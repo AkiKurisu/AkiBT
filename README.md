@@ -285,10 +285,10 @@ public class IsHateGt: Conditional
 ```
 
 * Conditional Node can be leaf node like Action Node.
-<img src="images/conditional1.jpg" width="480"/>
+<img src="Images/conditional1.jpg" width="480"/>
 
 * Conditional Node can be branch node.
-<img src="images/conditional2.jpg" width="480"/>
+<img src="Images/conditional2.jpg" width="480"/>
 
 ### Create Composite
 * Create C# Script and extends `AkiBT.Composite`
