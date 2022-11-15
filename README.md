@@ -45,7 +45,7 @@ public class NavmeshStopAgent : Action
     
     }
 ```
-<img src="images/InfoAttribute.png" />
+<img src="Images/InfoAttribute.png" />
 
 2. 增加了Label特性用以替换编辑器中的结点名称
    
@@ -71,7 +71,7 @@ public class NavmeshStopAgent : Action
     
     }
 ```
-<img src="images/AkiLabel.png" />
+<img src="Images/AkiLabel.png" />
 
 3. 增加了Group特性用以对结点进行分类
 
@@ -96,14 +96,14 @@ public class NavmeshStopAgent : Action
         }
     }
 ```
-<img src="images/AkiGroup.png" />
+<img src="Images/AkiGroup.png" />
 
 4. 增加了更多Buit-in行为例如Navmesh、Animatior  
 
 5. 增加自动保存设置和保存到ScriptableObject的功能
-<img src="images/AutoSave.png" />
+<img src="Images/AutoSave.png" />
 * 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,“保存行为树”和“自动保存”不会将修改后的行为树同步到ScriptableObject,你可以再次点击“保存到SO”进行覆盖
-<img src="images/External.png" />
+<img src="Images/External.png" />
 
 6. 增加了装饰器结点类型Decorator Node.
 
@@ -123,7 +123,7 @@ public class WaitSuccess : Decorator
 ```
 
 # 使用方式(修改自原作者简介)
-<img src="images/demo.jpg" />
+<img src="Images/demo.jpg" />
 
 
 
@@ -131,14 +131,14 @@ public class WaitSuccess : Decorator
 
 
 2. Add `AkiBT.BehaviorTree` component for any GameObject.  
-   <img src="images/started1.jpg" width="240"/>
+   <img src="Images/started1.jpg" width="240"/>
 3. `Open Graph Editor` button opens GraphView for Behavior Tree.  
-   <img src="images/started2.jpg" width="360"/>
+   <img src="Images/started2.jpg" width="360"/>
 4. Add behaviors and set parameters.  
 5. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
-   <img src="images/started3.gif" width="480"/>  
+   <img src="Images/started3.gif" width="480"/>  
 6. Run the unity application. you can see node status in the editor window.  
-   <img src="images/started4.jpg" width="480"/>
+   <img src="Images/started4.jpg" width="480"/>
    
    * The red node means that last `Update` returned Status.Failure`.
    * The green node means that last `Update` returned `Status.Success`.
