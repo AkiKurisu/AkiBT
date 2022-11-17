@@ -1,0 +1,22 @@
+using UnityEngine;
+namespace Kurisu.AkiBT.Extend
+{
+    [AkiInfo("Action:Int类型赋值")]
+    [AkiLabel("Math:SetInt")]
+    [AkiGroup("Math")]
+public class SetInt : Action
+{
+    [SerializeField]
+    private SharedInt intToSet=new SharedInt();
+    [SerializeField]
+    private int setValue;
+    public override void Awake() {
+           intToSet.GetValueFromTree<int>(tree);
+        }
+    protected override Status OnUpdate()
+    {
+        intToSet.Value=setValue;
+        return Status.Success;
+    }
+}
+}

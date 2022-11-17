@@ -4,23 +4,25 @@
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
 行为树衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
-
+#
 
 ## 支持的版本Supported version
 
 * Unity 2019.4 or later.
-
-## 特点Features
+#
+## AkiBT特点Features
 * 支持使用可视化节点编辑器构造行为树Supports constructing behavior tree by [GraphView](https://docs.unity3d.com/ScriptReference/Experimental.GraphView.GraphView.html).
 * 支持运行时可视化结点状态Supports visualizing active node in runtime.
 * 非常便于拓展和自定义新的行为Easily add original behaviors(Action,Conditional,Composite).
+#
 ## 视图优化Optimization
 * 优化了结点创建菜单,根据类型分类
 * 增加了左键选框
 * 增加了背景和结点样式
 * 设置Root结点为不可删除防止无法恢复
-
-## 拓展部分Extend Features
+  
+#
+## 特性Attributes
 
 1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中
 ```C#
@@ -45,7 +47,7 @@ public class NavmeshStopAgent : Action
     
     }
 ```
-<img src="Images/InfoAttribute.png" />
+<img src="AkiBT/Images/InfoAttribute.png" />
 
 2. 增加了Label特性用以替换编辑器中的结点名称
    
@@ -71,7 +73,7 @@ public class NavmeshStopAgent : Action
     
     }
 ```
-<img src="Images/AkiLabel.png" />
+<img src="AkiBT/Images/AkiLabel.png" />
 
 3. 增加了Group特性用以对结点进行分类
 
@@ -96,16 +98,22 @@ public class NavmeshStopAgent : Action
         }
     }
 ```
-<img src="Images/AkiGroup.png" />
+<img src="AkiBT/Images/AkiGroup.png" />
 
-4. 增加了更多Buit-in行为例如Navmesh、Animatior  
+#
 
-5. 增加自动保存设置和保存到ScriptableObject的功能
-<img src="Images/AutoSave.png" />
-* 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,“保存行为树”和“自动保存”不会将修改后的行为树同步到ScriptableObject,你可以再次点击“保存到SO”进行覆盖
-<img src="Images/External.png" />
+## 保存功能Save Function
 
-6. 增加了装饰器结点类型Decorator Node.
+1. 增加自动保存设置和保存到ScriptableObject的功能
+<img src="AkiBT/Images/AutoSave.png" />
+
+2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,“保存行为树”和“自动保存”不会将修改后的行为树同步到ScriptableObject,你可以再次点击“保存到SO”进行覆盖
+<img src="AkiBT/Images/External.png" />
+
+#
+## 新的结点类型New Node Type
+
+1. 增加了装饰器结点类型Decorator Node.
 
 ```C#
  [AkiInfo("Decorator:直到子结点返回Success为止返回Running")]
@@ -121,24 +129,35 @@ public class WaitSuccess : Decorator
     }
 }
 ```
+#
+## 共享变量SharedVairable
 
+1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3类型变量
+
+<img src="AkiBT/Images/SharedVariable.png" />
+
+* 注意：修改共享变量名称的方式为双击变量,为空时自动删除
+  
+* 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
+
+<img src="AkiBT/Images/Operator.png" />
+
+#
 # 使用方式(修改自原作者简介)
-<img src="Images/demo.jpg" />
 
-
-
+<img src="AkiBT/Images/demo.jpg" />
 1. [Download](https://github.com/yoshidan/UniBT/releases) 直接下载，导入项目中
 
 
 2. Add `AkiBT.BehaviorTree` component for any GameObject.  
-   <img src="Images/started1.jpg" width="240"/>
+   <img src="AkiBT/Images/started1.jpg" width="240"/>
 3. `Open Graph Editor` button opens GraphView for Behavior Tree.  
-   <img src="Images/started2.jpg" width="360"/>
+   <img src="AkiBT/Images/started2.jpg" width="360"/>
 4. Add behaviors and set parameters.  
 5. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
-   <img src="Images/started3.gif" width="480"/>  
+   <img src="AkiBT/Images/started3.gif" width="480"/>  
 6. Run the unity application. you can see node status in the editor window.  
-   <img src="Images/started4.jpg" width="480"/>
+   <img src="AkiBT/Images/started4.jpg" width="480"/>
    
    * The red node means that last `Update` returned Status.Failure`.
    * The green node means that last `Update` returned `Status.Success`.
@@ -285,10 +304,10 @@ public class IsHateGt: Conditional
 ```
 
 * Conditional Node can be leaf node like Action Node.
-<img src="Images/conditional1.jpg" width="480"/>
+<img src="AkiBT/Images/conditional1.jpg" width="480"/>
 
 * Conditional Node can be branch node.
-<img src="Images/conditional2.jpg" width="480"/>
+<img src="AkiBT/Images/conditional2.jpg" width="480"/>
 
 ### Create Composite
 * Create C# Script and extends `AkiBT.Composite`

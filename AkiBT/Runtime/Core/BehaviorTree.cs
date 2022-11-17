@@ -1,0 +1,124 @@
+using UnityEngine;
+using System.Collections.Generic;
+namespace Kurisu.AkiBT
+{
+    public enum UpdateType
+    {
+        [InspectorName("自动模式")]
+       Auto,
+       [InspectorName("手动模式")]
+       Manual
+    }
+    [DisallowMultipleComponent]
+    //[IconAttribute("Assets/Gizmos/AkiBT/Icon.jpg")] 
+    /// <summary>
+    /// 行为树
+    /// </summary>
+    public class BehaviorTree : MonoBehaviour
+    {
+        
+        [HideInInspector]
+        [SerializeReference]
+        private Root root = new Root();
+        [HideInInspector]
+        [SerializeReference]
+        private List<SharedVariable> sharedVariables = new List<SharedVariable>();
+        private Dictionary<string,int>sharedVariableIndex;
+        [SerializeField,
+        Tooltip("切换成UpdateType.Manual使用手动更新并且调用BehaviorTree.Tick()"),Header("Kurisu AkiBT行为树")]
+        private UpdateType updateType;
+        [SerializeField,
+        Tooltip("使用外部行为树替换组件内行为树,保存时会覆盖组件内行为树")]
+        private BehaviorTreeSO externalBehaviorTree;
+        public BehaviorTreeSO ExternalBehaviorTree=>externalBehaviorTree;
+        [SerializeField,HideInInspector]
+        private bool autoSave;
+        [SerializeField,HideInInspector]
+        private string savePath="Assets";
+        public string SavePath
+        {
+             get => savePath;
+        #if UNITY_EDITOR
+                    set => savePath = value;
+        #endif
+        }
+        public bool AutoSave
+        {
+
+            get => autoSave;
+#if UNITY_EDITOR
+            set => autoSave = value;
+#endif
+        }
+        
+        public Root Root
+        {
+            get => root;
+#if UNITY_EDITOR
+            set => root = value;
+#endif
+        }
+        public List<SharedVariable> SharedVariables
+        {
+            get => sharedVariables;
+#if UNITY_EDITOR
+            set => sharedVariables = value;
+#endif
+        }
+        /// <summary>
+        /// 获取共享变量
+        /// </summary>
+        /// <param name="name"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        internal  SharedVariable<T> GetShareVariable<T>(string name)
+        {
+            if(string.IsNullOrEmpty(name))return null;
+            int index;
+            if(sharedVariableIndex.TryGetValue(name,out index))
+            {
+                var variable=sharedVariables[index];
+                if(variable is SharedVariable<T>)
+                {
+                    return variable as SharedVariable<T>;
+                }
+                else
+                {
+                    Debug.LogError($"{name}名称变量不是{typeof(T).Name}类型");
+                }
+            }
+            else
+            {
+                Debug.LogError($"没有在行为树中找到共享变量:{name}");
+            }
+            return null;
+        }
+        private void Awake() {
+            sharedVariableIndex=new Dictionary<string, int>();
+            for(int i=0;i<sharedVariables.Count;i++)
+            {
+                sharedVariableIndex.Add(sharedVariables[i].Name,i);
+            }
+            root.Run(gameObject,this);
+            root.Awake();
+        }
+
+        private void Start()
+        {
+            root.Start();
+        }
+
+        private void Update()
+        {
+            if (updateType == UpdateType.Auto) Tick();
+        }
+        
+        public void Tick()
+        {
+            root.PreUpdate();
+            root.Update();
+            root.PostUpdate();
+        }
+
+    }
+}
