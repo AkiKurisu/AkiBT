@@ -47,7 +47,7 @@ public class NavmeshStopAgent : Action
     
     }
 ```
-<img src="AkiBT/Images/InfoAttribute.png" />
+<img src="Images/InfoAttribute.png" />
 
 2. 增加了Label特性用以替换编辑器中的结点名称
    
@@ -73,7 +73,7 @@ public class NavmeshStopAgent : Action
     
     }
 ```
-<img src="AkiBT/Images/AkiLabel.png" />
+<img src="Images/AkiLabel.png" />
 
 3. 增加了Group特性用以对结点进行分类
 
@@ -98,17 +98,17 @@ public class NavmeshStopAgent : Action
         }
     }
 ```
-<img src="AkiBT/Images/AkiGroup.png" />
+<img src="Images/AkiGroup.png" />
 
 #
 
 ## 保存功能Save Function
 
 1. 增加自动保存设置和保存到ScriptableObject的功能
-<img src="AkiBT/Images/AutoSave.png" />
+<img src="Images/AutoSave.png" />
 
 2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,“保存行为树”和“自动保存”不会将修改后的行为树同步到ScriptableObject,你可以再次点击“保存到SO”进行覆盖
-<img src="AkiBT/Images/External.png" />
+<img src="Images/External.png" />
 
 #
 ## 新的结点类型New Node Type
@@ -134,30 +134,30 @@ public class WaitSuccess : Decorator
 
 1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3类型变量
 
-<img src="AkiBT/Images/SharedVariable.png" />
+<img src="Images/SharedVariable.png" />
 
 * 注意：修改共享变量名称的方式为双击变量,为空时自动删除
   
 * 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
 
-<img src="AkiBT/Images/Operator.png" />
+<img src="Images/Operator.png" />
 
 #
 # 使用方式(修改自原作者简介)
 
-<img src="AkiBT/Images/demo.jpg" />
+<img src="Images/demo.jpg" />
 1. [Download](https://github.com/yoshidan/UniBT/releases) 直接下载，导入项目中
 
 
 2. Add `AkiBT.BehaviorTree` component for any GameObject.  
-   <img src="AkiBT/Images/started1.jpg" width="240"/>
+   <img src="Images/started1.jpg" width="240"/>
 3. `Open Graph Editor` button opens GraphView for Behavior Tree.  
-   <img src="AkiBT/Images/started2.jpg" width="360"/>
+   <img src="Images/started2.jpg" width="360"/>
 4. Add behaviors and set parameters.  
 5. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
-   <img src="AkiBT/Images/started3.gif" width="480"/>  
+   <img src="Images/started3.gif" width="480"/>  
 6. Run the unity application. you can see node status in the editor window.  
-   <img src="AkiBT/Images/started4.jpg" width="480"/>
+   <img src="Images/started4.jpg" width="480"/>
    
    * The red node means that last `Update` returned Status.Failure`.
    * The green node means that last `Update` returned `Status.Success`.
@@ -304,10 +304,10 @@ public class IsHateGt: Conditional
 ```
 
 * Conditional Node can be leaf node like Action Node.
-<img src="AkiBT/Images/conditional1.jpg" width="480"/>
+<img src="Images/conditional1.jpg" width="480"/>
 
 * Conditional Node can be branch node.
-<img src="AkiBT/Images/conditional2.jpg" width="480"/>
+<img src="Images/conditional2.jpg" width="480"/>
 
 ### Create Composite
 * Create C# Script and extends `AkiBT.Composite`
