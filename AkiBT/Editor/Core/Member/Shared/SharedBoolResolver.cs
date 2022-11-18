@@ -25,7 +25,7 @@ namespace Kurisu.AkiBT.Editor
         public SharedBoolField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput,objectType)
         {
            
-            valueField=new Toggle("Value:");
+            valueField=new Toggle("Value");
             valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
             this.dropdownField.Add(valueField);
 

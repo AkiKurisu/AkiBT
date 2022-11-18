@@ -1,24 +1,28 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:获取Animator的Bool元素,如果和status一致返回True,否则返回False")]
-    [AkiLabel("Animator:GetBool")]
+    [AkiInfo("Condition:获取Animator的Bool元素,如果和status一致返回True,否则返回False")]
+    [AkiLabel("Animator:BoolCondition")]
     [AkiGroup("Animator")]
-    public class AnimatorGetBool : AnimatorCondition
+    public class AnimatorBoolCondition : AnimatorCondition
     {
         [SerializeField]
         private string parameter;
         [SerializeField]
         private bool status;
+        [SerializeField]
+        private SharedBool storeResult=new SharedBool();
         private int parameterHash;
         protected override void OnStart()
         {
             base.OnStart();
             parameterHash=Animator.StringToHash(parameter);
+            storeResult.GetValueFromTree(tree);
         }
         protected override bool IsUpdatable()
         {
-            return(animator.GetBool(parameterHash)==status);
+            storeResult.Value=animator.GetBool(parameterHash);
+            return(storeResult.Value==status);
         }
     }
 }

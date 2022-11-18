@@ -16,10 +16,10 @@ namespace Kurisu.AkiBT.Editor
             this.label=label;
             dropdownField=new Foldout();
             this.contentContainer.Add(dropdownField);
-            toggle=new Toggle("Is Shared:");
+            toggle=new Toggle("Is Shared");
             toggle.RegisterValueChangedCallback(evt => value.IsShared = evt.newValue);
             this.dropdownField.Add(toggle);
-            textField=new TextField("Variable Name:");
+            textField=new TextField("Variable Name");
             textField.RegisterValueChangedCallback(evt => value.Name = evt.newValue);
             this.dropdownField.Add(textField);
             this.dropdownField.value=false;

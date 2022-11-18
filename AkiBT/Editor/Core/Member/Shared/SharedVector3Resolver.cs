@@ -25,7 +25,7 @@ namespace Kurisu.AkiBT.Editor
         public SharedVector3Field(string label, VisualElement visualInput, Type objectType) : base(label, visualInput,objectType)
         {
            
-            valueField=new Vector3Field("Value:");
+            valueField=new Vector3Field("Value");
             valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
             this.dropdownField.Add(valueField);
 

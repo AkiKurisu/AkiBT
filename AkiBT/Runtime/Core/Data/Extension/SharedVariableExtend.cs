@@ -14,6 +14,11 @@ public static class SharedVariableExtend
     /// <returns></returns>
     public static SharedVariable<T> GetValueFromTree<T>(this SharedVariable<T> variable,BehaviorTree tree)
     {
+        if(variable==null)
+        {
+            Debug.LogWarning("你没有实例SharedVarible!");
+            return null;
+        }
         if(!variable.IsShared)return variable;
         var value=tree.GetShareVariable<T>(variable.Name);
         if(value!=null)

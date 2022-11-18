@@ -11,8 +11,8 @@ public class SetInt : Action
     [SerializeField]
     private int setValue;
     public override void Awake() {
-           intToSet.GetValueFromTree<int>(tree);
-        }
+        intToSet.GetValueFromTree(tree);
+    }
     protected override Status OnUpdate()
     {
         intToSet.Value=setValue;

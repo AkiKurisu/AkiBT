@@ -34,8 +34,7 @@ namespace Kurisu.AkiBT.Editor
             foldout.text="SharedVariables";
             foreach(var variable in bt.SharedVariables)
             {
-                var valueLabel=new Label($"Value:{variable.GetValue()}");
-                valueLabel.style.minWidth=100;
+                var valueLabel=new Label($"Value  :  {variable.GetValue()}");
                 var grid=new Foldout();
                 grid.text=$"{variable.GetType().Name}  :  {variable.Name}";
                 grid.style.flexDirection=FlexDirection.Column;

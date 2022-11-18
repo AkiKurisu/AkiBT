@@ -11,8 +11,8 @@ public class SetFloat : Action
     [SerializeField]
     private float setValue;
     public override void Awake() {
-           floatToSet.GetValueFromTree<float>(tree);
-        }
+        floatToSet.GetValueFromTree(tree);
+    }
     protected override Status OnUpdate()
     {
         floatToSet.Value=setValue;

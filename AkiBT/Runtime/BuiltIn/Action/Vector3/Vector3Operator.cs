@@ -13,17 +13,14 @@ public class Vector3Operator : Action
             Subtract,
             Scale
         }
-
         public Operation operation;
         public SharedVector3 firstVector3=new SharedVector3();
         public SharedVector3 secondVector3=new SharedVector3();
         public SharedVector3 storeResult=new SharedVector3();
         public override void Awake() {
-
-            firstVector3.GetValueFromTree<Vector3>(tree);
-            secondVector3.GetValueFromTree<Vector3>(tree);
-            storeResult.GetValueFromTree<Vector3>(tree);
-
+            firstVector3.GetValueFromTree(tree);
+            secondVector3.GetValueFromTree(tree);
+            storeResult.GetValueFromTree(tree);
         }
         protected override Status OnUpdate()
         {
@@ -39,14 +36,6 @@ public class Vector3Operator : Action
                     break;
             }
             return Status.Success;
-        }
-
-        public override void Abort()
-        {
-            operation = Operation.Add;
-            firstVector3.Value = Vector3.zero; 
-            secondVector3.Value = Vector3.zero; 
-            storeResult.Value = Vector3.zero;
         }
 }
 }

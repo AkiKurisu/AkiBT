@@ -140,7 +140,7 @@ namespace Kurisu.AkiBT.Editor
                     var fieldResolver = fieldResolverFactory.Create(p);//工厂创建暴露引用
                     var defaultValue = Activator.CreateInstance(nodeBehavior) as NodeBehavior;
                     fieldResolver.Restore(defaultValue);
-                    container.Add( fieldResolver.GetEditorField());
+                    container.Add(fieldResolver.GetEditorField());
                     resolvers.Add(fieldResolver);
                 });
             AkiLabel[] array;

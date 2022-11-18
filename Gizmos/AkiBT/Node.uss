@@ -24,6 +24,10 @@ SharedVector3Field
 {
     flex-direction:column
 }
+SharedBoolField
+{
+    flex-direction:column
+}
 ActionNode #title {
     background-color: rgba(251, 114, 153, 0.91);
 }

@@ -1,23 +1,23 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:根据status设置Animator的Bool元素")]
-    [AkiLabel("Animator:SetBool")]
+    [AkiInfo("Action:获取Animator的Bool元素")]
+    [AkiLabel("Animator:GetBool")]
     [AkiGroup("Animator")]
-    public class AnimatorSetBool : AnimatorAction
+    public class AnimatorGetBool : AnimatorAction
     {
         [SerializeField]
         private string parameter;
         [SerializeField]
-        private SharedBool status=new SharedBool();
+        private SharedBool storeResult=new SharedBool();
         private int parameterHash;
         public override void Start() {
             parameterHash=Animator.StringToHash(parameter);
-            status.GetValueFromTree(tree);
+            storeResult.GetValueFromTree(tree);
         }
         protected override Status OnUpdate()
         {
-            animator.SetBool(parameterHash,status.Value);
+            storeResult.Value=animator.GetBool(parameterHash);
             return Status.Success;
         }
     }

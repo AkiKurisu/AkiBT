@@ -2,26 +2,26 @@ using UnityEngine;
 using UnityEngine.AI;
 namespace Kurisu.AkiBT.Extend
 {
-[AkiInfo("Action:根据isStopped停止NavmeshAgent")]
-[AkiLabel("Navmesh:StopAgent")]
+[AkiInfo("Action:设置NavmeshAgent的目的地")]
+[AkiLabel("Navmesh:SetDestination")]
 [AkiGroup("Navmesh")]
-public class NavmeshStopAgent : Action
+public class NavmeshSetDestination : Action
 {
     private NavMeshAgent _navMeshAgent;
     [SerializeField]
-    private SharedBool isStopped=new SharedBool();
+    private SharedVector3 destination=new SharedVector3();
     protected override Status OnUpdate()
     {
-        if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped.Value)
+        if(_navMeshAgent!=null)
         {
-            _navMeshAgent.isStopped=isStopped.Value;
+            _navMeshAgent.destination=destination.Value;
         }
         return Status.Success;
     }
     public override void Awake()
     {
         _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
-        isStopped.GetValueFromTree(tree);
+        destination.GetValueFromTree(tree);
     }
     
     }

@@ -24,7 +24,7 @@ public class SharedIntField : SharedVariableField<SharedInt>
          IntegerField valueField;
         public SharedIntField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput,objectType)
         {
-            valueField=new IntegerField("Value:");
+            valueField=new IntegerField("Value");
             valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
             this.dropdownField.Add(valueField);
         }

@@ -1,4 +1,4 @@
-
+[![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/releases)
 # 行为树 AkiBT 简介 Intro
 
 

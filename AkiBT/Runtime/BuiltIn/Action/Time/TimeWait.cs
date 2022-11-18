@@ -6,12 +6,12 @@ namespace Kurisu.AkiBT.Extend
     public class TimeWait : Action
     {
         [SerializeField]
-        private float waitTime; 
+        private SharedFloat waitTime=new SharedFloat(); 
         [SerializeField]
         private SharedFloat sharedTimer=new SharedFloat();  
         public override void Awake() {
-            sharedTimer.GetValueFromTree<float>(tree);
- 
+            sharedTimer.GetValueFromTree(tree);
+            waitTime.GetValueFromTree(tree);
         }
         protected override Status OnUpdate()
         {
@@ -37,7 +37,7 @@ namespace Kurisu.AkiBT.Extend
         bool IsAlready()
         {
             if(sharedTimer!=null)
-                return sharedTimer.Value>waitTime;
+                return sharedTimer.Value>waitTime.Value;
             else
                 return true;
         }

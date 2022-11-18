@@ -1,0 +1,22 @@
+using UnityEngine;
+namespace Kurisu.AkiBT.Extend
+{
+    [AkiInfo("Action:Bool类型赋值")]
+    [AkiLabel("Math:SetBool")]
+    [AkiGroup("Math")]
+public class SetBool : Action
+{
+    [SerializeField]
+    private SharedBool boolToSet=new SharedBool();
+    [SerializeField]
+    private bool setValue;
+    public override void Awake() {
+        boolToSet.GetValueFromTree(tree);
+    }
+    protected override Status OnUpdate()
+    {
+        boolToSet.Value=setValue;
+        return Status.Success;
+    }
+}
+}

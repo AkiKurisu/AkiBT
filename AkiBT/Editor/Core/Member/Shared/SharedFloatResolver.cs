@@ -24,7 +24,7 @@ public class SharedFloatResovler :FieldResolver<SharedFloatField,SharedFloat>
         public SharedFloatField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput,objectType)
         {
            
-            valueField=new FloatField("Value:");
+            valueField=new FloatField("Value");
             valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
             this.dropdownField.Add(valueField);
 

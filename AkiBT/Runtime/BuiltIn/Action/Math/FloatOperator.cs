@@ -17,27 +17,20 @@ namespace Kurisu.AkiBT.Extend
             Modulo
         }
         [SerializeField]
-        private SharedFloat float1;
+        private SharedFloat float1=new SharedFloat();
         [SerializeField]
-        private SharedFloat float2;
+        private SharedFloat float2=new SharedFloat();
         [SerializeField]
-        private SharedFloat storeResult;
+        private SharedFloat storeResult=new SharedFloat();
         [SerializeField]
         private Operation operation;
         
             
       
          public override void Awake() {
-            float1.GetValueFromTree<float>(tree);
-            float2.GetValueFromTree<float>(tree);
-            storeResult.GetValueFromTree<float>(tree);     
-        }
-        public override void Abort()
-        {
-            operation = Operation.Add;
-            float1.Value = 0;
-            float2.Value= 0;
-            storeResult.Value= 0;
+            float1.GetValueFromTree(tree);
+            float2.GetValueFromTree(tree);
+            storeResult.GetValueFromTree(tree);     
         }
         protected override Status OnUpdate()
         {

@@ -28,16 +28,9 @@ namespace Kurisu.AkiBT.Extend
             
       
         public override void Awake() {
-            int1.GetValueFromTree<int>(tree);
-            int2.GetValueFromTree<int>(tree);
-            storeResult.GetValueFromTree<int>(tree);
-        }
-        public override void Abort()
-        {
-            operation = Operation.Add;
-            int1.Value = 0;
-            int2.Value= 0;
-            storeResult.Value= 0;
+            int1.GetValueFromTree(tree);
+            int2.GetValueFromTree(tree);
+            storeResult.GetValueFromTree(tree);
         }
         protected override Status OnUpdate()
         {

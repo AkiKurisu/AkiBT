@@ -6,12 +6,12 @@ namespace Kurisu.AkiBT.Extend
 public class TimeCondition : Conditional
 {
     [SerializeField]
-    private float waitTime;
+    private SharedFloat waitTime=new SharedFloat(); 
     [SerializeField]
     private SharedFloat sharedTimer=new SharedFloat();  
     protected override void OnAwake() {
-
-                sharedTimer.GetValueFromTree<float>(tree);
+        sharedTimer.GetValueFromTree(tree);
+        waitTime.GetValueFromTree(tree);
     }
     protected override bool IsUpdatable()
     {
@@ -24,28 +24,27 @@ public class TimeCondition : Conditional
         return false;
     }
     void AddTimer()
-        {
-             if(sharedTimer!=null)
-                sharedTimer.Value+=Time.deltaTime;
-        
-        }
-        void ClearTimer()
-        {
-             if(sharedTimer!=null)
-                sharedTimer.Value=0;
-           
-        }
-        bool IsAlready()
-        {
+    {
+        if(sharedTimer!=null)
+        sharedTimer.Value+=Time.deltaTime;
+    }
+    void ClearTimer()
+    {
             if(sharedTimer!=null)
-                return sharedTimer.Value>waitTime;
-            else
-                return true;
-        }
-        public override void Abort()
-        {
-            base.Abort();
-            ClearTimer();
-        }
+            sharedTimer.Value=0;
+        
+    }
+    bool IsAlready()
+    {
+        if(sharedTimer!=null)
+            return sharedTimer.Value>waitTime.Value;
+        else
+            return true;
+    }
+    public override void Abort()
+    {
+        base.Abort();
+        ClearTimer();
+    }
 }
 }
