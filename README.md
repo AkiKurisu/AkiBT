@@ -132,7 +132,7 @@ public class WaitSuccess : Decorator
 #
 ## 共享变量SharedVairable
 
-1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3类型变量
+1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool类型变量
 
 <img src="Images/SharedVariable.png" />
 

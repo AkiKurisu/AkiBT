@@ -98,7 +98,7 @@ namespace Kurisu.AkiBT.Editor
         /// <param name="variable"></param>
         /// <param name="loadMode">是否为重加载（非第一次创建）</param>
         /// <typeparam name="T"></typeparam>
-        public void AddPropertyToBlackBoard<T>(SharedVariable<T> variable, bool loadMode = false)
+        public void AddPropertyToBlackBoard(SharedVariable variable, bool loadMode = false)
         {
             var localPropertyName = variable.Name;
             var localPropertyValue = variable.GetValue();
@@ -119,13 +119,7 @@ namespace Kurisu.AkiBT.Editor
             container.Add(field);
             FieldInfo info=variable.GetType().GetField("value");//反射获取FieldInfo
             var fieldResolver = fieldResolverFactory.Create(info);//工厂创建暴露引用
-            var valueField=fieldResolver.GetEditorField() as BaseField<T>;
-            valueField.label="Value:";
-            valueField.RegisterValueChangedCallback(evt =>
-            {
-                var index = ExposedProperties.FindIndex(x => x.Name == variable.Name);
-                ExposedProperties[index].SetValue(evt.newValue) ;
-            });
+            var valueField=fieldResolver.GetEditorField(ExposedProperties,variable);
             var sa = new BlackboardRow(field, valueField);
             container.Add(sa);
             _blackboard.Add(container);
@@ -221,23 +215,9 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            for(int i=0;i<behaviorTree.SharedVariables.Count;i++)
+            foreach(var variable in behaviorTree.SharedVariables)
             {
-                if(behaviorTree.SharedVariables[i] is SharedInt)
-                {
-                    var sharedInt=behaviorTree.SharedVariables[i] as SharedInt;
-                    AddPropertyToBlackBoard(sharedInt,true);
-                }
-                if(behaviorTree.SharedVariables[i] is SharedFloat)
-                {
-                    var sharedInt=behaviorTree.SharedVariables[i] as SharedFloat;
-                    AddPropertyToBlackBoard(sharedInt,true);
-                }
-                if(behaviorTree.SharedVariables[i] is SharedVector3)
-                {
-                    var sharedInt=behaviorTree.SharedVariables[i] as SharedVector3;
-                    AddPropertyToBlackBoard(sharedInt,true);
-                }
+                    AddPropertyToBlackBoard(variable,true);
             }
         }
 

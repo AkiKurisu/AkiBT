@@ -68,6 +68,7 @@ namespace Kurisu.AkiBT.Editor
                 var menu = new GenericMenu();
                 menu.AddItem(new GUIContent($"Int"), false, () => _graphView.AddPropertyToBlackBoard(new SharedInt(), false));
                 menu.AddItem(new GUIContent($"Float"), false, () => _graphView.AddPropertyToBlackBoard(new SharedFloat(), false));
+                menu.AddItem(new GUIContent($"Bool"), false, () => _graphView.AddPropertyToBlackBoard(new SharedBool(), false));
                 menu.AddItem(new GUIContent($"Vector3"), false, () => _graphView.AddPropertyToBlackBoard(new SharedVector3(), false));
                 menu.ShowAsContext();
             };

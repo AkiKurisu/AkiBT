@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using UnityEngine.UIElements;
-
+using System.Collections.Generic;
 namespace Kurisu.AkiBT.Editor
 {
     sealed class Ordered : Attribute
@@ -11,11 +11,14 @@ namespace Kurisu.AkiBT.Editor
 
     public interface IFieldResolver
     {
-        VisualElement GetEditorField();
+        VisualElement GetEditorField( );
+        VisualElement GetEditorField(List<SharedVariable> ExposedProperties,SharedVariable variable);
 
         void Restore(NodeBehavior behavior);
 
         void Commit(NodeBehavior behavior);
+       
+        
     }
 
     public abstract class FieldResolver<T, K> :IFieldResolver where T: BaseField<K>
@@ -35,12 +38,28 @@ namespace Kurisu.AkiBT.Editor
         }
 
         protected abstract T CreateEditorField(FieldInfo fieldInfo);
-
         public VisualElement GetEditorField()
         {
+
             return this.editorField;
         }
-
+        /// <summary>
+        /// 不安全的方法,外界注入回调操作的列表和共享变量,不保证转换成功
+        /// </summary>
+        /// <param name="ExposedProperties"></param>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        public VisualElement GetEditorField(List<SharedVariable> ExposedProperties,SharedVariable variable)
+        {
+            this.editorField.RegisterValueChangedCallback(evt =>
+            {
+                var index = ExposedProperties.FindIndex(x => x.Name == variable.Name);
+                ExposedProperties[index].SetValue(evt.newValue) ;
+            });
+            this.editorField.value=(K)variable.GetValue();
+            return this.editorField;
+        }
+       
         public void Restore(NodeBehavior behavior)
         {
             editorField.value = (K)fieldInfo.GetValue(behavior);

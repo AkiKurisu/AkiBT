@@ -2,13 +2,16 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using System.Reflection;
 namespace Kurisu.AkiBT.Editor
 {
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
+        FieldResolverFactory fieldResolverFactory=new FieldResolverFactory();
         public override VisualElement CreateInspectorGUI()
         {
+            
             // Create a new VisualElement to be the root of our inspector UI
             VisualElement myInspector = new VisualElement();
             var bt = target as BehaviorTree;
@@ -17,10 +20,30 @@ namespace Kurisu.AkiBT.Editor
             label.style.fontSize=20;
             myInspector.Add(label);
             myInspector.styleSheets.Add((StyleSheet)AssetDatabase.LoadAssetAtPath("Assets/Gizmos/AkiBT/Inspector.uss", typeof(StyleSheet)));
+            var toggle=new PropertyField();
+            toggle.bindingPath="updateType";
+            toggle.label="更新模式";
+            myInspector.Add(toggle);
             var field=new PropertyField();
             field.bindingPath="externalBehaviorTree";
             field.label="外部行为树";
             myInspector.Add(field);
+            if(bt.SharedVariables.Count!=0)
+            {var foldout=new Foldout();
+            foldout.value=false;
+            foldout.text="SharedVariables";
+            foreach(var variable in bt.SharedVariables)
+            {
+                var valueLabel=new Label($"Value:{variable.GetValue()}");
+                valueLabel.style.minWidth=100;
+                var grid=new Foldout();
+                grid.text=$"{variable.GetType().Name}  :  {variable.Name}";
+                grid.style.flexDirection=FlexDirection.Column;
+                grid.value=false;
+                grid.Add(valueLabel);
+                foldout.Add(grid);
+            }
+            myInspector.Add(foldout);}
             var button=new Button(()=>{GraphEditorWindow.Show(bt);});
             
             button.style.fontSize=15;
