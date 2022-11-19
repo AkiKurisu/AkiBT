@@ -2,8 +2,8 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action:Vector3类型值运算")]
-    [AkiLabel("Vector:Operator")]
-    [AkiGroup("Vector")]
+    [AkiLabel("Vector3:Operator")]
+    [AkiGroup("Vector3")]
 public class Vector3Operator : Action
 {
     

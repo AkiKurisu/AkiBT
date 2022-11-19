@@ -9,7 +9,12 @@ CompositeNode #title {
 }
 .unity-base-field__label
 {
-    min-width:100px;
+    min-width:20px;
+    
+}
+#unity-text-input
+{
+    min-width:50px;
     
 }
 SharedFloatField

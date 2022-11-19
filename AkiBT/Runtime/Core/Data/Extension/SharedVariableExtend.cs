@@ -22,7 +22,11 @@ public static class SharedVariableExtend
         if(!variable.IsShared)return variable;
         var value=tree.GetShareVariable<T>(variable.Name);
         if(value!=null)
-            variable=value;
+        {
+            variable.Bind(value);
+        }
+        else
+            Debug.Log("获取了空值");
        return variable;
     }
 }

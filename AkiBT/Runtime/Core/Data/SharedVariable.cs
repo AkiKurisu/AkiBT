@@ -34,36 +34,43 @@ public abstract class SharedVariable
 				this.mName = value;
 			}
 		}
-
 		public abstract object GetValue();
-
 		public abstract void SetValue(object value);
-
 		[SerializeField]
 		private string mName;
-
-
 	}
 	[System.Serializable]
     public abstract class SharedVariable<T> : SharedVariable
 	{
-		
 		public T Value
 		{
-			get=>this.value;
-			
-			set=>this.value = value;
+			get
+			{
+				return (this.Getter == null) ? this.value : this.Getter();
+			}
+			set
+			{
+				if (this.Setter != null)
+				{
+					this.Setter(value);
+				}
+				else
+				{
+					this.value = value;
+				}
+			}
 		}
-
 		public override object GetValue()
 		{
 			return this.Value;
 		}
-
 		public override void SetValue(object value)
 		{
-			
-			if (value is IConvertible)
+			if (this.Setter != null)
+			{
+				this.Setter((T)((object)value));
+			}
+			else if (value is IConvertible)
 			{
 				this.value = (T)((object)Convert.ChangeType(value, typeof(T)));
 			}
@@ -72,12 +79,18 @@ public abstract class SharedVariable
 				this.value = (T)((object)value);
 			}
 		}
-
-
+		private Func<T> Getter;
+		private Action<T> Setter;
+		/// <summary>
+		/// 绑定共享变量
+		/// </summary>
+		/// <param name="other"></param>
+		public void Bind(SharedVariable<T> other)
+		{
+			Getter=()=>other.Value;
+			Setter=(evt)=>other.Value=evt;
+		}
 		[SerializeField]
 		public T value;
-	}
-	
-	
-    
+	} 
 }
