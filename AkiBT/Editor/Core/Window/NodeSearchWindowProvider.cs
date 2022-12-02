@@ -53,14 +53,7 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Action"),1)); 
-            foreach(Type nodeType in nodeTypes)
-            {
-                if (nodeType.IsSubclassOf(typeof(Action)))
-                {
-                    entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
-                }
-            }
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Action"),1));     
             foreach(string group in attributeDict.Keys)
             {
                 bool needGroup=false;
@@ -74,15 +67,15 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Condition"),1));
             foreach(Type nodeType in nodeTypes)
             {
-                if (nodeType.IsSubclassOf(typeof(Conditional)))
+                if (nodeType.IsSubclassOf(typeof(Action)))
                 {
                     entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
                 }
             }
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Condition"),1));
+            
             foreach(string group in attributeDict.Keys)
             {
                 bool needGroup=false;
@@ -96,15 +89,15 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-        
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Composite"),1));
             foreach(Type nodeType in nodeTypes)
             {
-                if (nodeType.IsSubclassOf(typeof(Composite)))
+                if (nodeType.IsSubclassOf(typeof(Conditional)))
                 {
                     entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
                 }
             }
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Composite"),1));
+            
             foreach(string group in attributeDict.Keys)
             {
                 bool needGroup=true;
@@ -118,15 +111,15 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Decorator"),1));
             foreach(Type nodeType in nodeTypes)
             {
-                if (nodeType.IsSubclassOf(typeof(Decorator)))
+                if (nodeType.IsSubclassOf(typeof(Composite)))
                 {
                     entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
                 }
             }
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Decorator"),1));
+            
             foreach(string group in attributeDict.Keys)
             {
                 bool needGroup=false;
@@ -140,15 +133,13 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            
-            // foreach(string group in attributeDict.Keys)
-            // {
-            //     entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),1));
-            //     foreach(Type type in attributeDict[group])
-            //     {
-            //         entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 2, userData = type });
-            //     }
-            // }
+            foreach(Type nodeType in nodeTypes)
+            {
+                if (nodeType.IsSubclassOf(typeof(Decorator)))
+                {
+                    entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
+                }
+            }
             return entries;
         }
 
@@ -170,28 +161,59 @@ namespace Kurisu.AkiBT.Editor
     {
         private BehaviorTreeNode node;
         protected virtual string nodeName{get;}
-
+        private Texture2D _indentationIcon;
         public void Init(BehaviorTreeNode node)
         {
             this.node = node;
+            _indentationIcon=new Texture2D(1,1);
+            _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
+            _indentationIcon.Apply();
         }
 
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
-            entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {nodeName}")));
-
+            Dictionary<string,List<Type>> attributeDict=new Dictionary<string, List<Type>>();
+            List<Type> nodeTypes=new List<Type>();
+            entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {nodeName}"),0));
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {
                     if (type.IsSubclassOf(typeof(T))&& !type.IsAbstract)
                     {
-                        entries.Add(new SearchTreeEntry(new GUIContent(type.Name)) { level = 1, userData = type });
+                        nodeTypes.Add(type);
+                        AkiGroup[] array;
+                        if ((array = (type.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[])).Length > 0)
+                        {
+                            if(attributeDict.ContainsKey(array[0].Group))
+                            {
+                                attributeDict[array[0].Group].Add(type);
+                            }
+                            else
+                            {
+                                attributeDict.Add(array[0].Group,new List<Type>(){type});
+                            }
+                            nodeTypes.Remove(type);
+                        }
                     }
                 }
             }
-
+            foreach(string group in attributeDict.Keys)
+            {
+                bool needGroup=false;
+                foreach(Type type in attributeDict[group])
+                {
+                    
+                    if(!needGroup)entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),1));
+                    needGroup=true;
+                    entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 2, userData = type });
+                }
+            }
+            foreach(Type nodeType in nodeTypes)
+            {
+                entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 1, userData = nodeType });
+            }
             return entries;
         }
 

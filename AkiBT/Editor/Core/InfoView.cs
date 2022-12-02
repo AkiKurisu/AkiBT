@@ -6,11 +6,11 @@ namespace Kurisu.AkiBT.Editor
 {
 public class InfoView : VisualElement
 {
-    public InfoView()
+    public InfoView(string info)
     {
         Clear();
         IMGUIContainer container=new IMGUIContainer();
-        container.Add(new Label($"欢迎使用AkiBT,一个超简单的行为树!"));
+        container.Add(new Label(info));
         Add(container);
     }
     public void UpdateSelection(BehaviorTreeNode node)

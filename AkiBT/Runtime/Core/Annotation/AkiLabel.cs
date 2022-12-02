@@ -3,9 +3,9 @@ using System;
 namespace Kurisu.AkiBT
 {
     /// <summary>
-    /// 行为结点在编辑器中的名称进行替换
+    /// 对行为结点在编辑器中的名称进行替换,也可以对字段名称进行替换
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public sealed class AkiLabel : Attribute
     {
         public string Title

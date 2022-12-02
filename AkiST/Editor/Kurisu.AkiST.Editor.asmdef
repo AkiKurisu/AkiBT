@@ -1,0 +1,20 @@
+{
+    "name": "Kurisu.AkiST.Editor",
+    "rootNamespace": "Kurisu.AkiST.Editor",
+    "references": [
+        "GUID:2c32d50ec91ce0d4197421ef1b0ae5a7",
+        "GUID:3dad40524f69b4faab0f11e825b1b08e",
+        "GUID:4a9214fa9d60c4c92bfc3c635010f27f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

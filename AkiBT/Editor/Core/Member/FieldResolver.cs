@@ -35,6 +35,9 @@ namespace Kurisu.AkiBT.Editor
         private void SetEditorField()
         {
             this.editorField = this.CreateEditorField(this.fieldInfo);
+            //修改标签
+            AkiLabel label=this.fieldInfo.GetCustomAttribute<AkiLabel>();
+            if(label!=null)this.editorField.label=label.Title;
         }
 
         protected abstract T CreateEditorField(FieldInfo fieldInfo);

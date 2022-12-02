@@ -32,8 +32,8 @@ namespace Kurisu.AkiBT
 #endif
 
         protected GameObject gameObject { private set; get; }
-        protected BehaviorTree tree{ private set; get; }
-        public void Run(GameObject attachedObject,BehaviorTree attachedTree)
+        protected IBehaviorTree tree{ private set; get; }
+        public void Run(GameObject attachedObject,IBehaviorTree attachedTree)
         {
             gameObject = attachedObject;
             tree=attachedTree;
@@ -69,6 +69,15 @@ namespace Kurisu.AkiBT
         public virtual void Abort() {}
         
         public virtual bool CanUpdate() => true;
+        /// <summary>
+        /// 初始化共享变量
+        /// </summary>
+        /// <param name="shareVariable"></param>
+        /// <typeparam name="T"></typeparam>
+        protected  void InitVariable<T>(SharedVariable<T> shareVariable)
+        {
+            shareVariable.GetValueFromTree(tree);
+        }
         
     }
 }

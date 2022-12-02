@@ -14,12 +14,13 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 行为树
     /// </summary>
-    public class BehaviorTree : MonoBehaviour
+    public class BehaviorTree : MonoBehaviour,IBehaviorTree
     {
         
         [HideInInspector]
         [SerializeReference]
         private Root root = new Root();
+        Object IBehaviorTree._Object=>this;
         [HideInInspector]
         [SerializeReference]
         private List<SharedVariable> sharedVariables = new List<SharedVariable>();
@@ -37,33 +38,33 @@ namespace Kurisu.AkiBT
         private string savePath="Assets";
         public string SavePath
         {
-             get => savePath;
+                get => savePath;
         #if UNITY_EDITOR
-                    set => savePath = value;
+                set => savePath = value;
         #endif
         }
         public bool AutoSave
         {
 
             get => autoSave;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => autoSave = value;
-#endif
+        #endif
         }
         
         public Root Root
         {
-            get => root;
-#if UNITY_EDITOR
-            set => root = value;
-#endif
+            get=>root;
+            #if UNITY_EDITOR
+                set => root = value;
+            #endif
         }
         public List<SharedVariable> SharedVariables
         {
-            get => sharedVariables;
-#if UNITY_EDITOR
-            set => sharedVariables = value;
-#endif
+            get=>sharedVariables;
+            #if UNITY_EDITOR
+                set=>sharedVariables=value;
+            #endif
         }
         /// <summary>
         /// 获取共享变量
@@ -71,7 +72,7 @@ namespace Kurisu.AkiBT
         /// <param name="name"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal  SharedVariable<T> GetShareVariable<T>(string name)
+        SharedVariable<T> IBehaviorTree.GetShareVariable<T>(string name)
         {
             if(string.IsNullOrEmpty(name))return null;
             int index;

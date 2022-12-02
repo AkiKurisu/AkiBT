@@ -6,14 +6,15 @@ using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using System.Linq;
-namespace Kurisu.AkiBT.Editor
+using Kurisu.AkiBT;
+using Kurisu.AkiBT.Editor;
+namespace Kurisu.AkiST.Editor
 {
-    public class GraphEditorWindow : EditorWindow
-    {
-        // GraphView window per GameObject
-        private static readonly Dictionary<int,GraphEditorWindow> cache = new Dictionary<int, GraphEditorWindow>();
-        private BehaviorTreeView graphView;
-        public BehaviorTreeView GraphView=>graphView;
+public class SkillEditorWindow : EditorWindow
+{
+        private static readonly Dictionary<int,SkillEditorWindow> cache = new Dictionary<int, SkillEditorWindow>();
+        private SkillTreeView graphView;
+        public SkillTreeView GraphView=>graphView;
         private IBehaviorTree key { get; set; }
         InfoView infoView;
         public static void Show(IBehaviorTree bt)
@@ -23,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
             window.Focus();
         }
 
-        private static GraphEditorWindow Create(IBehaviorTree bt)
+        private static SkillEditorWindow Create(IBehaviorTree bt)
         {
            
             var key = bt.GetHashCode();
@@ -31,9 +32,9 @@ namespace Kurisu.AkiBT.Editor
             {
                 return cache[key];
             }
-            var window = CreateInstance<GraphEditorWindow>();
+            var window = CreateInstance<SkillEditorWindow>();
             StructGraphView(window, bt);
-            window.titleContent = new GUIContent($"行为树结点编辑器({bt._Object.name})");
+            window.titleContent = new GUIContent($"技能树结点编辑器({bt._Object.name})");
             window.key = bt;
             cache[key] = window;
             return window;
@@ -43,11 +44,11 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         /// <param name="window"></param>
         /// <param name="behaviorTree"></param>
-        private static void StructGraphView(GraphEditorWindow window, IBehaviorTree behaviorTree)
+        private static void StructGraphView(SkillEditorWindow window, IBehaviorTree behaviorTree)
         {
             window.rootVisualElement.Clear();
-            window.graphView = new BehaviorTreeView(behaviorTree, window);
-            window.infoView=new InfoView("欢迎使用AkiBT,一个超简单的行为树!");
+            window.graphView = new SkillTreeView(behaviorTree, window);
+            window.infoView=new InfoView("欢迎使用AkiST,针对技能优化的技能树!");
             window.infoView.styleSheets.Add((StyleSheet)AssetDatabase.LoadAssetAtPath("Assets/Gizmos/AkiBT/Info.uss", typeof(StyleSheet)));
             window.graphView.Add( window.infoView);
             window.graphView.onSelectAction=window.OnNodeSelectionChange;//绑定委托
@@ -59,7 +60,7 @@ namespace Kurisu.AkiBT.Editor
 
       
 
-        private static void GenerateBlackBoard(BehaviorTreeView _graphView)
+        private static void GenerateBlackBoard(SkillTreeView _graphView)
         {
             var blackboard = new Blackboard(_graphView);
             blackboard.Add(new BlackboardSection {title = "Shared Variables"});
@@ -96,19 +97,6 @@ namespace Kurisu.AkiBT.Editor
             blackboard.SetPosition(new Rect(10,100,300,400));
             _graphView.Add(blackboard);
             _graphView._blackboard = blackboard;
-        }
-        void SaveDataToSO()
-        {
-            var treeSO=ScriptableObject.CreateInstance<BehaviorTreeSO>();
-            if (!graphView.Save())
-            {
-                Debug.LogWarning($"<color=#ff2f2f>AkiBT</color>保存失败,不会生成ScritableObject\n{System.DateTime.Now.ToString()}");
-                return;
-            }
-            graphView.Commit(treeSO);
-            AssetDatabase.CreateAsset(treeSO,$"{graphView.SavePath}/{key._Object.name}.asset");
-            AssetDatabase.SaveAssets();
-            Debug.Log($"<color=#3aff48>AkiBT</color>外部行为树保存成功,SO生成位置:{graphView.SavePath}/{key._Object.name}.asset\n{System.DateTime.Now.ToString()}");
         }
         
         private void OnDestroy()
@@ -160,7 +148,7 @@ namespace Kurisu.AkiBT.Editor
                 Repaint();
             }
         }
-        private VisualElement CreateToolBar(BehaviorTreeView graphView)
+        private VisualElement CreateToolBar(SkillTreeView graphView)
         {
             return new IMGUIContainer(
                 () =>
@@ -169,29 +157,21 @@ namespace Kurisu.AkiBT.Editor
 
                     if (!Application.isPlaying)
                     {
-                        if (GUILayout.Button("保存行为树", EditorStyles.toolbarButton))
+                        if (GUILayout.Button("保存技能树", EditorStyles.toolbarButton))
                         {
                             var guiContent = new GUIContent();
                             if (graphView.Save())
                             {
-                                guiContent.text = "成功更新行为树!";
+                                guiContent.text = "成功更新技能树!";
                                 this.ShowNotification(guiContent);
                             }
                             else
                             {
-                                guiContent.text = "无效行为树,请检查结点设置是否存在错误!";
+                                guiContent.text = "无效技能树,请检查结点设置是否存在错误!";
                                 this.ShowNotification(guiContent);
                             }
                         }
                         graphView.AutoSave=GUILayout.Toggle(graphView.AutoSave,"自动保存");
-                        if(graphView.IsTree)
-                        {
-                            if (GUILayout.Button("保存到SO", EditorStyles.toolbarButton))
-                            {
-                                SaveDataToSO();
-                            }
-                            graphView.SavePath=GUILayout.TextField(graphView.SavePath,GUILayout.Width(200));
-                        }
                     }
                     
                    
@@ -207,5 +187,5 @@ namespace Kurisu.AkiBT.Editor
         }
 
 
-    }
+}
 }

@@ -40,29 +40,31 @@ namespace Kurisu.AkiBT.Editor
         {
             if (!Child.connected)
             {
-                return false;
+                return true;
             }
             stack.Push(Child.connections.First().input.node as BehaviorTreeNode);
             return true;
         }
         protected override void OnCommit(Stack<BehaviorTreeNode> stack)
         {
-            var child = Child.connections.First().input.node as BehaviorTreeNode;
+            
             var newRoot = new Root();
-            newRoot.Child = child.ReplaceBehavior();
+            BehaviorTreeNode child=null;
+            if(Child.connected)
+            {
+                child = Child.connections.First().input.node as BehaviorTreeNode;
+                newRoot.Child = child.ReplaceBehavior();
+                stack.Push(child);
+                
+            }
             newRoot.UpdateEditor = ClearStyle;
             NodeBehavior = newRoot;
-            stack.Push(child);
             cache = child;
         }
 
-        public void PostCommit(BehaviorTree tree)
+        public void PostCommit(IBehaviorTree tree)
         {
             tree.Root = (NodeBehavior as Root); 
-        }
-         public void PostCommit(BehaviorTreeSO treeSO)
-        {
-            treeSO.SetRoot(NodeBehavior as Root); 
         }
         protected override void OnClearStyle()
         {

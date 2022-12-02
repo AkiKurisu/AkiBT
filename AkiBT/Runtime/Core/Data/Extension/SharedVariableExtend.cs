@@ -12,7 +12,7 @@ public static class SharedVariableExtend
     /// <param name="tree"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static SharedVariable<T> GetValueFromTree<T>(this SharedVariable<T> variable,BehaviorTree tree)
+    public static SharedVariable<T> GetValueFromTree<T>(this SharedVariable<T> variable,IBehaviorTree tree)
     {
         if(variable==null)
         {

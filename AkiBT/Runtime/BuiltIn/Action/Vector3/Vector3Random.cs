@@ -2,9 +2,9 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action:随机获取Vector3值")]
-    [AkiLabel("Vector3:RandomGet")]
+    [AkiLabel("Vector3:Random")]
     [AkiGroup("Vector3")]
-    public class Vector3RandomGet : Action
+    public class Vector3Random : Action
     {
         private enum Operation
         {

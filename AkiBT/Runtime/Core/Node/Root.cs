@@ -30,17 +30,17 @@ namespace Kurisu.AkiBT
 
         public override void Awake()
         {
-            child.Awake();
+            child?.Awake();
         }
 
         public override void Start()
         {
-           child.Start();
+           child?.Start();
         }
 
         public override void PreUpdate()
         {
-            child.PreUpdate();
+            child?.PreUpdate();
         }
 
         protected sealed override Status OnUpdate()
@@ -48,18 +48,19 @@ namespace Kurisu.AkiBT
 #if UNITY_EDITOR
             UpdateEditor?.Invoke();
 #endif
+            if(child==null)return Status.Failure;
             return child.Update();
         }
         
         
         public override void PostUpdate()
         {
-            child.PostUpdate();
+            child?.PostUpdate();
         }
 
         public override void Abort()
         {
-            child.Abort();
+            child?.Abort();
         }
 
     }

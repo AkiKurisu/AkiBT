@@ -91,6 +91,6 @@ public abstract class SharedVariable
 			Setter=(evt)=>other.Value=evt;
 		}
 		[SerializeField]
-		public T value;
+		protected T value;
 	} 
 }

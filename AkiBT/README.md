@@ -22,85 +22,6 @@
 * 设置Root结点为不可删除防止无法恢复
   
 #
-## 特性Attributes
-
-1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中
-```C#
-  [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
-public class NavmeshStopAgent : Action
-{
-    private NavMeshAgent _navMeshAgent;
-    [SerializeField]
-    private bool isStopped;
-    protected override Status OnUpdate()
-    {
-        if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped)
-        {
-            _navMeshAgent.isStopped=isStopped;
-        }
-        return Status.Success;
-    }
-    public override void Awake()
-    {
-        _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
-    }
-    
-    }
-```
-<img src="Images/InfoAttribute.png" />
-
-2. 增加了Label特性用以替换编辑器中的结点名称
-   
-```C#
-[AkiLabel("NavmeshStopAgent设置停止移动")]
-public class NavmeshStopAgent : Action
-{
-    private NavMeshAgent _navMeshAgent;
-    [SerializeField]
-    private bool isStopped;
-    protected override Status OnUpdate()
-    {
-        if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped)
-        {
-            _navMeshAgent.isStopped=isStopped;
-        }
-        return Status.Success;
-    }
-    public override void Awake()
-    {
-        _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
-    }
-    
-    }
-```
-<img src="Images/AkiLabel.png" />
-
-3. 增加了Group特性用以对结点进行分类
-
-```c#
-[AkiGroup("Animator")]
-    public class AnimatorSetBool : AnimatorAction
-    {
-        [SerializeField]
-        private string parameter;
-        
-
-        [SerializeField]
-        private bool status;
-        private int parameterHash;
-        public override void Start() {
-            parameterHash=Animator.StringToHash(parameter);
-        }
-        protected override Status OnUpdate()
-        {
-            animator.SetBool(parameterHash,status);
-            return Status.Success;
-        }
-    }
-```
-<img src="Images/AkiGroup.png" />
-
-#
 
 ## 保存功能Save Function
 
@@ -109,6 +30,10 @@ public class NavmeshStopAgent : Action
 
 2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,“保存行为树”和“自动保存”不会将修改后的行为树同步到ScriptableObject,你可以再次点击“保存到SO”进行覆盖
 <img src="Images/External.png" />
+
+3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！
+   
+<img src="Images/OpenSO.png" />
 
 #
 ## 新的结点类型New Node Type
@@ -141,6 +66,88 @@ public class WaitSuccess : Decorator
 * 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
 
 <img src="Images/Operator.png" />
+
+2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换
+
+#
+## 特性Attributes
+
+1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中
+```C#
+  [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
+public class NavmeshStopAgent : Action
+{
+    private NavMeshAgent _navMeshAgent;
+    [SerializeField]
+    private bool isStopped;
+    protected override Status OnUpdate()
+    {
+        if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped)
+        {
+            _navMeshAgent.isStopped=isStopped;
+        }
+        return Status.Success;
+    }
+    public override void Awake()
+    {
+        _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
+    }
+    
+    }
+```
+<img src="Images/InfoAttribute.png" />
+
+1. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称
+   
+```C#
+[AkiLabel("NavmeshStopAgent设置停止移动")]
+public class NavmeshStopAgent : Action
+{
+    private NavMeshAgent _navMeshAgent;
+    [SerializeField,AkiLabel("是否停止")]
+    private bool isStopped;
+    protected override Status OnUpdate()
+    {
+        if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped)
+        {
+            _navMeshAgent.isStopped=isStopped;
+        }
+        return Status.Success;
+    }
+    public override void Awake()
+    {
+        _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
+    }
+    
+    }
+```
+<img src="Images/AkiLabel.png" />
+
+3. 增加了Group特性用以对结点进行分类
+
+```c#
+    [AkiGroup("Animator")]
+    public class AnimatorSetBool : AnimatorAction
+    {
+        [SerializeField]
+        private string parameter;
+        
+
+        [SerializeField]
+        private bool status;
+        private int parameterHash;
+        public override void Start() {
+            parameterHash=Animator.StringToHash(parameter);
+        }
+        protected override Status OnUpdate()
+        {
+            animator.SetBool(parameterHash,status);
+            return Status.Success;
+        }
+    }
+```
+<img src="Images/AkiGroup.png" />
+
 
 #
 # 使用方式(修改自原作者简介)

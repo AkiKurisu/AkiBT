@@ -1,8 +1,12 @@
 {
-    "name": "Kurisu.BehaviorTree",
+    "name": "Kurisu.AkiBT.Editor",
     "rootNamespace": "",
-    "references": [],
-    "includePlatforms": [],
+    "references": [
+        "Kurisu.AkiBT"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

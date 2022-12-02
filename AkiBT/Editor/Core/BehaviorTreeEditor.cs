@@ -2,21 +2,24 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
-using System.Reflection;
 namespace Kurisu.AkiBT.Editor
 {
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        FieldResolverFactory fieldResolverFactory=new FieldResolverFactory();
+        const string labelText="AkiBT 行为树 Version1.1";
+        protected virtual string LabelText=>labelText;
+        const string buttonText="打开行为树";
+        protected virtual string ButtonText=>buttonText;
+        protected VisualElement myInspector;
         public override VisualElement CreateInspectorGUI()
         {
             
             // Create a new VisualElement to be the root of our inspector UI
-            VisualElement myInspector = new VisualElement();
-            var bt = target as BehaviorTree;
+            myInspector = new VisualElement();
+            var bt = target as IBehaviorTree;
             // Add a simple label
-            var label=new Label("AkiBT 行为树 Version1.0");
+            var label=new Label(LabelText);
             label.style.fontSize=20;
             myInspector.Add(label);
             myInspector.styleSheets.Add((StyleSheet)AssetDatabase.LoadAssetAtPath("Assets/Gizmos/AkiBT/Inspector.uss", typeof(StyleSheet)));
@@ -51,7 +54,7 @@ namespace Kurisu.AkiBT.Editor
             if(!Application.isPlaying)
             {
                 button.style.backgroundColor=new StyleColor(new Color(140/255f, 160/255f, 250/255f));
-                button.text="打开行为树";
+                button.text=ButtonText;
             }
                 
             else
@@ -64,6 +67,15 @@ namespace Kurisu.AkiBT.Editor
             return myInspector;
         }
        
+    }
+    [CustomEditor(typeof(BehaviorTreeSO))]
+    public class BehaviorTreeSOEditor : BehaviorTreeEditor
+    {
+        const string labelText="AkiBT 行为树SO";
+        protected override string LabelText=>labelText;
+        const string buttonText="打开行为树SO";
+        protected override string ButtonText=>buttonText;
+      
     }
 
 }

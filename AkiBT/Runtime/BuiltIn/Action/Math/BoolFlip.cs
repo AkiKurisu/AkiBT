@@ -1,0 +1,20 @@
+using UnityEngine;
+namespace Kurisu.AkiBT.Extend
+{
+    [AkiInfo("Action:Bool类型反转")]
+    [AkiLabel("Math:BoolFlip")]
+    [AkiGroup("Math")]
+public class BoolFlip : Action
+{
+    [SerializeField]
+    private SharedBool boolToFlip=new SharedBool();
+    public override void Awake() {
+        boolToFlip.GetValueFromTree(tree);
+    }
+    protected override Status OnUpdate()
+    {
+        boolToFlip.Value=!boolToFlip.Value;
+        return Status.Success;
+    }
+}
+}

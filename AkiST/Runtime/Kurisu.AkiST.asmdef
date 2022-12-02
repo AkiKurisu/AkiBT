@@ -1,12 +1,10 @@
 {
-    "name": "Kurisu.BehaviorTree.Editor",
-    "rootNamespace": "",
+    "name": "Kurisu.AkiST",
+    "rootNamespace": "Kurisu.AkiST",
     "references": [
-        "Kurisu.BehaviorTree"
+        "GUID:4a9214fa9d60c4c92bfc3c635010f27f"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

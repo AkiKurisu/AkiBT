@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT.Editor
             }
         }
         public Blackboard _blackboard;
-        private readonly BehaviorTree behaviorTree;
+        private readonly IBehaviorTree behaviorTree;
         private RootNode root;
         public List<SharedVariable> ExposedProperties=new List<SharedVariable>();
         private FieldResolverFactory fieldResolverFactory = new FieldResolverFactory();
@@ -37,6 +37,8 @@ namespace Kurisu.AkiBT.Editor
             get=>behaviorTree.SavePath;
             set=>behaviorTree.SavePath=value;
         }
+        public bool IsTree=>behaviorTree is BehaviorTree;
+        protected virtual string treeEditorName=>"AkiBT";
         private readonly NodeResolver nodeResolver = new NodeResolver();
         /// <summary>
         /// 结点选择委托
@@ -46,7 +48,7 @@ namespace Kurisu.AkiBT.Editor
         /// 黑板
         /// </summary>
         /// <returns></returns>
-        public BehaviorTreeView(BehaviorTree bt, EditorWindow editor)
+        public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
         {
             behaviorTree = bt;
             style.flexGrow = 1;
@@ -110,14 +112,12 @@ namespace Kurisu.AkiBT.Editor
                     localPropertyName = $"{localPropertyName}(1)";
                 
             }
-            //这里修改前后是同一个类！因此即使不保存也会修改，存在问题！
             variable.Name=localPropertyName;
             ExposedProperties.Add(variable);
-            //
             var container = new VisualElement();
             var field = new BlackboardField {text = localPropertyName, typeText = variable.GetType().Name};
             container.Add(field);
-            FieldInfo info=variable.GetType().GetField("value");//反射获取FieldInfo
+            FieldInfo info=variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public);//反射获取FieldInfo
             var fieldResolver = fieldResolverFactory.Create(info);//工厂创建暴露引用
             var valueField=fieldResolver.GetEditorField(ExposedProperties,variable);
             var sa = new BlackboardRow(field, valueField);
@@ -215,9 +215,11 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            foreach(var variable in behaviorTree.SharedVariables)
+            IBehaviorTree tree=behaviorTree;
+            if(behaviorTree.ExternalBehaviorTree!=null)tree=behaviorTree.ExternalBehaviorTree;
+            foreach(var variable in tree.SharedVariables)
             {
-                    AddPropertyToBlackBoard(variable,true);
+                AddPropertyToBlackBoard(variable,true);
             }
         }
 
@@ -229,11 +231,11 @@ namespace Kurisu.AkiBT.Editor
             {
                 Commit();
                 if(autoSave)
-                    Debug.Log($"<color=#3aff48>AkiBT</color>自动保存成功{System.DateTime.Now.ToString()}");
+                    Debug.Log($"<color=#3aff48>{treeEditorName}</color>自动保存成功{System.DateTime.Now.ToString()}");
                 return true;
             }
             if(autoSave)
-                Debug.Log($"<color=#ff2f2f>AkiBT</color>自动保存失败{System.DateTime.Now.ToString()}");
+                Debug.Log($"<color=#ff2f2f>{treeEditorName}</color>自动保存失败{System.DateTime.Now.ToString()}");
             return false;
         }
 
@@ -272,7 +274,7 @@ namespace Kurisu.AkiBT.Editor
                 behaviorTree.SharedVariables.Add(sharedVariable);
             }
             // notify to unity editor that the tree is changed.
-            EditorUtility.SetDirty(behaviorTree);
+            EditorUtility.SetDirty(behaviorTree._Object);
         }
         public void Commit(BehaviorTreeSO treeSO)
         {
@@ -287,7 +289,11 @@ namespace Kurisu.AkiBT.Editor
             }
             
             root.PostCommit(treeSO);
-            
+            treeSO.SharedVariables.Clear();
+            foreach(var sharedVariable in ExposedProperties)
+            {
+                treeSO.SharedVariables.Add(sharedVariable);
+            }
             // notify to unity editor that the tree is changed.
             EditorUtility.SetDirty(treeSO);
         }
