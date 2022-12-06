@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT.Extend
         private Operation operation;
         public override void Awake()
         {
-           randomVector3.GetValueFromTree(tree);
+           InitVariable(randomVector3);
         }
         protected override Status OnUpdate()
         {

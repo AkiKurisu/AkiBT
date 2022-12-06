@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT
     [AkiLabel("Sequence序列")]
     public class Sequence : Composite
     {
-        [SerializeField]
+        [SerializeField,AkiLabel("在判断改变时打断子结点")]
         private bool abortOnConditionChanged = true;
 
         private NodeBehavior runningNode;

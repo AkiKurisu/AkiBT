@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT
     [AkiLabel("Selector选择")]
     public class Selector : Composite
     {
-        [SerializeField]
+        [SerializeField,AkiLabel("在判断改变时打断子结点")]
         private bool abortOnConditionChanged = true;
 
         private NodeBehavior runningNode;

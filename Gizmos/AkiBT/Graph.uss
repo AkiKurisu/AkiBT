@@ -9,3 +9,6 @@ Label
 {
     min-width:10px;
 }
+:root {
+    -unity-font-definition: url('project://database/Assets/Gizmos/AkiBT/Font.asset');
+}

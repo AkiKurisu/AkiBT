@@ -24,13 +24,10 @@ namespace Kurisu.AkiBT.Extend
         private SharedInt storeResult=new SharedInt();
         [SerializeField]
         private Operation operation;
-        
-            
-      
         public override void Awake() {
-            int1.GetValueFromTree(tree);
-            int2.GetValueFromTree(tree);
-            storeResult.GetValueFromTree(tree);
+            InitVariable(int1);
+            InitVariable(int2);
+            InitVariable(storeResult);     
         }
         protected override Status OnUpdate()
         {

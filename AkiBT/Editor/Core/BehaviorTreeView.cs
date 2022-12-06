@@ -24,9 +24,10 @@ namespace Kurisu.AkiBT.Editor
         }
         public Blackboard _blackboard;
         private readonly IBehaviorTree behaviorTree;
-        private RootNode root;
+        protected RootNode root;
         public List<SharedVariable> ExposedProperties=new List<SharedVariable>();
         private FieldResolverFactory fieldResolverFactory = new FieldResolverFactory();
+        protected NodeSearchWindowProvider provider;
         public bool AutoSave
         {
             get=>behaviorTree.AutoSave;
@@ -69,7 +70,7 @@ namespace Kurisu.AkiBT.Editor
             this.AddManipulator(new FreehandSelector());
             this.AddManipulator(contentDragger);
 
-            var provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
+            provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
             provider.Initialize(this, editor);
 
             nodeCreationRequest += context =>
@@ -239,7 +240,7 @@ namespace Kurisu.AkiBT.Editor
             return false;
         }
 
-        private bool Validate()
+        protected virtual bool Validate()
         {
             //validate nodes by DFS.
             var stack = new Stack<BehaviorTreeNode>();

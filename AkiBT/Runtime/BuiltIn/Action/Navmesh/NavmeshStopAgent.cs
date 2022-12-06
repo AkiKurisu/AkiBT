@@ -21,7 +21,7 @@ public class NavmeshStopAgent : Action
     public override void Awake()
     {
         _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
-        isStopped.GetValueFromTree(tree);
+        InitVariable(isStopped);
     }
     
     }

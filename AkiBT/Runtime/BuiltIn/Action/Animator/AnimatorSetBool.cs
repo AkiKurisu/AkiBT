@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT.Extend
         private int parameterHash;
         public override void Start() {
             parameterHash=Animator.StringToHash(parameter);
-            status.GetValueFromTree(tree);
+            InitVariable(status);
         }
         protected override Status OnUpdate()
         {

@@ -1,3 +1,6 @@
+:root {
+    -unity-font-definition: url('project://database/Assets/Gizmos/AkiBT/Font.asset');
+}
 CompositeNode #title {
     background-color: rgba(76, 255, 85, 0.91);
     color: white;
@@ -10,7 +13,6 @@ CompositeNode #title {
 .unity-base-field__label
 {
     min-width:20px;
-    
 }
 #unity-text-input
 {

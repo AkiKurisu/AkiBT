@@ -1,4 +1,3 @@
-using Kurisu.AkiBT;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
@@ -22,7 +21,7 @@ namespace Kurisu.AkiBT
         private bool operateWhenUpdate;
         public override void Awake()
         {
-           randomInt.GetValueFromTree(tree);
+           InitVariable(randomInt);
         }
         public override void Start() {
             base.Start();

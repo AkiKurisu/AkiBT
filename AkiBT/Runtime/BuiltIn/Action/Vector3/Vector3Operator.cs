@@ -18,9 +18,9 @@ public class Vector3Operator : Action
         public SharedVector3 secondVector3=new SharedVector3();
         public SharedVector3 storeResult=new SharedVector3();
         public override void Awake() {
-            firstVector3.GetValueFromTree(tree);
-            secondVector3.GetValueFromTree(tree);
-            storeResult.GetValueFromTree(tree);
+            InitVariable(firstVector3);
+            InitVariable(secondVector3);
+            InitVariable(storeResult);  
         }
         protected override Status OnUpdate()
         {

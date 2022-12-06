@@ -13,6 +13,7 @@ namespace Kurisu.AkiBT.Editor
         private EditorWindow graphEditor;
         private readonly NodeResolver nodeResolver = new NodeResolver();
         private Texture2D _indentationIcon;
+        private List<string> canShowNodeTypes;
         public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor)
         {
             this.graphView = graphView;
@@ -21,7 +22,10 @@ namespace Kurisu.AkiBT.Editor
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
         }
-
+        public void SetShowNodeTypes(List<string> canShowNodeTypes)
+        {
+            this.canShowNodeTypes=canShowNodeTypes;
+        }
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
@@ -46,7 +50,7 @@ namespace Kurisu.AkiBT.Editor
                             }
                             else
                             {
-                                attributeDict.Add(array[0].Group,new List<Type>(){type});
+                                if(canShowNodeTypes!=null&&canShowNodeTypes.Contains(array[0].Group))attributeDict.Add(array[0].Group,new List<Type>(){type});
                             }
                             nodeTypes.Remove(type);
                         }
@@ -169,7 +173,6 @@ namespace Kurisu.AkiBT.Editor
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
         }
-
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
@@ -192,7 +195,7 @@ namespace Kurisu.AkiBT.Editor
                             }
                             else
                             {
-                                attributeDict.Add(array[0].Group,new List<Type>(){type});
+                               attributeDict.Add(array[0].Group,new List<Type>(){type});
                             }
                             nodeTypes.Remove(type);
                         }

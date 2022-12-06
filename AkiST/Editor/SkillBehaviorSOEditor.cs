@@ -3,6 +3,7 @@ using UnityEditor.UIElements;
 using UnityEditor;
 using UnityEngine;
 using Kurisu.AkiBT;
+using System.Linq;
 using System.Reflection;
 
 namespace Kurisu.AkiST.Editor
@@ -60,8 +61,8 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
             VisualElement inspectorFoldout = new VisualElement();
             inspectorFoldout.Add(new Label(Skill_Config));
             InspectorElement.FillDefaultInspector(inspectorFoldout, serializedObject, this);
-            
-            var fields=target.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+            var fields=target.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(field => field.GetCustomAttribute<SerializeField>() != null);
             foreach(var field in fields)
             {
                 AkiLabel newLabel= field.GetCustomAttribute<AkiLabel>();

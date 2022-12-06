@@ -19,9 +19,8 @@ namespace Kurisu.AkiBT.Extend
         private Operation operation;
         protected override void OnStart()
         {
-            base.OnStart();
-            bool1.GetValueFromTree(tree);
-            bool2.GetValueFromTree(tree);
+            InitVariable(bool1);
+            InitVariable(bool2);
         }
         protected override bool IsUpdatable()
         {

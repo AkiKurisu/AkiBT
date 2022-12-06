@@ -20,9 +20,9 @@ namespace Kurisu.AkiBT.Extend
         [SerializeField]
         private Operation operation;
         public override void Awake() {
-            bool1.GetValueFromTree(tree);
-            bool2.GetValueFromTree(tree);
-            storeResult.GetValueFromTree(tree);     
+            InitVariable(bool1);
+            InitVariable(bool2);
+            InitVariable(storeResult);  
         }
         protected override Status OnUpdate()
         {

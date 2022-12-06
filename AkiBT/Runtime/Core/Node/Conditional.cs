@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT
         /// <summary>
         /// 子结点运行时是否要继续判断
         /// </summary>
-        [SerializeField,Tooltip("勾选后子结点运行时,该判断仍会继续计算")] 
+        [SerializeField,AkiLabel("在子结点运行时继续判断")] 
         private bool evaluateOnRunning = false;
 
         [SerializeReference]
@@ -46,7 +46,7 @@ namespace Kurisu.AkiBT
         {
         }
 
-        public sealed override void Start()
+        public override void Start()
         {
             OnStart();
             child?.Start();

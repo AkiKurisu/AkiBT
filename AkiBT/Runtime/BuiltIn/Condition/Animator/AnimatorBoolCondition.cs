@@ -15,9 +15,8 @@ namespace Kurisu.AkiBT.Extend
         private int parameterHash;
         protected override void OnStart()
         {
-            base.OnStart();
             parameterHash=Animator.StringToHash(parameter);
-            storeResult.GetValueFromTree(tree);
+            InitVariable(storeResult);
         }
         protected override bool IsUpdatable()
         {

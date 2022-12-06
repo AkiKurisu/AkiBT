@@ -65,7 +65,13 @@ public class SkillSystem : MonoBehaviour
 ```
 
 ## 注意事项General Note
-* 和行为树不同,由于是完全在SO文件中运行,技能树的退出需要使用Action结点SkillExit放在所有逻辑的末尾来保证逻辑执行完后从技能系统中注销。
+* 和行为树不同,由于是完全在SO文件中运行,技能树的退出需要额外操作。
+* 可以使用SkillExit结点放在所有逻辑的末尾来保证逻辑执行完后退出技能
   
+<img src="Images/Type2.png" />
+
+* 可以使用SkillSequence结点替换普通序列,从而在所有子结点运行第一次运行完后自动退出技能。
+
+<img src="Images/Type1.png" />
   
 

@@ -7,3 +7,6 @@ Label
 {
     white-space: normal 
 }
+:root {
+    -unity-font-definition: url('project://database/Assets/Gizmos/AkiBT/Font.asset');
+}

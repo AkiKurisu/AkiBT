@@ -5,13 +5,11 @@ namespace Kurisu.AkiBT.Extend
     [AkiLabel("Time:Wait")]
     public class TimeWait : Action
     {
-        [SerializeField]
+        [SerializeField,AkiLabel("等待时间")]
         private SharedFloat waitTime=new SharedFloat(); 
-        [SerializeField]
-        private SharedFloat sharedTimer=new SharedFloat();  
+        private float timer;
         public override void Awake() {
-            sharedTimer.GetValueFromTree(tree);
-            waitTime.GetValueFromTree(tree);
+            InitVariable(waitTime);
         }
         protected override Status OnUpdate()
         {
@@ -26,21 +24,13 @@ namespace Kurisu.AkiBT.Extend
         }
         void AddTimer()
         {
-             if(sharedTimer!=null)
-                sharedTimer.Value+=Time.deltaTime;
+             timer+=Time.deltaTime;
         }
         void ClearTimer()
         {
-             if(sharedTimer!=null)
-                sharedTimer.Value=0;
+             timer=0;
         }
-        bool IsAlready()
-        {
-            if(sharedTimer!=null)
-                return sharedTimer.Value>waitTime.Value;
-            else
-                return true;
-        }
+        bool IsAlready()=>timer>waitTime.Value;
         public override void Abort()
         {
             ClearTimer();

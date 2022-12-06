@@ -19,7 +19,7 @@ public class IntRandom : Action
         private Operation operation;
         public override void Awake()
         {
-           randomInt.GetValueFromTree(tree);
+           InitVariable(randomInt);
         }
         protected override Status OnUpdate()
         {

@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using System.Linq;
 using Kurisu.AkiBT;
 using Kurisu.AkiBT.Editor;
@@ -48,7 +47,7 @@ public class SkillEditorWindow : EditorWindow
         {
             window.rootVisualElement.Clear();
             window.graphView = new SkillTreeView(behaviorTree, window);
-            window.infoView=new InfoView("欢迎使用AkiST,针对技能优化的技能树!");
+            window.infoView=new InfoView("欢迎使用AkiST,一个针对技能系统优化的行为树版本!");
             window.infoView.styleSheets.Add((StyleSheet)AssetDatabase.LoadAssetAtPath("Assets/Gizmos/AkiBT/Info.uss", typeof(StyleSheet)));
             window.graphView.Add( window.infoView);
             window.graphView.onSelectAction=window.OnNodeSelectionChange;//绑定委托

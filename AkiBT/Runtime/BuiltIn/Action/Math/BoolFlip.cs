@@ -9,7 +9,7 @@ public class BoolFlip : Action
     [SerializeField]
     private SharedBool boolToFlip=new SharedBool();
     public override void Awake() {
-        boolToFlip.GetValueFromTree(tree);
+        InitVariable(boolToFlip);
     }
     protected override Status OnUpdate()
     {

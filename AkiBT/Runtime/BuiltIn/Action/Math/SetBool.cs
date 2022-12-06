@@ -11,7 +11,7 @@ public class SetBool : Action
     [SerializeField]
     private bool setValue;
     public override void Awake() {
-        boolToSet.GetValueFromTree(tree);
+        InitVariable(boolToSet);
     }
     protected override Status OnUpdate()
     {

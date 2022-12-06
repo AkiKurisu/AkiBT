@@ -23,9 +23,8 @@ namespace Kurisu.AkiBT.Extend
         private Operation operation;
         protected override void OnStart()
         {
-            base.OnStart();
-            float1.GetValueFromTree(tree);
-            float2.GetValueFromTree(tree);
+            InitVariable(float1);
+            InitVariable(float2);
         }
         protected override bool IsUpdatable()
         {
