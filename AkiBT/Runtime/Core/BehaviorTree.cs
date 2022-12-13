@@ -10,7 +10,6 @@ namespace Kurisu.AkiBT
        Manual
     }
     [DisallowMultipleComponent]
-    //[IconAttribute("Assets/Gizmos/AkiBT/Icon.jpg")] 
     /// <summary>
     /// 行为树
     /// </summary>

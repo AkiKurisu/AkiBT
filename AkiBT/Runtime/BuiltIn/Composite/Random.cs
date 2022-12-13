@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT
             {
                 return HandleStatus(runningNode.Update(), runningNode);
             }
-
+            
             var result = UnityEngine.Random.Range(0, Children.Count);
             var target = Children[result];
             return HandleStatus(target.Update(), target);

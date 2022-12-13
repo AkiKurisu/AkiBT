@@ -3,7 +3,7 @@ using System;
 namespace Kurisu.AkiBT
 {
     /// <summary>
-    /// 行为结点在编辑器下拉菜单中进行分类
+    /// 行为结点在编辑器下拉菜单中进行分类,可以用'/'符号进行子分类
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class AkiGroup : Attribute
@@ -21,6 +21,8 @@ namespace Kurisu.AkiBT
         {
             this.mGroup=group;
         }
+
+	
     }
 
 }

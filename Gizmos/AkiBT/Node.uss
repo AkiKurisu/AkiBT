@@ -14,11 +14,16 @@ CompositeNode #title {
 {
     min-width:20px;
 }
+.unity-base-field
+{
+    flex-basis:auto;
+    min-width:80px;
+}
 #unity-text-input
 {
     min-width:50px;
-    
 }
+
 SharedFloatField
 {
     flex-direction:column

@@ -146,14 +146,18 @@ public class NavmeshStopAgent : Action
         }
     }
 ```
+
 <img src="Images/AkiGroup.png" />
 
+## 更新内容：在1.2版本你可以使用'/'符号进行子分类
+
+<img src="Images/SubCategories.png" />
 
 #
 # 使用方式(修改自原作者简介)
 
 <img src="Images/demo.jpg" />
-1. [Download](https://github.com/yoshidan/UniBT/releases) 直接下载，导入项目中
+1. [Download](https://github.com/AkiKurisu/AkiBT/releases) 直接下载，导入项目中
 
 
 2. Add `AkiBT.BehaviorTree` component for any GameObject.  

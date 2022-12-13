@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-
+using System.Linq;
 namespace Kurisu.AkiBT.Editor
 {
     public class NodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider
@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT.Editor
         private EditorWindow graphEditor;
         private readonly NodeResolver nodeResolver = new NodeResolver();
         private Texture2D _indentationIcon;
-        private List<string> canShowNodeTypes;
+        private string[] showGroupNames;
         public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor)
         {
             this.graphView = graphView;
@@ -22,131 +22,35 @@ namespace Kurisu.AkiBT.Editor
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
         }
-        public void SetShowNodeTypes(List<string> canShowNodeTypes)
+        public void SetShowGroupNames(string[] showGroupNames)
         {
-            this.canShowNodeTypes=canShowNodeTypes;
+            this.showGroupNames=showGroupNames;
         }
+        static readonly Type[] _Types={typeof(Action),typeof(Conditional),typeof(Composite),typeof(Decorator)};
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
             entries.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"),0));
-            List<Type> nodeTypes=new List<Type>();
-            Dictionary<string,List<Type>> attributeDict=new Dictionary<string, List<Type>>();
-            //遍历全部把Action Conditional Composite加入列表
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            List<Type> nodeTypes =SearchUtility.FindSubClassTypes(_Types);
+            var groups=nodeTypes.GroupsByAkiGroup();;
+            nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();
+            groups=groups.SelectString(showGroupNames);
+            foreach(var _type in _Types)  
             {
-                foreach (var type in assembly.GetTypes())
+                entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {_type.Name}"),1));
+                var group=groups.SelectFather(_type);
+                foreach(var subGroup in group)
                 {
-                    if ((type.IsSubclassOf(typeof(Action))|type.IsSubclassOf(typeof(Conditional))|type.IsSubclassOf(typeof(Composite))|type.IsSubclassOf(typeof(Decorator)))&&
-                    !type.IsAbstract)
-                    {
-                        nodeTypes.Add(type);
-                        AkiGroup[] array;
-                        if ((array = (type.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[])).Length > 0)
-                        {
-                            if(attributeDict.ContainsKey(array[0].Group))
-                            {
-                                attributeDict[array[0].Group].Add(type);
-                            }
-                            else
-                            {
-                                if(canShowNodeTypes!=null&&canShowNodeTypes.Contains(array[0].Group))attributeDict.Add(array[0].Group,new List<Type>(){type});
-                            }
-                            nodeTypes.Remove(type);
-                        }
-                    }
+                    entries.AddAllEntries(subGroup,_indentationIcon,2);
                 }
-            }
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Action"),1));     
-            foreach(string group in attributeDict.Keys)
-            {
-                bool needGroup=false;
-                foreach(Type type in attributeDict[group])
+                var left=nodeTypes.Where(x=>x.IsSubclassOf(_type));
+                foreach(Type type in left)
                 {
-                    if(type.IsSubclassOf(typeof(Action)))
-                    {
-                        if(!needGroup)entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),2));
-                        needGroup=true;
-                        entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 3, userData = type });
-                    }
-                }
-            }
-            foreach(Type nodeType in nodeTypes)
-            {
-                if (nodeType.IsSubclassOf(typeof(Action)))
-                {
-                    entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
-                }
-            }
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Condition"),1));
-            
-            foreach(string group in attributeDict.Keys)
-            {
-                bool needGroup=false;
-                foreach(Type type in attributeDict[group])
-                {
-                    if(type.IsSubclassOf(typeof(Conditional)))
-                    {
-                        if(!needGroup)entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),2));
-                        needGroup=true;
-                        entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 3, userData = type });
-                    }
-                }
-            }
-            foreach(Type nodeType in nodeTypes)
-            {
-                if (nodeType.IsSubclassOf(typeof(Conditional)))
-                {
-                    entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
-                }
-            }
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Composite"),1));
-            
-            foreach(string group in attributeDict.Keys)
-            {
-                bool needGroup=true;
-                foreach(Type type in attributeDict[group])
-                {
-                    if(type.IsSubclassOf(typeof(Composite)))
-                    {
-                        if(!needGroup)entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),2));
-                        needGroup=true;
-                        entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 3, userData = type });
-                    }
-                }
-            }
-            foreach(Type nodeType in nodeTypes)
-            {
-                if (nodeType.IsSubclassOf(typeof(Composite)))
-                {
-                    entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
-                }
-            }
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Select Decorator"),1));
-            
-            foreach(string group in attributeDict.Keys)
-            {
-                bool needGroup=false;
-                foreach(Type type in attributeDict[group])
-                {
-                    if(type.IsSubclassOf(typeof(Decorator)))
-                    {
-                        if(!needGroup)entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),2));
-                        needGroup=true;
-                        entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 3, userData = type });
-                    }
-                }
-            }
-            foreach(Type nodeType in nodeTypes)
-            {
-                if (nodeType.IsSubclassOf(typeof(Decorator)))
-                {
-                    entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 2, userData = nodeType });
+                    entries.AddEntry(type,2,_indentationIcon);
                 }
             }
             return entries;
         }
-
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
             var type = searchTreeEntry.userData as Type;
@@ -155,7 +59,6 @@ namespace Kurisu.AkiBT.Editor
             var localMousePosition = this.graphView.contentViewContainer.WorldToLocal(worldMousePosition);
             node.SetPosition(new Rect(localMousePosition, new Vector2(100, 100)));
             this.graphView.AddElement(node);
-            //修改新的Node结点部分
             node.onSelectAction=graphView.onSelectAction;
             return true;
         }
@@ -164,7 +67,6 @@ namespace Kurisu.AkiBT.Editor
     public class CertainNodeSearchWindowProvider<T> : ScriptableObject, ISearchWindowProvider where T:NodeBehavior
     {
         private BehaviorTreeNode node;
-        protected virtual string nodeName{get;}
         private Texture2D _indentationIcon;
         public void Init(BehaviorTreeNode node)
         {
@@ -177,45 +79,18 @@ namespace Kurisu.AkiBT.Editor
         {
             var entries = new List<SearchTreeEntry>();
             Dictionary<string,List<Type>> attributeDict=new Dictionary<string, List<Type>>();
-            List<Type> nodeTypes=new List<Type>();
-            entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {nodeName}"),0));
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {typeof(T).Name}"),0));
+            List<Type> nodeTypes =SearchUtility.FindSubClassTypes(typeof(T));
+            var groups=nodeTypes.GroupsByAkiGroup();//按AkiGroup进行分类
+            nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();//去除被分类的部分
+            foreach(var group in groups)
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (type.IsSubclassOf(typeof(T))&& !type.IsAbstract)
-                    {
-                        nodeTypes.Add(type);
-                        AkiGroup[] array;
-                        if ((array = (type.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[])).Length > 0)
-                        {
-                            if(attributeDict.ContainsKey(array[0].Group))
-                            {
-                                attributeDict[array[0].Group].Add(type);
-                            }
-                            else
-                            {
-                               attributeDict.Add(array[0].Group,new List<Type>(){type});
-                            }
-                            nodeTypes.Remove(type);
-                        }
-                    }
-                }
+                entries.AddAllEntries(group,_indentationIcon,1);
             }
-            foreach(string group in attributeDict.Keys)
+            foreach(Type type in nodeTypes)
             {
-                bool needGroup=false;
-                foreach(Type type in attributeDict[group])
-                {
-                    
-                    if(!needGroup)entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group}"),1));
-                    needGroup=true;
-                    entries.Add(new SearchTreeEntry(new GUIContent(type.Name,_indentationIcon)) { level = 2, userData = type });
-                }
-            }
-            foreach(Type nodeType in nodeTypes)
-            {
-                entries.Add(new SearchTreeEntry(new GUIContent(nodeType.Name,_indentationIcon)) { level = 1, userData = nodeType });
+                entries.AddEntry(type,1,_indentationIcon);
             }
             return entries;
         }
@@ -226,6 +101,79 @@ namespace Kurisu.AkiBT.Editor
             this.node.SetBehavior(type);
             return true;
         }
+        
+            
+        }
+    
+    public class SearchUtility
+    {
+        public static List<Type> FindSubClassTypes(Type father)
+        {
+           return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => t.IsSubclassOf(father) && !t.IsAbstract).ToList();
+        }
+       public static List<Type> FindSubClassTypes(Type[] fathers)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                            .SelectMany(a => a.GetTypes())
+                            .Where(t => fathers.Any(f => t.IsSubclassOf(f)))
+                            .Where(t => !t.IsAbstract)
+                            .ToList();
+        }
+        const char Span='/';
+         public static string[] GetSplittedGroupName (string group)
+         {
+            var array=group.Split(Span,StringSplitOptions.RemoveEmptyEntries) ;
+            return array.Length>0?array: new string[1]{group};
+         }
+        
+        
+    
+    }
+    public static class SearchExtension
+    {
+        public static IEnumerable<IGrouping<string, Type>> GroupsByAkiGroup(this IEnumerable<Type> types)
+        {
+            return types.GroupBy(t=>
+            {
+                var array=t.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[];
+                return array.Length>0?SearchUtility.GetSplittedGroupName(array[0].Group)[0]:null;
+            }).Where(x=>!string.IsNullOrEmpty(x.Key));
+        }
+        public static IEnumerable<IGrouping<string, Type>> SubGroups(this IGrouping<string, Type>group,int level)
+        {
+            return group.GroupBy(t=>
+            {
+                var array=t.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[];
+                var subcategory=SearchUtility.GetSplittedGroupName(array[0].Group);
+                return subcategory.Length>level?subcategory[level]:null;
+            }).Where(x=>!string.IsNullOrEmpty(x.Key));
+        }
+        public static IEnumerable<IGrouping<string, Type>> SelectFather(this IEnumerable<IGrouping<string, Type>> groups,Type Father)
+        {
+            return groups.SelectMany(x=>x).Where(x => x.IsSubclassOf(Father)).GroupsByAkiGroup();
+        }
+        public static IEnumerable<IGrouping<string, Type>> SelectString(this IEnumerable<IGrouping<string, Type>> groups,string[] showGroupNames)
+        {
+            return showGroupNames!=null?groups.Where(x=>showGroupNames.Any(a=>a==x.Key)):groups;
 
+        }
+        public static void AddEntry(this List<SearchTreeEntry> entries,Type _type,int _level,Texture icon)
+        {
+            entries.Add(new SearchTreeEntry(new GUIContent(_type.Name,icon)) { level = _level, userData = _type });
+        }
+        public static void AddAllEntries(this List<SearchTreeEntry> entries, IGrouping<string, Type> group,Texture icon,int level,int subCount=1)
+        {
+                entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group.Key}"),level));
+                var subGroups=group.SubGroups(subCount);
+                var left=group.Except(subGroups.SelectMany(x=>x));
+                foreach(var subGroup in subGroups)
+                {
+                    entries.AddAllEntries(subGroup,icon,level+1,subCount+1);
+                }
+                foreach(Type type in left)
+                {
+                    entries.AddEntry(type,level+1,icon);
+                }
+        }
     }
 }
