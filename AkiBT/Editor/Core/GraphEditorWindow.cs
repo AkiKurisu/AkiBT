@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using System.Linq;
 namespace Kurisu.AkiBT.Editor
 {
@@ -72,11 +71,12 @@ namespace Kurisu.AkiBT.Editor
                 menu.AddItem(new GUIContent($"Vector3"), false, () => _graphView.AddPropertyToBlackBoard(new SharedVector3(), false));
                 menu.ShowAsContext();
             };
+
             blackboard.editTextRequested = (_blackboard, element, newValue) =>
             {
                 var oldPropertyName = ((BlackboardField) element).text;
                 var index= _graphView.ExposedProperties.FindIndex(x=>x.Name==oldPropertyName);
-                if(newValue=="")
+                if(string.IsNullOrEmpty(newValue))
                 {
                    blackboard.contentContainer.RemoveAt(index+1);
                    _graphView.ExposedProperties.RemoveAt(index);

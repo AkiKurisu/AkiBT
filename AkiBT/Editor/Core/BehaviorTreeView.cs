@@ -117,6 +117,8 @@ namespace Kurisu.AkiBT.Editor
             ExposedProperties.Add(variable);
             var container = new VisualElement();
             var field = new BlackboardField {text = localPropertyName, typeText = variable.GetType().Name};
+            field.capabilities &=~Capabilities.Deletable;//不可删除
+            field.capabilities &=~Capabilities.Movable;//不可移动
             container.Add(field);
             FieldInfo info=variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public);//反射获取FieldInfo
             var fieldResolver = fieldResolverFactory.Create(info);//工厂创建暴露引用
