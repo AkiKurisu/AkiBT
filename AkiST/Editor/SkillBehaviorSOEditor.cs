@@ -5,7 +5,7 @@ using UnityEngine;
 using Kurisu.AkiBT;
 using System.Linq;
 using System.Reflection;
-using Kurisu.AkiBT.Editor;
+
 namespace Kurisu.AkiST.Editor
 {
 [CustomEditor(typeof(SkillTreeSO),true)]
@@ -19,7 +19,6 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
     protected Button button;
     const string Skill_Config="技能配置";
     const string StaticSkillInfo="该技能为静态技能,你无法编辑技能树";
-    private FieldResolverFactory factory=new FieldResolverFactory();
     public override VisualElement CreateInspectorGUI()
     {
             myInspector = new VisualElement();
@@ -39,18 +38,12 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
                 foldout.text="SharedVariables";
                 foreach(var variable in bt.SharedVariables)
                 {
+                    var valueLabel=new Label($"Value  :  {variable.GetValue()}");
                     var grid=new Foldout();
                     grid.text=$"{variable.GetType().Name}  :  {variable.Name}";
+                    grid.style.flexDirection=FlexDirection.Column;
                     grid.value=false;
-                    var content=new VisualElement();
-                    content.style.flexDirection=FlexDirection.Row;
-                    var valueField=factory.Create(variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public)).GetEditorField(bt.SharedVariables,variable);
-                    content.Add(valueField);
-                    var deleteButton=new Button(()=>{ bt.SharedVariables.Remove(variable);foldout.Remove(grid);});
-                    deleteButton.text="Delate";
-                    deleteButton.style.width=50;
-                    content.Add(deleteButton);
-                    grid.Add(content);
+                    grid.Add(valueLabel);
                     foldout.Add(grid);
                 }
                 myInspector.Add(foldout);}

@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Extend
 public class NavmeshStopAgent : Action
 {
     private NavMeshAgent _navMeshAgent;
-    [SerializeField,AkiLabel("是否停止")]
+    [SerializeField]
     private SharedBool isStopped=new SharedBool();
     protected override Status OnUpdate()
     {
