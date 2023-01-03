@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT.Editor
 {
-    public class ConditionalSearchWindowProvider : CertainNodeSearchWindowProvider<Conditional>
+    public sealed class ConditionalSearchWindowProvider : CertainNodeSearchWindowProvider<Conditional>
     {
     }
 }

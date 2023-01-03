@@ -11,7 +11,7 @@ namespace Kurisu.AkiST.Editor
 [CustomEditor(typeof(SkillTreeSO),true)]
 public class SkillBehaviorSOEditor : UnityEditor.Editor
 {
-    const string labelText="AkiST 技能树 Version1.0";
+    const string labelText="AkiST 技能树 Version1.1";
     protected virtual string LabelText=>labelText;
     const string buttonText="打开技能树";  
     protected virtual string ButtonText=>buttonText;
@@ -46,7 +46,13 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
                     content.style.flexDirection=FlexDirection.Row;
                     var valueField=factory.Create(variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public)).GetEditorField(bt.SharedVariables,variable);
                     content.Add(valueField);
-                    var deleteButton=new Button(()=>{ bt.SharedVariables.Remove(variable);foldout.Remove(grid);});
+                    var deleteButton=new Button(()=>{ 
+                        bt.SharedVariables.Remove(variable);
+                        foldout.Remove(grid);
+                        EditorUtility.SetDirty(target);
+                        EditorUtility.SetDirty(this);
+                        AssetDatabase.SaveAssets();
+                        });
                     deleteButton.text="Delate";
                     deleteButton.style.width=50;
                     content.Add(deleteButton);
@@ -55,9 +61,7 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
                 }
                 myInspector.Add(foldout);}
                 button=new Button(()=>{SkillEditorWindow.Show(bt);});
-                RefreshButton();
-                
-                    
+                RefreshButton();    
                 myInspector.Add(button);
             } 
             else
@@ -68,15 +72,35 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
             VisualElement inspectorFoldout = new VisualElement();
             inspectorFoldout.Add(new Label(Skill_Config));
             InspectorElement.FillDefaultInspector(inspectorFoldout, serializedObject, this);
-            var fields=target.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+            var fields=target.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance|BindingFlags.Public)
                 .Where(field => field.GetCustomAttribute<SerializeField>() != null);
             foreach(var field in fields)
-            {
+            {    
                 AkiLabel newLabel= field.GetCustomAttribute<AkiLabel>();
                 if(newLabel!=null)
                 {
                     var pf=inspectorFoldout.Q<PropertyField>($"PropertyField:{field.Name}");
                     pf.label=newLabel.Title;
+                }
+            }
+            foreach(var field in fields)
+            {    
+                AkiFolder newFolder= field.GetCustomAttribute<AkiFolder>();
+                if(newFolder!=null)
+                {
+                    var foldout=inspectorFoldout.Q<Foldout>(newFolder.Folder);
+                    var pf=inspectorFoldout.Q<PropertyField>($"PropertyField:{field.Name}");
+                    int index=pf.parent.IndexOf(pf);
+                    var parent=pf.parent;
+                    parent.Remove(pf);
+                    if(foldout==null)
+                    {
+                        foldout=new Foldout();
+                        foldout.name=newFolder.Folder;
+                        foldout.text=newFolder.Folder;
+                        parent.Insert(index,foldout);
+                    }
+                    foldout.Add(pf);
                 }
             }
 

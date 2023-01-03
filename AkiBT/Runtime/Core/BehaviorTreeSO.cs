@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
@@ -23,7 +22,7 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
             set=>sharedVariables=value;
         #endif
     }
-
+    #if UNITY_EDITOR
     [SerializeField,HideInInspector]
     private bool autoSave;
     [SerializeField,HideInInspector]
@@ -31,23 +30,19 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
     public string SavePath
     {
             get => savePath;
-    #if UNITY_EDITOR
             set => savePath = value;
-    #endif
     }
     public bool AutoSave
     {
-
         get => autoSave;
-#if UNITY_EDITOR
         set => autoSave = value;
-#endif
     }
+    public virtual BehaviorTreeSO ExternalBehaviorTree=>null;
+    #endif
     [HideInInspector]
     [SerializeReference]
     private List<SharedVariable> sharedVariables = new List<SharedVariable>();
     protected Dictionary<string,int>sharedVariableIndex;
-    public virtual BehaviorTreeSO ExternalBehaviorTree=>null;
     /// <summary>
     /// 获取共享变量
     /// </summary>
@@ -75,6 +70,43 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
             Debug.LogError($"没有在行为树中找到共享变量:{name}");
         }
         return null;
+    }
+    #if UNITY_EDITOR
+    void OnValidate()
+    {
+        sharedVariableIndex=new Dictionary<string, int>();
+        for(int i=0;i<this.SharedVariables.Count;i++)
+        {
+            sharedVariableIndex.Add(this.SharedVariables[i].Name,i);
+        }
+    }
+   #else
+    void Awake()
+    {
+        sharedVariableIndex=new Dictionary<string, int>();
+        for(int i=0;i<this.SharedVariables.Count;i++)
+        {
+            sharedVariableIndex.Add(this.SharedVariables[i].Name,i);
+        }
+    }
+   #endif
+    /// <summary>
+    /// 外部传入绑定对象并初始化
+    /// </summary>
+    /// <param name="gameObject"></param>
+    public void Init(GameObject gameObject) {
+        root.Run(gameObject,this);
+        root.Awake();
+        root.Start();
+    } 
+    /// <summary>
+    /// 外部调用Update更新,此方法运行完全基于SO
+    /// </summary>
+    public virtual void Update()
+    {
+        root.PreUpdate();
+        root.Update();
+        root.PostUpdate();
     }
 }
 }

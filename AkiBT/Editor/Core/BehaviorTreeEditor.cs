@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        const string labelText="AkiBT 行为树 Version1.1";
+        const string labelText="AkiBT 行为树 Version1.2";
         protected virtual string LabelText=>labelText;
         const string buttonText="打开行为树";
         protected virtual string ButtonText=>buttonText;
@@ -41,7 +41,13 @@ namespace Kurisu.AkiBT.Editor
                     content.style.flexDirection=FlexDirection.Row;
                     var valueField=factory.Create(variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public)).GetEditorField(bt.SharedVariables,variable);
                     content.Add(valueField);
-                    var deleteButton=new Button(()=>{ bt.SharedVariables.Remove(variable);foldout.Remove(grid);});
+                    var deleteButton=new Button(()=>{ 
+                        bt.SharedVariables.Remove(variable);
+                        foldout.Remove(grid);
+                        EditorUtility.SetDirty(target);
+                        EditorUtility.SetDirty(this);
+                        AssetDatabase.SaveAssets();
+                    });
                     deleteButton.text="Delate";
                     deleteButton.style.width=50;
                     content.Add(deleteButton);

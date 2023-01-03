@@ -17,9 +17,9 @@ namespace Kurisu.AkiBT.Editor
         {
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
             {
-                var provider =ScriptableObject.CreateInstance< DecortaorSearchWindowProvider>();
-                provider.Init(this);
-                SearchWindow.Open(new SearchWindowContext(this.GetPosition().center), provider);
+                var provider =ScriptableObject.CreateInstance< DecoratorSearchWindowProvider>();
+                provider.Init(this,BehaviorTreeSetting.GetMask(ownerTreeView.treeEditorName));
+                SearchWindow.Open(new SearchWindowContext(a.eventInfo.mousePosition), provider);
             }));
         }
 

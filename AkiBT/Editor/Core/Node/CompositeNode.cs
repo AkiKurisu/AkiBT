@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class CompositeNode : BehaviorTreeNode
@@ -17,8 +16,8 @@ namespace Kurisu.AkiBT.Editor
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
             {
                 var provider = ScriptableObject.CreateInstance< CompositeSearchWindowProvider>();
-                provider.Init(this);
-                SearchWindow.Open(new SearchWindowContext(this.GetPosition().center), provider);
+                provider.Init(this,BehaviorTreeSetting.GetMask(ownerTreeView.treeEditorName));
+                SearchWindow.Open(new SearchWindowContext(a.eventInfo.mousePosition), provider);
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Add Child", (a) => AddChild()));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Remove Unnecessary Children", (a) => RemoveUnnecessaryChildren()));
@@ -26,7 +25,6 @@ namespace Kurisu.AkiBT.Editor
 
         public CompositeNode() 
         {
-        
             AddChild();
         }
 

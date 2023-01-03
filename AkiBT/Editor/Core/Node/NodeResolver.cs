@@ -4,7 +4,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class NodeResolver
     {
-        public BehaviorTreeNode CreateNodeInstance(Type type)
+        public BehaviorTreeNode CreateNodeInstance(Type type,BehaviorTreeView treeView)
         {
             BehaviorTreeNode node;
             if (type.IsSubclassOf(typeof(Composite)))
@@ -26,7 +26,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 node = new ActionNode();
             }
-            node.SetBehavior(type);
+            node.SetBehavior(type,treeView);
             return node;
         }
     }

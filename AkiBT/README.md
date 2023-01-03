@@ -26,15 +26,17 @@
 ## 保存功能Save Function
 
 1. 增加自动保存设置和保存到ScriptableObject的功能
+
 <img src="Images/AutoSave.png" width="480"/>
 
 #
 
-2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,“保存行为树”和“自动保存”不会将修改后的行为树同步到ScriptableObject,你可以再次点击“保存到SO”进行覆盖
+2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO
+
 <img src="Images/External.png" width="480"/>
 
 #
-## 更新内容：1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！
+3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！
    
 <img src="Images/OpenSO.png" width="480"/>
 
@@ -73,11 +75,14 @@ public class WaitSuccess : Decorator
 
 2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换
 
-#
 
-## 更新内容：1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值
+3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值
 
-<img src="Images/ChangeVairableInInspector.png" width="480"/>
+<img src="Images/ChangeVariableInInspector.png" width="480"/>
+
+4. 1.2版本将编辑器内的共享变量修改为Dropdown下拉菜单,无需重复填写
+
+<img src="Images/SmartVariable.png" width="480"/>
 
 #
 ## 特性Attributes
@@ -121,23 +126,29 @@ public class NavmeshStopAgent : Action
 
 <img src="Images/AkiGroup.png" width="480"/>
 
-#
-
-## 更新内容：在1.2版本你可以使用'/'符号进行子分类
+在1.2版本你可以使用'/'符号进行子分类
 
 <img src="Images/SubCategories.png" width="480"/>
+
+#
+
+## 设置界面
+
+1.2版本中增加了搜索结点的筛选设置,你可以在ProjectSetting中设置AkiBT编辑器或者其余继承自AkiBT的编辑器的搜索遮罩。你可以设置工作流中需要的Group类型（Group特性相关见上文）,没有添加Group特性的结点不会被过滤。
+
+<img src="Images/Setting.png" width="480"/>
 
 #
 # 使用方式(修改自原作者简介)
 
 <img src="Images/demo.jpg" />
-1. [Download](https://github.com/AkiKurisu/AkiBT/releases) 直接下载，导入项目中
+1. [Download](https://github.com/AkiKurisu/AkiBT/releases) 直接下载,导入项目中,需要注意的是Gizmos文件夹需要放在Assets目录下。
 
 
 2. Add `AkiBT.BehaviorTree` component for any GameObject.  
-   <img src="Images/started1.jpg" width="240"/>
+   <img src="Images/started1.png" width="480"/>
 3. `Open Graph Editor` button opens GraphView for Behavior Tree.  
-   <img src="Images/started2.jpg" width="360"/>
+   <img src="Images/started2.jpg" width="480"/>
 4. Add behaviors and set parameters.  
 5. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
    <img src="Images/started3.gif" width="480"/>  
@@ -292,6 +303,8 @@ public class IsHateGt: Conditional
 <img src="Images/conditional1.jpg" width="480"/>
 
 * Conditional Node can be branch node.
+* 注:原作者将Conditional结点设计为可以单独作为叶结点,即将子结点置空,只根据判断返回Success和Failure。但我并不推荐将行为逻辑写在Conditional中,这会带来判断逻辑和行为逻辑的混同。
+
 <img src="Images/conditional2.jpg" width="480"/>
 
 ### Create Composite
@@ -344,6 +357,7 @@ public class Random : Composite
 ```
 
 ### Create Decorator
+* 装饰器结点类型用来对返回值进行修饰,缩减使用的Conditional或Composite结点数量
 * Create C# Script and extends `AkiBT.Decorator`
 * Override `OnDecortaor` 根据子结点返回值修改返回值.
 * Override `OnAwake` called by `AkiBT.BehaviorTree.Awake` if needed.

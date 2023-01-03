@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT.Editor
 {
-    public class CompositeSearchWindowProvider :CertainNodeSearchWindowProvider<Composite>
+    public sealed class CompositeSearchWindowProvider :CertainNodeSearchWindowProvider<Composite>
     {
 
     }

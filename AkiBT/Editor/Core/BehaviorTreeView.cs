@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 using System.Linq;
 using System.Reflection;
 using System;
-using UnityEditor.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeView: GraphView
@@ -39,7 +38,7 @@ namespace Kurisu.AkiBT.Editor
             set=>behaviorTree.SavePath=value;
         }
         public bool IsTree=>behaviorTree is BehaviorTree;
-        protected virtual string treeEditorName=>"AkiBT";
+        public virtual string treeEditorName=>"AkiBT";
         private readonly NodeResolver nodeResolver = new NodeResolver();
         /// <summary>
         /// 结点选择委托
@@ -71,7 +70,7 @@ namespace Kurisu.AkiBT.Editor
             this.AddManipulator(contentDragger);
 
             provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
-            provider.Initialize(this, editor);
+            provider.Initialize(this, editor,BehaviorTreeSetting.GetMask(treeEditorName));
 
             nodeCreationRequest += context =>
             {
@@ -149,10 +148,13 @@ namespace Kurisu.AkiBT.Editor
         public void Restore()
         {
             var stack = new Stack<EdgePair>();
-            if(behaviorTree.ExternalBehaviorTree!=null)
-                stack.Push(new EdgePair(behaviorTree.ExternalBehaviorTree.Root, null));
-            else
-                stack.Push(new EdgePair(behaviorTree.Root, null));
+            IBehaviorTree tree=behaviorTree;
+            if(behaviorTree.ExternalBehaviorTree!=null)tree=behaviorTree.ExternalBehaviorTree;
+            foreach(var variable in tree.SharedVariables)
+            {
+                AddPropertyToBlackBoard(variable,true);
+            }
+            stack.Push(new EdgePair(tree.Root, null));
             while (stack.Count > 0)
             {
                 // create node
@@ -161,7 +163,7 @@ namespace Kurisu.AkiBT.Editor
                 {
                     continue;
                 }
-                var node = nodeResolver.CreateNodeInstance(edgePair.NodeBehavior.GetType());
+                var node = nodeResolver.CreateNodeInstance(edgePair.NodeBehavior.GetType(),this);
                 node.Restore(edgePair.NodeBehavior);
                 /// <summary>
                 /// 添加选中委托
@@ -218,12 +220,6 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
             }
-            IBehaviorTree tree=behaviorTree;
-            if(behaviorTree.ExternalBehaviorTree!=null)tree=behaviorTree.ExternalBehaviorTree;
-            foreach(var variable in tree.SharedVariables)
-            {
-                AddPropertyToBlackBoard(variable,true);
-            }
         }
 
 
@@ -233,12 +229,11 @@ namespace Kurisu.AkiBT.Editor
             if (Validate())
             {
                 Commit();
-                if(autoSave)
-                    Debug.Log($"<color=#3aff48>{treeEditorName}</color>自动保存成功{System.DateTime.Now.ToString()}");
+                if(autoSave)Debug.Log($"<color=#3aff48>{treeEditorName}</color>[{behaviorTree._Object.name}]自动保存成功{System.DateTime.Now.ToString()}");
+                AssetDatabase.SaveAssets();
                 return true;
             }
-            if(autoSave)
-                Debug.Log($"<color=#ff2f2f>{treeEditorName}</color>自动保存失败{System.DateTime.Now.ToString()}");
+            if(autoSave)Debug.Log($"<color=#ff2f2f>{treeEditorName}</color>[{behaviorTree._Object.name}]自动保存失败{System.DateTime.Now.ToString()}");
             return false;
         }
 

@@ -24,6 +24,7 @@ namespace Kurisu.AkiBT.Editor
 
         private readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
+        protected BehaviorTreeView ownerTreeView;
         public override void OnSelected()
         {
             base.OnSelected();
@@ -51,7 +52,6 @@ namespace Kurisu.AkiBT.Editor
             description.RegisterCallback<FocusOutEvent>(evt => { Input.imeCompositionMode = IMECompositionMode.Auto; });
             mainContainer.Add(description);
         }
-
         public void Restore(NodeBehavior behavior)
         {
             NodeBehavior = behavior;
@@ -120,8 +120,9 @@ namespace Kurisu.AkiBT.Editor
         ///  核心:设置结点行为类型
         /// </summary>
         /// <param name="nodeBehavior"></param>
-        public void SetBehavior(System.Type nodeBehavior)
+        public void SetBehavior(System.Type nodeBehavior,BehaviorTreeView ownerTreeView=null)
         {
+            if(ownerTreeView!=null)this.ownerTreeView=ownerTreeView;
             if (dirtyNodeBehaviorType != null)
             {
                 dirtyNodeBehaviorType = null;
@@ -140,7 +141,7 @@ namespace Kurisu.AkiBT.Editor
                     var fieldResolver = fieldResolverFactory.Create(p);//工厂创建暴露引用
                     var defaultValue = Activator.CreateInstance(nodeBehavior) as NodeBehavior;
                     fieldResolver.Restore(defaultValue);
-                    container.Add(fieldResolver.GetEditorField());
+                    container.Add(fieldResolver.GetEditorField(ownerTreeView));
                     resolvers.Add(fieldResolver);
                 });
             AkiLabel[] array;

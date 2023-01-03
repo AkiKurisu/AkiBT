@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
@@ -16,17 +15,13 @@ public interface IBehaviorTree
     set;
     #endif
     }
-    public string SavePath{get;
     #if UNITY_EDITOR
-    set;
-    #endif
-    }
-    public bool AutoSave{get;
-    #if UNITY_EDITOR
-    set;
-    #endif
-    }
-    SharedVariable<T> GetShareVariable<T>(string name);
+    public string SavePath{get;set;}
+    public bool AutoSave{get;set;}
     public BehaviorTreeSO ExternalBehaviorTree{get;}    
+    # endif
+    SharedVariable<T> GetShareVariable<T>(string name);
+    
+    
 }
 }

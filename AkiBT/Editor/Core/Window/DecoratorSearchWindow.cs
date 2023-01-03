@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT.Editor
 {
-    public class DecortaorSearchWindowProvider :CertainNodeSearchWindowProvider<Decorator>
+    public sealed class DecoratorSearchWindowProvider :CertainNodeSearchWindowProvider<Decorator>
     {
 
     }

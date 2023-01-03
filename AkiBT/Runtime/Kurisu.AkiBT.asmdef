@@ -1,6 +1,6 @@
 {
     "name": "Kurisu.AkiBT",
-    "rootNamespace": "",
+    "rootNamespace": "Kurisu.AkiBT",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

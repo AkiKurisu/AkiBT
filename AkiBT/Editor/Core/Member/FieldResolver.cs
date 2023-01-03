@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using UnityEngine.UIElements;
+using UnityEngine;
 using System.Collections.Generic;
 namespace Kurisu.AkiBT.Editor
 {
@@ -11,7 +12,7 @@ namespace Kurisu.AkiBT.Editor
 
     public interface IFieldResolver
     {
-        VisualElement GetEditorField( );
+        VisualElement GetEditorField(BehaviorTreeView ownerTreeView);
         VisualElement GetEditorField(List<SharedVariable> ExposedProperties,SharedVariable variable);
 
         void Restore(NodeBehavior behavior);
@@ -25,7 +26,6 @@ namespace Kurisu.AkiBT.Editor
     {
         private readonly FieldInfo fieldInfo;
         private T editorField;
-
         protected FieldResolver(FieldInfo fieldInfo)
         {
             this.fieldInfo = fieldInfo;
@@ -38,12 +38,15 @@ namespace Kurisu.AkiBT.Editor
             //修改标签
             AkiLabel label=this.fieldInfo.GetCustomAttribute<AkiLabel>();
             if(label!=null)this.editorField.label=label.Title;
+            TooltipAttribute tooltip=this.fieldInfo.GetCustomAttribute<TooltipAttribute>();
+            if(tooltip!=null)this.editorField.tooltip=tooltip.tooltip;
         }
 
         protected abstract T CreateEditorField(FieldInfo fieldInfo);
-        public VisualElement GetEditorField()
+        protected virtual void SetTree(BehaviorTreeView ownerTreeView){}
+        public VisualElement GetEditorField(BehaviorTreeView ownerTreeView)
         {
-
+            SetTree(ownerTreeView);
             return this.editorField;
         }
         /// <summary>

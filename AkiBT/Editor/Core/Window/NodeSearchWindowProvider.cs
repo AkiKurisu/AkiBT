@@ -14,17 +14,14 @@ namespace Kurisu.AkiBT.Editor
         private readonly NodeResolver nodeResolver = new NodeResolver();
         private Texture2D _indentationIcon;
         private string[] showGroupNames;
-        public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor)
+        public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor,string[] showGroupNames)
         {
             this.graphView = graphView;
             this.graphEditor = graphEditor;
+            this.showGroupNames=showGroupNames;
             _indentationIcon=new Texture2D(1,1);
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
-        }
-        public void SetShowGroupNames(string[] showGroupNames)
-        {
-            this.showGroupNames=showGroupNames;
         }
         static readonly Type[] _Types={typeof(Action),typeof(Conditional),typeof(Composite),typeof(Decorator)};
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
@@ -54,7 +51,7 @@ namespace Kurisu.AkiBT.Editor
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
             var type = searchTreeEntry.userData as Type;
-            var node = this.nodeResolver.CreateNodeInstance(type);
+            var node = this.nodeResolver.CreateNodeInstance(type,graphView);
             var worldMousePosition = this.graphEditor.rootVisualElement.ChangeCoordinatesTo(this.graphEditor.rootVisualElement.parent, context.screenMousePosition - this.graphEditor.position.position);
             var localMousePosition = this.graphView.contentViewContainer.WorldToLocal(worldMousePosition);
             node.SetPosition(new Rect(localMousePosition, new Vector2(100, 100)));
@@ -68,9 +65,11 @@ namespace Kurisu.AkiBT.Editor
     {
         private BehaviorTreeNode node;
         private Texture2D _indentationIcon;
-        public void Init(BehaviorTreeNode node)
+        private string[] showGroupNames;
+        public void Init(BehaviorTreeNode node,string[] showGroupNames)
         {
             this.node = node;
+            this.showGroupNames=showGroupNames;
             _indentationIcon=new Texture2D(1,1);
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
@@ -84,6 +83,7 @@ namespace Kurisu.AkiBT.Editor
             List<Type> nodeTypes =SearchUtility.FindSubClassTypes(typeof(T));
             var groups=nodeTypes.GroupsByAkiGroup();//按AkiGroup进行分类
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();//去除被分类的部分
+            groups=groups.SelectString(showGroupNames);
             foreach(var group in groups)
             {
                 entries.AddAllEntries(group,_indentationIcon,1);

@@ -6,16 +6,11 @@ namespace Kurisu.AkiST.Editor
 {
     public class SkillTreeView : BehaviorTreeView
     {
-        /// <summary>
-        /// 添加显示的结点Group,如果不需要筛选可以置为Null
-        /// </summary>
-        /// <value></value>
-        static readonly string[] showGroupName={"Skill","Math"};
         public SkillTreeView(IBehaviorTree bt, EditorWindow editor) : base(bt, editor)
         {
-            provider.SetShowGroupNames(showGroupName);
         }
-        protected override string treeEditorName=>"AkiST";
+
+        public override string treeEditorName=>"AkiST";
         protected override bool Validate()
         {
             var stack = new Stack<BehaviorTreeNode>();
