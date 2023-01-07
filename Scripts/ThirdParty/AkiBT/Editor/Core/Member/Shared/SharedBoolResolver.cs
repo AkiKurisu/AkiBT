@@ -19,7 +19,7 @@ namespace Kurisu.AkiBT.Editor
             editorField = new SharedBoolField(fieldInfo.Name,null,fieldInfo.FieldType);
             return editorField;
         }
-        public static bool IsAcceptable(FieldInfo info) =>info.FieldType==typeof(SharedBool) ;
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType==typeof(SharedBool) ;
          
     }
      public class SharedBoolField : SharedVariableField<SharedBool,bool>

@@ -16,4 +16,4 @@ MonoBehaviour:
   - EditorName: AkiST
     ShowGroups:
     - Skill
-    - Debug
+    - Math

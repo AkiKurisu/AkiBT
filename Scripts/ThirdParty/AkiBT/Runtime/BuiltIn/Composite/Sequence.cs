@@ -2,11 +2,13 @@ using UnityEngine;
 
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite:序列,依次遍历子结点,若返回正确则继续下一个,否则退出返回Failure")]
+    [AkiInfo("Composite:序列,依次遍历子结点,若返回Success则继续更新下一个,否则返回Failure")]
     [AkiLabel("Sequence序列")]
     public class Sequence : Composite
     {
-        [SerializeField,AkiLabel("在判断改变时打断子结点")]
+        [SerializeField,AkiLabel("在判断改变时打断子结点"),Tooltip("当子结点判断改变时打断该结点,打断会影响其分支下全部结点;在AkiBT中,Action结点的判断始终"+
+        "为true,只有Conditional结点会发生判断(CanUpdate)的改变"
+        )]
         private bool abortOnConditionChanged = true;
 
         private NodeBehavior runningNode;

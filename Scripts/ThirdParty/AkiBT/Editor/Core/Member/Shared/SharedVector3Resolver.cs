@@ -20,7 +20,7 @@ namespace Kurisu.AkiBT.Editor
             editorField = new SharedVector3Field(fieldInfo.Name,null,fieldInfo.FieldType);
             return editorField;
         }
-        public static bool IsAcceptable(FieldInfo info) =>info.FieldType==typeof(SharedVector3) ;   
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType==typeof(SharedVector3) ;   
     }
      public class SharedVector3Field : SharedVariableField<SharedVector3,Vector3>
     {

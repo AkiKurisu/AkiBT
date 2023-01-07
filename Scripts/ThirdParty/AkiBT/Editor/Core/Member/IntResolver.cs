@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using UnityEditor.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class IntResolver : FieldResolver<IntegerField,int>
@@ -13,6 +12,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new IntegerField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(int);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(int);
     }
 }

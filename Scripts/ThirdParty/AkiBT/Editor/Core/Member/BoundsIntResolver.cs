@@ -1,7 +1,7 @@
+using System;
 using System.Reflection;
 using UnityEditor.UIElements;
 using UnityEngine;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class BoundsIntResolver : FieldResolver<BoundsIntField,BoundsInt>
@@ -13,6 +13,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new BoundsIntField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(BoundsInt);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(BoundsInt);
     }
 }

@@ -1,7 +1,7 @@
 namespace Kurisu.AkiBT
 {
-     [AkiInfo("Composite:随机选择,等待结点结束运行后重新选择")]
-     [AkiLabel("Random随机选择")]
+     [AkiInfo("Composite:随机,等待结点结束运行后重新选择下一个结点")]
+     [AkiLabel("Random随机")]
     public class Random : Composite
     {
         private NodeBehavior runningNode;

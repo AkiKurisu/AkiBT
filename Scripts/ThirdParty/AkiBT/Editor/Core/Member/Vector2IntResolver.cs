@@ -1,7 +1,7 @@
+using System;
 using System.Reflection;
 using UnityEditor.UIElements;
 using UnityEngine;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class Vector2IntResolver : FieldResolver<Vector2IntField, Vector2Int>
@@ -13,6 +13,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new Vector2IntField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(Vector2Int);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(Vector2Int);
     }
 }

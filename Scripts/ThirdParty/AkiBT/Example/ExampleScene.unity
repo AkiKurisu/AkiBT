@@ -152,7 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &488310074
 GameObject:
@@ -242,11 +242,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488310074}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0.81424904, y: 8.287397, z: -6.332284}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1953241686}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &488310077
@@ -368,7 +368,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &754640378
 MonoBehaviour:
@@ -675,7 +675,69 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &842860049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 842860050}
+  m_Layer: 0
+  m_Name: "\u62B5\u8FBE\u540E\u8FC75\u79D2\u518D\u91CD\u65B0\u5BFB\u627E"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &842860050
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842860049}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.960014, y: 2.9287028, z: 0.8125901}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &941161013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 941161014}
+  m_Layer: 0
+  m_Name: '=======AI======== '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &941161014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941161013}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.81424904, y: -5.287398, z: 6.332284}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1504724517
 GameObject:
@@ -775,7 +837,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &1504724522
 NavMeshAgent:
@@ -812,7 +874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root:
-    rid: 7851556585065939002
+    rid: 7851556597599830268
   sharedVariables:
   - rid: 7851556583930069081
   - rid: 7851556583930069096
@@ -849,7 +911,7 @@ MonoBehaviour:
         isShared: 0
         mName: already
         value: 1
-    - rid: 7851556585065939002
+    - rid: 7851556597599830268
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -860,8 +922,8 @@ MonoBehaviour:
           height: 77
         description: 
         child:
-          rid: 7851556585065939003
-    - rid: 7851556585065939003
+          rid: 7851556597599830269
+    - rid: 7851556597599830269
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -872,10 +934,10 @@ MonoBehaviour:
           height: 143
         description: 
         children:
-        - rid: 7851556585065939004
-        - rid: 7851556585065939005
+        - rid: 7851556597599830270
+        - rid: 7851556597599830271
         abortOnConditionChanged: 0
-    - rid: 7851556585065939004
+    - rid: 7851556597599830270
       type: {class: ReturnSuccess, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -886,8 +948,8 @@ MonoBehaviour:
           height: 99
         description: 
         child:
-          rid: 7851556585065939006
-    - rid: 7851556585065939005
+          rid: 7851556597599830272
+    - rid: 7851556597599830271
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -898,10 +960,10 @@ MonoBehaviour:
           height: 143
         description: 
         children:
-        - rid: 7851556585065939007
-        - rid: 7851556585065939008
+        - rid: 7851556597599830273
+        - rid: 7851556597599830274
         abortOnConditionChanged: 0
-    - rid: 7851556585065939006
+    - rid: 7851556597599830272
       type: {class: BoolComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -913,7 +975,7 @@ MonoBehaviour:
         description: "\u68C0\u6D4B\u662F\u5426\u62B5\u8FBE"
         evaluateOnRunning: 0
         child:
-          rid: 7851556585065939009
+          rid: 7851556597599830275
         bool1:
           isShared: 1
           mName: already
@@ -923,7 +985,7 @@ MonoBehaviour:
           mName: 
           value: 1
         operation: 0
-    - rid: 7851556585065939007
+    - rid: 7851556597599830273
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -934,11 +996,11 @@ MonoBehaviour:
           height: 167
         description: "\u8BA1\u7B97\u5E8F\u5217"
         children:
-        - rid: 7851556585065939010
-        - rid: 7851556585065939011
-        - rid: 7851556585065939012
+        - rid: 7851556597599830276
+        - rid: 7851556597599830277
+        - rid: 7851556597599830278
         abortOnConditionChanged: 0
-    - rid: 7851556585065939008
+    - rid: 7851556597599830274
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -949,10 +1011,10 @@ MonoBehaviour:
           height: 143
         description: 
         children:
-        - rid: 7851556585065939013
-        - rid: 7851556585065939014
+        - rid: 7851556597599830279
+        - rid: 7851556597599830280
         abortOnConditionChanged: 0
-    - rid: 7851556585065939009
+    - rid: 7851556597599830275
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -963,10 +1025,10 @@ MonoBehaviour:
           height: 143
         description: 
         children:
-        - rid: 7851556585065939015
-        - rid: 7851556585065939016
+        - rid: 7851556597599830281
+        - rid: 7851556597599830282
         abortOnConditionChanged: 0
-    - rid: 7851556585065939010
+    - rid: 7851556597599830276
       type: {class: TransformGetPosition, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -981,7 +1043,7 @@ MonoBehaviour:
           isShared: 1
           mName: myPos
           value: {x: 0, y: 0, z: 0}
-    - rid: 7851556585065939011
+    - rid: 7851556597599830277
       type: {class: Vector3Operator, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1004,7 +1066,7 @@ MonoBehaviour:
           isShared: 1
           mName: destination
           value: {x: 0, y: 0, z: 0}
-    - rid: 7851556585065939012
+    - rid: 7851556597599830278
       type: {class: Vector3GetSqrMagnitude, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1022,7 +1084,7 @@ MonoBehaviour:
           isShared: 1
           mName: distance
           value: 0
-    - rid: 7851556585065939013
+    - rid: 7851556597599830279
       type: {class: FloatComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1034,7 +1096,7 @@ MonoBehaviour:
         description: "\u5224\u65AD\u6A21\u957F\u7684\u5E73\u65B9>16\u5373\u8DDD\u79BB>4"
         evaluateOnRunning: 0
         child:
-          rid: 7851556585065939017
+          rid: 7851556597599830283
         float1:
           isShared: 1
           mName: distance
@@ -1044,7 +1106,7 @@ MonoBehaviour:
           mName: 
           value: 16
         operation: 5
-    - rid: 7851556585065939014
+    - rid: 7851556597599830280
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1055,11 +1117,11 @@ MonoBehaviour:
           height: 167
         description: "\u5230\u8FBE\u540E\u7EE7\u7EED\u6267\u884C"
         children:
-        - rid: 7851556585065939018
-        - rid: 7851556585065939019
-        - rid: 7851556585065939020
+        - rid: 7851556597599830284
+        - rid: 7851556597599830285
+        - rid: 7851556597599830286
         abortOnConditionChanged: 0
-    - rid: 7851556585065939015
+    - rid: 7851556597599830281
       type: {class: SetBool, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1074,7 +1136,7 @@ MonoBehaviour:
           mName: already
           value: 0
         setValue: 0
-    - rid: 7851556585065939016
+    - rid: 7851556597599830282
       type: {class: Vector3Random, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1092,7 +1154,7 @@ MonoBehaviour:
         yRange: {x: 0, y: 0}
         zRange: {x: -10, y: 10}
         operation: 1
-    - rid: 7851556585065939017
+    - rid: 7851556597599830283
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1103,10 +1165,10 @@ MonoBehaviour:
           height: 143
         description: "\u79FB\u52A8\u5E8F\u5217"
         children:
-        - rid: 7851556585065939021
-        - rid: 7851556585065939022
+        - rid: 7851556597599830287
+        - rid: 7851556597599830288
         abortOnConditionChanged: 0
-    - rid: 7851556585065939018
+    - rid: 7851556597599830284
       type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1120,7 +1182,7 @@ MonoBehaviour:
           isShared: 0
           mName: 
           value: 1
-    - rid: 7851556585065939019
+    - rid: 7851556597599830285
       type: {class: SetBool, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1135,7 +1197,7 @@ MonoBehaviour:
           mName: already
           value: 0
         setValue: 1
-    - rid: 7851556585065939020
+    - rid: 7851556597599830286
       type: {class: TimeWait, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1149,7 +1211,7 @@ MonoBehaviour:
           isShared: 0
           mName: 
           value: 5
-    - rid: 7851556585065939021
+    - rid: 7851556597599830287
       type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1163,7 +1225,7 @@ MonoBehaviour:
           isShared: 0
           mName: 
           value: 0
-    - rid: 7851556585065939022
+    - rid: 7851556597599830288
       type: {class: NavmeshSetDestination, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1177,6 +1239,493 @@ MonoBehaviour:
           isShared: 1
           mName: destination
           value: {x: 0, y: 0, z: 0}
+--- !u!1 &1521665826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1521665832}
+  - component: {fileID: 1521665831}
+  - component: {fileID: 1521665830}
+  - component: {fileID: 1521665829}
+  - component: {fileID: 1521665828}
+  - component: {fileID: 1521665827}
+  m_Layer: 0
+  m_Name: Patrol
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!195 &1521665827
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521665826}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &1521665828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521665826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbdc14eea9651417792898b3298a5cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root:
+    rid: 7851556629727674368
+  sharedVariables:
+  - rid: 7851556597599830290
+  - rid: 7851556597599830291
+  - rid: 7851556597599830292
+  updateType: 0
+  externalBehaviorTree: {fileID: 0}
+  autoSave: 1
+  savePath: Assets
+  references:
+    version: 2
+    RefIds:
+    - rid: 7851556597599830290
+      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        mName: destination
+        value: {x: 0, y: 0, z: 0}
+    - rid: 7851556597599830291
+      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        mName: myPos
+        value: {x: 0, y: 0, z: 0}
+    - rid: 7851556597599830292
+      type: {class: SharedFloat, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        mName: distance
+        value: 0
+    - rid: 7851556629727674368
+      type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 400
+          y: 300
+          width: 80
+          height: 77
+        description: 
+        child:
+          rid: 7851556629727674369
+    - rid: 7851556629727674369
+      type: {class: Parallel, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 523
+          y: 269
+          width: 135
+          height: 123
+        description: 
+        children:
+        - rid: 7851556629727674370
+        - rid: 7851556629727674371
+    - rid: 7851556629727674370
+      type: {class: ReturnSuccess, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 696
+          y: 38
+          width: 210
+          height: 99
+        description: 
+        child:
+          rid: 7851556629727674372
+    - rid: 7851556629727674371
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 764
+          y: 269
+          width: 154
+          height: 143
+        description: 
+        children:
+        - rid: 7851556629727674373
+        - rid: 7851556629727674374
+        abortOnConditionChanged: 0
+    - rid: 7851556629727674372
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 953
+          y: -73
+          width: 154
+          height: 143
+        description: 
+        children:
+        - rid: 7851556629727674375
+        - rid: 7851556629727674376
+        abortOnConditionChanged: 0
+    - rid: 7851556629727674373
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1030
+          y: 269
+          width: 154
+          height: 167
+        description: "\u8BA1\u7B97\u5E8F\u5217"
+        children:
+        - rid: 7851556629727674377
+        - rid: 7851556629727674378
+        - rid: 7851556629727674379
+        abortOnConditionChanged: 0
+    - rid: 7851556629727674374
+      type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1016
+          y: 585
+          width: 154
+          height: 143
+        description: 
+        children:
+        - rid: 7851556629727674380
+        - rid: 7851556629727674381
+        abortOnConditionChanged: 0
+    - rid: 7851556629727674375
+      type: {class: TimeWait, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1161
+          y: -331
+          width: 118
+          height: 140
+        description: 
+        waitTime:
+          isShared: 0
+          mName: 
+          value: 10
+    - rid: 7851556629727674376
+      type: {class: Vector3Random, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1161
+          y: -171
+          width: 218
+          height: 228
+        description: "\u83B7\u53D6\u5F53\u524D\u4F4D\u7F6E\u8303\u56F4\u5185\u968F\u673A\u4F4D\u7F6E"
+        randomVector3:
+          isShared: 1
+          mName: destination
+          value: {x: 0, y: 0, z: 0}
+        xRange: {x: -10, y: 10}
+        yRange: {x: 0, y: 0}
+        zRange: {x: -10, y: 10}
+        operation: 1
+    - rid: 7851556629727674377
+      type: {class: TransformGetPosition, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1266
+          y: 70
+          width: 206
+          height: 161
+        description: "\u83B7\u53D6\u81EA\u8EAB\u4F4D\u7F6E"
+        target: {fileID: 0}
+        result:
+          isShared: 1
+          mName: myPos
+          value: {x: 0, y: 0, z: 0}
+    - rid: 7851556629727674378
+      type: {class: Vector3Operator, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1266
+          y: 231
+          width: 167
+          height: 244
+        description: "\u4F4D\u7F6E\u76F8\u51CF"
+        operation: 1
+        firstVector3:
+          isShared: 1
+          mName: myPos
+          value: {x: 0, y: 0, z: 0}
+        secondVector3:
+          isShared: 1
+          mName: destination
+          value: {x: 0, y: 0, z: 0}
+        storeResult:
+          isShared: 1
+          mName: destination
+          value: {x: 0, y: 0, z: 0}
+    - rid: 7851556629727674379
+      type: {class: Vector3GetSqrMagnitude, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1266
+          y: 475
+          width: 228
+          height: 181
+        description: "\u83B7\u53D6\u6A21\u7684\u5E73\u65B9"
+        vector3:
+          isShared: 1
+          mName: destination
+          value: {x: 0, y: 0, z: 0}
+        result:
+          isShared: 1
+          mName: distance
+          value: 0
+    - rid: 7851556629727674380
+      type: {class: FloatComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1273
+          y: 682
+          width: 208
+          height: 223
+        description: "\u5224\u65AD\u6A21\u957F\u7684\u5E73\u65B9>16\u5373\u8DDD\u79BB>4"
+        evaluateOnRunning: 0
+        child:
+          rid: 7851556629727674382
+        float1:
+          isShared: 1
+          mName: distance
+          value: 0
+        float2:
+          isShared: 0
+          mName: 
+          value: 16
+        operation: 5
+    - rid: 7851556629727674381
+      type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1273
+          y: 917
+          width: 190
+          height: 140
+        description: "\u505C\u6B62\u79FB\u52A8"
+        isStopped:
+          isShared: 0
+          mName: 
+          value: 1
+    - rid: 7851556629727674382
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1574
+          y: 657
+          width: 154
+          height: 143
+        description: "\u79FB\u52A8\u5E8F\u5217"
+        children:
+        - rid: 7851556629727674383
+        - rid: 7851556629727674384
+        abortOnConditionChanged: 0
+    - rid: 7851556629727674383
+      type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1828
+          y: 542
+          width: 190
+          height: 140
+        description: "\u5173\u95ED\u505C\u6B62"
+        isStopped:
+          isShared: 0
+          mName: 
+          value: 0
+    - rid: 7851556629727674384
+      type: {class: NavmeshSetDestination, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1828
+          y: 702
+          width: 220
+          height: 140
+        description: "\u79FB\u52A8\u5230destination"
+        destination:
+          isShared: 1
+          mName: destination
+          value: {x: 0, y: 0, z: 0}
+--- !u!136 &1521665829
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521665826}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1521665830
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521665826}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0212bd97fe33d434185fff660ed7867e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1521665831
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521665826}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1521665832
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521665826}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.08, y: 1, z: -6.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1576608359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1576608360}
+  m_Layer: 0
+  m_Name: "3.Patrol\u4F1A\u968F\u673A\u627E\u4F4D\u7F6E\u79FB\u52A8,\u6BCF10\u79D2\u627E\u65B0\u4F4D\u7F6E"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1576608360
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576608359}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.960014, y: 2.9287028, z: 0.8125901}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1676695616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1676695617}
+  m_Layer: 0
+  m_Name: "=======\u8BF4\u660E========"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1676695617
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676695616}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.81424904, y: -5.287398, z: 6.332284}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1907104732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,7 +1736,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1907104733}
   m_Layer: 0
-  m_Name: "2.Enemy\u4F1A\u968F\u673A\u627E\u4F4D\u7F6E\u79FB\u52A8,\u62B5\u8FBE\u540E\u8FC75\u79D2\u518D\u91CD\u65B0\u5BFB\u627E"
+  m_Name: "2.Enemy\u4F1A\u968F\u673A\u627E\u4F4D\u7F6E\u79FB\u52A8"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1206,7 +1755,41 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1953241685
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1953241686}
+  m_Layer: 0
+  m_Name: ===BackGround===
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1953241686
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953241685}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.81424904, y: -5.287398, z: 6.332284}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2130379003}
+  - {fileID: 488310076}
+  - {fileID: 1969741449}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1969741445
 GameObject:
@@ -1298,12 +1881,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1969741445}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.81424904, y: 5.287398, z: -6.332284}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1953241686}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2058485265
@@ -1335,7 +1918,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2130379000
 GameObject:
@@ -1415,11 +1998,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2130379000}
   m_LocalRotation: {x: 0.1809852, y: -0, z: -0, w: 0.9834859}
-  m_LocalPosition: {x: 0, y: 2.52, z: -7.57}
+  m_LocalPosition: {x: 0.81424904, y: 7.807398, z: -13.902285}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1953241686}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 20.854, y: 0, z: 0}
 --- !u!114 &2130379004

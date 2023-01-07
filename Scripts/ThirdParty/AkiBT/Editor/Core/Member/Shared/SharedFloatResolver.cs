@@ -19,7 +19,7 @@ public class SharedFloatResolver :FieldResolver<SharedFloatField,SharedFloat>
             editorField = new SharedFloatField(fieldInfo.Name,null,fieldInfo.FieldType);
             return editorField;
         }
-        public static bool IsAcceptable(FieldInfo info) =>info.FieldType==typeof(SharedFloat) ;
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType==typeof(SharedFloat) ;
          
     }
   public class SharedFloatField : SharedVariableField<SharedFloat,float>

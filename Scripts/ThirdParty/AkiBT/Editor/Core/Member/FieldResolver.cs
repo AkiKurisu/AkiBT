@@ -12,14 +12,26 @@ namespace Kurisu.AkiBT.Editor
 
     public interface IFieldResolver
     {
+        /// <summary>
+        /// 获取ValueField同时绑定行为树视图
+        /// </summary>
+        /// <param name="ownerTreeView"></param>
+        /// <returns></returns>
         VisualElement GetEditorField(BehaviorTreeView ownerTreeView);
+        /// <summary>
+        /// 获取ValueField同时绑定共享变量
+        /// </summary>
+        /// <param name="ExposedProperties"></param>
+        /// <param name="variable"></param>
+        /// <returns></returns>
         VisualElement GetEditorField(List<SharedVariable> ExposedProperties,SharedVariable variable);
-
+        /// <summary>
+        /// 只创建ValueField,不进行任何绑定
+        /// </summary>
+        /// <returns></returns>
+        public VisualElement CreateField();
         void Restore(NodeBehavior behavior);
-
-        void Commit(NodeBehavior behavior);
-       
-        
+        void Commit(NodeBehavior behavior);    
     }
 
     public abstract class FieldResolver<T, K> :IFieldResolver where T: BaseField<K>
@@ -43,6 +55,7 @@ namespace Kurisu.AkiBT.Editor
         }
 
         protected abstract T CreateEditorField(FieldInfo fieldInfo);
+        public VisualElement CreateField()=>CreateEditorField(this.fieldInfo);
         protected virtual void SetTree(BehaviorTreeView ownerTreeView){}
         public VisualElement GetEditorField(BehaviorTreeView ownerTreeView)
         {

@@ -1,6 +1,6 @@
+using System;
 using System.Reflection;
 using UnityEditor.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class FloatResolver : FieldResolver<FloatField,float>
@@ -12,6 +12,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new FloatField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(float);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(float);
     }
 }

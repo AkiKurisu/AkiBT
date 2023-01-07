@@ -1,6 +1,6 @@
+using System;
 using System.Reflection;
 using UnityEditor.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     [Ordered]
@@ -13,6 +13,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new LayerField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(int) && info.GetCustomAttribute<Layer>() != null;
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(int) && info.GetCustomAttribute<Layer>() != null;
     }
 }

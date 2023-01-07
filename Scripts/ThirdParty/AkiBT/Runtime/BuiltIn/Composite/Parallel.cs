@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 namespace Kurisu.AkiBT
 {
     [AkiInfo("Composite:平行,依次遍历子结点,如果返回错误则退出返回Failure,否则等待所有子结点返回正确")]

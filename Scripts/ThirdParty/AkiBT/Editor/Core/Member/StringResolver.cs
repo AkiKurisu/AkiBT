@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using UnityEngine.UIElements;
 
@@ -14,6 +15,6 @@ namespace Kurisu.AkiBT.Editor
             field.style.minWidth = 200;
             return field;
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(string);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(string);
     }
 }

@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT
     ///  update the children in order.
     ///  update only one child per frame.
     /// </summary>
-    [AkiInfo("Composite:轮盘,按顺序更新子结点,当结点结束运行后更新下一个结点")]
+    [AkiInfo("Composite:轮盘,按顺序更新子结点,每次Update只会更新当前结点,该结点结束运行后下一次Update再继续更新下一个结点")]
     [AkiLabel("Rotator轮盘")]
     public class Rotator : Composite
     {
@@ -24,9 +24,7 @@ namespace Kurisu.AkiBT
             {
                 return HandleStatus(runningNode.Update(), runningNode);
             }
-
-            var target = Children[targetIndex];
-            return HandleStatus(target.Update(), target);
+            return HandleStatus(Children[targetIndex].Update(), Children[targetIndex]);
         }
 
         private void SetNext()
@@ -59,7 +57,6 @@ namespace Kurisu.AkiBT
                 runningNode.Abort();
                 runningNode = null;
             }
-
             if (resetOnAbort)
             {
                 targetIndex = 0;

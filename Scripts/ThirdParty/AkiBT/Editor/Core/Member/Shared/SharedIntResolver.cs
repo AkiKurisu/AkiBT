@@ -19,7 +19,7 @@ public class SharedIntResolver :FieldResolver<SharedIntField,SharedInt>
             editorField = new SharedIntField(fieldInfo.Name,null,fieldInfo.FieldType);
             return editorField;
         }
-        public static bool IsAcceptable(FieldInfo info) =>info.FieldType ==typeof(SharedInt) ;
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType ==typeof(SharedInt) ;
          
     }
     public class SharedIntField : SharedVariableField<SharedInt,int>

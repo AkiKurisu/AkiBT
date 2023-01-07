@@ -1,6 +1,6 @@
+using System;
 using System.Reflection;
 using UnityEditor.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class LongResolver : FieldResolver<LongField,long>
@@ -12,6 +12,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new LongField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(long);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(long);
     }
 }

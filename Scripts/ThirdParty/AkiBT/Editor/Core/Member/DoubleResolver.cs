@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using UnityEditor.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class DoubleResolver : FieldResolver<DoubleField,double>
@@ -13,6 +12,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new DoubleField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(double);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(double);
     }
 }

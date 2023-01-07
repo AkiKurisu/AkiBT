@@ -1,6 +1,6 @@
+using System;
 using System.Reflection;
 using UnityEngine.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class BoolResolver : FieldResolver<Toggle,bool>
@@ -12,6 +12,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new Toggle(fieldInfo.Name);
         }
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(bool);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(bool);
     }
 }

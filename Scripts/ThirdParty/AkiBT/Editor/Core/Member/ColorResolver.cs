@@ -1,7 +1,7 @@
+using System;
 using System.Reflection;
 using UnityEditor.UIElements;
 using UnityEngine;
-
 namespace Kurisu.AkiBT.Editor
 {
     public class ColorResolver : FieldResolver<ColorField,Color>
@@ -14,6 +14,6 @@ namespace Kurisu.AkiBT.Editor
             return new ColorField(fieldInfo.Name);
         }
 
-        public static bool IsAcceptable(FieldInfo info) => info.FieldType == typeof(Color);
+        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(Color);
     }
 }
