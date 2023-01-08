@@ -8,8 +8,8 @@
 
 ## 支持的版本Supported version
 
-* AkiBT1.1 Unity 2019.4 
-* AkiBT1.2 Unity 2021.3 or later.
+* AkiBT1.1 Unity 2019.4 or later.
+* AkiBT1.2 Unity 2021.3 or later.(使用了新版本UIToolkit的DropdownField和TreeView)
 #
 ## AkiBT特点Features
 * 支持使用可视化节点编辑器构造行为树Supports constructing behavior tree by [GraphView](https://docs.unity3d.com/ScriptReference/Experimental.GraphView.GraphView.html).
@@ -21,7 +21,7 @@
 * 增加了左键选框
 * 增加了背景和结点样式
 * 设置Root结点为不可删除防止无法恢复
-  
+* 1.2.2版本加入了List的显示功能,后续会支持Array数组的显示
 #
 
 ## 保存功能Save Function
@@ -210,11 +210,12 @@ Selector has following parameter.
 | abortOnConditionChanged | true: Aborts the running node when a node with a higher priority than the running node becomes executable. Specifically, the execution result of `Conditional.CanUpdate`, which is a descendant of a node with a higher priority than the running node, is used.Abort功能也可以参照BehaviorDesigner的使用.|
 
 #### Parallel
-* Updates all child nodes.  
+* Updates all child nodes.
 * Returns running if any child node returns running.
 * Returns failure if any child node returns failure.
 * Otherwise, returns success.
-* 由All更名为Parallel,功能与BehaviorDesigner的Parallel相同
+* 注意:如果存在返回值为Running的子结点,Parallel平行会一直保持Running,并且持续Update所有子结点。
+* AkiBT版本由All更名为Parallel。
 
 #### Random
 * The child nodes are elected and executed according to the probability based on the uniform distribution.  
@@ -360,7 +361,8 @@ public class Random : Composite
 ### Create Decorator
 * 装饰器结点类型用来对返回值进行修饰,缩减使用的Conditional或Composite结点数量
 * Create C# Script and extends `AkiBT.Decorator`
-* Override `OnDecortaor` 根据子结点返回值修改返回值.
+* Override `OnDecorate(Status childStatus)` 根据子结点返回值修改返回值.
+* Decorator继承了子结点的CanUpdate,即如果子结点为Conditional,该结点会继承其判断值,如果要修饰CanUpdate可以Override`OnDecorate(bool childCanUpdate)`
 * Override `OnAwake` called by `AkiBT.BehaviorTree.Awake` if needed.
 * Override `OnStart` called by `AkiBT.BehaviorTree.Start` if needed.
 * Composite Node has `gameObject` field with `AkiBT.BehaviorTree` attached.

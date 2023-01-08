@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT
     public class WeightedRandom : Composite
     {
         private NodeBehavior runningNode;
-        [SerializeField,Tooltip("结点参数,列表长度大于子结点数量时,超过部分不会计入权重")]
+        [SerializeField,Tooltip("结点权重列表,列表长度大于子结点数量时,超过部分不会计入权重")]
         private List<float> weights=new List<float>();
         protected override Status OnUpdate()
         {

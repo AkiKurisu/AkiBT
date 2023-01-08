@@ -10,9 +10,7 @@ namespace Kurisu.AkiBT
         /// <summary>
         /// 子结点运行时是否要继续判断
         /// </summary>
-        [SerializeField,AkiLabel("在子结点运行时继续判断"),Tooltip("勾选后子结点运行时,该结点依然会进行判断,否则在子结点运行时CanUpdate总是返回True;"
-        +"子结点运行时如果判断发生改变,配合Composite的判断时改变(abortOnConditionChanged)会打断当前分支运行"
-        )] 
+        [SerializeField,AkiLabel("在子结点运行时继续判断"),Tooltip("勾选后子结点运行时,该结点依然会进行判断,否则在子结点运行时CanUpdate总是返回True")] 
         private bool evaluateOnRunning = false;
 
         [SerializeReference]

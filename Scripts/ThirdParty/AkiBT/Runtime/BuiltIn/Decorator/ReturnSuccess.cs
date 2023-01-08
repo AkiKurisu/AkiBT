@@ -6,7 +6,6 @@ public class ReturnSuccess : Decorator
 {
     protected override Status OnDecorate(Status childStatus)
     {
-        
         return Status.Success;
     }
 }
