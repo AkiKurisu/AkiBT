@@ -31,13 +31,16 @@ namespace Kurisu.AkiBT.Editor
         /// <returns></returns>
         public VisualElement CreateField();
         void Restore(NodeBehavior behavior);
-        void Commit(NodeBehavior behavior);    
+        void Commit(NodeBehavior behavior);   
+        void Copy(IFieldResolver resolver);
+        object Value{get;} 
     }
 
     public abstract class FieldResolver<T, K> :IFieldResolver where T: BaseField<K>
     {
         private readonly FieldInfo fieldInfo;
         private T editorField;
+        public object Value=>editorField.value;
         protected FieldResolver(FieldInfo fieldInfo)
         {
             this.fieldInfo = fieldInfo;
@@ -78,12 +81,15 @@ namespace Kurisu.AkiBT.Editor
             this.editorField.value=(K)variable.GetValue();
             return this.editorField;
         }
-       
+        public void Copy(IFieldResolver resolver)
+        {
+            if(resolver is not FieldResolver<T, K>)return;
+            editorField.value=(K)resolver.Value;
+        }
         public void Restore(NodeBehavior behavior)
         {
             editorField.value = (K)fieldInfo.GetValue(behavior);
         }
-
         public void Commit(NodeBehavior behavior)
         {
            fieldInfo.SetValue(behavior, editorField.value);

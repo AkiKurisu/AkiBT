@@ -17,6 +17,7 @@ namespace Kurisu.AkiBT.Editor
             title = "Root";
             Child = CreateChildPort();
             outputContainer.Add(Child);
+            capabilities&=~Capabilities.Copiable;
             capabilities &=~Capabilities.Deletable;//不可删除
             capabilities &=~Capabilities.Movable;//不可删除
             RefreshExpandedState();

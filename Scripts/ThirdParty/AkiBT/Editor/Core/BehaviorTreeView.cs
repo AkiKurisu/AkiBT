@@ -45,12 +45,14 @@ namespace Kurisu.AkiBT.Editor
         /// 结点选择委托
         /// </summary>
         public System.Action<BehaviorTreeNode> onSelectAction;  
+        private readonly EditorWindow _window;
         /// <summary>
         /// 黑板
         /// </summary>
         /// <returns></returns>
         public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
         {
+            _window=editor;
             behaviorTree = bt;
             style.flexGrow = 1;
             style.flexShrink = 1;
@@ -77,8 +79,95 @@ namespace Kurisu.AkiBT.Editor
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
             };
+            serializeGraphElements += CopyOperation;
+            canPasteSerializedData+=(data)=>true;
+            unserializeAndPaste+=OnPaste;
         }
+        private string CopyOperation(IEnumerable<GraphElement> elements)
+        {
+            ClearSelection();
+            foreach (GraphElement n in elements)
+            {
+                AddToSelection(n);
+            }
+            return "Copy Nodes";
+        }
+        /// <summary>
+        /// 粘贴结点
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        private void OnPaste(string a,string b)
+        {
+            Dictionary<Port,Port>portCopyDict=new Dictionary<Port, Port>();
+            List<ISelectable> copyElements=new List<ISelectable>();
+            foreach(var select in selection)
+            {
+                if(select is Edge)continue;
+                //先复制所有子结点
+                BehaviorTreeNode selectNode=select as BehaviorTreeNode;
+                var node =DuplicateNode(selectNode);
+                copyElements.Add(node);
+                if(selectNode.BehaviorType.IsSubclassOf(typeof(Action)))
+                {
+                    var actionNode = selectNode as ActionNode;
+                    portCopyDict.Add(actionNode.Parent,(node as ActionNode).Parent);
+                }
+                if(selectNode.BehaviorType.IsSubclassOf(typeof(Composite)))
+                {
+                    var compositeNode = selectNode as CompositeNode;
+                    var copy=node as CompositeNode;
+                    for(int i=0;i<compositeNode.ChildPorts.Count-copy.ChildPorts.Count;i++)
+                    {
+                        copy.AddChild();
+                    }
+                    for(int i=0;i<compositeNode.ChildPorts.Count;i++)
+                    {
+                        portCopyDict.Add(compositeNode.ChildPorts[i],copy.ChildPorts[i]);
+                    }
+                    portCopyDict.Add(compositeNode.Parent,copy.Parent);
+                }
+                if(selectNode.BehaviorType.IsSubclassOf(typeof(Conditional)))
+                {
+                    var conditionalNode = selectNode as ConditionalNode;
+                    portCopyDict.Add(conditionalNode.Child,(node as ConditionalNode).Child);
+                    portCopyDict.Add(conditionalNode.Parent,(node as ConditionalNode).Parent);
 
+                }
+                if(selectNode.BehaviorType.IsSubclassOf(typeof(Decorator)))
+                {
+                    var decoratorNode = node as DecoratorNode;
+                    portCopyDict.Add(decoratorNode.Child,(node as DecoratorNode).Child);
+                    portCopyDict.Add(decoratorNode.Parent,(node as DecoratorNode).Parent);
+                }
+            }
+            foreach(var select in selection)
+            {
+                if(select is not Edge)continue;
+                var edge=select as Edge;    
+                if(!portCopyDict.ContainsKey(edge.input)||!portCopyDict.ContainsKey(edge.output))continue;
+                var newEdge = ConnectPorts(portCopyDict[edge.output], portCopyDict[edge.input]);
+                AddElement(newEdge);
+                copyElements.Add(newEdge);
+            }
+            ClearSelection();
+            copyElements.ForEach(node=>
+            {
+                node.Select(this,true);
+            });
+        }
+        public BehaviorTreeNode DuplicateNode(BehaviorTreeNode node)
+        {
+            var newNode =nodeResolver.CreateNodeInstance(node.BehaviorType,this) as BehaviorTreeNode;
+            Rect newRect=node.GetPosition();
+            newRect.position+=new Vector2(50,50);
+            newNode.SetPosition(newRect);
+            newNode.onSelectAction=onSelectAction;
+            AddElement(newNode);
+            newNode.CopyFrom(node);
+            return newNode;
+        }
+        
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             base.BuildContextualMenu(evt);
@@ -99,21 +188,17 @@ namespace Kurisu.AkiBT.Editor
         /// 添加暴露的共享变量到黑板
         /// </summary>
         /// <param name="variable"></param>
-        /// <param name="loadMode">是否为重加载（非第一次创建）</param>
         /// <typeparam name="T"></typeparam>
-        public void AddPropertyToBlackBoard(SharedVariable variable, bool loadMode = false)
+        public void AddPropertyToBlackBoard(SharedVariable variable)
         {
             var localPropertyName = variable.Name;
             var localPropertyValue = variable.GetValue();
-            if (!loadMode)
+            if(String.IsNullOrEmpty(localPropertyName))
+                localPropertyName=variable.GetType().Name;
+            while (ExposedProperties.Any(x => x.Name == localPropertyName))
             {
-                if(String.IsNullOrEmpty(localPropertyName))
-                    localPropertyName=variable.GetType().Name;
-                while (ExposedProperties.Any(x => x.Name == localPropertyName))
-                {
-                    int index=ExposedProperties.Count(x=>x.Name == localPropertyName);
-                    localPropertyName = $"{localPropertyName}{index+1}";
-                }  
+                int index=ExposedProperties.Count(x=>x.Name == localPropertyName);
+                localPropertyName = $"{localPropertyName}{index+1}";
             }
             variable.Name=localPropertyName;
             ExposedProperties.Add(variable);
@@ -169,7 +254,7 @@ namespace Kurisu.AkiBT.Editor
             if(behaviorTree.ExternalBehaviorTree!=null)tree=behaviorTree.ExternalBehaviorTree;
             foreach(var variable in tree.SharedVariables)
             {
-                AddPropertyToBlackBoard(variable,true);
+                AddPropertyToBlackBoard(variable.Clone() as SharedVariable);//Clone新的共享变量
             }
             stack.Push(new EdgePair(tree.Root, null));
             while (stack.Count > 0)
@@ -182,10 +267,7 @@ namespace Kurisu.AkiBT.Editor
                 }
                 var node = nodeResolver.CreateNodeInstance(edgePair.NodeBehavior.GetType(),this);
                 node.Restore(edgePair.NodeBehavior);
-                /// <summary>
-                /// 添加选中委托
-                /// </summary>
-                node.onSelectAction=onSelectAction;
+                node.onSelectAction=onSelectAction;// 添加选中委托
                 AddElement(node);
                 node.SetPosition( edgePair.NodeBehavior.graphPosition);
 

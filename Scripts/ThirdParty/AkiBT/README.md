@@ -22,6 +22,7 @@
 * 增加了背景和结点样式
 * 设置Root结点为不可删除防止无法恢复
 * 1.2.2版本加入了List的显示功能,后续会支持Array数组的显示
+* 1.2.3版本加入了复制粘贴功能(Ctrl+C&&Ctrl+V或者右键单个结点的Duplicate选项)
 #
 
 ## 保存功能Save Function
@@ -69,6 +70,8 @@ public class WaitSuccess : Decorator
 <img src="Images/SharedVariable.png" />
 
 * 注意：修改共享变量名称的方式为双击变量,为空时自动删除
+
+* 1.2.3版本加入了右键删除和更新所有引用该共享变量的字段,方便修改变量名称时不用一个个手动重选
   
 * 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
 

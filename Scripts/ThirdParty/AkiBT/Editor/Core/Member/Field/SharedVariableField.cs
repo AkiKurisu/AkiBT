@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class SharedVariableField<T,K> : BaseField<T> where T:SharedVariable<K>
+    public abstract class SharedVariableField<T,K> : BaseField<T> where T:SharedVariable<K>,new()
     {
         private Foldout foldout;
         private Toggle toggle;
@@ -40,9 +40,10 @@ namespace Kurisu.AkiBT.Editor
             .Select(v => v.Name)
             .ToList();
         }
-        void BindVariable()
+        private void BindProperty()
         {
-            bindExposedProperty=treeView.ExposedProperties.Where(x=>x.GetType().IsSubclassOf(typeof(SharedVariable<K>))).FirstOrDefault();
+            if(treeView==null)return;
+            bindExposedProperty=treeView.ExposedProperties.Where(x=>x.GetType().IsSubclassOf(typeof(SharedVariable<K>))&&x.Name.Equals(value.Name)).FirstOrDefault();
         }
         private void OnToggle(bool IsShared){
             if(IsShared)
@@ -50,9 +51,8 @@ namespace Kurisu.AkiBT.Editor
                 if(nameDropdown==null&&value!=null&&treeView!=null)
                 {
                     nameDropdown=new DropdownField("Variable Name",GetList(treeView),value.Name!=null?value.Name:string.Empty);
-                    
                     nameDropdown.RegisterCallback<MouseEnterEvent>((evt)=>{nameDropdown.choices=GetList(treeView);});
-                    nameDropdown.RegisterValueChangedCallback(evt => value.Name = evt.newValue);
+                    nameDropdown.RegisterValueChangedCallback(evt => {value.Name = evt.newValue;BindProperty();});
                     foldout.Add(nameDropdown);
                 }
                 if(valueField!=null)foldout.Remove(valueField);
@@ -71,13 +71,17 @@ namespace Kurisu.AkiBT.Editor
                 }
             }
         }
-        protected virtual BaseField<K> CreateValueField(){return null;}
-        public override T value { get => base.value; set {base.value = value;UpdateValue();} }
+        protected abstract BaseField<K> CreateValueField();
+        public sealed override T value {get=>base.value; set {if(base.value==null)base.value=new T();UpdateValue(value);} }
         protected BaseField<K>valueField{get;set;}
-        void UpdateValue()
+        void UpdateValue(T newValue)
         {
+            value.IsShared=newValue.IsShared;
+            value.Value=newValue.Value;
+            value.Name=newValue.Name;
             toggle.value=value.IsShared;
             if(valueField!=null)valueField.value=value.Value;
+            BindProperty();
             OnToggle(value.IsShared);
         }
     }

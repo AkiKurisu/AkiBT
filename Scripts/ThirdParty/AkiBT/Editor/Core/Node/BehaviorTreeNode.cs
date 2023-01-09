@@ -10,10 +10,10 @@ namespace Kurisu.AkiBT.Editor
 {
     public abstract class BehaviorTreeNode : Node{
 
-        protected NodeBehavior NodeBehavior { set;  get; }
+        protected NodeBehavior NodeBehavior {set;  get; }
 
         private Type dirtyNodeBehaviorType;
-
+        public Type BehaviorType=>dirtyNodeBehaviorType;
         public Port Parent { private set; get; }
         
         private readonly VisualElement container;
@@ -22,7 +22,7 @@ namespace Kurisu.AkiBT.Editor
 
         private readonly FieldResolverFactory fieldResolverFactory;
 
-        private readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
+        public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
         protected BehaviorTreeView ownerTreeView;
         public override void OnSelected()
@@ -60,6 +60,16 @@ namespace Kurisu.AkiBT.Editor
             description.value = NodeBehavior.description;
             OnRestore();
         }
+        public void CopyFrom(BehaviorTreeNode copyNode)
+        {
+            for(int i=0;i<copyNode.resolvers.Count;i++)
+            {
+                resolvers[i].Copy(copyNode.resolvers[i]);
+            }
+            description.value = copyNode.NodeBehavior.description;
+            NodeBehavior=Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
+            NodeBehavior.NotifyEditor = MarkAsExecuted;
+        }
 
         protected virtual void OnRestore()
         {
@@ -90,7 +100,7 @@ namespace Kurisu.AkiBT.Editor
         {
             return dirtyNodeBehaviorType;
         }
-
+            
         public void Commit(Stack<BehaviorTreeNode> stack)
         {
             OnCommit(stack);

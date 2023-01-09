@@ -42,9 +42,10 @@ public class ListField<T> : BaseField<List<T>>
             var view = new ListView(value, itemHeight, makeItem, bindItem);
             return view;
         }
-        public sealed override List<T> value { get => base.value; set {base.value = value;UpdateValue();} }
-        private void UpdateValue()
+        public sealed override List<T> value { get => base.value; set {base.value = new List<T>();UpdateValue(value);} }
+        private void UpdateValue(List<T> newList)
         {
+            foreach(T element in newList)value.Add(element);
             if(listView!=null){listView.itemsSource=value;listView.RefreshItems();}
         }
         

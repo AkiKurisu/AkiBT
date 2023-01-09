@@ -6,7 +6,7 @@ using System;
 namespace Kurisu.AkiBT
 {
 	[System.Serializable]
-public abstract class SharedVariable
+public abstract class SharedVariable:ICloneable
 {
 		public SharedVariable()
 		{
@@ -36,7 +36,10 @@ public abstract class SharedVariable
 		}
 		public abstract object GetValue();
 		public abstract void SetValue(object value);
-		[SerializeField]
+
+        public abstract object Clone();
+
+        [SerializeField]
 		private string mName;
 	}
 	[System.Serializable]
@@ -60,11 +63,11 @@ public abstract class SharedVariable
 				}
 			}
 		}
-		public override object GetValue()
+		public sealed override object GetValue()
 		{
 			return this.Value;
 		}
-		public override void SetValue(object value)
+		public sealed override void SetValue(object value)
 		{
 			if (this.Setter != null)
 			{

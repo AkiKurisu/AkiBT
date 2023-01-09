@@ -21,6 +21,7 @@ namespace Kurisu.AkiBT.Editor
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Add Child", (a) => AddChild()));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Remove Unnecessary Children", (a) => RemoveUnnecessaryChildren()));
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>ownerTreeView.DuplicateNode(this)));
         }
 
         public CompositeNode() 

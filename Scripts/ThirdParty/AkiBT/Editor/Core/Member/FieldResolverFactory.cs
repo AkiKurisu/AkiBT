@@ -53,12 +53,11 @@ namespace Kurisu.AkiBT.Editor
                 {
                     try
                     {
-                        //尝试构造为resolverType<parameterType>
-                        resolverType=resolverType.MakeGenericType(parameterType);
+                        resolverType=resolverType.MakeGenericType(parameterType);//尝试构造为resolverType<parameterType>
                     }
                     catch
-                    {
-                        //没有通过约束则忽略
+                    { 
+                        continue;//没有通过约束则忽略
                     }
                 }
                 if(!IsAcceptable(resolverType,fieldType,fieldInfo))continue;//不满足则继续

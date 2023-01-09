@@ -29,6 +29,7 @@ namespace Kurisu.AkiBT.Editor
            
 
         }
+
         protected override BaseField<bool> CreateValueField()=>new Toggle("Value");
     }
 }

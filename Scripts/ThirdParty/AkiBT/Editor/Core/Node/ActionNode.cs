@@ -14,6 +14,7 @@ namespace Kurisu.AkiBT.Editor
                 provider.Init(this,BehaviorTreeSetting.GetMask(ownerTreeView.treeEditorName));
                 SearchWindow.Open(new SearchWindowContext(a.eventInfo.mousePosition), provider);
             }));
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>ownerTreeView.DuplicateNode(this)));
         }
 
         protected override bool OnValidate(Stack<BehaviorTreeNode> stack) => true;
