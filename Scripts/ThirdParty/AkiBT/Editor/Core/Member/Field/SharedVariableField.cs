@@ -10,6 +10,7 @@ namespace Kurisu.AkiBT.Editor
         private Toggle toggle;
         private BehaviorTreeView treeView;
         private DropdownField nameDropdown;
+        private SharedVariable bindExposedProperty;
         public SharedVariableField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput)
         {
             this.label=label;
@@ -24,6 +25,12 @@ namespace Kurisu.AkiBT.Editor
         public void InitField(BehaviorTreeView treeView)
         {
             this.treeView=treeView;
+            treeView.OnExposedPropertyNameChangeEvent+=(variable)=>
+            {
+                if(variable!=bindExposedProperty)return;
+                nameDropdown.value=variable.Name;
+                value.Name=variable.Name;
+            };
             OnToggle(toggle.value);
         } 
         static List<string> GetList(BehaviorTreeView treeView)
@@ -33,12 +40,17 @@ namespace Kurisu.AkiBT.Editor
             .Select(v => v.Name)
             .ToList();
         }
+        void BindVariable()
+        {
+            bindExposedProperty=treeView.ExposedProperties.Where(x=>x.GetType().IsSubclassOf(typeof(SharedVariable<K>))).FirstOrDefault();
+        }
         private void OnToggle(bool IsShared){
             if(IsShared)
             {      
                 if(nameDropdown==null&&value!=null&&treeView!=null)
                 {
                     nameDropdown=new DropdownField("Variable Name",GetList(treeView),value.Name!=null?value.Name:string.Empty);
+                    
                     nameDropdown.RegisterCallback<MouseEnterEvent>((evt)=>{nameDropdown.choices=GetList(treeView);});
                     nameDropdown.RegisterValueChangedCallback(evt => value.Name = evt.newValue);
                     foldout.Add(nameDropdown);

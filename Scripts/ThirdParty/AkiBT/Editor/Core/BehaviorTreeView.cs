@@ -27,6 +27,7 @@ namespace Kurisu.AkiBT.Editor
         public List<SharedVariable> ExposedProperties=new List<SharedVariable>();
         private FieldResolverFactory fieldResolverFactory = new FieldResolverFactory();
         protected NodeSearchWindowProvider provider;
+        public event System.Action<SharedVariable> OnExposedPropertyNameChangeEvent;
         public bool AutoSave
         {
             get=>behaviorTree.AutoSave;
@@ -109,8 +110,10 @@ namespace Kurisu.AkiBT.Editor
                 if(String.IsNullOrEmpty(localPropertyName))
                     localPropertyName=variable.GetType().Name;
                 while (ExposedProperties.Any(x => x.Name == localPropertyName))
-                    localPropertyName = $"{localPropertyName}(1)";
-                
+                {
+                    int index=ExposedProperties.Count(x=>x.Name == localPropertyName);
+                    localPropertyName = $"{localPropertyName}{index+1}";
+                }  
             }
             variable.Name=localPropertyName;
             ExposedProperties.Add(variable);
@@ -123,10 +126,24 @@ namespace Kurisu.AkiBT.Editor
             var fieldResolver = fieldResolverFactory.Create(info);//工厂创建暴露引用
             var valueField=fieldResolver.GetEditorField(ExposedProperties,variable);
             var sa = new BlackboardRow(field, valueField);
+            sa.AddManipulator(new ContextualMenuManipulator((evt)=>BuildBlackboardMenu(evt,container,variable)));
             container.Add(sa);
             _blackboard.Add(container);
         }
-        
+        private void BuildBlackboardMenu(ContextualMenuPopulateEvent evt,VisualElement element,SharedVariable variable)
+        {
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Delate Variable", (a) =>
+            {
+                   int index=_blackboard.contentContainer.IndexOf(element);
+                   ExposedProperties.RemoveAt(index-1);
+                   _blackboard.Remove(element);
+                   return;
+            }));
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Update All Reference Node", (a) =>
+            {
+                   OnExposedPropertyNameChangeEvent?.Invoke(variable);
+            }));
+        }
         public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter) {
             var compatiblePorts = new List<Port>();
             foreach (var port in ports.ToList())
