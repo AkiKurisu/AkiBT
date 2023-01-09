@@ -117,7 +117,8 @@ namespace Kurisu.AkiBT.Editor
                 {
                     var compositeNode = selectNode as CompositeNode;
                     var copy=node as CompositeNode;
-                    for(int i=0;i<compositeNode.ChildPorts.Count-copy.ChildPorts.Count;i++)
+                    int count=compositeNode.ChildPorts.Count-copy.ChildPorts.Count;
+                    for(int i=0;i<count;i++)
                     {
                         copy.AddChild();
                     }
