@@ -4,6 +4,7 @@
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
 行为树衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
+AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function.I add more features so that you can enjoy it.
 #
 
 ## 支持的版本Supported version
@@ -14,31 +15,31 @@
 ## AkiBT特点Features
 * 支持使用可视化节点编辑器构造行为树Supports constructing behavior tree by [GraphView](https://docs.unity3d.com/ScriptReference/Experimental.GraphView.GraphView.html).
 * 支持运行时可视化结点状态Supports visualizing active node in runtime.
-* 非常便于拓展和自定义新的行为Easily add original behaviors(Action,Conditional,Composite).
+* 非常便于拓展和自定义新的行为Easily add original behaviors(Action,Conditional,Composite,Decorator).
 #
 ## 视图优化Optimization
-* 优化了结点创建菜单,根据类型分类
-* 增加了左键选框
-* 增加了背景和结点样式
-* 设置Root结点为不可删除防止无法恢复
+* 优化了结点创建菜单,根据类型分类Optimize NodeSearchWindow and improve it with an advanced subCategory attribute.
+* 增加了左键选框Add SelectionDragger using Left Mouse.
+* 增加了背景和结点样式Add style for background and node.
+* 设置Root结点为不可删除防止无法恢复Set Root's Capablity to Undeletable.
 * 1.2.2版本加入了List的显示功能,后续会支持Array数组的显示
 * 1.2.3版本加入了复制粘贴功能(Ctrl+C&&Ctrl+V或者右键单个结点的Duplicate选项)
 #
 
 ## 保存功能Save Function
 
-1. 增加自动保存设置和保存到ScriptableObject的功能
+1. 增加自动保存设置和保存到ScriptableObject的功能Add Auto-Save function and Save-To-ScriptableObject function.
 
 <img src="Images/AutoSave.png" width="480"/>
 
 #
 
-2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO
+2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO。You can use External Tree to replaced the BehaviorTree Component in Inspector with it.However,you cant use it for runtime-using such as replacing tree data in playing mode.It is designed for editing nodes based on another behavior tree.It's an Editor-Only feature.Although the visual node editor will draw the tree by exteral tree,you cant edit the tree by 'Saving BehaviorTree'.
 
 <img src="Images/External.png" width="480"/>
 
 #
-3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！
+3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！You can edit so directly in version1.1.
    
 <img src="Images/OpenSO.png" width="480"/>
 
@@ -65,33 +66,33 @@ public class WaitSuccess : Decorator
 #
 ## 共享变量SharedVairable
 
-1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool类型变量
+1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool类型变量Add SharedVariable which let you have access to add it in a blackboard and share value between different node.Now it support Float,Int,Vector3,Bool , maybe I will add String , GameObject in the future.
 
 <img src="Images/SharedVariable.png" />
 
-* 注意：修改共享变量名称的方式为双击变量,为空时自动删除
+* 注意：修改共享变量名称的方式为双击变量,为空时自动删除You can edit variable's name by double-click it and the variable will auto delate when it's name becomes empty.
 
-* 1.2.3版本加入了右键删除和更新所有引用该共享变量的字段,方便修改变量名称时不用一个个手动重选
+* 1.2.3版本加入了右键删除和更新所有引用该共享变量的字段,方便修改变量名称时不用一个个手动重选In version1.2.3,I add a menu when you left-click the blackboardRaw,you can easily delate it and refresh all the referenced fields when updating the name of variable.
   
-* 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
+* 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.SharedVariable supports static-using,if you dont want to relate it with variables in blackboard,you just need make 'Is Shared' toogle to False.If you have a variable with invalide name,it will stay unShared in playing mode.
 
 <img src="Images/Operator.png" width="480"/>
 
-2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换
+2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换SharedVariable will be replaced when you save the tree.
 
 
 3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值
 
 <img src="Images/ChangeVariableInInspector.png" width="480"/>
 
-4. 1.2版本将编辑器内的共享变量修改为Dropdown下拉菜单,无需重复填写
+4. 1.2版本将编辑器内的共享变量修改为Dropdown下拉菜单,无需重复填写StringField for SharedVariable is now replaced with a DropdownField which is easy to edit.
 
 <img src="Images/SmartVariable.png" width="480"/>
 
 #
 ## 特性Attributes
 
-1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中
+1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中.You can use AkiInfo attribute to describe the behavior detail of the node for inforamtion used.
 ```C#
   [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
 public class NavmeshStopAgent : Action
@@ -103,7 +104,7 @@ public class NavmeshStopAgent : Action
 
 #
 
-2. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称
+2. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.AkiLabel attrubte is added for replacing the label of node'title or field especailly for Chinese.
    
 ```C#
 [AkiLabel("Navmesh:StopAgent")]
@@ -118,7 +119,7 @@ public class NavmeshStopAgent : Action
 
 #
 
-3. 增加了Group特性用以对结点进行分类
+3. 增加了Group特性用以对结点进行分类AkiGroup is an advanced attribute using in Node Searching,you can add this attribute to make it easier and more clear to find certain node.
 
 ```c#
     [AkiGroup("Animator")]
@@ -130,7 +131,7 @@ public class NavmeshStopAgent : Action
 
 <img src="Images/AkiGroup.png" width="480"/>
 
-在1.2版本你可以使用'/'符号进行子分类
+在1.2版本你可以使用'/'符号进行子分类You can also subcategory the SearchWindow by using '/'.
 
 <img src="Images/SubCategories.png" width="480"/>
 
@@ -138,7 +139,7 @@ public class NavmeshStopAgent : Action
 
 ## 设置界面
 
-1.2版本中增加了搜索结点的筛选设置,你可以在ProjectSetting中设置AkiBT编辑器或者其余继承自AkiBT的编辑器的搜索遮罩。你可以设置工作流中需要的Group类型（Group特性相关见上文）,没有添加Group特性的结点不会被过滤。
+1.2版本中增加了搜索结点的筛选设置,你可以在ProjectSetting中设置AkiBT编辑器或者其余继承自AkiBT的编辑器的搜索遮罩。你可以设置工作流中需要的Group类型（Group特性相关见上文）,没有添加Group特性的结点不会被过滤。Sometimes you maynot care about some nodes,you can add the AkiGroup attribute that makes them in a certain named group.Then you can edit the setting in ProjectSetting where you can add mask for the group you want to see in the SearchWindow.To be mentioned,the mask is relating to the editor you used.As default,the AkiBT editor is named with 'AkiBT',so you should edit the 'EditorName' with it. 
 
 <img src="Images/Setting.png" width="480"/>
 
