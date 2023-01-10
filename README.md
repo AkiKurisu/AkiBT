@@ -4,7 +4,7 @@
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
 行为树衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
-AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function.I add more features so that you can enjoy it.
+AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function.AkiKurisu Extends it with more features so that you can enjoy it.
 #
 
 ## 支持的版本Supported version
@@ -20,7 +20,7 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 ## 视图优化Optimization
 * 优化了结点创建菜单,根据类型分类Optimize NodeSearchWindow and improve it with an advanced subCategory attribute.
 * 增加了左键选框Add SelectionDragger using Left Mouse.
-* 增加了背景和结点样式Add style for background and node.
+* 增加了背景和结点样式Add style for both background and nodes.
 * 设置Root结点为不可删除防止无法恢复Set Root's Capablity to Undeletable.
 * 1.2.2版本加入了List的显示功能,后续会支持Array数组的显示
 * 1.2.3版本加入了复制粘贴功能(Ctrl+C&&Ctrl+V或者右键单个结点的Duplicate选项)
@@ -34,12 +34,12 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 
 #
 
-2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO。You can use External Tree to replaced the BehaviorTree Component in Inspector with it.However,you cant use it for runtime-using such as replacing tree data in playing mode.It is designed for editing nodes based on another behavior tree.It's an Editor-Only feature.Although the visual node editor will draw the tree by exteral tree,you cant edit the tree by 'Saving BehaviorTree'.
+2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO。You can use External Tree to replaced the BehaviorTree Component in Inspector with it.However,you cant use it for runtime-using such as replacing tree data in playing mode.It is designed for editing nodes based on another behavior tree.It's an Editor-Only feature.Although the visual node editor will draw the tree by exteral tree,you cant edit the tree in the SO by click 'Saving BehaviorTree' which will only effect the tree in the Component.
 
 <img src="Images/External.png" width="480"/>
 
 #
-3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！You can edit so directly in version1.1.
+3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！You can edit SO directly in version1.1.
    
 <img src="Images/OpenSO.png" width="480"/>
 
@@ -66,7 +66,7 @@ public class WaitSuccess : Decorator
 #
 ## 共享变量SharedVairable
 
-1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool类型变量Add SharedVariable which let you have access to add it in a blackboard and share value between different node.Now it support Float,Int,Vector3,Bool , maybe I will add String , GameObject in the future.
+1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool类型变量Add SharedVariable which lets you have access to add it in a blackboard and share value between different node.Now it supports Float,Int,Vector3,Bool, maybe I will add String , GameObject in the future.
 
 <img src="Images/SharedVariable.png" />
 
@@ -81,18 +81,18 @@ public class WaitSuccess : Decorator
 2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换SharedVariable will be replaced when you save the tree.
 
 
-3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值
+3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值In version1.2,you can edit the exposed sharedvariable's value in the inspector.
 
 <img src="Images/ChangeVariableInInspector.png" width="480"/>
 
-4. 1.2版本将编辑器内的共享变量修改为Dropdown下拉菜单,无需重复填写StringField for SharedVariable is now replaced with a DropdownField which is easy to edit.
+4. 1.2版本将编辑器内的共享变量修改为Dropdown下拉菜单,无需重复填写StringField for SharedVariable is now replaced with a DropdownField which is easier to edit.
 
 <img src="Images/SmartVariable.png" width="480"/>
 
 #
 ## 特性Attributes
 
-1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中.You can use AkiInfo attribute to describe the behavior detail of the node for inforamtion used.
+1. 增加了Info特性用以描述结点行为,可以显示在结点编辑器中.You can use AkiInfo attribute to describe the behavior detail of the node for information.
 ```C#
   [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
 public class NavmeshStopAgent : Action
@@ -104,7 +104,7 @@ public class NavmeshStopAgent : Action
 
 #
 
-2. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.AkiLabel attrubte is added for replacing the label of node'title or field especailly for Chinese.
+2. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.AkiLabel attrubte is added for replacing label of node's title or field especailly for Chinese.
    
 ```C#
 [AkiLabel("Navmesh:StopAgent")]
