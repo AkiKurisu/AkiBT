@@ -5,7 +5,7 @@ namespace Kurisu.AkiBT.Editor
 {
 public class ListField<T> : BaseField<List<T>>
     {
-        private readonly ListView listView;
+        protected readonly ListView listView;
         protected readonly Func<VisualElement>elementCreator;
         protected readonly Func<object>valueCreator;
         public ListField(string label, VisualElement visualInput,Func<VisualElement>elementCreator,Func<object>valueCreator) : base(label, visualInput)
@@ -42,10 +42,9 @@ public class ListField<T> : BaseField<List<T>>
             var view = new ListView(value, itemHeight, makeItem, bindItem);
             return view;
         }
-        public sealed override List<T> value { get => base.value; set {base.value = new List<T>();UpdateValue(value);} }
-        private void UpdateValue(List<T> newList)
+        public sealed override List<T> value { get => base.value; set {base.value = new List<T>(value);UpdateValue();} }
+        private void UpdateValue()
         {
-            foreach(T element in newList)value.Add(element);
             if(listView!=null){listView.itemsSource=value;listView.RefreshItems();}
         }
         

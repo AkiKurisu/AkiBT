@@ -23,22 +23,14 @@ CompositeNode #title {
 {
     min-width:50px;
 }
+#unity-content-container
+{
+   flex-basis:auto;   
+}
 
-SharedFloatField
+.SharedVariableField
 {
-    flex-direction:column
-}
-SharedIntField
-{
-    flex-direction:column
-}
-SharedVector3Field
-{
-    flex-direction:column
-}
-SharedBoolField
-{
-    flex-direction:column
+    flex-direction:column-reverse
 }
 ActionNode #title {
     background-color: rgba(251, 114, 153, 0.91);

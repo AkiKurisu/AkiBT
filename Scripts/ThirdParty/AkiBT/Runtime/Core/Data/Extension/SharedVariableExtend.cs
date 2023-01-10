@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
@@ -16,7 +14,7 @@ public static class SharedVariableExtend
     {
         if(variable==null)
         {
-            Debug.LogWarning("你没有实例SharedVarible!");
+            // Debug.LogWarning("你没有实例SharedVarible!");
             return null;
         }
         if(!variable.IsShared)return variable;

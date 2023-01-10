@@ -4,9 +4,17 @@ using System.Linq;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public abstract class SharedVariableField<T,K> : BaseField<T> where T:SharedVariable<K>,new()
+    public interface IFoldout
     {
-        private Foldout foldout;
+        public Foldout foldout{get;}
+    }
+    public interface IInitField
+    {
+        public void InitField(BehaviorTreeView treeView);
+    }
+    public abstract class SharedVariableField<T,K> : BaseField<T>,IFoldout,IInitField where T:SharedVariable<K>,new()
+    {
+        public Foldout foldout{get;private set;}
         private Toggle toggle;
         private BehaviorTreeView treeView;
         private DropdownField nameDropdown;
@@ -14,9 +22,11 @@ namespace Kurisu.AkiBT.Editor
         public SharedVariableField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput)
         {
             this.label=label;
+            AddToClassList("SharedVariableField");
             foldout=new Foldout();
             foldout.value=false;
             foldout.text=$"{objectType.Name}";
+            contentContainer.RemoveAt(0);
             contentContainer.Add(foldout);
             toggle=new Toggle("Is Shared");
             toggle.RegisterValueChangedCallback(evt =>{ value.IsShared = evt.newValue;OnToggle(evt.newValue);});
@@ -72,13 +82,14 @@ namespace Kurisu.AkiBT.Editor
             }
         }
         protected abstract BaseField<K> CreateValueField();
-        public sealed override T value {get=>base.value; set {if(base.value==null)base.value=new T();UpdateValue(value);} }
+        public sealed override T value {get=>base.value; set {
+            if(value!=null)base.value=value.Clone() as T;
+            else base.value=new T();
+            UpdateValue();
+        } }
         protected BaseField<K>valueField{get;set;}
-        void UpdateValue(T newValue)
+        void UpdateValue()
         {
-            value.IsShared=newValue.IsShared;
-            value.Value=newValue.Value;
-            value.Name=newValue.Name;
             toggle.value=value.IsShared;
             if(valueField!=null)valueField.value=value.Value;
             BindProperty();
@@ -88,3 +99,4 @@ namespace Kurisu.AkiBT.Editor
     
 }
 
+;
