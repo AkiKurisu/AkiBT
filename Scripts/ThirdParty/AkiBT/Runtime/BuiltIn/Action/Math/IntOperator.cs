@@ -17,11 +17,11 @@ namespace Kurisu.AkiBT.Extend
             Modulo
         }
         [SerializeField]
-        private SharedInt int1=new SharedInt();
+        private SharedInt int1;
         [SerializeField]
-        private SharedInt int2=new SharedInt();
+        private SharedInt int2;
         [SerializeField]
-        private SharedInt storeResult=new SharedInt();
+        private SharedInt storeResult;
         [SerializeField]
         private Operation operation;
         public override void Awake() {

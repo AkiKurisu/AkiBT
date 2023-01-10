@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT.Extend
         [SerializeField]
         private string parameter;
         [SerializeField]
-        private SharedBool storeResult=new SharedBool();
+        private SharedBool storeResult;
         private int parameterHash;
         public override void Start() {
             parameterHash=Animator.StringToHash(parameter);

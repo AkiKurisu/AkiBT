@@ -12,7 +12,7 @@ public class IntRandom : Action
             Relatively
         }
         [SerializeField]
-        private SharedInt randomInt=new SharedInt();
+        private SharedInt randomInt;
         [SerializeField]
         private Vector2Int range=new Vector2Int(-5,5);
         [SerializeField]

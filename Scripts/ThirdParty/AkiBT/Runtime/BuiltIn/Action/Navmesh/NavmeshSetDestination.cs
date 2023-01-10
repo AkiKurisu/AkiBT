@@ -9,7 +9,7 @@ public class NavmeshSetDestination : Action
 {
     private NavMeshAgent _navMeshAgent;
     [SerializeField]
-    private SharedVector3 destination=new SharedVector3();
+    private SharedVector3 destination;
     protected override Status OnUpdate()
     {
         if(_navMeshAgent!=null)

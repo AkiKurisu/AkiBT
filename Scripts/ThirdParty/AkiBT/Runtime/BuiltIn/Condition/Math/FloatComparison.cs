@@ -16,9 +16,9 @@ namespace Kurisu.AkiBT.Extend
             GreaterThan
         }
         [SerializeField]
-        private SharedFloat float1=new SharedFloat();
+        private SharedFloat float1;
         [SerializeField]
-        private SharedFloat float2=new SharedFloat();
+        private SharedFloat float2;
         [SerializeField]
         private Operation operation;
         protected override void OnStart()

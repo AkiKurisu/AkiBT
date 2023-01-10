@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT.Extend
     public class TimeWait : Action
     {
         [SerializeField,AkiLabel("等待时间")]
-        private SharedFloat waitTime=new SharedFloat(); 
+        private SharedFloat waitTime; 
         private float timer;
         public override void Awake() {
             InitVariable(waitTime);

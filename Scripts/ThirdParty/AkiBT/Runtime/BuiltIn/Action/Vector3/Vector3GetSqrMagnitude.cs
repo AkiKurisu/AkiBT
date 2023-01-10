@@ -7,9 +7,9 @@ namespace Kurisu.AkiBT.Extend
     public class Vector3GetSqrMagnitude : Action
     {
         [SerializeField,Tooltip("待计算的数值")]
-        public SharedVector3 vector3=new SharedVector3();
+        public SharedVector3 vector3;
         [SerializeField]
-        private SharedFloat result=new SharedFloat();
+        private SharedFloat result;
         public override void Awake() {
             InitVariable(vector3);
             InitVariable(result);

@@ -7,9 +7,9 @@ namespace Kurisu.AkiBT.Extend
 public class Int2Float : Action
 {
     [SerializeField]
-    private SharedInt value=new SharedInt();
+    private SharedInt value;
     [SerializeField]
-    private SharedFloat newValue=new SharedFloat();
+    private SharedFloat newValue;
     public override void Awake() {
         InitVariable(value);
         InitVariable(newValue);

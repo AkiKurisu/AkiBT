@@ -12,11 +12,11 @@ namespace Kurisu.AkiBT.Extend
             Or
         }
         [SerializeField]
-        private SharedBool bool1=new SharedBool();
+        private SharedBool bool1;
         [SerializeField]
-        private SharedBool bool2=new SharedBool();
+        private SharedBool bool2;
         [SerializeField]
-        private SharedBool storeResult=new SharedBool();
+        private SharedBool storeResult;
         [SerializeField]
         private Operation operation;
         public override void Awake() {

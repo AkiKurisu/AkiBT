@@ -7,11 +7,11 @@ namespace Kurisu.AkiBT.Extend
     public class Vector3Distance : Action
     {
         [SerializeField]
-        public SharedVector3 firstVector3=new SharedVector3();
+        public SharedVector3 firstVector3;
         [SerializeField]
-        public SharedVector3 secondVector3=new SharedVector3();
+        public SharedVector3 secondVector3;
         [SerializeField]
-        private SharedFloat result=new SharedFloat();
+        private SharedFloat result;
         public override void Awake() {
             InitVariable(firstVector3);
             InitVariable(secondVector3);

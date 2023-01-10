@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT
         [SerializeField,Tooltip("目标Transform")]
         private Transform target;
         [SerializeField]
-        private SharedVector3 result=new SharedVector3();
+        private SharedVector3 result;
         public override void Awake()
         {
             InitVariable(result);

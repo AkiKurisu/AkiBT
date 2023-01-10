@@ -11,7 +11,7 @@ namespace Kurisu.AkiBT.Extend
         [SerializeField]
         private bool status;
         [SerializeField]
-        private SharedBool storeResult=new SharedBool();
+        private SharedBool storeResult;
         private int parameterHash;
         protected override void OnStart()
         {

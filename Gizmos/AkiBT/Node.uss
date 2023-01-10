@@ -23,11 +23,6 @@ CompositeNode #title {
 {
     min-width:50px;
 }
-#unity-content-container
-{
-   flex-basis:auto;   
-}
-
 .SharedVariableField
 {
     flex-direction:column-reverse

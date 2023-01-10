@@ -16,11 +16,11 @@ public class Vector3Operator : Action
         [SerializeField]
         private Operation operation;
         [SerializeField]
-        private SharedVector3 firstVector3=new SharedVector3();
+        private SharedVector3 firstVector3;
         [SerializeField]
-        private SharedVector3 secondVector3=new SharedVector3();
+        private SharedVector3 secondVector3;
         [SerializeField]
-        private SharedVector3 storeResult=new SharedVector3();
+        private SharedVector3 storeResult;
         public override void Awake() {
             InitVariable(firstVector3);
             InitVariable(secondVector3);

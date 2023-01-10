@@ -12,9 +12,9 @@ namespace Kurisu.AkiBT.Extend
             NotEqualTo,
         }
         [SerializeField]
-        private SharedBool bool1=new SharedBool();
+        private SharedBool bool1;
         [SerializeField]
-        private SharedBool bool2=new SharedBool();
+        private SharedBool bool2;
         [SerializeField]
         private Operation operation;
         protected override void OnStart()

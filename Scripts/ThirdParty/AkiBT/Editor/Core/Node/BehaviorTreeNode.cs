@@ -19,7 +19,7 @@ namespace Kurisu.AkiBT.Editor
         private readonly VisualElement container;
 
         private readonly TextField description;
-
+        public string Description=>description.value;
         private readonly FieldResolverFactory fieldResolverFactory;
 
         public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
@@ -66,7 +66,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 resolvers[i].Copy(copyNode.resolvers[i]);
             }
-            description.value = copyNode.NodeBehavior.description;
+            description.value = copyNode.Description;
             NodeBehavior=Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
             NodeBehavior.NotifyEditor = MarkAsExecuted;
         }

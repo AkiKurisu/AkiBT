@@ -12,7 +12,7 @@ namespace Kurisu.AkiBT.Extend
             Relatively
         }
         [SerializeField]
-        private SharedVector3 randomVector3=new SharedVector3();
+        private SharedVector3 randomVector3;
         [SerializeField]
         private Vector2 xRange=new Vector2(-5,5);
         [SerializeField]

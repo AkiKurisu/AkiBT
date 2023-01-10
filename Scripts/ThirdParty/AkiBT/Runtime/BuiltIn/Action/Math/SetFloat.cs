@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Extend
 public class SetFloat : Action
 {
     [SerializeField]
-    private SharedFloat floatToSet=new SharedFloat();
+    private SharedFloat floatToSet;
     [SerializeField]
     private float setValue;
     public override void Awake() {

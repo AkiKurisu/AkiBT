@@ -9,7 +9,7 @@ public class NavmeshStopAgent : Action
 {
     private NavMeshAgent _navMeshAgent;
     [SerializeField,AkiLabel("是否停止")]
-    private SharedBool isStopped=new SharedBool();
+    private SharedBool isStopped;
     protected override Status OnUpdate()
     {
         if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped.Value)

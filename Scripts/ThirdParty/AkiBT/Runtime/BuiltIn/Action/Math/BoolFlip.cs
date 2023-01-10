@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Extend
 public class BoolFlip : Action
 {
     [SerializeField]
-    private SharedBool boolToFlip=new SharedBool();
+    private SharedBool boolToFlip;
     public override void Awake() {
         InitVariable(boolToFlip);
     }

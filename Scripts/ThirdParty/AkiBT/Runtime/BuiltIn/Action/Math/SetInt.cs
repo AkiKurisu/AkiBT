@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Extend
 public class SetInt : Action
 {
     [SerializeField]
-    private SharedInt intToSet=new SharedInt();
+    private SharedInt intToSet;
     [SerializeField]
     private int setValue;
     public override void Awake() {

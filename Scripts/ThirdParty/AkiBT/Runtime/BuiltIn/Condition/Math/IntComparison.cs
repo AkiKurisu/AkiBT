@@ -16,9 +16,9 @@ namespace Kurisu.AkiBT.Extend
             GreaterThan
         }
         [SerializeField]
-        private SharedInt int1=new SharedInt();
+        private SharedInt int1;
         [SerializeField]
-        private SharedInt int2=new SharedInt();
+        private SharedInt int2;
         [SerializeField]
         private Operation operation;
         protected override void OnStart()
