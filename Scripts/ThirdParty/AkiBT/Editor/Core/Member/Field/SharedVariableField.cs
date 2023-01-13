@@ -21,12 +21,10 @@ namespace Kurisu.AkiBT.Editor
         private SharedVariable bindExposedProperty;
         public SharedVariableField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput)
         {
-            this.label=label;
             AddToClassList("SharedVariableField");
             foldout=new Foldout();
             foldout.value=false;
             foldout.text=$"{objectType.Name}";
-            contentContainer.RemoveAt(0);
             contentContainer.Add(foldout);
             toggle=new Toggle("Is Shared");
             toggle.RegisterValueChangedCallback(evt =>{ value.IsShared = evt.newValue;OnToggle(evt.newValue);});
