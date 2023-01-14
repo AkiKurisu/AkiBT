@@ -1302,12 +1302,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root:
-    rid: 7851556643135291534
+    rid: 7851556781192904725
   sharedVariables:
-  - rid: 7851556597599830290
-  - rid: 7851556597599830291
-  - rid: 7851556597599830292
-  - rid: 7851556643135291535
+  - rid: 7851556781192904705
+  - rid: 7851556781192904706
+  - rid: 7851556781192904707
+  - rid: 7851556781192904708
   updateType: 0
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
@@ -1315,25 +1315,31 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 7851556597599830290
+    - rid: 7851556781192904705
       type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
         mName: destination
         value: {x: 0, y: 0, z: 0}
-    - rid: 7851556597599830291
+    - rid: 7851556781192904706
       type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
         mName: myPos
         value: {x: 0, y: 0, z: 0}
-    - rid: 7851556597599830292
+    - rid: 7851556781192904707
       type: {class: SharedFloat, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
         mName: distance
         value: 0
-    - rid: 7851556643135291534
+    - rid: 7851556781192904708
+      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        mName: subtract
+        value: {x: 0, y: 0, z: 0}
+    - rid: 7851556781192904725
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1344,14 +1350,8 @@ MonoBehaviour:
           height: 77
         description: 
         child:
-          rid: 7851556643135291536
-    - rid: 7851556643135291535
-      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
-      data:
-        isShared: 0
-        mName: subtract
-        value: {x: 0, y: 0, z: 0}
-    - rid: 7851556643135291536
+          rid: 7851556781192904726
+    - rid: 7851556781192904726
       type: {class: Parallel, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1362,9 +1362,9 @@ MonoBehaviour:
           height: 123
         description: 
         children:
-        - rid: 7851556643135291537
-        - rid: 7851556643135291538
-    - rid: 7851556643135291537
+        - rid: 7851556781192904727
+        - rid: 7851556781192904728
+    - rid: 7851556781192904727
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1375,11 +1375,11 @@ MonoBehaviour:
           height: 167
         description: 
         children:
-        - rid: 7851556643135291539
-        - rid: 7851556643135291540
-        - rid: 7851556643135291541
+        - rid: 7851556781192904729
+        - rid: 7851556781192904730
+        - rid: 7851556781192904731
         abortOnConditionChanged: 0
-    - rid: 7851556643135291538
+    - rid: 7851556781192904728
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1390,10 +1390,10 @@ MonoBehaviour:
           height: 143
         description: 
         children:
-        - rid: 7851556643135291542
-        - rid: 7851556643135291543
+        - rid: 7851556781192904732
+        - rid: 7851556781192904733
         abortOnConditionChanged: 0
-    - rid: 7851556643135291539
+    - rid: 7851556781192904729
       type: {class: Vector3Random, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1411,7 +1411,7 @@ MonoBehaviour:
         yRange: {x: 0, y: 0}
         zRange: {x: -10, y: 10}
         operation: 1
-    - rid: 7851556643135291540
+    - rid: 7851556781192904730
       type: {class: DebugLog, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1422,7 +1422,7 @@ MonoBehaviour:
           height: 121
         description: "Patrol\u83B7\u53D6\u4E86\u65B0\u4F4D\u7F6E"
         logText: "Patrol\u83B7\u53D6\u4E86\u65B0\u4F4D\u7F6E"
-    - rid: 7851556643135291541
+    - rid: 7851556781192904731
       type: {class: TimeWait, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1436,7 +1436,7 @@ MonoBehaviour:
           isShared: 0
           mName: 
           value: 10
-    - rid: 7851556643135291542
+    - rid: 7851556781192904732
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1447,11 +1447,11 @@ MonoBehaviour:
           height: 167
         description: "\u8BA1\u7B97\u5E8F\u5217"
         children:
-        - rid: 7851556643135291544
-        - rid: 7851556643135291545
-        - rid: 7851556643135291546
+        - rid: 7851556781192904734
+        - rid: 7851556781192904735
+        - rid: 7851556781192904736
         abortOnConditionChanged: 0
-    - rid: 7851556643135291543
+    - rid: 7851556781192904733
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1462,10 +1462,10 @@ MonoBehaviour:
           height: 143
         description: 
         children:
-        - rid: 7851556643135291547
-        - rid: 7851556643135291548
+        - rid: 7851556781192904737
+        - rid: 7851556781192904738
         abortOnConditionChanged: 0
-    - rid: 7851556643135291544
+    - rid: 7851556781192904734
       type: {class: TransformGetPosition, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1480,7 +1480,7 @@ MonoBehaviour:
           isShared: 1
           mName: myPos
           value: {x: 0, y: 0, z: 0}
-    - rid: 7851556643135291545
+    - rid: 7851556781192904735
       type: {class: Vector3Operator, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1503,7 +1503,7 @@ MonoBehaviour:
           isShared: 1
           mName: subtract
           value: {x: 0, y: 0, z: 0}
-    - rid: 7851556643135291546
+    - rid: 7851556781192904736
       type: {class: Vector3GetSqrMagnitude, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1521,7 +1521,7 @@ MonoBehaviour:
           isShared: 1
           mName: distance
           value: 0
-    - rid: 7851556643135291547
+    - rid: 7851556781192904737
       type: {class: FloatComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1530,10 +1530,10 @@ MonoBehaviour:
           y: 682
           width: 208
           height: 223
-        description: "\u5224\u65ADdistance>16\u5373\u8DDD\u79BB>4"
+        description: "\u5224\u65ADdistance>4\u5373\u8DDD\u79BB>2"
         evaluateOnRunning: 0
         child:
-          rid: 7851556643135291549
+          rid: 7851556781192904739
         float1:
           isShared: 1
           mName: distance
@@ -1541,9 +1541,9 @@ MonoBehaviour:
         float2:
           isShared: 0
           mName: 
-          value: 16
+          value: 4
         operation: 5
-    - rid: 7851556643135291548
+    - rid: 7851556781192904738
       type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1557,7 +1557,7 @@ MonoBehaviour:
           isShared: 0
           mName: 
           value: 1
-    - rid: 7851556643135291549
+    - rid: 7851556781192904739
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1568,10 +1568,10 @@ MonoBehaviour:
           height: 143
         description: "\u79FB\u52A8\u5E8F\u5217"
         children:
-        - rid: 7851556643135291550
-        - rid: 7851556643135291551
+        - rid: 7851556781192904740
+        - rid: 7851556781192904741
         abortOnConditionChanged: 0
-    - rid: 7851556643135291550
+    - rid: 7851556781192904740
       type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -1585,7 +1585,7 @@ MonoBehaviour:
           isShared: 0
           mName: 
           value: 0
-    - rid: 7851556643135291551
+    - rid: 7851556781192904741
       type: {class: NavmeshSetDestination, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
