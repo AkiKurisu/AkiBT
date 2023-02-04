@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT.Editor
         private static readonly Dictionary<int,GraphEditorWindow> cache = new Dictionary<int, GraphEditorWindow>();
         private BehaviorTreeView graphView;
         public BehaviorTreeView GraphView=>graphView;
-        private IBehaviorTree key { get; set; }
+        private UnityEngine.Object key { get; set; }
         InfoView infoView;
         public static void Show(IBehaviorTree bt)
         {
@@ -25,7 +25,7 @@ namespace Kurisu.AkiBT.Editor
         private static GraphEditorWindow Create(IBehaviorTree bt)
         {
            
-            var key = bt.GetHashCode();
+            var key = bt._Object.GetHashCode();
             if (cache.ContainsKey(key))
             {
                 return cache[key];
@@ -33,7 +33,7 @@ namespace Kurisu.AkiBT.Editor
             var window = CreateInstance<GraphEditorWindow>();
             StructGraphView(window, bt);
             window.titleContent = new GUIContent($"行为树结点编辑器({bt._Object.name})");
-            window.key = bt;
+            window.key = bt._Object;
             cache[key] = window;
             return window;
         }
@@ -106,9 +106,9 @@ namespace Kurisu.AkiBT.Editor
                 return;
             }
             graphView.Commit(treeSO);
-            AssetDatabase.CreateAsset(treeSO,$"{graphView.SavePath}/{key._Object.name}.asset");
+            AssetDatabase.CreateAsset(treeSO,$"{graphView.SavePath}/{key.name}.asset");
             AssetDatabase.SaveAssets();
-            Debug.Log($"<color=#3aff48>AkiBT</color>外部行为树保存成功,SO生成位置:{graphView.SavePath}/{key._Object.name}.asset\n{System.DateTime.Now.ToString()}");
+            Debug.Log($"<color=#3aff48>AkiBT</color>外部行为树保存成功,SO生成位置:{graphView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
         }
         
         private void OnDestroy()
@@ -156,7 +156,8 @@ namespace Kurisu.AkiBT.Editor
         {
             if (key != null)
             {
-                StructGraphView(this, key);
+                if(key is GameObject)StructGraphView(this, (key as GameObject).GetComponent<IBehaviorTree>());
+                else StructGraphView(this, (key as IBehaviorTree));
                 Repaint();
             }
         }
