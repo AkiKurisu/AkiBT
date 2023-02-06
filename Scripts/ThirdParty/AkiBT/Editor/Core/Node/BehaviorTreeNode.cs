@@ -24,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
 
         public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
-        protected BehaviorTreeView ownerTreeView;
+        protected BehaviorTreeView mapTreeView;
         public override void OnSelected()
         {
             base.OnSelected();
@@ -132,7 +132,7 @@ namespace Kurisu.AkiBT.Editor
         /// <param name="nodeBehavior"></param>
         public void SetBehavior(System.Type nodeBehavior,BehaviorTreeView ownerTreeView=null)
         {
-            if(ownerTreeView!=null)this.ownerTreeView=ownerTreeView;
+            if(ownerTreeView!=null)this.mapTreeView=ownerTreeView;
             if (dirtyNodeBehaviorType != null)
             {
                 dirtyNodeBehaviorType = null;
@@ -151,7 +151,7 @@ namespace Kurisu.AkiBT.Editor
                     var fieldResolver = fieldResolverFactory.Create(p);//工厂创建暴露引用
                     var defaultValue = Activator.CreateInstance(nodeBehavior) as NodeBehavior;
                     fieldResolver.Restore(defaultValue);
-                    container.Add(fieldResolver.GetEditorField(ownerTreeView));
+                    container.Add(fieldResolver.GetEditorField(mapTreeView));
                     resolvers.Add(fieldResolver);
                 });
             AkiLabel[] array;
