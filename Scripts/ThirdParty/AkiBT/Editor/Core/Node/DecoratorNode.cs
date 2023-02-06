@@ -18,10 +18,10 @@ namespace Kurisu.AkiBT.Editor
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
             {
                 var provider =ScriptableObject.CreateInstance< DecoratorSearchWindowProvider>();
-                provider.Init(this,BehaviorTreeSetting.GetMask(ownerTreeView.treeEditorName));
+                provider.Init(this,BehaviorTreeSetting.GetMask(mapTreeView.treeEditorName));
                 SearchWindow.Open(new SearchWindowContext(a.eventInfo.mousePosition), provider);
             }));
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>ownerTreeView.DuplicateNode(this)));   
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>mapTreeView.DuplicateNode(this)));   
         }
 
         public DecoratorNode()
