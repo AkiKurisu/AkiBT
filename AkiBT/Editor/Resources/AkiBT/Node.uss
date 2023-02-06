@@ -1,0 +1,48 @@
+:root {
+    -unity-font-definition: resource('AkiBT/Font');
+}
+CompositeNode #title {
+    background-color: rgba(76, 255, 85, 0.91);
+    color: white;
+}
+#title-label
+{
+    color:black;
+    font-size: 15px;
+}
+.unity-base-field__label
+{
+    min-width:20px;
+}
+.unity-base-field
+{
+    flex-basis:auto;
+    min-width:80px;
+}
+#unity-text-input
+{
+    min-width:50px;
+}
+.SharedVariableField
+{
+    flex-direction:column
+}
+ActionNode #title {
+    background-color: rgba(251, 114, 153, 0.91);
+}
+ConditionalNode #title {
+    background-color: rgba(0, 255, 255, 0.91);
+
+}
+DecoratorNode #title {
+    background-color: rgba(14, 240, 180, 0.91);
+
+}
+RootNode #title {
+    background-color: rgba(191, 117, 255, 0.91);
+    
+}
+Foldout:hover
+{
+   background-color: rgba(77, 77, 77, 0.91);
+}

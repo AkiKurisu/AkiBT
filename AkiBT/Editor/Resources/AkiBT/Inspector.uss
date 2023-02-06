@@ -1,0 +1,22 @@
+:root {
+    -unity-font-definition: resource('AkiBT/Font');
+}
+#unity-text-input
+{
+    min-width:50px;
+    padding-right:5px;
+}
+.unity-base-field
+{
+    flex-basis:auto;
+    padding-right:5px;
+}
+.unity-foldout--depth-1:hover
+{
+   background-color: rgba(77, 77, 77, 0.91);
+}
+Label
+{
+    min-width:20px;
+    padding-right:5px;
+}

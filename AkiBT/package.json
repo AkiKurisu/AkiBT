@@ -1,0 +1,25 @@
+{
+  "name": "com.kurisu.akibt",
+  "displayName": "AkiBT",
+  "version": "1.2.5",
+  "unity": "2021.3",
+  "description": "可视化行为树编辑器Node based Behavior Tree./n*支持运行时可视化结点状态Supports visualizing active node in runtime./n*非常便于拓展和自定义新的行为Easily add original behaviors.",
+  "keywords": [
+    "Graph",
+    "GraphView",
+    "BehaviorTree",
+    "AI"
+  ],
+  "samples": [
+    {
+      "displayName": "Example Scene",
+      "description": "A simple example for using AkiBT to design complex AI",
+      "path": "Samples/Example"
+    }
+  ],
+  "category": "Visual Scripting",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AkiKurisu/AkiBT.git"
+  }
+}

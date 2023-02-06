@@ -1,0 +1,12 @@
+InfoView {
+    font-size: 20px;
+    width:300px;
+    
+}
+Label
+{
+    white-space: normal 
+}
+:root {
+    -unity-font-definition: resource('AkiBT/Font');
+}
