@@ -406,149 +406,192 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root:
-    rid: 7851556643135291392
+    rid: 7839347643643592725
   sharedVariables: []
   updateType: 0
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
   savePath: Assets
+  blockData:
+  - ChildNodes:
+    - c4076fdc-0c37-4c72-adc7-cc6e58c18c6a
+    - 5686c2c3-9039-4a7f-9729-7f648cd15806
+    - 6b3fa873-1d0d-46e7-93f2-0dbd8548f63a
+    Position: {x: 482, y: 210.00003}
+    Title: "3.InvertorAbort\u6709\u4E24\u4E2A\u90E8\u5206"
+  - ChildNodes:
+    - ef8eeb86-c0f6-4dad-9a20-03d65f0e568a
+    - 970cef77-59a4-4d47-8048-85c36849fc6a
+    - 11edba71-6483-4a48-9db4-17bd5f3978fa
+    - 561d512d-91fb-4ea9-a8a8-4f7c503eff41
+    Position: {x: 910.6667, y: 130.66667}
+    Title: "\u4E0A\u534A\u90E8\u5206\u5728\u542F\u7528CanMove\u65F6\u4F1ADebug\u4E00\u6B21"
+  - ChildNodes:
+    - 5a63316f-bc57-488a-97e4-26a9a897a6e3
+    - c087b52b-753c-4420-8e0b-bfeea85d5363
+    - 513019d5-9c86-499d-b38e-1baac213ac9c
+    Position: {x: 906, y: 489.99997}
+    Title: "\u4E0B\u534A\u90E8\u5206\u5728\u542F\u7528CanMove\u65F6\u4F1A\u6301\u7EEDDebug"
+  - ChildNodes: []
+    Position: {x: 1506.1732, y: 496.81915}
+    Title: "Abort\u4F1A\u540C\u65F6\u6253\u65AD\u4E24\u90E8\u5206\u56E0\u6B64\u90FD\u4F1ADebug\u4E00\u6B21"
+  - ChildNodes: []
+    Position: {x: 1509.215, y: 618.4892}
+    Title: "\u4E0A\u534A\u90E8\u5206\u5728\u8FD4\u56DE\u503C\u65F6\u88ABInvertor\u53CD\u8F6C\u4E3AFailure"
+  - ChildNodes: []
+    Position: {x: 1512.2568, y: 720.38776}
+    Title: "\u56E0\u6B64\u4E0B\u4E00\u6B21Update\u4E0D\u4F1A\u88AB\u66F4\u65B0"
+  - ChildNodes: []
+    Position: {x: 1503.1315, y: 826.9301}
+    Title: "\u53EF\u89C1Abort\u4F18\u5148\u7EA7\u9AD8\u4E8E\u7ED3\u70B9\u7684Update\u8FD4\u56DE\u503C"
   references:
     version: 2
     RefIds:
-    - rid: 7851556643135291392
+    - rid: 7839347643643592725
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
           x: 400
           y: 300
-          width: 80
-          height: 77
+          width: 81.33334
+          height: 78.66669
         description: 
+        guid: 7e5b14e8-5f5b-42f4-a037-3cb624802a21
         child:
-          rid: 7851556643135291393
-    - rid: 7851556643135291393
+          rid: 7839347643643592726
+    - rid: 7839347643643592726
       type: {class: Parallel, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 493
-          y: 295
-          width: 135
-          height: 123
+          x: 507.33334
+          y: 295.33334
+          width: 135.99997
+          height: 126.66666
         description: 
+        guid: c4076fdc-0c37-4c72-adc7-cc6e58c18c6a
         children:
-        - rid: 7851556643135291394
-        - rid: 7851556643135291395
-    - rid: 7851556643135291394
+        - rid: 7839347643643592727
+        - rid: 7839347643643592728
+    - rid: 7839347643643592727
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 711
-          y: 275
-          width: 154
-          height: 143
+          x: 693.3333
+          y: 274.6667
+          width: 156.66669
+          height: 147.33331
         description: "\u6253\u65AD\u540E\u53EA\u4F1ALog\u4E00\u6B21"
+        guid: 6b3fa873-1d0d-46e7-93f2-0dbd8548f63a
         children:
-        - rid: 7851556643135291396
-        - rid: 7851556643135291397
+        - rid: 7839347643643592729
+        - rid: 7839347643643592730
         abortOnConditionChanged: 1
-    - rid: 7851556643135291395
+    - rid: 7839347643643592728
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 711
-          y: 447
-          width: 154
-          height: 143
+          x: 693.3333
+          y: 446.6667
+          width: 156.66669
+          height: 147.33334
         description: "\u6253\u65AD\u540E\u6301\u7EEDLog"
+        guid: 5686c2c3-9039-4a7f-9729-7f648cd15806
         children:
-        - rid: 7851556643135291398
-        - rid: 7851556643135291399
+        - rid: 7839347643643592731
+        - rid: 7839347643643592732
         abortOnConditionChanged: 1
-    - rid: 7851556643135291396
+    - rid: 7839347643643592729
       type: {class: Invertor, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 893
-          y: 226
-          width: 188
-          height: 99
+          x: 936
+          y: 195.33333
+          width: 190.66663
+          height: 102.66666
         description: "\u88C5\u9970\u5668\u7EE7\u627F\u5224\u65AD\u4F46\u4F1A\u4FEE\u6539\u8FD4\u56DE\u503C"
+        guid: 970cef77-59a4-4d47-8048-85c36849fc6a
         child:
-          rid: 7851556643135291400
-    - rid: 7851556643135291397
+          rid: 7839347643643592733
+    - rid: 7839347643643592730
       type: {class: FixedReturn, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 898
-          y: 348
-          width: 207
-          height: 121
+          x: 940.6667
+          y: 317.33334
+          width: 207.99994
+          height: 126.66666
         description: "\u6211\u662FA"
+        guid: ef8eeb86-c0f6-4dad-9a20-03d65f0e568a
         returnStatus: 2
-    - rid: 7851556643135291398
+    - rid: 7839347643643592731
       type: {class: CanMoveCondition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 898
-          y: 479
-          width: 231
-          height: 119
+          x: 931.3333
+          y: 554.6666
+          width: 232.66669
+          height: 123.333374
         description: "\u4ECE\u5916\u90E8\u52FE\u9009CanMove,\u4F1A\u6253\u65AD\u4E0B\u9762\u7684B"
+        guid: c087b52b-753c-4420-8e0b-bfeea85d5363
         evaluateOnRunning: 0
         child:
-          rid: 7851556643135291401
-    - rid: 7851556643135291399
+          rid: 7839347643643592734
+    - rid: 7839347643643592732
       type: {class: FixedReturn, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 898
-          y: 612
-          width: 207
-          height: 121
+          x: 931.3333
+          y: 688
+          width: 208.00006
+          height: 126.666626
         description: "\u6211\u662FB"
+        guid: 5a63316f-bc57-488a-97e4-26a9a897a6e3
         returnStatus: 2
-    - rid: 7851556643135291400
+    - rid: 7839347643643592733
       type: {class: CanMoveCondition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 1095
-          y: 226
-          width: 231
-          height: 119
+          x: 1138
+          y: 195.33333
+          width: 232.66663
+          height: 123.33334
         description: "\u4ECE\u5916\u90E8\u52FE\u9009CanMove,\u4F1A\u6253\u65AD\u4E0B\u9762\u7684A"
+        guid: 11edba71-6483-4a48-9db4-17bd5f3978fa
         evaluateOnRunning: 0
         child:
-          rid: 7851556643135291402
-    - rid: 7851556643135291401
+          rid: 7839347643643592735
+    - rid: 7839347643643592734
       type: {class: DebugLog, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 1173
-          y: 479
-          width: 214
-          height: 121
+          x: 1206.6666
+          y: 554.6666
+          width: 216
+          height: 126.66669
         description: 
+        guid: 513019d5-9c86-499d-b38e-1baac213ac9c
         logText: "\u6253\u65ADB"
-    - rid: 7851556643135291402
+    - rid: 7839347643643592735
       type: {class: DebugLog, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 1341
-          y: 227
-          width: 214
-          height: 121
+          x: 1384
+          y: 196
+          width: 216
+          height: 126.66667
         description: 
+        guid: 561d512d-91fb-4ea9-a8a8-4f7c503eff41
         logText: "\u6253\u65ADA"
 --- !u!4 &935190467
 Transform:
@@ -596,75 +639,88 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root:
-    rid: 7851556631484825661
+    rid: 7839347643643592709
   sharedVariables: []
   updateType: 0
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
   savePath: Assets
+  blockData:
+  - ChildNodes:
+    - 23dac54a-01b4-4766-a14d-882c80730541
+    - 26f55835-28c5-4f56-8035-b570114c937f
+    - 7226ba74-a571-4863-83a2-e63976613a83
+    - 5f5751d3-5211-471a-a58c-8356dd2a4162
+    Position: {x: 484, y: 165.33333}
+    Title: "1.SequenceAbort\u4F1A\u5728\u542F\u7528CanMove\u65F6\u6253\u65AD\u4E0B\u65B9\u7684\u65E0\u9650\u7B49\u5F85\u5668"
   references:
     version: 2
     RefIds:
-    - rid: 7851556631484825661
+    - rid: 7839347643643592709
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
           x: 400
           y: 300
-          width: 80
-          height: 77
+          width: 81.33334
+          height: 78.66669
         description: 
+        guid: 7f4d992c-2470-40b5-9221-8a77113130c5
         child:
-          rid: 7851556631484825662
-    - rid: 7851556631484825662
+          rid: 7839347643643592710
+    - rid: 7839347643643592710
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 509
+          x: 509.33334
           y: 300
-          width: 154
-          height: 143
+          width: 156.66666
+          height: 147.33334
         description: 
+        guid: 23dac54a-01b4-4766-a14d-882c80730541
         children:
-        - rid: 7851556631484825663
-        - rid: 7851556631484825664
+        - rid: 7839347643643592711
+        - rid: 7839347643643592712
         abortOnConditionChanged: 1
-    - rid: 7851556631484825663
+    - rid: 7839347643643592711
       type: {class: CanMoveCondition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 709
-          y: 230
-          width: 231
-          height: 119
+          x: 709.3333
+          y: 229.99998
+          width: 235.33337
+          height: 123.33334
         description: "\u4ECE\u5916\u90E8\u52FE\u9009CanMove,\u4F1A\u6253\u65AD\u4E0B\u9762\u7684\u7B49\u5F85"
+        guid: 7226ba74-a571-4863-83a2-e63976613a83
         evaluateOnRunning: 0
         child:
-          rid: 7851556631484825665
-    - rid: 7851556631484825664
+          rid: 7839347643643592713
+    - rid: 7839347643643592712
       type: {class: FixedReturn, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 709
-          y: 377
-          width: 207
-          height: 121
+          x: 709.3333
+          y: 376.6667
+          width: 208
+          height: 126.66666
         description: "\u59CB\u7EC8\u8FD4\u56DERunning"
+        guid: 26f55835-28c5-4f56-8035-b570114c937f
         returnStatus: 2
-    - rid: 7851556631484825665
+    - rid: 7839347643643592713
       type: {class: DebugLog, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
           x: 960
-          y: 230
-          width: 214
-          height: 121
+          y: 229.99998
+          width: 216
+          height: 126.66669
         description: 
+        guid: 5f5751d3-5211-471a-a58c-8356dd2a4162
         logText: "\u6253\u65AD\u4E0B\u9762\u7684\u7ED3\u70B9"
 --- !u!4 &935238946
 Transform:
@@ -955,75 +1011,88 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root:
-    rid: 7851556631484825671
+    rid: 7839347643643592736
   sharedVariables: []
   updateType: 0
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
   savePath: Assets
+  blockData:
+  - ChildNodes:
+    - 69dfab9a-eb13-40d0-b1d5-290076d41f6a
+    - 03326141-5b9b-4225-87bb-71fbd91d5f7f
+    - 6109c31c-660a-4f03-8c35-7b6c26f7cea9
+    - 77cb7511-9cee-407c-a9ce-0690b469e082
+    Position: {x: 484, y: 165.33333}
+    Title: "2.ConditionalAbort\u4F1A\u5728\u5173\u95EDCanMove\u65F6\u6253\u65AD\u5B50\u8282\u70B9\u7684\u65E0\u9650\u7B49\u5F85\u5668"
   references:
     version: 2
     RefIds:
-    - rid: 7851556631484825671
+    - rid: 7839347643643592736
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
           x: 400
           y: 300
-          width: 80
-          height: 77
+          width: 81.33334
+          height: 78.66669
         description: 
+        guid: 9426f581-4d46-407f-aca9-48991e89862c
         child:
-          rid: 7851556631484825672
-    - rid: 7851556631484825672
+          rid: 7839347643643592737
+    - rid: 7839347643643592737
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 509
+          x: 509.33334
           y: 300
-          width: 154
-          height: 143
+          width: 156.66666
+          height: 147.33334
         description: 
+        guid: 69dfab9a-eb13-40d0-b1d5-290076d41f6a
         children:
-        - rid: 7851556631484825673
-        - rid: 7851556631484825674
+        - rid: 7839347643643592738
+        - rid: 7839347643643592739
         abortOnConditionChanged: 0
-    - rid: 7851556631484825673
+    - rid: 7839347643643592738
       type: {class: CanMoveCondition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 709
-          y: 230
-          width: 243
-          height: 119
+          x: 709.3333
+          y: 229.99998
+          width: 247.33337
+          height: 123.33334
         description: "\u4ECE\u5916\u90E8\u53D6\u6D88CanMove,\u4F1A\u6253\u65AD\u5B50\u8282\u70B9\u7684\u8FD0\u884C"
+        guid: 6109c31c-660a-4f03-8c35-7b6c26f7cea9
         evaluateOnRunning: 1
         child:
-          rid: 7851556631484825675
-    - rid: 7851556631484825674
+          rid: 7839347643643592740
+    - rid: 7839347643643592739
       type: {class: DebugLog, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
-          x: 709
-          y: 383
-          width: 214
-          height: 121
+          x: 709.3333
+          y: 382.6667
+          width: 216
+          height: 126.66666
         description: 
+        guid: 03326141-5b9b-4225-87bb-71fbd91d5f7f
         logText: "\u6253\u65AD\u4E0A\u9762\u7684\u7ED3\u70B9"
-    - rid: 7851556631484825675
+    - rid: 7839347643643592740
       type: {class: FixedReturn, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
           serializedVersion: 2
           x: 966
-          y: 230
-          width: 207
-          height: 121
+          y: 229.99998
+          width: 208
+          height: 126.66669
         description: 
+        guid: 77cb7511-9cee-407c-a9ce-0690b469e082
         returnStatus: 2
 --- !u!4 &1712306043
 Transform:

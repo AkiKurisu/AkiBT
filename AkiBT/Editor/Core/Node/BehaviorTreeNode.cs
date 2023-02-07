@@ -71,6 +71,7 @@ namespace Kurisu.AkiBT.Editor
             description.value = copyNode.Description;
             NodeBehavior=Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
             NodeBehavior.NotifyEditor = MarkAsExecuted;
+            guid=Guid.NewGuid().ToString();
         }
 
         protected virtual void OnRestore()
@@ -208,7 +209,10 @@ namespace Kurisu.AkiBT.Editor
         protected abstract void OnClearStyle();
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>mapTreeView.DuplicateNode(this)));
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>
+            {
+                mapTreeView.DuplicateNode(this);
+            }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Select Group", (a) =>
             {
                 mapTreeView.SelectGroup(this);

@@ -99,65 +99,15 @@ namespace Kurisu.AkiBT.Editor
         /// <param name="b"></param>
         private void OnPaste(string a,string b)
         {
-            Dictionary<Port,Port>portCopyDict=new Dictionary<Port, Port>();
-            List<ISelectable> copyElements=new List<ISelectable>();
-            foreach(var select in selection)
-            {
-                if(select is Edge)continue;
-                //先复制所有子结点
-                BehaviorTreeNode selectNode=select as BehaviorTreeNode;
-                var node =DuplicateNode(selectNode);
-                copyElements.Add(node);
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Action)))
-                {
-                    var actionNode = selectNode as ActionNode;
-                    portCopyDict.Add(actionNode.Parent,(node as ActionNode).Parent);
-                }
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Composite)))
-                {
-                    var compositeNode = selectNode as CompositeNode;
-                    var copy=node as CompositeNode;
-                    int count=compositeNode.ChildPorts.Count-copy.ChildPorts.Count;
-                    for(int i=0;i<count;i++)
-                    {
-                        copy.AddChild();
-                    }
-                    for(int i=0;i<compositeNode.ChildPorts.Count;i++)
-                    {
-                        portCopyDict.Add(compositeNode.ChildPorts[i],copy.ChildPorts[i]);
-                    }
-                    portCopyDict.Add(compositeNode.Parent,copy.Parent);
-                }
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Conditional)))
-                {
-                    var conditionalNode = selectNode as ConditionalNode;
-                    portCopyDict.Add(conditionalNode.Child,(node as ConditionalNode).Child);
-                    portCopyDict.Add(conditionalNode.Parent,(node as ConditionalNode).Parent);
-
-                }
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Decorator)))
-                {
-                    var decoratorNode = node as DecoratorNode;
-                    portCopyDict.Add(decoratorNode.Child,(node as DecoratorNode).Child);
-                    portCopyDict.Add(decoratorNode.Parent,(node as DecoratorNode).Parent);
-                }
-            }
-            foreach(var select in selection)
-            {
-                if(select is not Edge)continue;
-                var edge=select as Edge;    
-                if(!portCopyDict.ContainsKey(edge.input)||!portCopyDict.ContainsKey(edge.output))continue;
-                var newEdge = ConnectPorts(portCopyDict[edge.output], portCopyDict[edge.input]);
-                AddElement(newEdge);
-                copyElements.Add(newEdge);
-            }
+            List<ISelectable> copyElements=new CopyPasteGraph(this,selection).GetCopyElements();
             ClearSelection();
+            //再次选择
             copyElements.ForEach(node=>
             {
                 node.Select(this,true);
             });
         }
-        public BehaviorTreeNode DuplicateNode(BehaviorTreeNode node)
+        internal BehaviorTreeNode DuplicateNode(BehaviorTreeNode node)
         {
             var newNode =nodeResolver.CreateNodeInstance(node.BehaviorType,this) as BehaviorTreeNode;
             Rect newRect=node.GetPosition();
@@ -168,7 +118,7 @@ namespace Kurisu.AkiBT.Editor
             newNode.CopyFrom(node);
             return newNode;
         }
-        public GroupBlock CreateCommentBlock(Rect rect, GroupBlockData blockData = null)
+        internal GroupBlock CreateBlock(Rect rect, GroupBlockData blockData = null)
         {
             if(blockData==null)blockData = new GroupBlockData();
             var group = new GroupBlock
@@ -201,7 +151,7 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         /// <param name="variable"></param>
         /// <typeparam name="T"></typeparam>
-        public void AddPropertyToBlackBoard(SharedVariable variable)
+        internal void AddPropertyToBlackBoard(SharedVariable variable)
         {
             var localPropertyName = variable.Name;
             var localPropertyValue = variable.GetValue();
@@ -216,10 +166,10 @@ namespace Kurisu.AkiBT.Editor
             ExposedProperties.Add(variable);
             var container = new VisualElement();
             var field = new BlackboardField {text = localPropertyName, typeText = variable.GetType().Name};
-            field.capabilities &=~Capabilities.Deletable;//不可删除
-            field.capabilities &=~Capabilities.Movable;//不可移动
+            field.capabilities &=~Capabilities.Deletable;
+            field.capabilities &=~Capabilities.Movable;
             container.Add(field);
-            FieldInfo info=variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public);//反射获取FieldInfo
+            FieldInfo info=variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public);
             var fieldResolver = fieldResolverFactory.Create(info);//工厂创建暴露引用
             var valueField=fieldResolver.GetEditorField(ExposedProperties,variable);
             var sa = new BlackboardRow(field, valueField);
@@ -259,7 +209,7 @@ namespace Kurisu.AkiBT.Editor
         /// <summary>
         /// 重铸行为树
         /// </summary>
-        public void Restore()
+        internal void Restore()
         {
             var stack = new Stack<EdgePair>();
             IBehaviorTree tree=behaviorTree;
@@ -335,21 +285,21 @@ namespace Kurisu.AkiBT.Editor
             }
             foreach (var nodeBlockData in tree.BlockData)
             {
-               var block =CreateCommentBlock(new Rect(nodeBlockData.Position,  new Vector2(100, 100)),
+               var block =CreateBlock(new Rect(nodeBlockData.Position,  new Vector2(100, 100)),
                     nodeBlockData);
                block.AddElements(nodes.Where(x=>nodeBlockData.ChildNodes.Contains(x.GUID)));
             }
         }
-        public void SelectGroup(BehaviorTreeNode node)
+        internal void SelectGroup(BehaviorTreeNode node)
         {
-            var block =CreateCommentBlock(new Rect(node.transform.position,  new Vector2(100, 100)));
+            var block =CreateBlock(new Rect(node.transform.position,  new Vector2(100, 100)));
             foreach(var select in selection)
             {
-                if(select is not BehaviorTreeNode)continue;
+                if(select is not BehaviorTreeNode||select is RootNode)continue;
                 block.AddElement(select as BehaviorTreeNode);
             }
         }
-        public void UnSelectGroup()
+        internal void UnSelectGroup()
         {
             foreach(var select in selection)
             {
@@ -360,7 +310,7 @@ namespace Kurisu.AkiBT.Editor
             }
         }
 
-        public bool Save(bool autoSave=false)
+        internal bool Save(bool autoSave=false)
         {
             if(Application.isPlaying)return false;
             if (Validate())
@@ -428,7 +378,7 @@ namespace Kurisu.AkiBT.Editor
             // notify to unity editor that the tree is changed.
             EditorUtility.SetDirty(behaviorTree._Object);
         }
-        private static Edge ConnectPorts(Port output, Port input)
+        internal static Edge ConnectPorts(Port output, Port input)
         {
             var tempEdge = new Edge
             {
@@ -439,6 +389,5 @@ namespace Kurisu.AkiBT.Editor
             tempEdge.output.Connect(tempEdge);
             return tempEdge;
         }
-
     }
 }

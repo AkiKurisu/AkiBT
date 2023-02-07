@@ -57,7 +57,7 @@ namespace Kurisu.AkiBT.Editor
             var type = searchTreeEntry.userData as Type;
             if(type==typeof(GroupBlock))
             {
-                graphView.CreateCommentBlock(newRect);
+                graphView.CreateBlock(newRect);
                 return true;
             }
             var node = this.nodeResolver.CreateNodeInstance(type,graphView);
