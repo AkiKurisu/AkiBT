@@ -36,6 +36,7 @@ namespace Kurisu.AkiBT.Editor
             fieldResolverFactory = new FieldResolverFactory();
             container = new VisualElement();
             description = new TextField();
+            guid=Guid.NewGuid().ToString();
             Initialize();
         }
 
