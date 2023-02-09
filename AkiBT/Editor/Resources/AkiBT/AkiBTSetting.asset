@@ -13,7 +13,15 @@ MonoBehaviour:
   m_Name: AkiBTSetting
   m_EditorClassIdentifier: 
   masks:
-  - EditorName: AkiST
+  - EditorName: AkiDT
     ShowGroups:
-    - Skill
+    - Dialogue
+    - Piece
+    - Option
     - Math
+    NotShowGroups: []
+  - EditorName: AkiBT
+    ShowGroups: []
+    NotShowGroups:
+    - Skill
+    - Dialogue

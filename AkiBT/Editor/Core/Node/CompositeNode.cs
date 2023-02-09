@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 var provider = ScriptableObject.CreateInstance< CompositeSearchWindowProvider>();
                 provider.Init(this,BehaviorTreeSetting.GetMask(mapTreeView.treeEditorName));
-                SearchWindow.Open(new SearchWindowContext(a.eventInfo.mousePosition), provider);
+                SearchWindow.Open(new SearchWindowContext(a.eventInfo.localMousePosition), provider);
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Add Child", (a) => AddChild()));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Remove Unnecessary Children", (a) => RemoveUnnecessaryChildren()));

@@ -34,12 +34,12 @@ namespace Kurisu.AkiBT.Editor
                 var node =sourceView.DuplicateNode(selectNode);
                 copyElements.Add(node);
                 nodeCopyDict.Add(selectNode,node);
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Action)))
+                if(selectNode.GetBehavior().IsSubclassOf(typeof(Action)))
                 {
                     var actionNode = selectNode as ActionNode;
                     portCopyDict.Add(actionNode.Parent,(node as ActionNode).Parent);
                 }
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Composite)))
+                if(selectNode.GetBehavior().IsSubclassOf(typeof(Composite)))
                 {
                     var compositeNode = selectNode as CompositeNode;
                     var copy=node as CompositeNode;
@@ -54,14 +54,14 @@ namespace Kurisu.AkiBT.Editor
                     }
                     portCopyDict.Add(compositeNode.Parent,copy.Parent);
                 }
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Conditional)))
+                if(selectNode.GetBehavior().IsSubclassOf(typeof(Conditional)))
                 {
                     var conditionalNode = selectNode as ConditionalNode;
                     portCopyDict.Add(conditionalNode.Child,(node as ConditionalNode).Child);
                     portCopyDict.Add(conditionalNode.Parent,(node as ConditionalNode).Parent);
 
                 }
-                if(selectNode.BehaviorType.IsSubclassOf(typeof(Decorator)))
+                if(selectNode.GetBehavior().IsSubclassOf(typeof(Decorator)))
                 {
                     var decoratorNode = node as DecoratorNode;
                     portCopyDict.Add(decoratorNode.Child,(node as DecoratorNode).Child);

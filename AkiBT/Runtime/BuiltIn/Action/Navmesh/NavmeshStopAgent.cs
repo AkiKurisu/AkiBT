@@ -7,20 +7,21 @@ namespace Kurisu.AkiBT.Extend
 [AkiGroup("Navmesh")]
 public class NavmeshStopAgent : Action
 {
-    private NavMeshAgent _navMeshAgent;
+    [SerializeField,Tooltip("如不填写,则从绑定物体中获取")]
+    private NavMeshAgent agent;
     [SerializeField,AkiLabel("是否停止")]
     private SharedBool isStopped;
     protected override Status OnUpdate()
     {
-        if(_navMeshAgent!=null&&_navMeshAgent.isStopped!=isStopped.Value)
+        if(agent!=null&&agent.isStopped!=isStopped.Value)
         {
-            _navMeshAgent.isStopped=isStopped.Value;
+            agent.isStopped=isStopped.Value;
         }
         return Status.Success;
     }
     public override void Awake()
     {
-        _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
+        if(agent==null)agent=gameObject.GetComponent<NavMeshAgent>();
         InitVariable(isStopped);
     }
     

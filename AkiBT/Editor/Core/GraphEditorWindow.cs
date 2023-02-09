@@ -15,24 +15,36 @@ namespace Kurisu.AkiBT.Editor
         public BehaviorTreeView GraphView=>graphView;
         private UnityEngine.Object key { get; set; }
         InfoView infoView;
+        protected virtual Type SOType=>typeof(BehaviorTreeSO);
         protected virtual string TreeName=>"行为树";
         protected virtual string InfoText=>"欢迎使用AkiBT,一个超简单的行为树!";
+        [MenuItem("Tools/AkiBT Editor")]
+        private static void ShowEditorWindow()
+        {
+            var treeSO=ScriptableObject.CreateInstance<BehaviorTreeSO>();
+            AssetDatabase.CreateAsset(treeSO,"Assets/BehaviorTreeSO.asset");
+            AssetDatabase.SaveAssets();
+            Show(treeSO);
+        }
         public static void Show(IBehaviorTree bt)
         {
-            var window = Create(bt);
+            var window = Create<GraphEditorWindow>(bt);
             window.Show();
             window.Focus();
         }
-
-        private static GraphEditorWindow Create(IBehaviorTree bt)
+        protected virtual BehaviorTreeView CreateView(IBehaviorTree behaviorTree)
+        {
+            return new BehaviorTreeView(behaviorTree, this);
+        }
+        protected static T Create<T>(IBehaviorTree bt)where T:GraphEditorWindow
         {
            
             var key = bt._Object.GetHashCode();
             if (cache.ContainsKey(key))
             {
-                return cache[key];
+                return (T)cache[key];
             }
-            var window = CreateInstance<GraphEditorWindow>();
+            var window = CreateInstance<T>();
             StructGraphView(window, bt);
             window.titleContent = new GUIContent($"{window.TreeName}结点编辑器({bt._Object.name})");
             window.key = bt._Object;
@@ -47,7 +59,7 @@ namespace Kurisu.AkiBT.Editor
         private static void StructGraphView(GraphEditorWindow window, IBehaviorTree behaviorTree)
         {
             window.rootVisualElement.Clear();
-            window.graphView = new BehaviorTreeView(behaviorTree, window);
+            window.graphView=window.CreateView(behaviorTree);
             window.infoView=new InfoView(window.InfoText);
             window.infoView.styleSheets.Add((StyleSheet)Resources.Load("AkiBT/Info", typeof(StyleSheet)));
             window.graphView.Add( window.infoView);
@@ -67,10 +79,11 @@ namespace Kurisu.AkiBT.Editor
             blackboard.addItemRequested = _blackboard =>
             {
                 var menu = new GenericMenu();
-                menu.AddItem(new GUIContent($"Int"), false, () => _graphView.AddPropertyToBlackBoard(new SharedInt()));
-                menu.AddItem(new GUIContent($"Float"), false, () => _graphView.AddPropertyToBlackBoard(new SharedFloat()));
-                menu.AddItem(new GUIContent($"Bool"), false, () => _graphView.AddPropertyToBlackBoard(new SharedBool()));
-                menu.AddItem(new GUIContent($"Vector3"), false, () => _graphView.AddPropertyToBlackBoard(new SharedVector3()));
+                menu.AddItem(new GUIContent("Int"), false, () => _graphView.AddPropertyToBlackBoard(new SharedInt()));
+                menu.AddItem(new GUIContent("Float"), false, () => _graphView.AddPropertyToBlackBoard(new SharedFloat()));
+                menu.AddItem(new GUIContent("Bool"), false, () => _graphView.AddPropertyToBlackBoard(new SharedBool()));
+                menu.AddItem(new GUIContent("Vector3"), false, () => _graphView.AddPropertyToBlackBoard(new SharedVector3()));
+                menu.AddItem(new GUIContent("String"), false, () => _graphView.AddPropertyToBlackBoard(new SharedString()));
                 menu.ShowAsContext();
             };
 
@@ -93,6 +106,7 @@ namespace Kurisu.AkiBT.Editor
 
                 var targetIndex = _graphView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
                 _graphView.ExposedProperties[targetIndex].Name = newValue;
+                _graphView.NotifyEditSharedVariable(_graphView.ExposedProperties[targetIndex]);
                 ((BlackboardField) element).text = newValue;
             };
             blackboard.SetPosition(new Rect(10,100,300,400));
@@ -101,16 +115,16 @@ namespace Kurisu.AkiBT.Editor
         }
         void SaveDataToSO()
         {
-            var treeSO=ScriptableObject.CreateInstance<BehaviorTreeSO>();
+            var treeSO=ScriptableObject.CreateInstance(SOType);
             if (!graphView.Save())
             {
-                Debug.LogWarning($"<color=#ff2f2f>AkiBT</color>保存失败,不会生成ScriptableObject\n{System.DateTime.Now.ToString()}");
+                Debug.LogWarning($"<color=#ff2f2f>{graphView.treeEditorName}</color>保存失败,不会生成ScriptableObject\n{System.DateTime.Now.ToString()}");
                 return;
             }
-            graphView.Commit(treeSO);
+            graphView.Commit((IBehaviorTree)treeSO);
             AssetDatabase.CreateAsset(treeSO,$"{graphView.SavePath}/{key.name}.asset");
             AssetDatabase.SaveAssets();
-            Debug.Log($"<color=#3aff48>AkiBT</color>外部{TreeName}保存成功,SO生成位置:{graphView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
+            Debug.Log($"<color=#3aff48>{graphView.treeEditorName}</color>外部{TreeName}保存成功,SO生成位置:{graphView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
         }
         
         private void OnDestroy()
@@ -187,7 +201,7 @@ namespace Kurisu.AkiBT.Editor
                             }
                         }
                         graphView.AutoSave=GUILayout.Toggle(graphView.AutoSave,"自动保存");
-                        if(graphView.IsTree)
+                        if(graphView.CanSaveToSO)
                         {
                             if (GUILayout.Button("保存到SO", EditorStyles.toolbarButton))
                             {

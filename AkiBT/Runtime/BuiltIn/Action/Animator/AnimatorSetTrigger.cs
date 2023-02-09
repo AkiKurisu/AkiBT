@@ -16,8 +16,8 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override Status OnUpdate()
         {
-            if(resetLastTrigger)animator.ResetTrigger(parameterHash);
-            animator.SetTrigger(parameterHash);
+            if(resetLastTrigger)_Animator.ResetTrigger(parameterHash);
+            _Animator.SetTrigger(parameterHash);
             return Status.Success;
         }
     }

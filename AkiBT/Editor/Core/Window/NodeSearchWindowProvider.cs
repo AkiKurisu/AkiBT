@@ -13,12 +13,14 @@ namespace Kurisu.AkiBT.Editor
         private EditorWindow graphEditor;
         private readonly NodeResolver nodeResolver = new NodeResolver();
         private Texture2D _indentationIcon;
-        private string[] showGroupNames;
-        public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor,string[] showGroupNames)
+        private string[] showGroups;
+        private string[] notShowGroups;
+        public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor,(string[] ,string[] ) mask)
         {
             this.graphView = graphView;
             this.graphEditor = graphEditor;
-            this.showGroupNames=showGroupNames;
+            this.showGroups=mask.Item1;
+            this.notShowGroups=mask.Item2;
             _indentationIcon=new Texture2D(1,1);
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
@@ -27,12 +29,11 @@ namespace Kurisu.AkiBT.Editor
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"),0));
-            entries.Add(new SearchTreeEntry(new GUIContent("Create Group Block",_indentationIcon)) { level = 1, userData = typeof(GroupBlock) });
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"),0));  
             List<Type> nodeTypes =SearchUtility.FindSubClassTypes(_Types);
             var groups=nodeTypes.GroupsByAkiGroup();;
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();
-            groups=groups.SelectString(showGroupNames);
+            groups=groups.SelectString(showGroups).ExceptString(notShowGroups);
             foreach(var _type in _Types)  
             {
                 entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {_type.Name}"),1));
@@ -47,6 +48,7 @@ namespace Kurisu.AkiBT.Editor
                     entries.AddEntry(type,2,_indentationIcon);
                 }
             }
+            entries.Add(new SearchTreeEntry(new GUIContent("Create Group Block",_indentationIcon)) { level = 1, userData = typeof(GroupBlock) });
             return entries;
         }
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
@@ -71,11 +73,13 @@ namespace Kurisu.AkiBT.Editor
     {
         private BehaviorTreeNode node;
         private Texture2D _indentationIcon;
-        private string[] showGroupNames;
-        public void Init(BehaviorTreeNode node,string[] showGroupNames)
+        private string[] showGroups;
+        private string[] notShowGroups;
+        public void Init(BehaviorTreeNode node,(string[] ,string[] ) mask)
         {
             this.node = node;
-            this.showGroupNames=showGroupNames;
+            this.showGroups=mask.Item1;
+            this.notShowGroups=mask.Item2;
             _indentationIcon=new Texture2D(1,1);
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
@@ -89,7 +93,7 @@ namespace Kurisu.AkiBT.Editor
             List<Type> nodeTypes =SearchUtility.FindSubClassTypes(typeof(T));
             var groups=nodeTypes.GroupsByAkiGroup();//按AkiGroup进行分类
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();//去除被分类的部分
-            groups=groups.SelectString(showGroupNames);
+            groups=groups.SelectString(showGroups).ExceptString(notShowGroups);
             foreach(var group in groups)
             {
                 entries.AddAllEntries(group,_indentationIcon,1);
@@ -126,14 +130,11 @@ namespace Kurisu.AkiBT.Editor
                             .ToList();
         }
         const char Span='/';
-         public static string[] GetSplittedGroupName (string group)
-         {
-            var array=group.Split(Span,StringSplitOptions.RemoveEmptyEntries) ;
-            return array.Length>0?array: new string[1]{group};
-         }
-        
-        
-    
+        public static string[] GetSplittedGroupName (string group)
+        {
+        var array=group.Split(Span,StringSplitOptions.RemoveEmptyEntries) ;
+        return array.Length>0?array: new string[1]{group};
+        }
     }
     public static class SearchExtension
     {
@@ -160,8 +161,11 @@ namespace Kurisu.AkiBT.Editor
         }
         public static IEnumerable<IGrouping<string, Type>> SelectString(this IEnumerable<IGrouping<string, Type>> groups,string[] showGroupNames)
         {
-            return showGroupNames!=null?groups.Where(x=>showGroupNames.Any(a=>a==x.Key)):groups;
-
+            return (showGroupNames!=null&&showGroupNames.Length!=0)?groups.Where(x=>showGroupNames.Any(a=>a==x.Key)):groups;
+        }
+        public static IEnumerable<IGrouping<string, Type>> ExceptString(this IEnumerable<IGrouping<string, Type>> groups,string[] notShowGroupNames)
+        {
+            return (notShowGroupNames!=null)?groups.Where(x=>!notShowGroupNames.Any(a=>a==x.Key)):groups;
         }
         public static void AddEntry(this List<SearchTreeEntry> entries,Type _type,int _level,Texture icon)
         {
@@ -169,17 +173,17 @@ namespace Kurisu.AkiBT.Editor
         }
         public static void AddAllEntries(this List<SearchTreeEntry> entries, IGrouping<string, Type> group,Texture icon,int level,int subCount=1)
         {
-                entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group.Key}"),level));
-                var subGroups=group.SubGroups(subCount);
-                var left=group.Except(subGroups.SelectMany(x=>x));
-                foreach(var subGroup in subGroups)
-                {
-                    entries.AddAllEntries(subGroup,icon,level+1,subCount+1);
-                }
-                foreach(Type type in left)
-                {
-                    entries.AddEntry(type,level+1,icon);
-                }
+            entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {group.Key}"),level));
+            var subGroups=group.SubGroups(subCount);
+            var left=group.Except(subGroups.SelectMany(x=>x));
+            foreach(var subGroup in subGroups)
+            {
+                entries.AddAllEntries(subGroup,icon,level+1,subCount+1);
+            }
+            foreach(Type type in left)
+            {
+                entries.AddEntry(type,level+1,icon);
+            }
         }
     }
 }

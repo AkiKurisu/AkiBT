@@ -147,7 +147,8 @@ public class NavmeshStopAgent : Action
 # 使用方式(修改自原作者简介)
 
 <img src="Images/demo.jpg" />
-1. [Download](https://github.com/AkiKurisu/AkiBT/releases) 直接下载,导入项目中,需要注意的是Gizmos文件夹需要放在Assets目录下。
+
+1.  [Download](https://github.com/AkiKurisu/AkiBT/releases) 直接下载,导入项目中,需要注意的是Gizmos文件夹需要放在Assets目录下。
 
 
 2. Add `AkiBT.BehaviorTree` component for any GameObject.  
@@ -165,6 +166,7 @@ public class NavmeshStopAgent : Action
    * The yellow node means that last `Update` returned `Status.Running`.
 7. you can save the GameObject with `AkiBT.BehaviorTree` as prefab.
 
+8. Tutorial Video On Bilibili B站教学视频：[开源行为树AkiBT使用教程](https://www.bilibili.com/video/BV1Jd4y187XL/)
 ## 工作原理How It Works
 
 * `AkiBT.BehaviorTree` updates child nodes in `Update` timing when the UpdateType is `UpdateType.Auto`.

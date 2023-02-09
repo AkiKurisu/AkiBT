@@ -12,7 +12,7 @@ namespace Kurisu.AkiBT.Extend
         private int layer=-1;       
         protected override Status OnUpdate()
         {
-            AnimatorStateInfo stateInfo=animator.GetCurrentAnimatorStateInfo(layer);
+            AnimatorStateInfo stateInfo=_Animator.GetCurrentAnimatorStateInfo(layer);
             if(stateInfo.IsName(stateName))
                 return Status.Success;
             else

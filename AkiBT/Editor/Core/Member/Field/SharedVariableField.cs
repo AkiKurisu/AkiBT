@@ -33,7 +33,7 @@ namespace Kurisu.AkiBT.Editor
         public void InitField(BehaviorTreeView treeView)
         {
             this.treeView=treeView;
-            treeView.OnExposedPropertyNameChangeEvent+=(variable)=>
+            treeView.OnPropertyNameChangeEvent+=(variable)=>
             {
                 if(variable!=bindExposedProperty)return;
                 nameDropdown.value=variable.Name;
@@ -41,43 +41,59 @@ namespace Kurisu.AkiBT.Editor
             };
             OnToggle(toggle.value);
         } 
-        static List<string> GetList(BehaviorTreeView treeView)
+        private static List<string> GetList(BehaviorTreeView treeView)
         {
             return treeView.ExposedProperties
-            .Where(x=>x.GetType().IsSubclassOf(typeof(SharedVariable<K>)))
+            .Where(x=>x.GetType()==typeof(T))
             .Select(v => v.Name)
             .ToList();
         }
         private void BindProperty()
         {
             if(treeView==null)return;
-            bindExposedProperty=treeView.ExposedProperties.Where(x=>x.GetType().IsSubclassOf(typeof(SharedVariable<K>))&&x.Name.Equals(value.Name)).FirstOrDefault();
+            bindExposedProperty=treeView.ExposedProperties.Where(x=>x.GetType()==typeof(T)&&x.Name.Equals(value.Name)).FirstOrDefault();
         }
         private void OnToggle(bool IsShared){
             if(IsShared)
             {      
                 if(nameDropdown==null&&value!=null&&treeView!=null)
                 {
-                    nameDropdown=new DropdownField("Variable Name",GetList(treeView),value.Name!=null?value.Name:string.Empty);
-                    nameDropdown.RegisterCallback<MouseEnterEvent>((evt)=>{nameDropdown.choices=GetList(treeView);});
-                    nameDropdown.RegisterValueChangedCallback(evt => {value.Name = evt.newValue;BindProperty();});
-                    foldout.Add(nameDropdown);
+                    AddNameDropDown();
                 }
-                if(valueField!=null)foldout.Remove(valueField);
-                valueField=null;
+                RemoveValueField();
             }
             else
             {
-                if(nameDropdown!=null)foldout.Remove(nameDropdown);
-                nameDropdown=null;
+                RemoveNameDropDown();
                 if(valueField==null)
                 {
-                    valueField=CreateValueField();
-                    valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
-                    if(value!=null)valueField.value=value.Value;
-                    this.foldout.Add(valueField);
+                    AddValueField();
                 }
             }
+        }
+        private void AddNameDropDown()
+        {
+            nameDropdown=new DropdownField("Variable Name",GetList(treeView),value.Name??string.Empty);
+            nameDropdown.RegisterCallback<MouseEnterEvent>((evt)=>{nameDropdown.choices=GetList(treeView);});
+            nameDropdown.RegisterValueChangedCallback(evt => {value.Name = evt.newValue;BindProperty();});
+            foldout.Add(nameDropdown);
+        }
+        private void RemoveNameDropDown()
+        {
+            if(nameDropdown!=null)foldout.Remove(nameDropdown);
+            nameDropdown=null;
+        }
+        private void RemoveValueField()
+        {
+            if(valueField!=null)foldout.Remove(valueField);
+            valueField=null;
+        }
+        private void AddValueField()
+        {
+            valueField=CreateValueField();
+            valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
+            if(value!=null)valueField.value=value.Value;
+            this.foldout.Add(valueField);
         }
         protected abstract BaseField<K> CreateValueField();
         public sealed override T value {get=>base.value; set {

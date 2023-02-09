@@ -11,6 +11,8 @@ internal class BehaviorTreeNodeSearchMask
     public string EditorName="AkiBT";
     [Tooltip("显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
     public string[] ShowGroups;
+    [Tooltip("不显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
+    public string[] NotShowGroups;
 }
 public class BehaviorTreeSetting : ScriptableObject
 {
@@ -18,11 +20,15 @@ public class BehaviorTreeSetting : ScriptableObject
 
     [SerializeField,Tooltip("结点搜索遮罩,如果你有多个编辑器继承自AkiBT,可以在这里根据编辑器名称设置结点遮罩,这样在使用特定编辑器时可以隐藏不需要的结点")]
     private BehaviorTreeNodeSearchMask[] masks;
-    public static string[] GetMask(string maskName)
+    public static (string[],string[]) GetMask(string maskName)
     {
         var setting=GetOrCreateSettings();
-        if(setting.masks.Any(x=>x.EditorName.Equals(maskName))) return setting.masks.First(x=>x.EditorName.Equals(maskName)).ShowGroups;
-        return null;
+        if(setting.masks.Any(x=>x.EditorName.Equals(maskName))) 
+        {
+            var mask=setting.masks.First(x=>x.EditorName.Equals(maskName));
+            return (mask.ShowGroups,mask.NotShowGroups);
+        }
+        return (null,null);
     }
     internal static BehaviorTreeSetting GetOrCreateSettings()
     {

@@ -22,12 +22,13 @@ namespace Kurisu.AkiBT.Editor
             }
         }
         public Blackboard _blackboard;
-        private readonly IBehaviorTree behaviorTree;
+        protected readonly IBehaviorTree behaviorTree;
         protected RootNode root;
         public List<SharedVariable> ExposedProperties=new List<SharedVariable>();
         private FieldResolverFactory fieldResolverFactory = new FieldResolverFactory();
         protected NodeSearchWindowProvider provider;
-        public event System.Action<SharedVariable> OnExposedPropertyNameChangeEvent;
+        public event System.Action<SharedVariable> OnPropertyNameChangeEvent;
+        public event System.Action<SharedVariable> OnPropertyNameEditingEvent;
         public bool AutoSave
         {
             get=>behaviorTree.AutoSave;
@@ -38,7 +39,13 @@ namespace Kurisu.AkiBT.Editor
             get=>behaviorTree.SavePath;
             set=>behaviorTree.SavePath=value;
         }
-        public bool IsTree=>behaviorTree is BehaviorTree;
+        /// <summary>
+        /// 是否可以保存为SO,如果可以会在ToolBar中提供按钮
+        /// </summary>
+        public virtual bool CanSaveToSO=>behaviorTree is BehaviorTree;
+        /// <summary>
+        /// 编辑器名称
+        /// </summary>
         public virtual string treeEditorName=>"AkiBT";
         private readonly NodeResolver nodeResolver = new NodeResolver();
         /// <summary>
@@ -46,6 +53,11 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public System.Action<BehaviorTreeNode> onSelectAction;  
         private readonly EditorWindow _window;
+        /// <summary>
+        /// 是否在Restore中
+        /// </summary>
+        /// <value></value>
+        public bool IsRestored{get;private set;}
         /// <summary>
         /// 黑板
         /// </summary>
@@ -88,6 +100,7 @@ namespace Kurisu.AkiBT.Editor
             ClearSelection();
             foreach (GraphElement n in elements)
             {
+                if(n is BehaviorTreeNode&&!(n as BehaviorTreeNode).Copiable)continue;
                 AddToSelection(n);
             }
             return "Copy Nodes";
@@ -109,7 +122,7 @@ namespace Kurisu.AkiBT.Editor
         }
         internal BehaviorTreeNode DuplicateNode(BehaviorTreeNode node)
         {
-            var newNode =nodeResolver.CreateNodeInstance(node.BehaviorType,this) as BehaviorTreeNode;
+            var newNode =nodeResolver.CreateNodeInstance(node.GetBehavior(),this) as BehaviorTreeNode;
             Rect newRect=node.GetPosition();
             newRect.position+=new Vector2(50,50);
             newNode.SetPosition(newRect);
@@ -130,6 +143,10 @@ namespace Kurisu.AkiBT.Editor
             group.SetPosition(rect);
             return group;
         }
+        internal void NotifyEditSharedVariable(SharedVariable variable)
+        {
+            OnPropertyNameEditingEvent?.Invoke(variable);
+        }
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             base.BuildContextualMenu(evt);
@@ -147,20 +164,21 @@ namespace Kurisu.AkiBT.Editor
             remainTargets.ForEach(evt.menu.MenuItems().Add);
         }
         /// <summary>
-        /// 添加暴露的共享变量到黑板
+        /// 添加共享变量到黑板
         /// </summary>
         /// <param name="variable"></param>
         /// <typeparam name="T"></typeparam>
-        internal void AddPropertyToBlackBoard(SharedVariable variable)
+        public void AddPropertyToBlackBoard(SharedVariable variable)
         {
-            var localPropertyName = variable.Name;
             var localPropertyValue = variable.GetValue();
-            if(String.IsNullOrEmpty(localPropertyName))
-                localPropertyName=variable.GetType().Name;
+            if(String.IsNullOrEmpty(variable.Name))
+                variable.Name=variable.GetType().Name;
+            var localPropertyName = variable.Name;
+            int index=1;
             while (ExposedProperties.Any(x => x.Name == localPropertyName))
             {
-                int index=ExposedProperties.Count(x=>x.Name == localPropertyName);
-                localPropertyName = $"{localPropertyName}{index+1}";
+                localPropertyName = $"{variable.Name}{index}";
+                index++;
             }
             variable.Name=localPropertyName;
             ExposedProperties.Add(variable);
@@ -170,7 +188,7 @@ namespace Kurisu.AkiBT.Editor
             field.capabilities &=~Capabilities.Movable;
             container.Add(field);
             FieldInfo info=variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public);
-            var fieldResolver = fieldResolverFactory.Create(info);//工厂创建暴露引用
+            var fieldResolver = fieldResolverFactory.Create(info);
             var valueField=fieldResolver.GetEditorField(ExposedProperties,variable);
             var sa = new BlackboardRow(field, valueField);
             sa.AddManipulator(new ContextualMenuManipulator((evt)=>BuildBlackboardMenu(evt,container,variable)));
@@ -188,7 +206,7 @@ namespace Kurisu.AkiBT.Editor
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Update All Reference Node", (a) =>
             {
-                   OnExposedPropertyNameChangeEvent?.Invoke(variable);
+                   OnPropertyNameChangeEvent?.Invoke(variable);
             }));
         }
         public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter) {
@@ -220,6 +238,7 @@ namespace Kurisu.AkiBT.Editor
             }
             stack.Push(new EdgePair(tree.Root, null));
             var nodes=new List<BehaviorTreeNode>();
+            IsRestored=true;
             while (stack.Count > 0)
             {
                 // create node
@@ -289,6 +308,7 @@ namespace Kurisu.AkiBT.Editor
                     nodeBlockData);
                block.AddElements(nodes.Where(x=>nodeBlockData.ChildNodes.Contains(x.GUID)));
             }
+            IsRestored=false;
         }
         internal void SelectGroup(BehaviorTreeNode node)
         {

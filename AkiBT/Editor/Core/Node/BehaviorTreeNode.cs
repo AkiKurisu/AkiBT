@@ -14,7 +14,6 @@ namespace Kurisu.AkiBT.Editor
         protected NodeBehavior NodeBehavior {set;  get; }
 
         private Type dirtyNodeBehaviorType;
-        public Type BehaviorType=>dirtyNodeBehaviorType;
         public Port Parent { private set; get; }
         
         private readonly VisualElement container;
@@ -22,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
         private readonly TextField description;
         public string Description=>description.value;
         private readonly FieldResolverFactory fieldResolverFactory;
-
+        public bool Copiable=>NodeBehavior.Copiable;
         public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
         protected BehaviorTreeView mapTreeView;

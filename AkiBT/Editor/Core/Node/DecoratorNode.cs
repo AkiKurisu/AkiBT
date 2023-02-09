@@ -19,7 +19,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 var provider =ScriptableObject.CreateInstance< DecoratorSearchWindowProvider>();
                 provider.Init(this,BehaviorTreeSetting.GetMask(mapTreeView.treeEditorName));
-                SearchWindow.Open(new SearchWindowContext(a.eventInfo.mousePosition), provider);
+                SearchWindow.Open(new SearchWindowContext(a.eventInfo.localMousePosition), provider);
             })); 
             base.BuildContextualMenu(evt);
         }

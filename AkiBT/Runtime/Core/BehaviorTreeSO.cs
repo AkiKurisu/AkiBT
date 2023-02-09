@@ -45,54 +45,31 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
     [HideInInspector]
     [SerializeReference]
     private List<SharedVariable> sharedVariables = new List<SharedVariable>();
-    protected Dictionary<string,int>sharedVariableIndex;
     /// <summary>
     /// 获取共享变量
     /// </summary>
     /// <param name="name"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-     SharedVariable<T> IBehaviorTree.GetShareVariable<T>(string name)
+    SharedVariable<T> IBehaviorTree.GetShareVariable<T>(string name)
     {
-        if(string.IsNullOrEmpty(name))return null;
-        int index;
-        if(sharedVariableIndex.TryGetValue(name,out index))
+        if(string.IsNullOrEmpty(name))
         {
-            var variable=sharedVariables[index];
-            if(variable is SharedVariable<T>)
+            Debug.LogError($"共享变量名称不能为空",this);
+            return null;
+        }
+        foreach(var variable in sharedVariables)
+        {
+            if(variable.Name.Equals(name))
             {
-                return variable as SharedVariable<T>;
-            }
-            else
-            {
-                Debug.LogError($"{name}名称变量不是{typeof(T).Name}类型");
+                if( variable is SharedVariable<T>)return variable as SharedVariable<T>;
+                else Debug.LogError($"{name}名称变量不是{typeof(T).Name}类型",this);
+                return null;
             }
         }
-        else
-        {
-            Debug.LogError($"没有在行为树中找到共享变量:{name}");
-        }
+        Debug.LogError($"没有找到共享变量:{name}",this);
         return null;
     }
-    #if UNITY_EDITOR
-    void OnValidate()
-    {
-        sharedVariableIndex=new Dictionary<string, int>();
-        for(int i=0;i<this.SharedVariables.Count;i++)
-        {
-            sharedVariableIndex.Add(this.SharedVariables[i].Name,i);
-        }
-    }
-   #else
-    void Awake()
-    {
-        sharedVariableIndex=new Dictionary<string, int>();
-        for(int i=0;i<this.SharedVariables.Count;i++)
-        {
-            sharedVariableIndex.Add(this.SharedVariables[i].Name,i);
-        }
-    }
-   #endif
     /// <summary>
     /// 外部传入绑定对象并初始化
     /// </summary>

@@ -4,9 +4,11 @@ namespace Kurisu.AkiBT.Extend
     
 public abstract class AnimatorAction : Action
 {
-    protected Animator animator;
+    [SerializeField,Tooltip("如不填写,则从绑定物体中获取")]
+    private Animator animator;
+    protected Animator _Animator=>animator;
     public override void Awake() {
-        animator=gameObject.GetComponent<Animator>();
+        if(animator==null)animator=gameObject.GetComponent<Animator>();
     }
 }
 }

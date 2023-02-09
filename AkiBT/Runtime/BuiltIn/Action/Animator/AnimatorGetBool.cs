@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override Status OnUpdate()
         {
-            storeResult.Value=animator.GetBool(parameterHash);
+            storeResult.Value=_Animator.GetBool(parameterHash);
             return Status.Success;
         }
     }

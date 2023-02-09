@@ -18,6 +18,10 @@ public interface IBehaviorTree
     #if UNITY_EDITOR
     public string SavePath{get;set;}
     public bool AutoSave{get;set;}
+    /// <summary>
+    /// 外部行为树,Editor Only
+    /// </summary>
+    /// <value></value>
     public BehaviorTreeSO ExternalBehaviorTree{get;}    
     public List<GroupBlockData> BlockData{get;set;}
     # endif

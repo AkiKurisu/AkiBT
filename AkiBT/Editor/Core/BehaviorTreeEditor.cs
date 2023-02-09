@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        const string labelText="AkiBT 行为树 Version1.2";
+        const string labelText="AkiBT 行为树 Version1.2.6";
         protected virtual string LabelText=>labelText;
         const string buttonText="打开行为树";
         protected virtual string ButtonText=>buttonText;
@@ -60,7 +60,7 @@ namespace Kurisu.AkiBT.Editor
             button.style.fontSize=15;
             button.style.unityFontStyleAndWeight=FontStyle.Bold;
             button.style.color=Color.white;
-            if(!Application.isPlaying)
+            if(!Application.isPlaying||bt is BehaviorTreeSO)
             {
                 button.style.backgroundColor=new StyleColor(new Color(140/255f, 160/255f, 250/255f));
                 button.text=ButtonText;

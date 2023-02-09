@@ -7,20 +7,21 @@ namespace Kurisu.AkiBT.Extend
 [AkiGroup("Navmesh")]
 public class NavmeshSetDestination : Action
 {
-    private NavMeshAgent _navMeshAgent;
+    [SerializeField,Tooltip("如不填写,则从绑定物体中获取")]
+    private NavMeshAgent agent;
     [SerializeField]
     private SharedVector3 destination;
     protected override Status OnUpdate()
     {
-        if(_navMeshAgent!=null)
+        if(agent!=null)
         {
-            _navMeshAgent.destination=destination.Value;
+            agent.destination=destination.Value;
         }
         return Status.Success;
     }
     public override void Awake()
     {
-        _navMeshAgent=gameObject.GetComponent<NavMeshAgent>();
+        if(agent==null)agent=gameObject.GetComponent<NavMeshAgent>();
         InitVariable(destination);
     }
     

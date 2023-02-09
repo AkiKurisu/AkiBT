@@ -23,9 +23,8 @@ namespace Kurisu.AkiBT
         [HideInInspector]
         [SerializeReference]
         private List<SharedVariable> sharedVariables = new List<SharedVariable>();
-        private Dictionary<string,int>sharedVariableIndex;
         [SerializeField,
-        Tooltip("切换成UpdateType.Manual使用手动更新并且调用BehaviorTree.Tick()"),Header("Kurisu AkiBT行为树")]
+        Tooltip("切换成UpdateType.Manual使用手动更新并且调用BehaviorTree.Tick()")]
         private UpdateType updateType;
         #if UNITY_EDITOR
         [SerializeField,Tooltip("使用外部行为树替换组件内行为树,保存时会覆盖组件内行为树")]
@@ -73,33 +72,25 @@ namespace Kurisu.AkiBT
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         SharedVariable<T> IBehaviorTree.GetShareVariable<T>(string name)
+    {
+        if(string.IsNullOrEmpty(name))
         {
-            if(string.IsNullOrEmpty(name))return null;
-            int index;
-            if(sharedVariableIndex.TryGetValue(name,out index))
-            {
-                var variable=sharedVariables[index];
-                if(variable is SharedVariable<T>)
-                {
-                    return variable as SharedVariable<T>;
-                }
-                else
-                {
-                    Debug.LogError($"{name}名称变量不是{typeof(T).Name}类型");
-                }
-            }
-            else
-            {
-                Debug.LogError($"没有在行为树中找到共享变量:{name}");
-            }
+            Debug.LogError($"共享变量名称不能为空",this);
             return null;
         }
-        private void Awake() {
-            sharedVariableIndex=new Dictionary<string, int>();
-            for(int i=0;i<sharedVariables.Count;i++)
+        foreach(var variable in sharedVariables)
+        {
+            if(variable.Name.Equals(name))
             {
-                sharedVariableIndex.Add(sharedVariables[i].Name,i);
+                if( variable is SharedVariable<T>)return variable as SharedVariable<T>;
+                else Debug.LogError($"{name}名称变量不是{typeof(T).Name}类型",this);
+                return null;
             }
+        }
+        Debug.LogError($"没有找到共享变量:{name}",this);
+        return null;
+    }
+        private void Awake() {
             root.Run(gameObject,this);
             root.Awake();
         }
