@@ -32,7 +32,6 @@ namespace Kurisu.AkiBT
         [SerializeField,HideInEditorWindow]
         private string guid;
         public string GUID{get=>guid;set=>guid=value;}
-        public virtual bool Copiable=>true;
         #endif
         
         protected GameObject gameObject { private set; get; }

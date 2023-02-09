@@ -21,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
         private readonly TextField description;
         public string Description=>description.value;
         private readonly FieldResolverFactory fieldResolverFactory;
-        public bool Copiable=>NodeBehavior.Copiable;
+        public bool Copiable{get;private set;}
         public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
         protected BehaviorTreeView mapTreeView;
@@ -157,13 +157,9 @@ namespace Kurisu.AkiBT.Editor
                     container.Add(fieldResolver.GetEditorField(mapTreeView));
                     resolvers.Add(fieldResolver);
                 });
-            AkiLabel[] array;
-            if ((array = (nodeBehavior.GetCustomAttributes(typeof(AkiLabel), false) as AkiLabel[])).Length > 0)
-            {
-                title = array[0].Title;
-            }
-            else
-                title = nodeBehavior.Name;
+            var label=nodeBehavior.GetCustomAttribute(typeof(AkiLabel), false) as AkiLabel;
+            title = label?.Title??nodeBehavior.Name;
+            Copiable=nodeBehavior.GetCustomAttribute(typeof(CopyDisableAttribute), false)==null;
             styleSheets.Add((StyleSheet)Resources.Load("AkiBT/Node", typeof(StyleSheet)));
         }
 

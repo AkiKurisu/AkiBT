@@ -37,6 +37,7 @@ public class BehaviorTreeSetting : ScriptableObject
         if(guids.Length==0)
         {
             setting = ScriptableObject.CreateInstance<BehaviorTreeSetting>();
+            Debug.Log($"AkiBT Setting保存位置:{k_BehaviorTreeSettingsPath}");
             AssetDatabase.CreateAsset(setting, k_BehaviorTreeSettingsPath);
             AssetDatabase.SaveAssets();
         }
