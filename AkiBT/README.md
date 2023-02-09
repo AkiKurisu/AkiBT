@@ -1,10 +1,13 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/releases)
-# 行为树 AkiBT 简介 Intro
+# 行为树 AkiBT Verisoin 1.2.6 简介 Intro
 
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
 行为树衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
 AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function.AkiKurisu Extends it with more features so that you can enjoy it.
+# 安装Setup
+1. [Download Release Package](https://github.com/AkiKurisu/AkiBT/releases)直接下载最新的UnityPackage
+2. Using git URL to download package by Unity PackageManager(https://github.com/AkiKurisu/AkiBT.git?path=/AkiBT)
 #
 
 ## 支持的版本Supported version
@@ -144,29 +147,26 @@ public class NavmeshStopAgent : Action
 <img src="Images/Setting.png" width="480"/>
 
 #
-# 使用方式(修改自原作者简介)
+# 使用方式How To Use
 
 <img src="Images/demo.jpg" />
 
-1.  [Download](https://github.com/AkiKurisu/AkiBT/releases) 直接下载,导入项目中,需要注意的是Gizmos文件夹需要放在Assets目录下。
-
-
-2. Add `AkiBT.BehaviorTree` component for any GameObject.  
+1. Add `AkiBT.BehaviorTree` component for any GameObject.  
    <img src="Images/started1.png" width="480"/>
-3. `Open Graph Editor` button opens GraphView for Behavior Tree.  
+2. `Open Graph Editor` button opens GraphView for Behavior Tree.  
    <img src="Images/started2.jpg" width="480"/>
-4. Add behaviors and set parameters.  
-5. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
+3. Add behaviors and set parameters.  
+4. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
    <img src="Images/started3.gif" width="480"/>  
-6. Run the unity application. you can see node status in the editor window.  
+5. Run the unity application. you can see node status in the editor window.  
    <img src="Images/started4.jpg" width="480"/>
    
    * The red node means that last `Update` returned Status.Failure`.
    * The green node means that last `Update` returned `Status.Success`.
    * The yellow node means that last `Update` returned `Status.Running`.
-7. you can save the GameObject with `AkiBT.BehaviorTree` as prefab.
+6. you can save the GameObject with `AkiBT.BehaviorTree` as prefab.
 
-8. Tutorial Video On Bilibili B站教学视频：[开源行为树AkiBT使用教程](https://www.bilibili.com/video/BV1Jd4y187XL/)
+7. Tutorial Video On Bilibili B站教学视频：[开源行为树AkiBT使用教程](https://www.bilibili.com/video/BV1Jd4y187XL/)
 ## 工作原理How It Works
 
 * `AkiBT.BehaviorTree` updates child nodes in `Update` timing when the UpdateType is `UpdateType.Auto`.
