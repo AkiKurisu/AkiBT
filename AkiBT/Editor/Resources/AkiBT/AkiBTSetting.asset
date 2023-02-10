@@ -12,19 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d695fd362f77f7b43a1d43ab84982486, type: 3}
   m_Name: AkiBTSetting
   m_EditorClassIdentifier: 
-  masks:
-  - EditorName: AkiDT
-    ShowGroups:
-    - Dialogue
-    - Piece
-    - Option
-    - Math
-    - String
-    NotShowGroups: []
+  settings:
   - EditorName: AkiBT
     ShowGroups: []
     NotShowGroups:
     - Skill
     - Dialogue
-    - Piece
     - Option
+    - Piece
+    graphStyleSheet: {fileID: 0}
+    inspectorStyleSheet: {fileID: 0}
+    nodeStyleSheet: {fileID: 0}
+  - EditorName: AkiST
+    ShowGroups:
+    - Skill
+    - Math
+    NotShowGroups: []
+    graphStyleSheet: {fileID: 0}
+    inspectorStyleSheet: {fileID: 0}
+    nodeStyleSheet: {fileID: 0}
+  - EditorName: AkiDT
+    ShowGroups:
+    - Dialogue
+    - Option
+    - Piece
+    - Math
+    - Animator
+    NotShowGroups: []
+    graphStyleSheet: {fileID: 0}
+    inspectorStyleSheet: {fileID: 0}
+    nodeStyleSheet: {fileID: 0}

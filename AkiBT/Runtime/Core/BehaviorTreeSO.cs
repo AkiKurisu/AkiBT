@@ -41,6 +41,8 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
     [SerializeField,HideInInspector]
     private List<GroupBlockData> blockData=new List<GroupBlockData>();
     public List<GroupBlockData> BlockData { get => blockData; set=>blockData=value;}
+    [Multiline,SerializeField]
+    public string Description;
     #endif
     [HideInInspector]
     [SerializeReference]

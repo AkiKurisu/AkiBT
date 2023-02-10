@@ -21,8 +21,9 @@ namespace Kurisu.AkiBT.Editor
         [MenuItem("Tools/AkiBT Editor")]
         private static void ShowEditorWindow()
         {
+            string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"").Replace(Application.dataPath,string.Empty);
             var treeSO=ScriptableObject.CreateInstance<BehaviorTreeSO>();
-            AssetDatabase.CreateAsset(treeSO,"Assets/BehaviorTreeSO.asset");
+            AssetDatabase.CreateAsset(treeSO,"Assets/"+path+"BehaviorTreeSO.asset");
             AssetDatabase.SaveAssets();
             Show(treeSO);
         }
@@ -122,7 +123,7 @@ namespace Kurisu.AkiBT.Editor
                 return;
             }
             graphView.Commit((IBehaviorTree)treeSO);
-            AssetDatabase.CreateAsset(treeSO,$"{graphView.SavePath}/{key.name}.asset");
+            AssetDatabase.CreateAsset(treeSO,$"Assets/{graphView.SavePath}/{key.name}.asset");
             AssetDatabase.SaveAssets();
             Debug.Log($"<color=#3aff48>{graphView.treeEditorName}</color>外部{TreeName}保存成功,SO生成位置:{graphView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
         }
@@ -205,18 +206,16 @@ namespace Kurisu.AkiBT.Editor
                         {
                             if (GUILayout.Button("保存到SO", EditorStyles.toolbarButton))
                             {
+                                string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
+                                graphView.SavePath=path.Replace(Application.dataPath,string.Empty);
                                 SaveDataToSO();
                             }
-                            graphView.SavePath=GUILayout.TextField(graphView.SavePath,GUILayout.Width(200));
                         }
                     }
-                    
-                   
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
             );
-
         }
         void OnNodeSelectionChange(BehaviorTreeNode node)
         {

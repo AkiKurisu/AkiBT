@@ -27,7 +27,7 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
             var label=new Label(LabelText);
             label.style.fontSize=20;
             myInspector.Add(label);
-            myInspector.styleSheets.Add((StyleSheet)Resources.Load("AkiBT/Inspector", typeof(StyleSheet)));
+            myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiST"));
             if(bt.UseTree)
             {
                 var field=new PropertyField(serializedObject.FindProperty("externalSkill"),"技能模板");

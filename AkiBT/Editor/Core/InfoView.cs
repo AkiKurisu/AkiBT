@@ -22,6 +22,5 @@ public class InfoView : VisualElement
         }
         Add(container);
     }
-   
 }
 }

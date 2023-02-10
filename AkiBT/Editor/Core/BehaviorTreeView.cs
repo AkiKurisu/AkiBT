@@ -10,6 +10,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeView: GraphView
     {
+        internal readonly StyleSheet nodeSheet;
         private readonly struct EdgePair
         {
             public readonly NodeBehavior NodeBehavior;
@@ -68,7 +69,7 @@ namespace Kurisu.AkiBT.Editor
             behaviorTree = bt;
             style.flexGrow = 1;
             style.flexShrink = 1;
-            styleSheets.Add((StyleSheet)Resources.Load("AkiBT/Graph", typeof(StyleSheet)));
+            styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(treeEditorName));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new GridBackground());
 
@@ -94,6 +95,7 @@ namespace Kurisu.AkiBT.Editor
             serializeGraphElements += CopyOperation;
             canPasteSerializedData+=(data)=>true;
             unserializeAndPaste+=OnPaste;
+            nodeSheet=BehaviorTreeSetting.GetNodeStyle(treeEditorName);
         }
         private string CopyOperation(IEnumerable<GraphElement> elements)
         {

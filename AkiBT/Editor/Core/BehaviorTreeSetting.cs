@@ -5,28 +5,55 @@ using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
 [System.Serializable]
-internal class BehaviorTreeNodeSearchMask
+internal class EditorSetting
 {
-    [Tooltip("编辑器名称,如对默认编辑器添加遮罩则填入AkiBT")]
-    public string EditorName="AkiBT";
+    [Tooltip("编辑器名称,默认编辑器则填入AkiBT")]
+    public string EditorName;
     [Tooltip("显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
     public string[] ShowGroups;
     [Tooltip("不显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
     public string[] NotShowGroups;
+    public StyleSheet graphStyleSheet;
+    public StyleSheet inspectorStyleSheet;
+    public StyleSheet nodeStyleSheet;
 }
 public class BehaviorTreeSetting : ScriptableObject
 {
-    public const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
+    private const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
+    private const string GraphFallBackPath="AkiBT/Graph";
+    private const string InspectorFallBackPath="AkiBT/Inspector";
+    private const string NodeFallBackPath="AkiBT/Node";
 
-    [SerializeField,Tooltip("结点搜索遮罩,如果你有多个编辑器继承自AkiBT,可以在这里根据编辑器名称设置结点遮罩,这样在使用特定编辑器时可以隐藏不需要的结点")]
-    private BehaviorTreeNodeSearchMask[] masks;
-    public static (string[],string[]) GetMask(string maskName)
+    [SerializeField,Tooltip("编辑器配置,你可以根据编辑器名称使用不同的样式,并为结点搜索提供筛选方案")]
+    private EditorSetting[] settings;
+    public static StyleSheet GetGraphStyle(string editorName)
     {
         var setting=GetOrCreateSettings();
-        if(setting.masks.Any(x=>x.EditorName.Equals(maskName))) 
+        if(!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
+        var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
+        return editorSetting.graphStyleSheet??Resources.Load<StyleSheet>(GraphFallBackPath);
+    } 
+    public static StyleSheet GetInspectorStyle(string editorName)
+    {
+        var setting=GetOrCreateSettings();
+        if(!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
+        var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
+        return editorSetting.inspectorStyleSheet??Resources.Load<StyleSheet>(InspectorFallBackPath);
+    } 
+    public static StyleSheet GetNodeStyle(string editorName)
+    {
+        var setting=GetOrCreateSettings();
+        if(!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
+        var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
+        return editorSetting.nodeStyleSheet??Resources.Load<StyleSheet>(NodeFallBackPath);
+    } 
+    public static (string[],string[]) GetMask(string editorName)
+    {
+        var setting=GetOrCreateSettings();
+        if(setting.settings.Any(x=>x.EditorName.Equals(editorName))) 
         {
-            var mask=setting.masks.First(x=>x.EditorName.Equals(maskName));
-            return (mask.ShowGroups,mask.NotShowGroups);
+            var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
+            return (editorSetting.ShowGroups,editorSetting.NotShowGroups);
         }
         return (null,null);
     }
@@ -57,7 +84,7 @@ class BehaviorTreeSettingsProvider : SettingsProvider
 
     class Styles
     {
-        public static GUIContent mask = new GUIContent("Node Search Mask");
+        public static GUIContent mask = new GUIContent("Editor Setting");
     }
     public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User)
         : base(path, scope) {}
@@ -67,7 +94,7 @@ class BehaviorTreeSettingsProvider : SettingsProvider
     }
     public override void OnGUI(string searchContext)
     {
-        EditorGUILayout.PropertyField(m_Settings.FindProperty("masks"), Styles.mask);
+        EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.mask);
         m_Settings.ApplyModifiedPropertiesWithoutUndo();
     }
     [SettingsProvider]

@@ -161,7 +161,6 @@ namespace Kurisu.AkiBT.Editor
             var label=nodeBehavior.GetCustomAttribute(typeof(AkiLabel), false) as AkiLabel;
             title = label?.Title??nodeBehavior.Name;
             Copiable=nodeBehavior.GetCustomAttribute(typeof(CopyDisableAttribute), false)==null;
-            styleSheets.Add((StyleSheet)Resources.Load("AkiBT/Node", typeof(StyleSheet)));
         }
 
         private static IEnumerable<FieldInfo> GetAllFields(Type t)
