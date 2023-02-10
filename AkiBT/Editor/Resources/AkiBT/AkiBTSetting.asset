@@ -19,10 +19,12 @@ MonoBehaviour:
     - Piece
     - Option
     - Math
-    - Debug
+    - String
     NotShowGroups: []
   - EditorName: AkiBT
     ShowGroups: []
     NotShowGroups:
     - Skill
     - Dialogue
+    - Piece
+    - Option

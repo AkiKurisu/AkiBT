@@ -1,55 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-2080863588985933890
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Font Atlas
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 3
-  m_Width: 0
-  m_Height: 0
-  m_CompleteImageSize: 0
-  m_MipsStripped: 0
-  m_TextureFormat: 1
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_IsPreProcessed: 0
-  m_IgnoreMasterTextureLimit: 0
-  m_StreamingMipmaps: 0
-  m_StreamingMipmapsPriority: 0
-  m_VTOnly: 0
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_LightmapFormat: 0
-  m_ColorSpace: 0
-  m_PlatformBlob: 
-  image data: 0
-  _typelessdata: 
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
-  m_OriginalWidth: 0
-  m_OriginalHeight: 0
-  m_OriginalAssetGuid: 00000000000000000000000000000000
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,9 +13,9 @@ MonoBehaviour:
   m_Name: Font
   m_EditorClassIdentifier: 
   m_Version: 1.1.0
-  m_Material: {fileID: 6925862491670511743}
-  m_SourceFontFileGUID: cbb79afacf25b794fbb5dc4e9ed407c1
-  m_SourceFontFile: {fileID: 12800000, guid: cbb79afacf25b794fbb5dc4e9ed407c1, type: 3}
+  m_Material: {fileID: 9220113947809303496}
+  m_SourceFontFileGUID: 4c4f5d858f20f4a499787b9936645ef8
+  m_SourceFontFile: {fileID: 12800000, guid: 4c4f5d858f20f4a499787b9936645ef8, type: 3}
   m_AtlasPopulationMode: 1
   InternalDynamicOS: 0
   m_FaceInfo:
@@ -113,32 +63,32 @@ MonoBehaviour:
   m_GlyphTable: []
   m_CharacterTable: []
   m_AtlasTextures:
-  - {fileID: -2080863588985933890}
+  - {fileID: 6843629671683021290}
   m_AtlasTextureIndex: 0
   m_IsMultiAtlasTexturesEnabled: 1
   m_ClearDynamicDataOnBuild: 1
-  m_AtlasWidth: 1024
-  m_AtlasHeight: 1024
+  m_AtlasWidth: 8192
+  m_AtlasHeight: 8192
   m_AtlasPadding: 9
   m_AtlasRenderMode: 4165
   m_UsedGlyphRects: []
   m_FreeGlyphRects:
   - m_X: 0
     m_Y: 0
-    m_Width: 1023
-    m_Height: 1023
+    m_Width: 8191
+    m_Height: 8191
   m_FontFeatureTable:
     m_GlyphPairAdjustmentRecords: []
   m_FallbackFontAssetTable: []
   m_fontAssetCreationEditorSettings:
-    sourceFontFileGUID: cbb79afacf25b794fbb5dc4e9ed407c1
+    sourceFontFileGUID: 4c4f5d858f20f4a499787b9936645ef8
     faceIndex: 0
     pointSizeSamplingMode: 0
     pointSize: 90
     padding: 9
     packingMode: 0
-    atlasWidth: 1024
-    atlasHeight: 1024
+    atlasWidth: 8192
+    atlasHeight: 8192
     characterSetSelectionMode: 7
     characterSequence: 
     referencedFontAssetGUID: 
@@ -153,14 +103,64 @@ MonoBehaviour:
   m_BoldStyleSpacing: 7
   m_ItalicStyleSlant: 35
   m_TabMultiple: 10
---- !u!21 &6925862491670511743
+--- !u!28 &6843629671683021290
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: NotoSansSC-Regular Atlas
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 3
+  m_Width: 0
+  m_Height: 0
+  m_CompleteImageSize: 0
+  m_MipsStripped: 0
+  m_TextureFormat: 1
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMasterTextureLimit: 0
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_LightmapFormat: 0
+  m_ColorSpace: 0
+  m_PlatformBlob: 
+  image data: 0
+  _typelessdata: 
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+  m_OriginalWidth: 0
+  m_OriginalHeight: 0
+  m_OriginalAssetGuid: 00000000000000000000000000000000
+--- !u!21 &9220113947809303496
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Font Atlas Material
+  m_Name: NotoSansSC-Regular Atlas Material
   m_Shader: {fileID: 19011, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -174,7 +174,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: -2080863588985933890}
+        m_Texture: {fileID: 6843629671683021290}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -191,8 +191,8 @@ Material:
     - _ScaleY: 1
     - _ShaderFlags: 0
     - _Sharpness: 0
-    - _TextureHeight: 1024
-    - _TextureWidth: 1024
+    - _TextureHeight: 8192
+    - _TextureWidth: 8192
     - _UnderlayDilate: 0
     - _UnderlayOffsetX: 0
     - _UnderlayOffsetY: 0

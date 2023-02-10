@@ -8,5 +8,5 @@ Label
     white-space: normal 
 }
 :root {
-    -unity-font-definition: resource('AkiBT/Font');
+    -unity-font-definition:resource('AkiBT/Font');
 }

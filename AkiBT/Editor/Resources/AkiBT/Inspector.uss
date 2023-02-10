@@ -1,5 +1,5 @@
 :root {
-    -unity-font-definition: resource('AkiBT/Font');
+    -unity-font-definition:resource('AkiBT/Font');
 }
 #unity-text-input
 {

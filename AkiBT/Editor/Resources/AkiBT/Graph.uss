@@ -10,5 +10,5 @@ Label
     min-width:10px;
 }
 :root {
-    -unity-font-definition: resource('AkiBT/Font');
+    -unity-font-definition:resource('AkiBT/Font');
 }
