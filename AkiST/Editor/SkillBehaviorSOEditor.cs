@@ -76,7 +76,7 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
                 .Where(field => field.GetCustomAttribute<SerializeField>() != null);
             foreach(var field in fields)
             {    
-                AkiLabel newLabel= field.GetCustomAttribute<AkiLabel>();
+                AkiLabelAttribute newLabel= field.GetCustomAttribute<AkiLabelAttribute>();
                 if(newLabel!=null)
                 {
                     var pf=inspectorFoldout.Q<PropertyField>($"PropertyField:{field.Name}");
@@ -85,7 +85,7 @@ public class SkillBehaviorSOEditor : UnityEditor.Editor
             }
             foreach(var field in fields)
             {    
-                AkiFolder newFolder= field.GetCustomAttribute<AkiFolder>();
+                AkiFolderAttribute newFolder= field.GetCustomAttribute<AkiFolderAttribute>();
                 if(newFolder!=null)
                 {
                     var foldout=inspectorFoldout.Q<Foldout>(newFolder.Folder);

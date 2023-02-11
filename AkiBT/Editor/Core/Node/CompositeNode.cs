@@ -10,7 +10,6 @@ namespace Kurisu.AkiBT.Editor
         public readonly List<Port> ChildPorts = new List<Port>();
 
         private List<BehaviorTreeNode> cache = new List<BehaviorTreeNode>();
-
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
@@ -48,12 +47,12 @@ namespace Kurisu.AkiBT.Editor
 
         protected override bool OnValidate(Stack<BehaviorTreeNode> stack)
         {
-            if (ChildPorts.Count <= 0) return false;
-
+            if (ChildPorts.Count <= 0&&!noValidate) return false;
             foreach (var port in ChildPorts)
             {
                 if (!port.connected)
                 {
+                    if(noValidate)continue;
                     style.backgroundColor = Color.red;
                     return false;
                 }
@@ -68,6 +67,7 @@ namespace Kurisu.AkiBT.Editor
             cache.Clear();
             foreach (var port in ChildPorts)
             {
+                if(port.connections.Count()==0)continue;
                 var child = port.connections.First().input.node as BehaviorTreeNode;
                 (NodeBehavior as Composite).AddChild(child.ReplaceBehavior());
                 stack.Push(child);

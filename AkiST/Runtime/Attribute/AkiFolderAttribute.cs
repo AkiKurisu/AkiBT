@@ -6,7 +6,7 @@ namespace Kurisu.AkiST
     /// 在编辑器中添加下拉容器FolderOut
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public sealed class AkiFolder : Attribute
+    public sealed class AkiFolderAttribute : Attribute
     {
         public string Folder
 		{
@@ -17,7 +17,7 @@ namespace Kurisu.AkiST
 		}
 
 		private readonly string mFolder;
-        public AkiFolder(string folder)
+        public AkiFolderAttribute(string folder)
         {
             this.mFolder=folder;
         }

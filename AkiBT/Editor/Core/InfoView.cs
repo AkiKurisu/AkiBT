@@ -14,8 +14,8 @@ public class InfoView : VisualElement
     {
         Clear();
         IMGUIContainer container=new IMGUIContainer();
-        AkiInfo[] array;
-        if ((array = (node.GetBehavior().GetCustomAttributes(typeof(AkiInfo), false) as AkiInfo[])).Length > 0)
+        AkiInfoAttribute[] array;
+        if ((array = (node.GetBehavior().GetCustomAttributes(typeof(AkiInfoAttribute), false) as AkiInfoAttribute[])).Length > 0)
         {
             Label label=new Label(array[0].Description);
             container.Add(label);

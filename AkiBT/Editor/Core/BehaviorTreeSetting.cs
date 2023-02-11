@@ -13,8 +13,11 @@ internal class EditorSetting
     public string[] ShowGroups;
     [Tooltip("不显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
     public string[] NotShowGroups;
+    [Tooltip("你可以自定义Graph视图的样式")]
     public StyleSheet graphStyleSheet;
+    [Tooltip("你可以自定义Inspector检查器的样式")]
     public StyleSheet inspectorStyleSheet;
+    [Tooltip("你可以自定义Node结点的样式")]
     public StyleSheet nodeStyleSheet;
 }
 public class BehaviorTreeSetting : ScriptableObject

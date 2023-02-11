@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT
     /// 在编辑器中描述结点行为
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class AkiInfo : Attribute
+    public sealed class AkiInfoAttribute : Attribute
     {
         public string Description
 		{
@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT
 		}
 
 		private readonly string mDescription;
-        public AkiInfo(string description)
+        public AkiInfoAttribute(string description)
         {
             this.mDescription=description;
         }

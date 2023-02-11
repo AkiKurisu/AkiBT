@@ -51,7 +51,7 @@ namespace Kurisu.AkiBT.Editor
         {
             this.editorField = this.CreateEditorField(this.fieldInfo);
             //修改标签
-            AkiLabel label=this.fieldInfo.GetCustomAttribute<AkiLabel>();
+            AkiLabelAttribute label=this.fieldInfo.GetCustomAttribute<AkiLabelAttribute>();
             if(label!=null)this.editorField.label=label.Title;
             TooltipAttribute tooltip=this.fieldInfo.GetCustomAttribute<TooltipAttribute>();
             if(tooltip!=null)this.editorField.tooltip=tooltip.tooltip;

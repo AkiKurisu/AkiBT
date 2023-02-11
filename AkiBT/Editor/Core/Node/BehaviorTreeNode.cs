@@ -25,6 +25,7 @@ namespace Kurisu.AkiBT.Editor
         public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
         protected BehaviorTreeView mapTreeView;
+        protected bool noValidate;
         public override void OnSelected()
         {
             base.OnSelected();
@@ -158,9 +159,10 @@ namespace Kurisu.AkiBT.Editor
                     container.Add(fieldResolver.GetEditorField(mapTreeView));
                     resolvers.Add(fieldResolver);
                 });
-            var label=nodeBehavior.GetCustomAttribute(typeof(AkiLabel), false) as AkiLabel;
+            var label=nodeBehavior.GetCustomAttribute(typeof(AkiLabelAttribute), false) as AkiLabelAttribute;
             title = label?.Title??nodeBehavior.Name;
             Copiable=nodeBehavior.GetCustomAttribute(typeof(CopyDisableAttribute), false)==null;
+            noValidate=nodeBehavior.GetCustomAttribute(typeof(NoValidateAttribute),false)!=null;
         }
 
         private static IEnumerable<FieldInfo> GetAllFields(Type t)

@@ -142,7 +142,7 @@ namespace Kurisu.AkiBT.Editor
         {
             return types.GroupBy(t=>
             {
-                var array=t.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[];
+                var array=t.GetCustomAttributes(typeof(AkiGroupAttribute), false) as AkiGroupAttribute[];
                 return array.Length>0?SearchUtility.GetSplittedGroupName(array[0].Group)[0]:null;
             }).Where(x=>!string.IsNullOrEmpty(x.Key));
         }
@@ -150,7 +150,7 @@ namespace Kurisu.AkiBT.Editor
         {
             return group.GroupBy(t=>
             {
-                var array=t.GetCustomAttributes(typeof(AkiGroup), false) as AkiGroup[];
+                var array=t.GetCustomAttributes(typeof(AkiGroupAttribute), false) as AkiGroupAttribute[];
                 var subcategory=SearchUtility.GetSplittedGroupName(array[0].Group);
                 return subcategory.Length>level?subcategory[level]:null;
             }).Where(x=>!string.IsNullOrEmpty(x.Key));
