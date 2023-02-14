@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT.Extend
         public SharedVector3 firstVector3;
         [SerializeField]
         public SharedVector3 secondVector3;
-        [SerializeField]
+        [SerializeField,ForceShared]
         private SharedFloat result;
         public override void Awake() {
             InitVariable(firstVector3);

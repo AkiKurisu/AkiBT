@@ -38,7 +38,7 @@ public class ListField<T> : BaseField<List<T>>
                 if(field is BaseField<T>)(field as BaseField<T>).label=string.Empty;
                 return field;
             };
-            const int itemHeight = 16;
+            const int itemHeight = 20;
             var view = new ListView(value, itemHeight, makeItem, bindItem);
             return view;
         }

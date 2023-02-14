@@ -15,7 +15,7 @@ namespace Kurisu.AkiBT.Extend
         private SharedBool bool1;
         [SerializeField]
         private SharedBool bool2;
-        [SerializeField]
+        [SerializeField,ForceShared]
         private SharedBool storeResult;
         [SerializeField]
         private Operation operation;

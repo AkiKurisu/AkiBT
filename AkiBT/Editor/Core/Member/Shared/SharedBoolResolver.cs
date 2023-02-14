@@ -9,14 +9,14 @@ namespace Kurisu.AkiBT.Editor
         public SharedBoolResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(BehaviorTreeView ownerTreeView)
+        protected override void SetTree(ITreeView ownerTreeView)
         {
             editorField.InitField(ownerTreeView);
         }
         private SharedBoolField editorField;
         protected override SharedBoolField CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedBoolField(fieldInfo.Name,null,fieldInfo.FieldType);
+            editorField = new SharedBoolField(fieldInfo.Name,null,fieldInfo.FieldType,fieldInfo);
             return editorField;
         }
         public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType==typeof(SharedBool) ;
@@ -24,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
     }
      public class SharedBoolField : SharedVariableField<SharedBool,bool>
     {
-        public SharedBoolField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput,objectType)
+        public SharedBoolField(string label, VisualElement visualInput, Type objectType,FieldInfo fieldInfo) : base(label, visualInput,objectType,fieldInfo)
         {
            
 

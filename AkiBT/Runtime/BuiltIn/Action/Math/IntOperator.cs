@@ -20,7 +20,7 @@ namespace Kurisu.AkiBT.Extend
         private SharedInt int1;
         [SerializeField]
         private SharedInt int2;
-        [SerializeField]
+        [SerializeField,ForceShared]
         private SharedInt storeResult;
         [SerializeField]
         private Operation operation;

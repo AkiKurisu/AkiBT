@@ -12,7 +12,7 @@ namespace Kurisu.AkiBT.Editor
             childResolver=resolver;
         }
         SharedVariableListField<T> editorField;
-        protected override void SetTree(BehaviorTreeView ownerTreeView)
+        protected override void SetTree(ITreeView ownerTreeView)
         {
             editorField.InitField(ownerTreeView);
         }
@@ -29,13 +29,13 @@ namespace Kurisu.AkiBT.Editor
     }
     public class SharedVariableListField<T> : ListField<T>,IInitField where T:SharedVariable
     {
-        private BehaviorTreeView treeView;
-        public event System.Action<BehaviorTreeView> OnTreeViewInitEvent;
+        private ITreeView treeView;
+        public event System.Action<ITreeView> OnTreeViewInitEvent;
         public SharedVariableListField(string label, VisualElement visualInput,Func<VisualElement>elementCreator,Func<object>valueCreator) : base(label, visualInput,elementCreator,valueCreator)
         {
             
         }
-        public void InitField(BehaviorTreeView treeView)
+        public void InitField(ITreeView treeView)
         {
             this.treeView=treeView;
             OnTreeViewInitEvent?.Invoke(treeView);

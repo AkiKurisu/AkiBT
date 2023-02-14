@@ -8,9 +8,8 @@ using System.Reflection;
 using System;
 namespace Kurisu.AkiBT.Editor
 {
-    public class BehaviorTreeView: GraphView
+    public class BehaviorTreeView: GraphView,ITreeView
     {
-        internal readonly StyleSheet nodeSheet;
         private readonly struct EdgePair
         {
             public readonly NodeBehavior NodeBehavior;
@@ -25,7 +24,8 @@ namespace Kurisu.AkiBT.Editor
         public Blackboard _blackboard;
         protected readonly IBehaviorTree behaviorTree;
         protected RootNode root;
-        public List<SharedVariable> ExposedProperties=new List<SharedVariable>();
+        private List<SharedVariable> exposedProperties=new List<SharedVariable>();
+        public List<SharedVariable> ExposedProperties=>exposedProperties;
         private FieldResolverFactory fieldResolverFactory = new FieldResolverFactory();
         protected NodeSearchWindowProvider provider;
         public event System.Action<SharedVariable> OnPropertyNameChangeEvent;
@@ -44,9 +44,6 @@ namespace Kurisu.AkiBT.Editor
         /// 是否可以保存为SO,如果可以会在ToolBar中提供按钮
         /// </summary>
         public virtual bool CanSaveToSO=>behaviorTree is BehaviorTree;
-        /// <summary>
-        /// 编辑器名称
-        /// </summary>
         public virtual string treeEditorName=>"AkiBT";
         private readonly NodeResolver nodeResolver = new NodeResolver();
         /// <summary>
@@ -54,11 +51,9 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public System.Action<BehaviorTreeNode> onSelectAction;  
         private readonly EditorWindow _window;
-        /// <summary>
-        /// 是否在Restore中
-        /// </summary>
-        /// <value></value>
         public bool IsRestored{get;private set;}
+        private readonly BehaviorNodeConverter converter=new BehaviorNodeConverter();
+        private readonly DragDropManipulator dragDropManipulator;
         /// <summary>
         /// 黑板
         /// </summary>
@@ -84,7 +79,9 @@ namespace Kurisu.AkiBT.Editor
             this.AddManipulator(new RectangleSelector());
             this.AddManipulator(new FreehandSelector());
             this.AddManipulator(contentDragger);
-
+            dragDropManipulator=new DragDropManipulator(this);
+            dragDropManipulator.OnDragOverEvent+=CopyFromObject;
+            this.AddManipulator(dragDropManipulator);
             provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
             provider.Initialize(this, editor,BehaviorTreeSetting.GetMask(treeEditorName));
 
@@ -95,7 +92,6 @@ namespace Kurisu.AkiBT.Editor
             serializeGraphElements += CopyOperation;
             canPasteSerializedData+=(data)=>true;
             unserializeAndPaste+=OnPaste;
-            nodeSheet=BehaviorTreeSetting.GetNodeStyle(treeEditorName);
         }
         private string CopyOperation(IEnumerable<GraphElement> elements)
         {
@@ -122,7 +118,7 @@ namespace Kurisu.AkiBT.Editor
                 node.Select(this,true);
             });
         }
-        internal BehaviorTreeNode DuplicateNode(BehaviorTreeNode node)
+        public BehaviorTreeNode DuplicateNode(BehaviorTreeNode node)
         {
             var newNode =nodeResolver.CreateNodeInstance(node.GetBehavior(),this) as BehaviorTreeNode;
             Rect newRect=node.GetPosition();
@@ -133,7 +129,7 @@ namespace Kurisu.AkiBT.Editor
             newNode.CopyFrom(node);
             return newNode;
         }
-        internal GroupBlock CreateBlock(Rect rect, GroupBlockData blockData = null)
+        public GroupBlock CreateBlock(Rect rect, GroupBlockData blockData = null)
         {
             if(blockData==null)blockData = new GroupBlockData();
             var group = new GroupBlock
@@ -165,11 +161,6 @@ namespace Kurisu.AkiBT.Editor
             evt.menu.MenuItems().Clear();
             remainTargets.ForEach(evt.menu.MenuItems().Add);
         }
-        /// <summary>
-        /// 添加共享变量到黑板
-        /// </summary>
-        /// <param name="variable"></param>
-        /// <typeparam name="T"></typeparam>
         public void AddPropertyToBlackBoard(SharedVariable variable)
         {
             var localPropertyValue = variable.GetValue();
@@ -226,93 +217,61 @@ namespace Kurisu.AkiBT.Editor
             }
             return compatiblePorts;
         }
+        private void CopyFromObject(UnityEngine.Object data)
+        {
+            if(data is GameObject)
+            {
+                if((data as GameObject).TryGetComponent<IBehaviorTree>(out IBehaviorTree tree))
+                {
+                    _window.ShowNotification(new GUIContent("GameObject Dropped Successfully!"));
+                    CopyFromOtherTree(tree);
+                    return;
+                }
+                _window.ShowNotification(new GUIContent("Invalid Drag GameObject!"));
+                return;
+            }
+            if(data is not IBehaviorTree)
+            {
+                _window.ShowNotification(new GUIContent("Invalid Drag Data!"));
+                return;
+            }
+            _window.ShowNotification(new GUIContent("Data Dropped Successfully!"));
+            CopyFromOtherTree(data as IBehaviorTree);
+        }
+        internal void CopyFromOtherTree(IBehaviorTree otherTree)
+        {
+            IsRestored=true;
+            IEnumerable<BehaviorTreeNode>nodes;
+            RootNode rootNode;
+            (rootNode,nodes)=converter.ConvertToNode(otherTree,this);
+            foreach(var node in nodes)node.onSelectAction=onSelectAction;
+            var edge=rootNode.Child.connections.First();
+            RemoveElement(edge);
+            RemoveElement(rootNode);
+            IsRestored=false;
+        }
         /// <summary>
         /// 重铸行为树
         /// </summary>
         internal void Restore()
         {
-            var stack = new Stack<EdgePair>();
-            IBehaviorTree tree=behaviorTree;
-            if(behaviorTree.ExternalBehaviorTree!=null)tree=behaviorTree.ExternalBehaviorTree;
+            IBehaviorTree tree=behaviorTree.ExternalBehaviorTree??behaviorTree;
             foreach(var variable in tree.SharedVariables)
             {
                 AddPropertyToBlackBoard(variable.Clone() as SharedVariable);//Clone新的共享变量
             }
-            stack.Push(new EdgePair(tree.Root, null));
-            var nodes=new List<BehaviorTreeNode>();
             IsRestored=true;
-            while (stack.Count > 0)
-            {
-                // create node
-                var edgePair = stack.Pop();
-                if (edgePair.NodeBehavior == null)
-                {
-                    continue;
-                }
-                var node = nodeResolver.CreateNodeInstance(edgePair.NodeBehavior.GetType(),this);
-                node.Restore(edgePair.NodeBehavior);
-                node.onSelectAction=onSelectAction;// 添加选中委托
-                AddElement(node);
-                nodes.Add(node);
-                node.SetPosition( edgePair.NodeBehavior.graphPosition);
-
-                // connect parent
-                if (edgePair.ParentOutputPort != null)
-                {
-                    var edge = ConnectPorts(edgePair.ParentOutputPort, node.Parent);
-                    AddElement(edge);
-                }
-
-                // seek child
-                switch (edgePair.NodeBehavior)
-                {
-                    case Composite nb:
-                    {
-                        var compositeNode = node as CompositeNode;
-                        var addible = nb.Children.Count - compositeNode.ChildPorts.Count;
-                        for (var i = 0; i < addible; i++)
-                        {
-                            compositeNode.AddChild();
-                        }
-
-                        for (var i = 0; i < nb.Children.Count; i++)
-                        {
-                            stack.Push(new EdgePair(nb.Children[i], compositeNode.ChildPorts[i]));
-                        }
-                        break;
-                    }
-                    case Conditional nb:
-                    {
-                        var conditionalNode = node as ConditionalNode;
-                        stack.Push(new EdgePair(nb.Child, conditionalNode.Child));
-                        break;
-                    }
-                    case Decorator nb:
-                    {
-                        var decoratorNode = node as DecoratorNode;
-                        stack.Push(new EdgePair(nb.Child, decoratorNode.Child));
-                        break;
-                    }
-                    case Root nb:
-                    {
-                        root = node as RootNode;
-                        if (nb.Child != null)
-                        {
-                            stack.Push(new EdgePair(nb.Child, root.Child));
-                        }
-                        break;
-                    }
-                }
-            }
+            IEnumerable<BehaviorTreeNode>nodes;
+            (this.root,nodes)=converter.ConvertToNode(tree,this);
+            foreach(var node in nodes)node.onSelectAction=onSelectAction;
             foreach (var nodeBlockData in tree.BlockData)
             {
-               var block =CreateBlock(new Rect(nodeBlockData.Position,  new Vector2(100, 100)),
-                    nodeBlockData);
-               block.AddElements(nodes.Where(x=>nodeBlockData.ChildNodes.Contains(x.GUID)));
+               CreateBlock(new Rect(nodeBlockData.Position,  new Vector2(100, 100)),nodeBlockData)
+               .AddElements(nodes.Where(x=>nodeBlockData.ChildNodes.Contains(x.GUID)));
             }
             IsRestored=false;
         }
-        internal void SelectGroup(BehaviorTreeNode node)
+        void ITreeView.SelectGroup(BehaviorTreeNode node)
         {
             var block =CreateBlock(new Rect(node.transform.position,  new Vector2(100, 100)));
             foreach(var select in selection)
@@ -321,7 +280,7 @@ namespace Kurisu.AkiBT.Editor
                 block.AddElement(select as BehaviorTreeNode);
             }
         }
-        internal void UnSelectGroup()
+        void ITreeView.UnSelectGroup()
         {
             foreach(var select in selection)
             {

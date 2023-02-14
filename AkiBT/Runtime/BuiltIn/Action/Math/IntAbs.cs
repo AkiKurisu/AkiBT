@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT.Extend
 [AkiGroup("Math")]
 public class IntAbs : Action
 {
-    [SerializeField]
+    [SerializeField,ForceShared]
     private SharedInt value;
     public override void Awake() {
         InitVariable(value);

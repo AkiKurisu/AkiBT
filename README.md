@@ -1,5 +1,5 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/releases)
-# 行为树 AkiBT Verisoin 1.2.6 简介 Intro
+# 行为树 AkiBT Verisoin 1.2.7 简介 Intro
 
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
@@ -12,8 +12,8 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 
 ## 支持的版本Supported version
 
-* AkiBT1.1 Unity 2019.4 or later.
 * AkiBT1.2 Unity 2021.3 or later.(使用了新版本UIToolkit的DropdownField和TreeView)
+* 我没有对Unity 2022版本进行测试,如果发现Bug或API升级导致的不兼容问题,你可以提交Issues。
 #
 ## AkiBT特点Features
 * 支持使用可视化节点编辑器构造行为树Supports constructing behavior tree by [GraphView](https://docs.unity3d.com/ScriptReference/Experimental.GraphView.GraphView.html).
@@ -25,8 +25,8 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 * 增加了左键选框Add SelectionDragger using Left Mouse.
 * 增加了背景和结点样式Add style for both background and nodes.
 * 设置Root结点为不可删除防止无法恢复Set Root's Capablity to Undeletable.
-* 1.2.2版本加入了List的显示功能,后续会支持Array数组的显示
-* 1.2.3版本加入了复制粘贴功能(Ctrl+C&&Ctrl+V或者右键单个结点的Duplicate选项)
+* 1.2.2版本加入了List的显示功能,后续会支持Array数组的显示Add List Field for serialzed list, I will add Array Field in the future.
+* 1.2.3版本加入了复制粘贴功能(Ctrl+C&&Ctrl+V或者右键单个结点的Duplicate选项)You can now easily ctrl C&V or right-click the node and click "Duplicate" option to duplicate nodes.
 #
 
 ## 保存功能Save Function
@@ -46,11 +46,14 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
    
 <img src="Images/OpenSO.png" width="480"/>
 
+4. 1.2.7版本增加了外部数据复制的功能(非覆盖),你可以从上侧工具栏选择“从SO复制”，也可以将AkiBT支持(例如AkiDT等衍生版本)的SO文件、AkiBT支持的组件或挂载AkiBT支持组件的GameObject拖拽进编辑器中进行复制粘贴。In version1.2.7, you can drag GameObject with AkiBT Supported Component(like AkiDT, a Dialogue Node Based Tree Editor),AkiBT Supported Component,AkiBT Supported ScriptableObject into the graph view or click the"从SO复制" button to pick a AkiBT Supported ScriptableObject from your project.
+
+<img src="Images/DragDrop.gif" width="1920"/>
 
 #
 ## 新的结点类型New Node Type
 
-1. 增加了装饰器结点类型Decorator Node.
+增加了装饰器结点类型Decorator Node.
 
 ```C#
  [AkiInfo("Decorator:直到子结点返回Success为止返回Running")]
@@ -67,9 +70,9 @@ public class WaitSuccess : Decorator
 }
 ```
 #
-## 共享变量SharedVairable
+## 共享变量SharedVariable
 
-1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool类型变量Add SharedVariable which lets you have access to add it in a blackboard and share value between different node.Now it supports Float,Int,Vector3,Bool, maybe I will add String , GameObject in the future.
+1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool、String类型变量Add SharedVariable which lets you have access to add it in a blackboard and share value between different node.Now it supports Float,Int,Vector3,Bool,String, maybe I will add GameObject in the future.
 
 <img src="Images/SharedVariable.png" />
 
@@ -77,14 +80,14 @@ public class WaitSuccess : Decorator
 
 * 1.2.3版本加入了右键删除和更新所有引用该共享变量的字段,方便修改变量名称时不用一个个手动重选In version1.2.3,I add a menu when you left-click the blackboardRaw,you can easily delate it and refresh all the referenced fields when updating the name of variable.
   
-* 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.SharedVariable supports static-using,if you dont want to relate it with variables in blackboard,you just need make 'Is Shared' toogle to False.If you have a variable with invalide name,it will stay unShared in playing mode.
+* 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.SharedVariable supports static-using,if you don't want to relate it with variables in blackboard,you just need make 'Is Shared' toggle to False.If you have a variable with invalid name,it will stay unShared in playing mode.
 
 <img src="Images/Operator.png" width="480"/>
 
 2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换SharedVariable will be replaced when you save the tree.
 
 
-3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值In version1.2,you can edit the exposed sharedvariable's value in the inspector.
+3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值In version1.2,you can edit the exposed value of SharedVariable in the inspector.
 
 <img src="Images/ChangeVariableInInspector.png" width="480"/>
 
@@ -107,7 +110,7 @@ public class NavmeshStopAgent : Action
 
 #
 
-2. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.AkiLabel attrubte is added for replacing label of node's title or field especailly for Chinese.
+2. 增加了Label特性用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.AkiLabel attribute is added for replacing label of node's title or field especially for Chinese.
    
 ```C#
 [AkiLabel("Navmesh:StopAgent")]
@@ -142,7 +145,7 @@ public class NavmeshStopAgent : Action
 
 ## 设置界面
 
-1.2版本中增加了搜索结点的筛选设置,你可以在ProjectSetting中设置AkiBT编辑器或者其余继承自AkiBT的编辑器的搜索遮罩。你可以设置工作流中需要的Group类型（Group特性相关见上文）,没有添加Group特性的结点不会被过滤。Sometimes you maynot care about some nodes,you can add the AkiGroup attribute that makes them in a certain named group.Then you can edit the setting in ProjectSetting where you can add mask for the group you want to see in the SearchWindow.To be mentioned,the mask is relating to the editor you used.As default,the AkiBT editor is named with 'AkiBT',so you should edit the 'EditorName' with it. 
+1.2版本中增加了搜索结点的筛选设置,你可以在ProjectSetting中设置AkiBT编辑器或者其余继承自AkiBT的编辑器的搜索遮罩。你可以设置工作流中需要的Group类型（Group特性相关见上文）,没有添加Group特性的结点不会被过滤。Sometimes you may not care about some nodes,you can add the AkiGroup attribute that makes them in a certain named group.Then you can edit the setting in ProjectSetting where you can add mask for the group you want to see in the SearchWindow.To be mentioned,the mask is relating to the editor you used.As default,the AkiBT editor is named with 'AkiBT',so you should edit the 'EditorName' with it. 
 
 <img src="Images/Setting.png" width="480"/>
 
@@ -166,7 +169,7 @@ public class NavmeshStopAgent : Action
    * The yellow node means that last `Update` returned `Status.Running`.
 6. you can save the GameObject with `AkiBT.BehaviorTree` as prefab.
 
-7. Tutorial Video On Bilibili B站教学视频：[开源行为树AkiBT使用教程](https://www.bilibili.com/video/BV1Jd4y187XL/)
+7. Tutorial Video On BiliBili B站教学视频：[开源行为树AkiBT使用教程](https://www.bilibili.com/video/BV1Jd4y187XL/)
 ## 工作原理How It Works
 
 * `AkiBT.BehaviorTree` updates child nodes in `Update` timing when the UpdateType is `UpdateType.Auto`.

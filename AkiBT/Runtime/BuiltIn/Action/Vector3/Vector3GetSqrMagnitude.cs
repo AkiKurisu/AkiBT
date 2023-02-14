@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Extend
     {
         [SerializeField,Tooltip("待计算的数值")]
         public SharedVector3 vector3;
-        [SerializeField]
+        [SerializeField,ForceShared]
         private SharedFloat result;
         public override void Awake() {
             InitVariable(vector3);

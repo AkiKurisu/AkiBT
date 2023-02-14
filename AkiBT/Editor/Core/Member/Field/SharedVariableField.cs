@@ -1,36 +1,44 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public interface IFoldout
+    internal interface IFoldout
     {
         public Foldout foldout{get;}
     }
-    public interface IInitField
+    internal interface IInitField
     {
-        public void InitField(BehaviorTreeView treeView);
+        public void InitField(ITreeView treeView);
     }
     public abstract class SharedVariableField<T,K> : BaseField<T>,IFoldout,IInitField where T:SharedVariable<K>,new()
     {
+        private readonly bool forceShared;
         public Foldout foldout{get;private set;}
         private Toggle toggle;
-        private BehaviorTreeView treeView;
+        private ITreeView treeView;
         private DropdownField nameDropdown;
         private SharedVariable bindExposedProperty;
-        public SharedVariableField(string label, VisualElement visualInput, Type objectType) : base(label, visualInput)
+        public SharedVariableField(string label, VisualElement visualInput, Type objectType,FieldInfo fieldInfo) : base(label, visualInput)
         {
+            forceShared=fieldInfo.GetCustomAttribute<ForceSharedAttribute>()!=null;
             AddToClassList("SharedVariableField");
             foldout=new Foldout();
             foldout.value=false;
             foldout.text=$"{objectType.Name}";
             contentContainer.Add(foldout);
             toggle=new Toggle("Is Shared");
-            toggle.RegisterValueChangedCallback(evt =>{ value.IsShared = evt.newValue;OnToggle(evt.newValue);});
+            toggle.RegisterValueChangedCallback(evt =>{ value.IsShared = evt.newValue;OnToggle(evt.newValue);});            
+            if(forceShared)
+            {
+                toggle.value=true;
+                return;
+            } 
             foldout.Add(toggle);
         }
-        public void InitField(BehaviorTreeView treeView)
+        public void InitField(ITreeView treeView)
         {
             this.treeView=treeView;
             treeView.OnPropertyNameChangeEvent+=(variable)=>
@@ -41,7 +49,7 @@ namespace Kurisu.AkiBT.Editor
             };
             OnToggle(toggle.value);
         } 
-        private static List<string> GetList(BehaviorTreeView treeView)
+        private static List<string> GetList(ITreeView treeView)
         {
             return treeView.ExposedProperties
             .Where(x=>x.GetType()==typeof(T))
@@ -56,19 +64,15 @@ namespace Kurisu.AkiBT.Editor
         private void OnToggle(bool IsShared){
             if(IsShared)
             {      
-                if(nameDropdown==null&&value!=null&&treeView!=null)
-                {
-                    AddNameDropDown();
-                }
+                RemoveNameDropDown();
+                if(nameDropdown==null&&value!=null&&treeView!=null)AddNameDropDown();
                 RemoveValueField();
             }
             else
             {
                 RemoveNameDropDown();
-                if(valueField==null)
-                {
-                    AddValueField();
-                }
+                RemoveValueField();
+                if(valueField==null)AddValueField();
             }
         }
         private void AddNameDropDown()
@@ -99,6 +103,7 @@ namespace Kurisu.AkiBT.Editor
         public sealed override T value {get=>base.value; set {
             if(value!=null)base.value=value.Clone() as T;
             else base.value=new T();
+            if(forceShared)base.value.IsShared=true;
             UpdateValue();
         } }
         protected BaseField<K>valueField{get;set;}

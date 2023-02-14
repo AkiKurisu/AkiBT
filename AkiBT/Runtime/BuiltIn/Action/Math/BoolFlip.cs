@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT.Extend
     [AkiGroup("Math")]
 public class BoolFlip : Action
 {
-    [SerializeField]
+    [SerializeField,ForceShared]
     private SharedBool boolToFlip;
     public override void Awake() {
         InitVariable(boolToFlip);

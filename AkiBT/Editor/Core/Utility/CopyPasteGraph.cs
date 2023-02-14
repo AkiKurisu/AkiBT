@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
 namespace Kurisu.AkiBT.Editor
 {
-        public class CopyPasteGraph
+    internal class CopyPasteGraph
     {
         private readonly BehaviorTreeView sourceView;
         private List<ISelectable> copyElements;

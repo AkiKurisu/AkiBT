@@ -12,11 +12,11 @@ public class IntRandom : Action
             Relatively
         }
         [SerializeField]
-        private SharedInt randomInt;
-        [SerializeField]
         private Vector2Int range=new Vector2Int(-5,5);
         [SerializeField]
         private Operation operation;
+        [SerializeField,ForceShared]
+        private SharedInt randomInt;
         public override void Awake()
         {
            InitVariable(randomInt);

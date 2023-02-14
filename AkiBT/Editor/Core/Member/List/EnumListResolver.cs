@@ -38,7 +38,7 @@ namespace Kurisu.AkiBT.Editor
                 (field as EnumField).label=string.Empty;
                 return field;
             };
-            const int itemHeight = 16;
+            const int itemHeight = 20;
             var view = new ListView(value, itemHeight, makeItem, bindItem);
             return view;
         }

@@ -7,9 +7,9 @@ namespace Kurisu.AkiBT.Extend
 public class SetBool : Action
 {
     [SerializeField]
-    private SharedBool boolToSet;
-    [SerializeField]
     private bool setValue;
+    [SerializeField,ForceShared]
+    private SharedBool boolToSet;
     public override void Awake() {
         InitVariable(boolToSet);
     }

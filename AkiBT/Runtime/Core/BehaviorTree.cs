@@ -19,7 +19,7 @@ namespace Kurisu.AkiBT
         [HideInInspector]
         [SerializeReference]
         private Root root = new Root();
-        Object IBehaviorTree._Object=>this;
+        Object IBehaviorTree._Object=>gameObject;
         [HideInInspector]
         [SerializeReference]
         private List<SharedVariable> sharedVariables = new List<SharedVariable>();

@@ -38,6 +38,7 @@ MonoBehaviour:
     - Piece
     - Math
     - Animator
+    - String
     NotShowGroups: []
     graphStyleSheet: {fileID: 0}
     inspectorStyleSheet: {fileID: 0}

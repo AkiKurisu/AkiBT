@@ -9,7 +9,7 @@ public class SharedStringResolver :FieldResolver<SharedStringField,SharedString>
         public SharedStringResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(BehaviorTreeView ownerTreeView)
+        protected override void SetTree(ITreeView ownerTreeView)
         {
             editorField.InitField(ownerTreeView);
         }
@@ -25,7 +25,7 @@ public class SharedStringResolver :FieldResolver<SharedStringField,SharedString>
     public class SharedStringField : SharedVariableField<SharedString,string>
     {
         private bool multiline;
-        public SharedStringField(string label, VisualElement visualInput, Type objectType,FieldInfo fieldInfo) : base(label, visualInput,objectType)
+        public SharedStringField(string label, VisualElement visualInput, Type objectType,FieldInfo fieldInfo) : base(label, visualInput,objectType,fieldInfo)
         {
             multiline=fieldInfo.GetCustomAttribute<MultilineAttribute>()!=null;
         }

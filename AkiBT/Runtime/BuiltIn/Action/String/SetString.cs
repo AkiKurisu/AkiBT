@@ -1,23 +1,23 @@
-using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:随机获取String值")]
-    [AkiLabel("String:Random")]
+    [AkiInfo("Action:String类型赋值")]
+    [AkiLabel("String:Set")]
     [AkiGroup("String")]
-    public class StringRandom : Action
+    public class SetString : Action
     {
         [SerializeField]
-        private List<string>randomStrings;
+        private SharedString value;
         [SerializeField,ForceShared]
         private SharedString storeResult;
         public override void Awake()
         {
+            InitVariable(value);
             InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            storeResult.Value=randomStrings[UnityEngine.Random.Range(0,randomStrings.Count)];
+            storeResult.Value=value.Value;
             return Status.Success;
         }
     }

@@ -19,7 +19,7 @@ public class Vector3Operator : Action
         private SharedVector3 firstVector3;
         [SerializeField]
         private SharedVector3 secondVector3;
-        [SerializeField]
+        [SerializeField,ForceShared]
         private SharedVector3 storeResult;
         public override void Awake() {
             InitVariable(firstVector3);

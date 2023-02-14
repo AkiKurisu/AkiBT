@@ -8,7 +8,7 @@ public class Int2Float : Action
 {
     [SerializeField]
     private SharedInt value;
-    [SerializeField]
+    [SerializeField,ForceShared]
     private SharedFloat newValue;
     public override void Awake() {
         InitVariable(value);

@@ -24,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
         public bool Copiable{get;private set;}
         public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
         public Action<BehaviorTreeNode> onSelectAction;
-        protected BehaviorTreeView mapTreeView;
+        protected ITreeView mapTreeView;
         protected bool noValidate;
         public override void OnSelected()
         {
@@ -135,7 +135,7 @@ namespace Kurisu.AkiBT.Editor
         ///  核心:设置结点行为类型
         /// </summary>
         /// <param name="nodeBehavior"></param>
-        public void SetBehavior(System.Type nodeBehavior,BehaviorTreeView ownerTreeView=null)
+        public void SetBehavior(System.Type nodeBehavior,ITreeView ownerTreeView=null)
         {
             if(ownerTreeView!=null)this.mapTreeView=ownerTreeView;
             if (dirtyNodeBehaviorType != null)

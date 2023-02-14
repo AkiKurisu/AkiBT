@@ -15,6 +15,10 @@ namespace Kurisu.AkiBT.Editor
         public BehaviorTreeView GraphView=>graphView;
         private UnityEngine.Object key { get; set; }
         InfoView infoView;
+        /// <summary>
+        /// 用于判断SO类型
+        /// </summary>
+        /// <returns></returns>
         protected virtual Type SOType=>typeof(BehaviorTreeSO);
         protected virtual string TreeName=>"行为树";
         protected virtual string InfoText=>"欢迎使用AkiBT,一个超简单的行为树!";
@@ -33,10 +37,21 @@ namespace Kurisu.AkiBT.Editor
             window.Show();
             window.Focus();
         }
+        /// <summary>
+        /// 创建GraphView实例
+        /// </summary>
+        /// <param name="behaviorTree"></param>
+        /// <returns></returns>
         protected virtual BehaviorTreeView CreateView(IBehaviorTree behaviorTree)
         {
             return new BehaviorTreeView(behaviorTree, this);
         }
+        /// <summary>
+        /// 创建EditorWindow实例
+        /// </summary>
+        /// <param name="bt"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         protected static T Create<T>(IBehaviorTree bt)where T:GraphEditorWindow
         {
            
@@ -62,7 +77,7 @@ namespace Kurisu.AkiBT.Editor
             window.rootVisualElement.Clear();
             window.graphView=window.CreateView(behaviorTree);
             window.infoView=new InfoView(window.InfoText);
-            window.infoView.styleSheets.Add((StyleSheet)Resources.Load("AkiBT/Info", typeof(StyleSheet)));
+            window.infoView.styleSheets.Add(Resources.Load<StyleSheet>("AkiBT/Info"));
             window.graphView.Add( window.infoView);
             window.graphView.onSelectAction=window.OnNodeSelectionChange;//绑定委托
             GenerateBlackBoard(window.graphView);
@@ -211,11 +226,30 @@ namespace Kurisu.AkiBT.Editor
                                 SaveDataToSO();
                             }
                         }
+                        if (GUILayout.Button("从SO复制", EditorStyles.toolbarButton))
+                        {
+                            string path=EditorUtility.OpenFilePanel("选择复制文件",Application.dataPath,"asset");
+                            var data=LoadDataFromFile(path.Replace(Application.dataPath,string.Empty));
+                            if(data!=null)graphView.CopyFromOtherTree(data);
+                        }
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
             );
+        }
+        private IBehaviorTree LoadDataFromFile(string path)
+        {
+            try
+            {
+                return AssetDatabase.LoadAssetAtPath<BehaviorTreeSO>($"Assets/{path}");
+                
+            }
+            catch
+            {
+                this.ShowNotification(new GUIContent($"无效路径:Assets/{path},请选择BehaviorTreeSO"));
+                return null;
+            }
         }
         void OnNodeSelectionChange(BehaviorTreeNode node)
         {

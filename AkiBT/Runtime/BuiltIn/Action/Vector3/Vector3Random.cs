@@ -11,8 +11,7 @@ namespace Kurisu.AkiBT.Extend
             Absolutely,
             Relatively
         }
-        [SerializeField]
-        private SharedVector3 randomVector3;
+        
         [SerializeField]
         private Vector2 xRange=new Vector2(-5,5);
         [SerializeField]
@@ -21,6 +20,8 @@ namespace Kurisu.AkiBT.Extend
         private Vector2 zRange=new Vector2(-5,5);
         [SerializeField]
         private Operation operation;
+        [SerializeField,ForceShared]
+        private SharedVector3 randomVector3;
         public override void Awake()
         {
            InitVariable(randomVector3);

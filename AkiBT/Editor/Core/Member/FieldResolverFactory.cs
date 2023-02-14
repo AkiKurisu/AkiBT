@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Kurisu.AkiBT.Editor
 {
-    public interface IChildResolver
+    internal interface IChildResolver
     {
 
     }

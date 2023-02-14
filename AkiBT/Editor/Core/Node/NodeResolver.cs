@@ -1,10 +1,11 @@
 using System;
-
+using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
     public class NodeResolver
     {
-        public BehaviorTreeNode CreateNodeInstance(Type type,BehaviorTreeView treeView)
+        private StyleSheet styleSheetCache;
+        public BehaviorTreeNode CreateNodeInstance(Type type,ITreeView treeView)
         {
             BehaviorTreeNode node;
             if (type.IsSubclassOf(typeof(Composite)))
@@ -27,7 +28,8 @@ namespace Kurisu.AkiBT.Editor
                 node = new ActionNode();
             }
             node.SetBehavior(type,treeView);
-            node.styleSheets.Add(treeView.nodeSheet);
+            if(styleSheetCache==null)styleSheetCache=BehaviorTreeSetting.GetNodeStyle(treeView.treeEditorName);
+            node.styleSheets.Add(styleSheetCache);
             return node;
         }
     }

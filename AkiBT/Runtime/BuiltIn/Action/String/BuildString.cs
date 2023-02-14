@@ -2,22 +2,26 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:随机获取String值")]
-    [AkiLabel("String:Random")]
+    [AkiInfo("Action:String类型拼接")]
+    [AkiLabel("String:Build")]
     [AkiGroup("String")]
-    public class StringRandom : Action
+    public class BuildString : Action
     {
         [SerializeField]
-        private List<string>randomStrings;
+        private List<SharedString> values;
         [SerializeField,ForceShared]
         private SharedString storeResult;
         public override void Awake()
         {
+            foreach(var value in values) InitVariable(value);
             InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            storeResult.Value=randomStrings[UnityEngine.Random.Range(0,randomStrings.Count)];
+            for(int i=0;i<values.Count;i++)
+            {
+                storeResult.Value+=values[i].Value;
+            }
             return Status.Success;
         }
     }

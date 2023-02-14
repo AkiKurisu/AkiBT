@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         /// <param name="ownerTreeView"></param>
         /// <returns></returns>
-        VisualElement GetEditorField(BehaviorTreeView ownerTreeView);
+        VisualElement GetEditorField(ITreeView ownerTreeView);
         /// <summary>
         /// 获取ValueField同时绑定共享变量
         /// </summary>
@@ -59,8 +59,8 @@ namespace Kurisu.AkiBT.Editor
 
         protected abstract T CreateEditorField(FieldInfo fieldInfo);
         public VisualElement CreateField()=>CreateEditorField(this.fieldInfo);
-        protected virtual void SetTree(BehaviorTreeView ownerTreeView){}
-        public VisualElement GetEditorField(BehaviorTreeView ownerTreeView)
+        protected virtual void SetTree(ITreeView ownerTreeView){}
+        public VisualElement GetEditorField(ITreeView ownerTreeView)
         {
             SetTree(ownerTreeView);
             return this.editorField;
