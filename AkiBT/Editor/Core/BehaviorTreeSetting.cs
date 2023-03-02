@@ -32,21 +32,21 @@ public class BehaviorTreeSetting : ScriptableObject
     public static StyleSheet GetGraphStyle(string editorName)
     {
         var setting=GetOrCreateSettings();
-        if(!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
+        if(setting.settings==null||setting.settings.Length==0||!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
         var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
         return editorSetting.graphStyleSheet??Resources.Load<StyleSheet>(GraphFallBackPath);
     } 
     public static StyleSheet GetInspectorStyle(string editorName)
     {
         var setting=GetOrCreateSettings();
-        if(!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
+        if(setting.settings==null||setting.settings.Length==0||!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
         var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
         return editorSetting.inspectorStyleSheet??Resources.Load<StyleSheet>(InspectorFallBackPath);
     } 
     public static StyleSheet GetNodeStyle(string editorName)
     {
         var setting=GetOrCreateSettings();
-        if(!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
+        if(setting.settings==null||setting.settings.Length==0||!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
         var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
         return editorSetting.nodeStyleSheet??Resources.Load<StyleSheet>(NodeFallBackPath);
     } 

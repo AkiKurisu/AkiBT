@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
     public interface ITreeView
@@ -32,6 +30,10 @@ namespace Kurisu.AkiBT.Editor
         /// 共享变量名称编辑事件(自动触发)
         /// </summary>
         event System.Action<SharedVariable> OnPropertyNameEditingEvent;
+        /// <summary>
+        /// 编辑器内共享变量
+        /// </summary>
+        /// <value></value>
         List<SharedVariable> ExposedProperties{get;}
         /// <summary>
         /// 是否在Restore中
@@ -42,7 +44,6 @@ namespace Kurisu.AkiBT.Editor
         /// 添加共享变量到黑板
         /// </summary>
         /// <param name="variable"></param>
-        /// <typeparam name="T"></typeparam>
         void AddPropertyToBlackBoard(SharedVariable variable);
     }
 }

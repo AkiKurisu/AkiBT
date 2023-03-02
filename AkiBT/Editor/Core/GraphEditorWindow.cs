@@ -216,21 +216,25 @@ namespace Kurisu.AkiBT.Editor
                                 this.ShowNotification(guiContent);
                             }
                         }
-                        graphView.AutoSave=GUILayout.Toggle(graphView.AutoSave,"自动保存");
+                        graphView.AutoSave=GUILayout.Toggle(graphView.AutoSave,"Auto Save");
                         if(graphView.CanSaveToSO)
                         {
-                            if (GUILayout.Button("保存到SO", EditorStyles.toolbarButton))
+                            if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
                             {
                                 string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
                                 graphView.SavePath=path.Replace(Application.dataPath,string.Empty);
                                 SaveDataToSO();
                             }
                         }
-                        if (GUILayout.Button("从SO复制", EditorStyles.toolbarButton))
+                        if (GUILayout.Button("Copy From SO", EditorStyles.toolbarButton))
                         {
                             string path=EditorUtility.OpenFilePanel("选择复制文件",Application.dataPath,"asset");
                             var data=LoadDataFromFile(path.Replace(Application.dataPath,string.Empty));
-                            if(data!=null)graphView.CopyFromOtherTree(data);
+                            if(data!=null)
+                            {
+                                ShowNotification(new GUIContent("Data Dropped Successfully!"));
+                                graphView.CopyFromOtherTree(data);
+                            }
                         }
                     }
                     GUILayout.FlexibleSpace();
@@ -247,7 +251,7 @@ namespace Kurisu.AkiBT.Editor
             }
             catch
             {
-                this.ShowNotification(new GUIContent($"无效路径:Assets/{path},请选择BehaviorTreeSO"));
+                this.ShowNotification(new GUIContent($"Invalid Path:Assets/{path},please pick BehaviorTreeSO"));
                 return null;
             }
         }

@@ -164,8 +164,7 @@ namespace Kurisu.AkiBT.Editor
         public void AddPropertyToBlackBoard(SharedVariable variable)
         {
             var localPropertyValue = variable.GetValue();
-            if(String.IsNullOrEmpty(variable.Name))
-                variable.Name=variable.GetType().Name;
+            if(String.IsNullOrEmpty(variable.Name))variable.Name=variable.GetType().Name;
             var localPropertyName = variable.Name;
             int index=1;
             while (ExposedProperties.Any(x => x.Name == localPropertyName))
@@ -243,11 +242,20 @@ namespace Kurisu.AkiBT.Editor
             IsRestored=true;
             IEnumerable<BehaviorTreeNode>nodes;
             RootNode rootNode;
+            foreach(var variable in otherTree.SharedVariables)
+            {
+                AddPropertyToBlackBoard(variable.Clone() as SharedVariable);//Clone新的共享变量
+            } 
             (rootNode,nodes)=converter.ConvertToNode(otherTree,this);
             foreach(var node in nodes)node.onSelectAction=onSelectAction;
             var edge=rootNode.Child.connections.First();
             RemoveElement(edge);
             RemoveElement(rootNode);
+            foreach (var nodeBlockData in otherTree.BlockData)
+            {
+               CreateBlock(new Rect(nodeBlockData.Position,  new Vector2(100, 100)),nodeBlockData)
+               .AddElements(nodes.Where(x=>nodeBlockData.ChildNodes.Contains(x.GUID)));
+            }
             IsRestored=false;
         }
         /// <summary>
