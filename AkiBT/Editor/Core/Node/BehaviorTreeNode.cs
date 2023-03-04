@@ -34,7 +34,7 @@ namespace Kurisu.AkiBT.Editor
         
         protected BehaviorTreeNode()
         {
-            fieldResolverFactory = new FieldResolverFactory();
+            fieldResolverFactory = FieldResolverFactory.Instance;
             container = new VisualElement();
             description = new TextField();
             guid=Guid.NewGuid().ToString();

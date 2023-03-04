@@ -26,7 +26,7 @@ namespace Kurisu.AkiBT.Editor
         protected RootNode root;
         private List<SharedVariable> exposedProperties=new List<SharedVariable>();
         public List<SharedVariable> ExposedProperties=>exposedProperties;
-        private FieldResolverFactory fieldResolverFactory = new FieldResolverFactory();
+        private FieldResolverFactory fieldResolverFactory = FieldResolverFactory.Instance;
         protected NodeSearchWindowProvider provider;
         public event System.Action<SharedVariable> OnPropertyNameChangeEvent;
         public event System.Action<SharedVariable> OnPropertyNameEditingEvent;

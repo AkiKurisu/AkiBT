@@ -11,7 +11,7 @@ namespace Kurisu.AkiBT.Editor
         const string LabelText="AkiBT 行为树 Version1.2.6";
         const string ButtonText="打开行为树";
         protected VisualElement myInspector;
-        private FieldResolverFactory factory=new FieldResolverFactory();
+        private FieldResolverFactory factory=FieldResolverFactory.Instance;
         public override VisualElement CreateInspectorGUI()
         {
             myInspector = new VisualElement();

@@ -14,10 +14,14 @@ namespace Kurisu.AkiBT.Editor
     /// </summary>
     public class FieldResolverFactory
     {
+        private static FieldResolverFactory instance;
+        public static FieldResolverFactory Instance=>instance??new FieldResolverFactory();
+
         private List<Type> _ResolverTypes = new List<Type>();
         private List<Type> _ResolverGenericTypes=new List<Type>();
         public FieldResolverFactory()
         {
+            instance=this;
             _ResolverTypes=AppDomain.CurrentDomain
             .GetAssemblies()
             .Select(x=>x.GetTypes())
