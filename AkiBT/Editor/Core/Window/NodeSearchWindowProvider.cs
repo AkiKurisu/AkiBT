@@ -33,7 +33,7 @@ namespace Kurisu.AkiBT.Editor
             List<Type> nodeTypes =SearchUtility.FindSubClassTypes(_Types);
             var groups=nodeTypes.GroupsByAkiGroup();;
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();
-            groups=groups.SelectString(showGroups).ExceptString(notShowGroups);
+            groups=groups.SelectGroup(showGroups).ExceptGroup(notShowGroups);
             foreach(var _type in _Types)  
             {
                 entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {_type.Name}"),1));
@@ -93,7 +93,7 @@ namespace Kurisu.AkiBT.Editor
             List<Type> nodeTypes =SearchUtility.FindSubClassTypes(typeof(T));
             var groups=nodeTypes.GroupsByAkiGroup();//按AkiGroup进行分类
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();//去除被分类的部分
-            groups=groups.SelectString(showGroups).ExceptString(notShowGroups);
+            groups=groups.SelectGroup(showGroups).ExceptGroup(notShowGroups);
             foreach(var group in groups)
             {
                 entries.AddAllEntries(group,_indentationIcon,1);

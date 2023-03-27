@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
 namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorNodeConverter
@@ -17,7 +19,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private readonly NodeResolver nodeResolver = new NodeResolver();
         private List<BehaviorTreeNode> tempNodes=new List<BehaviorTreeNode>();
-        public (RootNode,IEnumerable<BehaviorTreeNode>) ConvertToNode<T>(IBehaviorTree tree,T treeView)where T:GraphView,ITreeView
+        public (RootNode,IEnumerable<BehaviorTreeNode>) ConvertToNode<T>(IBehaviorTree tree,T treeView,Vector2 initPos)where T:GraphView,ITreeView
         {
             var stack = new Stack<EdgePair>();
             RootNode root=null;
@@ -35,7 +37,9 @@ namespace Kurisu.AkiBT.Editor
                 node.Restore(edgePair.NodeBehavior);
                 treeView.AddElement(node);
                 tempNodes.Add(node);
-                node.SetPosition( edgePair.NodeBehavior.graphPosition);
+                var rect=edgePair.NodeBehavior.graphPosition;
+                rect.position+=initPos;
+                node.SetPosition(rect);
 
                 // connect parent
                 if (edgePair.ParentOutputPort != null)

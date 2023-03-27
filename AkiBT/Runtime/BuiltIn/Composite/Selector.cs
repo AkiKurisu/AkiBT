@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT
     [AkiLabel("Selector选择")]
     public class Selector : Composite
     {
-        [SerializeField,AkiLabel("在判断改变时打断子结点"),Tooltip("当优先于当前运行结点的子结点判断改变时打断当前运行结点,打断会影响其分支下全部结点;注意:在AkiBT中,Action结点的判断始终"+
+        [SerializeField,Tooltip("当优先于当前运行结点的子结点判断改变时打断当前运行结点,打断会影响其分支下全部结点;注意:在AkiBT中,Action结点的判断始终"+
         "为true,只有Conditional结点会发生判断(CanUpdate)的改变"
         )]
         private bool abortOnConditionChanged = true;

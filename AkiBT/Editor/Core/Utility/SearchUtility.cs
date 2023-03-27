@@ -22,8 +22,8 @@ namespace Kurisu.AkiBT.Editor
         const char Span='/';
         public static string[] GetSplittedGroupName (string group)
         {
-        var array=group.Split(Span,StringSplitOptions.RemoveEmptyEntries) ;
-        return array.Length>0?array: new string[1]{group};
+            var array=group.Split(Span,StringSplitOptions.RemoveEmptyEntries) ;
+            return array.Length>0?array: new string[1]{group};
         }
     }
     public static class SearchExtension
@@ -49,11 +49,11 @@ namespace Kurisu.AkiBT.Editor
         {
             return groups.SelectMany(x=>x).Where(x => x.IsSubclassOf(Father)).GroupsByAkiGroup();
         }
-        public static IEnumerable<IGrouping<string, Type>> SelectString(this IEnumerable<IGrouping<string, Type>> groups,string[] showGroupNames)
+        public static IEnumerable<IGrouping<string, Type>> SelectGroup(this IEnumerable<IGrouping<string, Type>> groups,string[] showGroupNames)
         {
             return (showGroupNames!=null&&showGroupNames.Length!=0)?groups.Where(x=>showGroupNames.Any(a=>a==x.Key)):groups;
         }
-        public static IEnumerable<IGrouping<string, Type>> ExceptString(this IEnumerable<IGrouping<string, Type>> groups,string[] notShowGroupNames)
+        public static IEnumerable<IGrouping<string, Type>> ExceptGroup(this IEnumerable<IGrouping<string, Type>> groups,string[] notShowGroupNames)
         {
             return (notShowGroupNames!=null)?groups.Where(x=>!notShowGroupNames.Any(a=>a==x.Key)):groups;
         }

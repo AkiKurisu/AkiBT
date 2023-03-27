@@ -44,7 +44,7 @@ public class Decorator : NodeBehavior
         protected virtual void OnStart()
         {
         }
-        protected sealed override Status OnUpdate()
+        protected override Status OnUpdate()
         {
             var status = child.Update();
             return OnDecorate(status);

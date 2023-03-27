@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT
     [AkiLabel("Rotator轮盘")]
     public class Rotator : Composite
     {
-        [SerializeField,AkiLabel("打断后重置子结点")]
+        [SerializeField]
         private bool resetOnAbort;
 
         private int targetIndex;

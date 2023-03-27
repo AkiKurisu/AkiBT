@@ -216,14 +216,14 @@ namespace Kurisu.AkiBT.Editor
             }
             return compatiblePorts;
         }
-        private void CopyFromObject(UnityEngine.Object data)
+        private void CopyFromObject(UnityEngine.Object data,Vector3 mousePosition)
         {
             if(data is GameObject)
             {
                 if((data as GameObject).TryGetComponent<IBehaviorTree>(out IBehaviorTree tree))
                 {
                     _window.ShowNotification(new GUIContent("GameObject Dropped Successfully!"));
-                    CopyFromOtherTree(tree);
+                    CopyFromOtherTree(tree,mousePosition);
                     return;
                 }
                 _window.ShowNotification(new GUIContent("Invalid Drag GameObject!"));
@@ -235,10 +235,11 @@ namespace Kurisu.AkiBT.Editor
                 return;
             }
             _window.ShowNotification(new GUIContent("Data Dropped Successfully!"));
-            CopyFromOtherTree(data as IBehaviorTree);
+            CopyFromOtherTree(data as IBehaviorTree,mousePosition);
         }
-        internal void CopyFromOtherTree(IBehaviorTree otherTree)
+        internal void CopyFromOtherTree(IBehaviorTree otherTree,Vector2 mousePosition)
         {
+            var localMousePosition = contentViewContainer.WorldToLocal(mousePosition)-new Vector2(400,300);
             IsRestored=true;
             IEnumerable<BehaviorTreeNode>nodes;
             RootNode rootNode;
@@ -246,7 +247,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 AddPropertyToBlackBoard(variable.Clone() as SharedVariable);//Clone新的共享变量
             } 
-            (rootNode,nodes)=converter.ConvertToNode(otherTree,this);
+            (rootNode,nodes)=converter.ConvertToNode(otherTree,this,localMousePosition);
             foreach(var node in nodes)node.onSelectAction=onSelectAction;
             var edge=rootNode.Child.connections.First();
             RemoveElement(edge);
@@ -270,7 +271,7 @@ namespace Kurisu.AkiBT.Editor
             }
             IsRestored=true;
             IEnumerable<BehaviorTreeNode>nodes;
-            (this.root,nodes)=converter.ConvertToNode(tree,this);
+            (this.root,nodes)=converter.ConvertToNode(tree,this,Vector2.zero);
             foreach(var node in nodes)node.onSelectAction=onSelectAction;
             foreach (var nodeBlockData in tree.BlockData)
             {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action:随机获取Vector3值")]
@@ -20,16 +21,16 @@ namespace Kurisu.AkiBT.Extend
         private Vector2 zRange=new Vector2(-5,5);
         [SerializeField]
         private Operation operation;
-        [SerializeField,ForceShared]
-        private SharedVector3 randomVector3;
+        [SerializeField,ForceShared,FormerlySerializedAs("randomVector3")]
+        private SharedVector3 storeResult;
         public override void Awake()
         {
-           InitVariable(randomVector3);
+           InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
             Vector3 addVector3=new Vector3(UnityEngine.Random.Range(xRange.x,xRange.y),UnityEngine.Random.Range(yRange.x,yRange.y),UnityEngine.Random.Range(zRange.x,zRange.y));
-            randomVector3.Value=(operation==Operation.Absolutely?Vector3.zero:randomVector3.Value)+addVector3;
+            storeResult.Value=(operation==Operation.Absolutely?Vector3.zero:storeResult.Value)+addVector3;
             return Status.Success;
         }
     }

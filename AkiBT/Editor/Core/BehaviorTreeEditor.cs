@@ -56,10 +56,6 @@ namespace Kurisu.AkiBT.Editor
             label.style.fontSize=20;
             myInspector.Add(label);
             myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
-            var toggle=new PropertyField(serializedObject.FindProperty("updateType"),"更新模式");
-            myInspector.Add(toggle);
-            var field=new PropertyField(serializedObject.FindProperty("externalBehaviorTree"),"外部行为树");
-            myInspector.Add(field);
             myInspector.Add(new Label("行为树描述"));
             var description=new PropertyField(serializedObject.FindProperty("Description"),string.Empty);
             myInspector.Add(description);

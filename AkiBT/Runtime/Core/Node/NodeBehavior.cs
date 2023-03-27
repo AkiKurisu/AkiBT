@@ -5,6 +5,7 @@ namespace Kurisu.AkiBT
 {
     /// <summary>
     /// 行为状态
+    /// Behavior Status
     /// </summary>
     public enum Status
     {
@@ -13,7 +14,9 @@ namespace Kurisu.AkiBT
         Running
     }
    /// <summary>
-   /// 基础的结点行为类
+   /// Based Behavior Class
+   /// If you want to create new types outside of Action, Conditional, Composite and Decorator,
+   /// you can implement this class
    /// </summary>
     [Serializable]
     public abstract class NodeBehavior 

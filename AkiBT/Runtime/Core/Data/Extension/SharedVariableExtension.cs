@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-public static class SharedVariableExtend
+public static class SharedVariableExtension
 {
     /// <summary>
     /// 从行为树获取共享变量

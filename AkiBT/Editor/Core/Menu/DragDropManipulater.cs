@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Editor
     public class DragDropManipulator : PointerManipulator
     {
         Object droppedObject = null;
-        public event System.Action<Object> OnDragOverEvent;
+        public event System.Action<Object,Vector3> OnDragOverEvent;
         public DragDropManipulator(GraphView root)
         {
             target = root;
@@ -67,7 +67,8 @@ namespace Kurisu.AkiBT.Editor
         {
             // Set droppedObject and draggedName fields to refer to dragged object.
             droppedObject = DragAndDrop.objectReferences[0];
-            OnDragOverEvent?.Invoke(droppedObject);
+            Event currentEvent = Event.current;
+            OnDragOverEvent?.Invoke(droppedObject,currentEvent.mousePosition);        
             droppedObject=null;
         }
     

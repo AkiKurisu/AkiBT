@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action:计算两个Vector3间的距离")]
@@ -10,16 +11,16 @@ namespace Kurisu.AkiBT.Extend
         public SharedVector3 firstVector3;
         [SerializeField]
         public SharedVector3 secondVector3;
-        [SerializeField,ForceShared]
-        private SharedFloat result;
+        [SerializeField,ForceShared,FormerlySerializedAs("result")]
+        private SharedFloat storeResult;
         public override void Awake() {
             InitVariable(firstVector3);
             InitVariable(secondVector3);
-            InitVariable(result);
+            InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            result.Value=Vector3.Distance(firstVector3.Value,secondVector3.Value);
+            storeResult.Value=Vector3.Distance(firstVector3.Value,secondVector3.Value);
             return Status.Success;
         }
     }

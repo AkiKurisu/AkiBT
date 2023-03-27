@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
+/// <summary>
+/// Behavior Tree ScriptableObject, can only run manually.
+/// </summary>
 [CreateAssetMenu(fileName = "BehaviorTreeSO", menuName = "AkiBT/BehaviorTreeSO")]
 public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
 {
@@ -46,13 +49,7 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
     #endif
     [HideInInspector]
     [SerializeReference]
-    private List<SharedVariable> sharedVariables = new List<SharedVariable>();
-    /// <summary>
-    /// 获取共享变量
-    /// </summary>
-    /// <param name="name"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    protected List<SharedVariable> sharedVariables = new List<SharedVariable>();
     SharedVariable<T> IBehaviorTree.GetShareVariable<T>(string name)
     {
         if(string.IsNullOrEmpty(name))
@@ -73,7 +70,8 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
         return null;
     }
     /// <summary>
-    /// 外部传入绑定对象并初始化
+    /// 外部传入绑定对象并初始化,调用Awake和Start方法
+    /// Bind GameObject and Init behaviorTree through Awake and Start method
     /// </summary>
     /// <param name="gameObject"></param>
     public void Init(GameObject gameObject) {
@@ -83,6 +81,7 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
     } 
     /// <summary>
     /// 外部调用Update更新,此方法运行完全基于SO
+    /// Update BehaviorTree externally, this method is completely based on ScriptableObject
     /// </summary>
     public virtual void Update()
     {

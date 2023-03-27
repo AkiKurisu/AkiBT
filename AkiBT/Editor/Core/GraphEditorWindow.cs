@@ -25,7 +25,9 @@ namespace Kurisu.AkiBT.Editor
         [MenuItem("Tools/AkiBT Editor")]
         private static void ShowEditorWindow()
         {
-            string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"").Replace(Application.dataPath,string.Empty);
+            string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
+            if(string.IsNullOrEmpty(path))return;
+            path=path.Replace(Application.dataPath,string.Empty);
             var treeSO=ScriptableObject.CreateInstance<BehaviorTreeSO>();
             AssetDatabase.CreateAsset(treeSO,"Assets/"+path+"BehaviorTreeSO.asset");
             AssetDatabase.SaveAssets();
@@ -222,8 +224,12 @@ namespace Kurisu.AkiBT.Editor
                             if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
                             {
                                 string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
-                                graphView.SavePath=path.Replace(Application.dataPath,string.Empty);
-                                SaveDataToSO();
+                                if(!string.IsNullOrEmpty(path))
+                                {
+                                    graphView.SavePath=path.Replace(Application.dataPath,string.Empty);
+                                    SaveDataToSO();
+                                }
+                                
                             }
                         }
                         if (GUILayout.Button("Copy From SO", EditorStyles.toolbarButton))
@@ -233,7 +239,7 @@ namespace Kurisu.AkiBT.Editor
                             if(data!=null)
                             {
                                 ShowNotification(new GUIContent("Data Dropped Successfully!"));
-                                graphView.CopyFromOtherTree(data);
+                                graphView.CopyFromOtherTree(data,Vector2.zero);
                             }
                         }
                     }
