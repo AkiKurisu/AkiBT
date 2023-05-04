@@ -50,8 +50,6 @@ namespace Kurisu.AkiBT.Editor
             Func<VisualElement>makeItem=()=>
             {
                 var field=elementCreator.Invoke();
-                (field as IFoldout).foldout.text=string.Empty;
-                (field as IFoldout).foldout.value=true;
                 (field as BaseField<T>).label=string.Empty;
                 if(treeView!=null)(field as IInitField).InitField(treeView);
                 OnTreeViewInitEvent+=(view)=>{(field as IInitField).InitField(view);};

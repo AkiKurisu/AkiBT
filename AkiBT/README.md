@@ -1,26 +1,30 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/releases)
-# 行为树 AkiBT Verisoin 1.2.7 简介 Intro
+# 行为树 AkiBT Verisoin 1.2.8 简介 Intro
 
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
 行为树衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
-AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function.AkiKurisu Extends it with more features so that you can enjoy it.
-# 安装Setup
-1. [Download Release Package](https://github.com/AkiKurisu/AkiBT/releases)直接下载最新的UnityPackage
-2. Using git URL to download package by Unity PackageManager(https://github.com/AkiKurisu/AkiBT.git?path=/AkiBT)
+
+AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function. AkiKurisu Extends it with more features so that you can enjoy it.
+# 安装 Setup
+1. Download [Release Package](https://github.com/AkiKurisu/AkiBT/releases)
+2. Using git URL to download package by Unity PackageManager ```https://github.com/AkiKurisu/AkiBT.git?path=/AkiBT```
 #
 
-## 支持的版本Supported version
+## 支持的版本 Supported version
 
 * AkiBT1.2 Unity 2021.3 or later.(使用了新版本UIToolkit的DropdownField和TreeView)
 * 我没有对Unity 2022版本进行测试,如果发现Bug或API升级导致的不兼容问题,你可以提交Issues。
 #
-## AkiBT特点Features
-* 支持使用可视化节点编辑器构造行为树Supports constructing behavior tree by [GraphView](https://docs.unity3d.com/ScriptReference/Experimental.GraphView.GraphView.html).
-* 支持运行时可视化结点状态Supports visualizing active node in runtime.
-* 非常便于拓展和自定义新的行为Easily add original behaviors(Action,Conditional,Composite,Decorator).
+## AkiBT特点 AkiBT Features
+* 支持使用可视化节点编辑器构造行为树
+* Supports constructing behavior tree by visual node editor.
+* 支持运行时可视化结点状态
+* Supports visualizing active node in runtime.
+* 非常便于拓展和自定义新的行为
+* Easily add original behaviors(Action,Conditional,Composite,Decorator).
 #
-## 视图优化Optimization
+## 视图优化 View Optimization
 * 优化了结点创建菜单,根据类型分类Optimize NodeSearchWindow and improve it with an advanced subCategory attribute.
 * 增加了左键选框Add SelectionDragger using Left Mouse.
 * 增加了背景和结点样式Add style for both background and nodes.
@@ -29,26 +33,26 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 * 1.2.3版本加入了复制粘贴功能(Ctrl+C&&Ctrl+V或者右键单个结点的Duplicate选项)You can now easily ctrl C&V or right-click the node and click "Duplicate" option to duplicate nodes.
 #
 
-## 保存功能Save Function
+## 保存功能 Save Function
 
-1. 增加自动保存设置和保存到ScriptableObject的功能Add Auto-Save function and Save-To-ScriptableObject function.
+1. 增加自动保存设置和保存到ScriptableObject的功能 Add Auto-Save function and Save-To-ScriptableObject function.
 
-<img src="Images/AutoSave.png" width="480"/>
+    <img src="Images/AutoSave.png" width="480"/>
 
 #
 
 2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO。You can use External Tree to replaced the BehaviorTree Component in Inspector with it.However,you cant use it for runtime-using such as replacing tree data in playing mode.It is designed for editing nodes based on another behavior tree.It's an Editor-Only feature.Although the visual node editor will draw the tree by exteral tree,you cant edit the tree in the SO by click 'Saving BehaviorTree' which will only effect the tree in the Component.
 
-<img src="Images/External.png" width="480"/>
+    <img src="Images/External.png" width="480"/>
 
 #
 3. 1.1版本增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！You can edit SO directly in version1.1.
    
-<img src="Images/OpenSO.png" width="480"/>
+    <img src="Images/OpenSO.png" width="480"/>
 
 4. 1.2.7版本增加了外部数据复制的功能(非覆盖),你可以从上侧工具栏选择“从SO复制”，也可以将AkiBT支持(例如AkiDT等衍生版本)的SO文件、AkiBT支持的组件或挂载AkiBT支持组件的GameObject拖拽进编辑器中进行复制粘贴。In version1.2.7, you can drag GameObject with AkiBT Supported Component(like AkiDT, a Dialogue Node Based Tree Editor),AkiBT Supported Component,AkiBT Supported ScriptableObject into the graph view or click the"从SO复制" button to pick a AkiBT Supported ScriptableObject from your project.
 
-<img src="Images/DragDrop.gif" width="1920"/>
+    <img src="Images/DragDrop.gif" width="1920"/>
 
 #
 ## 新的结点类型New Node Type
@@ -74,7 +78,7 @@ public class WaitSuccess : Decorator
 
 1. 增加了共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool、String类型变量Add SharedVariable which lets you have access to add it in a blackboard and share value between different node.Now it supports Float,Int,Vector3,Bool,String, maybe I will add GameObject in the future.
 
-<img src="Images/SharedVariable.png" />
+    <img src="Images/SharedVariable.png" />
 
 * 注意：修改共享变量名称的方式为双击变量,为空时自动删除You can edit variable's name by double-click it and the variable will auto delate when it's name becomes empty.
 
@@ -82,18 +86,18 @@ public class WaitSuccess : Decorator
   
 * 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.SharedVariable supports static-using,if you don't want to relate it with variables in blackboard,you just need make 'Is Shared' toggle to False.If you have a variable with invalid name,it will stay unShared in playing mode.
 
-<img src="Images/Operator.png" width="480"/>
+    <img src="Images/Operator.png" width="480"/>
 
 2. 需要注意的是,共享变量在1.1版本会和SO文件一同被保存和替换SharedVariable will be replaced when you save the tree.
 
 
 3. 1.2版本增加了Inspector中共享变量的修改和删除功能,方便在Inspector中直接修改暴露引用的数值In version1.2,you can edit the exposed value of SharedVariable in the inspector.
 
-<img src="Images/ChangeVariableInInspector.png" width="480"/>
+    <img src="Images/ChangeVariableInInspector.png" width="480"/>
 
 4. 1.2版本将编辑器内的共享变量修改为Dropdown下拉菜单,无需重复填写StringField for SharedVariable is now replaced with a DropdownField which is easier to edit.
 
-<img src="Images/SmartVariable.png" width="480"/>
+    <img src="Images/SmartVariable.png" width="480"/>
 
 #
 ## 特性Attributes
@@ -223,8 +227,6 @@ Selector has following parameter.
 * Returns running if any child node returns running.
 * Returns failure if any child node returns failure.
 * Otherwise, returns success.
-* 注意:如果存在返回值为Running的子结点,Parallel平行会一直保持Running,并且持续Update所有子结点。
-* AkiBT版本由All更名为Parallel。
 
 #### Random
 * The child nodes are elected and executed according to the probability based on the uniform distribution.  
@@ -314,7 +316,6 @@ public class IsHateGt: Conditional
 <img src="Images/conditional1.jpg" width="480"/>
 
 * Conditional Node can be branch node.
-* 注:原作者将Conditional结点设计为可以单独作为叶结点,即将子结点置空,只根据判断返回Success和Failure。但我并不推荐将行为逻辑写在Conditional中,这会带来判断逻辑和行为逻辑的混同。
 
 <img src="Images/conditional2.jpg" width="480"/>
 
@@ -394,3 +395,10 @@ public class Invertor : Decorator
 }
 ```
 
+## 拓展功能 Extend Function
+
+1. 运行时更新 Runtime Update Support
+   
+   你可以使用[AkiBTVM](https://github.com/AkiKurisu/AkiBTVM)实现运行时编辑行为树
+
+   You can have access to runtime-updating by using [AkiBTVM](https://github.com/AkiKurisu/AkiBTVM) 

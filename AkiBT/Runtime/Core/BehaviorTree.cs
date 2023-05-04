@@ -31,22 +31,6 @@ namespace Kurisu.AkiBT
         [SerializeField,Tooltip("使用外部行为树替换组件内行为树,保存时会覆盖组件内行为树")]
         private BehaviorTreeSO externalBehaviorTree;
         public BehaviorTreeSO ExternalBehaviorTree=>externalBehaviorTree;
-
-        [SerializeField,HideInInspector]
-        private bool autoSave;
-        [SerializeField,HideInInspector]
-        private string savePath="Assets";
-        public string SavePath
-        {
-                get => savePath;
-                set => savePath = value;
-
-        }
-        public bool AutoSave
-        {
-            get => autoSave;
-            set => autoSave = value;
-        }
         [SerializeField,HideInInspector]
         private List<GroupBlockData> blockData=new List<GroupBlockData>();
         public List<GroupBlockData> BlockData { get => blockData; set=>blockData=value;}

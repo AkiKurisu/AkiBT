@@ -26,20 +26,6 @@ public class BehaviorTreeSO : ScriptableObject,IBehaviorTree
         #endif
     }
     #if UNITY_EDITOR
-    [SerializeField,HideInInspector]
-    private bool autoSave;
-    [SerializeField,HideInInspector]
-    private string savePath="Assets";
-    public string SavePath
-    {
-            get => savePath;
-            set => savePath = value;
-    }
-    public bool AutoSave
-    {
-        get => autoSave;
-        set => autoSave = value;
-    }
     public virtual BehaviorTreeSO ExternalBehaviorTree=>null;
     [SerializeField,HideInInspector]
     private List<GroupBlockData> blockData=new List<GroupBlockData>();

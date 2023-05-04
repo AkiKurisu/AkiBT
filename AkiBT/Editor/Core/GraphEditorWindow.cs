@@ -140,9 +140,9 @@ namespace Kurisu.AkiBT.Editor
                 return;
             }
             graphView.Commit((IBehaviorTree)treeSO);
-            AssetDatabase.CreateAsset(treeSO,$"Assets/{graphView.SavePath}/{key.name}.asset");
+            AssetDatabase.CreateAsset(treeSO,$"Assets/{BehaviorTreeView.SavePath}/{key.name}.asset");
             AssetDatabase.SaveAssets();
-            Debug.Log($"<color=#3aff48>{graphView.treeEditorName}</color>外部{TreeName}保存成功,SO生成位置:{graphView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
+            Debug.Log($"<color=#3aff48>{graphView.treeEditorName}</color>外部{TreeName}保存成功,SO生成位置:{BehaviorTreeView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
         }
         
         private void OnDestroy()
@@ -150,7 +150,7 @@ namespace Kurisu.AkiBT.Editor
             int code=key.GetHashCode();
             if (key != null && cache.ContainsKey(code))
             {
-                if(cache[code].GraphView.AutoSave)
+                if(BehaviorTreeView.AutoSave)
                     cache[code].GraphView.Save(true);
                 cache.Remove(code);
             }
@@ -218,7 +218,7 @@ namespace Kurisu.AkiBT.Editor
                                 this.ShowNotification(guiContent);
                             }
                         }
-                        graphView.AutoSave=GUILayout.Toggle(graphView.AutoSave,"Auto Save");
+                        BehaviorTreeView.AutoSave=GUILayout.Toggle(BehaviorTreeView.AutoSave,"Auto Save");
                         if(graphView.CanSaveToSO)
                         {
                             if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
@@ -226,7 +226,7 @@ namespace Kurisu.AkiBT.Editor
                                 string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
                                 if(!string.IsNullOrEmpty(path))
                                 {
-                                    graphView.SavePath=path.Replace(Application.dataPath,string.Empty);
+                                    BehaviorTreeView.SavePath=path.Replace(Application.dataPath,string.Empty);
                                     SaveDataToSO();
                                 }
                                 

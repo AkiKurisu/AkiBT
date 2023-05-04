@@ -16,8 +16,6 @@ public interface IBehaviorTree
         #endif
     }
     #if UNITY_EDITOR
-    public string SavePath{get;set;}
-    public bool AutoSave{get;set;}
     /// <summary>
     /// Editor Only
     /// </summary>

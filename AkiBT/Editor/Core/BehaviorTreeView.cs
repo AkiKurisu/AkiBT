@@ -30,15 +30,15 @@ namespace Kurisu.AkiBT.Editor
         protected NodeSearchWindowProvider provider;
         public event System.Action<SharedVariable> OnPropertyNameChangeEvent;
         public event System.Action<SharedVariable> OnPropertyNameEditingEvent;
-        public bool AutoSave
+        internal static bool AutoSave
         {
-            get=>behaviorTree.AutoSave;
-            set=>behaviorTree.AutoSave=value;
+            get=>setting.AutoSave;
+            set=>setting.AutoSave=value;
         }
-        public string SavePath
+        internal static string SavePath
         {
-            get=>behaviorTree.SavePath;
-            set=>behaviorTree.SavePath=value;
+            get=>setting.SavePath;
+            set=>setting.SavePath=value;
         }
         /// <summary>
         /// 是否可以保存为SO,如果可以会在ToolBar中提供按钮
@@ -54,6 +54,7 @@ namespace Kurisu.AkiBT.Editor
         public bool IsRestored{get;private set;}
         private readonly BehaviorNodeConverter converter=new BehaviorNodeConverter();
         private readonly DragDropManipulator dragDropManipulator;
+        private static readonly BehaviorTreeSetting setting=BehaviorTreeSetting.GetOrCreateSettings();
         /// <summary>
         /// 黑板
         /// </summary>
@@ -237,7 +238,7 @@ namespace Kurisu.AkiBT.Editor
             _window.ShowNotification(new GUIContent("Data Dropped Successfully!"));
             CopyFromOtherTree(data as IBehaviorTree,mousePosition);
         }
-        internal void CopyFromOtherTree(IBehaviorTree otherTree,Vector2 mousePosition)
+        internal protected void CopyFromOtherTree(IBehaviorTree otherTree,Vector2 mousePosition)
         {
             var localMousePosition = contentViewContainer.WorldToLocal(mousePosition)-new Vector2(400,300);
             IsRestored=true;

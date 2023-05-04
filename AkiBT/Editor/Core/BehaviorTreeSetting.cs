@@ -29,6 +29,21 @@ public class BehaviorTreeSetting : ScriptableObject
 
     [SerializeField,Tooltip("编辑器配置,你可以根据编辑器名称使用不同的样式,并为结点搜索提供筛选方案")]
     private EditorSetting[] settings;
+    [SerializeField,HideInInspector]
+    private bool autoSave;
+    [SerializeField,HideInInspector]
+    private string savePath="Assets";
+    public string SavePath
+    {
+        get => savePath;
+        set => savePath = value;
+
+    }
+    public bool AutoSave
+    {
+        get => autoSave;
+        set => autoSave = value;
+    }
     public static StyleSheet GetGraphStyle(string editorName)
     {
         var setting=GetOrCreateSettings();

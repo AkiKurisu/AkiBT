@@ -5,30 +5,27 @@ using System.Reflection;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    internal interface IFoldout
-    {
-        public Foldout foldout{get;}
-    }
     internal interface IInitField
     {
         public void InitField(ITreeView treeView);
     }
-    public abstract class SharedVariableField<T,K> : BaseField<T>,IFoldout,IInitField where T:SharedVariable<K>,new()
+    public abstract class SharedVariableField<T,K> : BaseField<T>,IInitField where T:SharedVariable<K>,new()
     {
         private readonly bool forceShared;
-        public Foldout foldout{get;private set;}
+        private readonly VisualElement foldout;
         private Toggle toggle;
         private ITreeView treeView;
         private DropdownField nameDropdown;
         private SharedVariable bindExposedProperty;
+        private readonly Type bindType;
         public SharedVariableField(string label, VisualElement visualInput, Type objectType,FieldInfo fieldInfo) : base(label, visualInput)
         {
             forceShared=fieldInfo.GetCustomAttribute<ForceSharedAttribute>()!=null;
             AddToClassList("SharedVariableField");
-            foldout=new Foldout();
-            foldout.value=false;
-            foldout.text=$"{objectType.Name}";
+            foldout=new VisualElement();
+            foldout.style.flexDirection=FlexDirection.Row;
             contentContainer.Add(foldout);
+            bindType=objectType;
             toggle=new Toggle("Is Shared");
             toggle.RegisterValueChangedCallback(evt =>{ value.IsShared = evt.newValue;OnToggle(evt.newValue);});            
             if(forceShared)
@@ -77,10 +74,10 @@ namespace Kurisu.AkiBT.Editor
         }
         private void AddNameDropDown()
         {
-            nameDropdown=new DropdownField("Variable Name",GetList(treeView),value.Name??string.Empty);
+            nameDropdown=new DropdownField(bindType.Name,GetList(treeView),value.Name??string.Empty);
             nameDropdown.RegisterCallback<MouseEnterEvent>((evt)=>{nameDropdown.choices=GetList(treeView);});
             nameDropdown.RegisterValueChangedCallback(evt => {value.Name = evt.newValue;BindProperty();});
-            foldout.Add(nameDropdown);
+            foldout.Insert(0,nameDropdown);
         }
         private void RemoveNameDropDown()
         {
@@ -97,7 +94,7 @@ namespace Kurisu.AkiBT.Editor
             valueField=CreateValueField();
             valueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
             if(value!=null)valueField.value=value.Value;
-            this.foldout.Add(valueField);
+            this.foldout.Insert(0,valueField);
         }
         protected abstract BaseField<K> CreateValueField();
         public sealed override T value {get=>base.value; set {
@@ -107,7 +104,7 @@ namespace Kurisu.AkiBT.Editor
             UpdateValue();
         } }
         protected BaseField<K>valueField{get;set;}
-        void UpdateValue()
+        private void UpdateValue()
         {
             toggle.value=value.IsShared;
             if(valueField!=null)valueField.value=value.Value;

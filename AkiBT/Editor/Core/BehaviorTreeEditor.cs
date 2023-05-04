@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        const string LabelText="AkiBT 行为树 Version1.2.6";
+        const string LabelText="AkiBT 行为树 <size=12>Version1.2.8</size>";
         const string ButtonText="打开行为树";
         protected VisualElement myInspector;
         private FieldResolverFactory factory=FieldResolverFactory.Instance;
@@ -44,7 +44,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTreeSO))]
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
-        const string LabelText="AkiBT 行为树SO Version1.2.6";
+        const string LabelText="AkiBT 行为树SO <size=12>Version1.2.8</size>";
         const string ButtonText="打开行为树SO";
         protected VisualElement myInspector;
         private FieldResolverFactory factory=new FieldResolverFactory();
@@ -95,7 +95,9 @@ namespace Kurisu.AkiBT.Editor
                 grid.value=false;
                 var content=new VisualElement();
                 content.style.flexDirection=FlexDirection.Row;
+                content.style.justifyContent=Justify.SpaceBetween;
                 var valueField=factory.Create(variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public)).GetEditorField(bt.SharedVariables,variable);
+                valueField.style.width=Length.Percent(70f);
                 content.Add(valueField);
                 var deleteButton=new Button(()=>{ 
                     bt.SharedVariables.Remove(variable);
@@ -105,7 +107,7 @@ namespace Kurisu.AkiBT.Editor
                     AssetDatabase.SaveAssets();
                 });
                 deleteButton.text="Delate";
-                deleteButton.style.width=50;
+                deleteButton.style.width=Length.Percent(20f);
                 content.Add(deleteButton);
                 grid.Add(content);
                 foldout.Add(grid);   
