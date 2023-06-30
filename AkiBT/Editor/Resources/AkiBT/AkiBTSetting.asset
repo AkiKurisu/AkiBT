@@ -27,6 +27,7 @@ MonoBehaviour:
     ShowGroups:
     - Skill
     - Math
+    - Ability
     NotShowGroups: []
     graphStyleSheet: {fileID: 0}
     inspectorStyleSheet: {fileID: 0}
@@ -39,7 +40,21 @@ MonoBehaviour:
     - Math
     - Animator
     - String
+    - Rogue
+    - Achievement
+    - MonsterDialogue
     NotShowGroups: []
     graphStyleSheet: {fileID: 0}
     inspectorStyleSheet: {fileID: 0}
     nodeStyleSheet: {fileID: 0}
+  - EditorName: AkiAT
+    ShowGroups:
+    - Math
+    - Ability
+    NotShowGroups: []
+    graphStyleSheet: {fileID: 0}
+    inspectorStyleSheet: {fileID: 0}
+    nodeStyleSheet: {fileID: 0}
+  autoSave: 0
+  savePath: Assets
+  serviceData: {fileID: 0}

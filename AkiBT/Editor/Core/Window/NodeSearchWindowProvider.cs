@@ -25,12 +25,12 @@ namespace Kurisu.AkiBT.Editor
             _indentationIcon.SetPixel(0,0,new Color(0,0,0,0));
             _indentationIcon.Apply();
         }
-        static readonly Type[] _Types={typeof(Action),typeof(Conditional),typeof(Composite),typeof(Decorator)};
+        private static readonly Type[] _Types={typeof(Action),typeof(Conditional),typeof(Composite),typeof(Decorator)};
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
             entries.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"),0));  
-            List<Type> nodeTypes =SearchUtility.FindSubClassTypes(_Types);
+            List<Type> nodeTypes =SubclassSearchUtility.FindSubClassTypes(_Types);
             var groups=nodeTypes.GroupsByAkiGroup();;
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();
             groups=groups.SelectGroup(showGroups).ExceptGroup(notShowGroups);
@@ -90,7 +90,7 @@ namespace Kurisu.AkiBT.Editor
             Dictionary<string,List<Type>> attributeDict=new Dictionary<string, List<Type>>();
 
             entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {typeof(T).Name}"),0));
-            List<Type> nodeTypes =SearchUtility.FindSubClassTypes(typeof(T));
+            List<Type> nodeTypes =SubclassSearchUtility.FindSubClassTypes(typeof(T));
             var groups=nodeTypes.GroupsByAkiGroup();//按AkiGroup进行分类
             nodeTypes=nodeTypes.Except(groups.SelectMany(x=>x)).ToList();//去除被分类的部分
             groups=groups.SelectGroup(showGroups).ExceptGroup(notShowGroups);

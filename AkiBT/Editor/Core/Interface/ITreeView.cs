@@ -21,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
         /// <summary>
         /// 编辑器名称
         /// </summary>
-        string treeEditorName{get;}
+        string TreeEditorName{get;}
         /// <summary>
         /// 共享变量名称修改事件(手动触发)
         /// </summary>

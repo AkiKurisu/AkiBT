@@ -69,7 +69,7 @@ namespace Kurisu.AkiBT
         protected abstract Status OnUpdate();
 
         /// <summary>
-        ///  abort running node when the condition changed.
+        /// Abort running node when the condition changed.
         /// 启用Abort后Condition发生变动会调用该方法,通常用于中断逻辑
         /// </summary>
         public virtual void Abort() {}

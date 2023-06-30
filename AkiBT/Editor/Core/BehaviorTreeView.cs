@@ -10,19 +10,9 @@ namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeView: GraphView,ITreeView
     {
-        private readonly struct EdgePair
-        {
-            public readonly NodeBehavior NodeBehavior;
-            public readonly Port ParentOutputPort;
-
-            public EdgePair(NodeBehavior nodeBehavior, Port parentOutputPort)
-            {
-                NodeBehavior = nodeBehavior;
-                ParentOutputPort = parentOutputPort;
-            }
-        }
         public Blackboard _blackboard;
         protected readonly IBehaviorTree behaviorTree;
+        public IBehaviorTree BehaviorTree=>behaviorTree;
         protected RootNode root;
         private List<SharedVariable> exposedProperties=new List<SharedVariable>();
         public List<SharedVariable> ExposedProperties=>exposedProperties;
@@ -44,7 +34,7 @@ namespace Kurisu.AkiBT.Editor
         /// 是否可以保存为SO,如果可以会在ToolBar中提供按钮
         /// </summary>
         public virtual bool CanSaveToSO=>behaviorTree is BehaviorTree;
-        public virtual string treeEditorName=>"AkiBT";
+        public virtual string TreeEditorName=>"AkiBT";
         private readonly NodeResolver nodeResolver = new NodeResolver();
         /// <summary>
         /// 结点选择委托
@@ -65,7 +55,7 @@ namespace Kurisu.AkiBT.Editor
             behaviorTree = bt;
             style.flexGrow = 1;
             style.flexShrink = 1;
-            styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(treeEditorName));
+            styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(TreeEditorName));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new GridBackground());
 
@@ -84,7 +74,7 @@ namespace Kurisu.AkiBT.Editor
             dragDropManipulator.OnDragOverEvent+=CopyFromObject;
             this.AddManipulator(dragDropManipulator);
             provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
-            provider.Initialize(this, editor,BehaviorTreeSetting.GetMask(treeEditorName));
+            provider.Initialize(this, editor,BehaviorTreeSetting.GetMask(TreeEditorName));
 
             nodeCreationRequest += context =>
             {
@@ -260,26 +250,35 @@ namespace Kurisu.AkiBT.Editor
             }
             IsRestored=false;
         }
-        /// <summary>
-        /// 重铸行为树
-        /// </summary>
         internal void Restore()
         {
+            IsRestored=true;
             IBehaviorTree tree=behaviorTree.ExternalBehaviorTree??behaviorTree;
+            OnRestore(tree);
+            IsRestored=false;
+        }
+        protected virtual void OnRestore(IBehaviorTree tree)
+        {
+            RestoreSharedVariables(tree);
+            IEnumerable<BehaviorTreeNode>nodes;
+            (this.root,nodes)=converter.ConvertToNode(tree,this,Vector2.zero);
+            foreach(var node in nodes)node.onSelectAction=onSelectAction;
+            RestoreBlocks(tree,nodes);
+        }
+        protected void RestoreSharedVariables(IBehaviorTree tree)
+        {
             foreach(var variable in tree.SharedVariables)
             {
                 AddPropertyToBlackBoard(variable.Clone() as SharedVariable);//Clone新的共享变量
             }
-            IsRestored=true;
-            IEnumerable<BehaviorTreeNode>nodes;
-            (this.root,nodes)=converter.ConvertToNode(tree,this,Vector2.zero);
-            foreach(var node in nodes)node.onSelectAction=onSelectAction;
+        }
+        protected void RestoreBlocks(IBehaviorTree tree,IEnumerable<BehaviorTreeNode>nodes)
+        {
             foreach (var nodeBlockData in tree.BlockData)
             {
                CreateBlock(new Rect(nodeBlockData.Position,  new Vector2(100, 100)),nodeBlockData)
                .AddElements(nodes.Where(x=>nodeBlockData.ChildNodes.Contains(x.GUID)));
             }
-            IsRestored=false;
         }
         void ITreeView.SelectGroup(BehaviorTreeNode node)
         {
@@ -306,12 +305,12 @@ namespace Kurisu.AkiBT.Editor
             if(Application.isPlaying)return false;
             if (Validate())
             {
-                Commit();
-                if(autoSave)Debug.Log($"<color=#3aff48>{treeEditorName}</color>[{behaviorTree._Object.name}]自动保存成功{System.DateTime.Now.ToString()}");
+                Commit(behaviorTree);
+                if(autoSave)Debug.Log($"<color=#3aff48>{TreeEditorName}</color>[{behaviorTree._Object.name}]自动保存成功{System.DateTime.Now.ToString()}");
                 AssetDatabase.SaveAssets();
                 return true;
             }
-            if(autoSave)Debug.Log($"<color=#ff2f2f>{treeEditorName}</color>[{behaviorTree._Object.name}]自动保存失败{System.DateTime.Now.ToString()}");
+            if(autoSave)Debug.Log($"<color=#ff2f2f>{TreeEditorName}</color>[{behaviorTree._Object.name}]自动保存失败{System.DateTime.Now.ToString()}");
             return false;
         }
 
@@ -330,22 +329,20 @@ namespace Kurisu.AkiBT.Editor
             }
             return true;
         }
-        private void Commit()
-        {
-            Commit(behaviorTree);
-        }
         internal void Commit(IBehaviorTree behaviorTree)
+        {
+            OnCommit(behaviorTree);
+        }
+        protected virtual void OnCommit(IBehaviorTree behaviorTree)
         {
             var stack = new Stack<BehaviorTreeNode>();
             stack.Push(root);
-            
             // save new components
             while (stack.Count > 0)
             {
                 var node = stack.Pop();
                 node.Commit(stack);
             }
-            
             root.PostCommit(behaviorTree);
             behaviorTree.SharedVariables.Clear();
             foreach(var sharedVariable in ExposedProperties)
@@ -356,9 +353,10 @@ namespace Kurisu.AkiBT.Editor
             behaviorTree.BlockData.Clear();
             foreach (var block in NodeBlocks)
             {
-                var nodes = block.containedElements.Where(x => x is BehaviorTreeNode).Cast<BehaviorTreeNode>().Select(x => x.GUID)
-                    .ToList();
-    
+                var nodes = block.containedElements.Where(x => x is BehaviorTreeNode)
+                .Cast<BehaviorTreeNode>()
+                .Select(x => x.GUID)
+                .ToList();
                 behaviorTree.BlockData.Add(new GroupBlockData
                 {
                     ChildNodes = nodes,
@@ -379,6 +377,24 @@ namespace Kurisu.AkiBT.Editor
             tempEdge.input.Connect(tempEdge);
             tempEdge.output.Connect(tempEdge);
             return tempEdge;
+        }
+        public string SerializeTreeToJson()
+        {
+            return BehaviorTreeSerializeUtility.SerializeTree(behaviorTree,false,true);
+        }
+        internal bool CopyFromJsonFile(string serializedData)
+        {
+            var temp=ScriptableObject.CreateInstance<BehaviorTreeSO>();
+            try
+            {
+                temp.Deserialize(serializedData);
+                CopyFromOtherTree(temp,Vector2.zero);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

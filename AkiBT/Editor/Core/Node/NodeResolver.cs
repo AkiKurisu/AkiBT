@@ -28,7 +28,7 @@ namespace Kurisu.AkiBT.Editor
                 node = new ActionNode();
             }
             node.SetBehavior(type,treeView);
-            if(styleSheetCache==null)styleSheetCache=BehaviorTreeSetting.GetNodeStyle(treeView.treeEditorName);
+            if(styleSheetCache==null)styleSheetCache=BehaviorTreeSetting.GetNodeStyle(treeView.TreeEditorName);
             node.styleSheets.Add(styleSheetCache);
             return node;
         }

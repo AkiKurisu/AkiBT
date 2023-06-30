@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        const string LabelText="AkiBT 行为树 <size=12>Version1.2.8</size>";
+        const string LabelText="AkiBT 行为树 <size=12>Version1.3.0</size>";
         const string ButtonText="打开行为树";
         protected VisualElement myInspector;
         private FieldResolverFactory factory=FieldResolverFactory.Instance;
@@ -44,7 +44,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTreeSO))]
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
-        const string LabelText="AkiBT 行为树SO <size=12>Version1.2.8</size>";
+        const string LabelText="AkiBT 行为树SO <size=12>Version1.3.0</size>";
         const string ButtonText="打开行为树SO";
         protected VisualElement myInspector;
         private FieldResolverFactory factory=new FieldResolverFactory();

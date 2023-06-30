@@ -5,7 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
-    public class SearchUtility
+    public class SubclassSearchUtility
     {
         public static List<Type> FindSubClassTypes(Type father)
         {
@@ -26,14 +26,14 @@ namespace Kurisu.AkiBT.Editor
             return array.Length>0?array: new string[1]{group};
         }
     }
-    public static class SearchExtension
+    public static class SubclassSearchExtension
     {
         public static IEnumerable<IGrouping<string, Type>> GroupsByAkiGroup(this IEnumerable<Type> types)
         {
             return types.GroupBy(t=>
             {
                 var array=t.GetCustomAttributes(typeof(AkiGroupAttribute), false) as AkiGroupAttribute[];
-                return array.Length>0?SearchUtility.GetSplittedGroupName(array[0].Group)[0]:null;
+                return array.Length>0?SubclassSearchUtility.GetSplittedGroupName(array[0].Group)[0]:null;
             }).Where(x=>!string.IsNullOrEmpty(x.Key));
         }
         public static IEnumerable<IGrouping<string, Type>> SubGroups(this IGrouping<string, Type>group,int level)
@@ -41,7 +41,7 @@ namespace Kurisu.AkiBT.Editor
             return group.GroupBy(t=>
             {
                 var array=t.GetCustomAttributes(typeof(AkiGroupAttribute), false) as AkiGroupAttribute[];
-                var subcategory=SearchUtility.GetSplittedGroupName(array[0].Group);
+                var subcategory=SubclassSearchUtility.GetSplittedGroupName(array[0].Group);
                 return subcategory.Length>level?subcategory[level]:null;
             }).Where(x=>!string.IsNullOrEmpty(x.Key));
         }
@@ -59,7 +59,10 @@ namespace Kurisu.AkiBT.Editor
         }
         public static void AddEntry(this List<SearchTreeEntry> entries,Type _type,int _level,Texture icon)
         {
-            entries.Add(new SearchTreeEntry(new GUIContent(_type.Name,icon)) { level = _level, userData = _type });
+            string label=_type.Name;
+            var array=_type.GetCustomAttributes(typeof(AkiLabelAttribute), false) as AkiLabelAttribute[];
+            if(array.Length>0)label=array[0].Title;
+            entries.Add(new SearchTreeEntry(new GUIContent(label,icon)) { level = _level, userData = _type });
         }
         public static void AddAllEntries(this List<SearchTreeEntry> entries, IGrouping<string, Type> group,Texture icon,int level,int subCount=1)
         {

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using System.Linq;
+using System.IO;
 namespace Kurisu.AkiBT.Editor
 {
     public class GraphEditorWindow : EditorWindow
@@ -14,7 +15,7 @@ namespace Kurisu.AkiBT.Editor
         private BehaviorTreeView graphView;
         public BehaviorTreeView GraphView=>graphView;
         private UnityEngine.Object key { get; set; }
-        InfoView infoView;
+        private InfoView infoView;
         /// <summary>
         /// 用于判断SO类型
         /// </summary>
@@ -22,10 +23,10 @@ namespace Kurisu.AkiBT.Editor
         protected virtual Type SOType=>typeof(BehaviorTreeSO);
         protected virtual string TreeName=>"行为树";
         protected virtual string InfoText=>"欢迎使用AkiBT,一个超简单的行为树!";
-        [MenuItem("Tools/AkiBT Editor")]
+        [MenuItem("Tools/AkiKurisu/AkiBT Editor")]
         private static void ShowEditorWindow()
         {
-            string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
+            string path=EditorUtility.OpenFolderPanel("Choose ScriptableObject saving path",Application.dataPath,"");
             if(string.IsNullOrEmpty(path))return;
             path=path.Replace(Application.dataPath,string.Empty);
             var treeSO=ScriptableObject.CreateInstance<BehaviorTreeSO>();
@@ -131,18 +132,18 @@ namespace Kurisu.AkiBT.Editor
             _graphView.Add(blackboard);
             _graphView._blackboard = blackboard;
         }
-        void SaveDataToSO()
+        private void SaveDataToSO()
         {
             var treeSO=ScriptableObject.CreateInstance(SOType);
             if (!graphView.Save())
             {
-                Debug.LogWarning($"<color=#ff2f2f>{graphView.treeEditorName}</color>保存失败,不会生成ScriptableObject\n{System.DateTime.Now.ToString()}");
+                Debug.LogWarning($"<color=#ff2f2f>{graphView.TreeEditorName}</color> : 保存失败,不会生成ScriptableObject\n{System.DateTime.Now.ToString()}");
                 return;
             }
             graphView.Commit((IBehaviorTree)treeSO);
             AssetDatabase.CreateAsset(treeSO,$"Assets/{BehaviorTreeView.SavePath}/{key.name}.asset");
             AssetDatabase.SaveAssets();
-            Debug.Log($"<color=#3aff48>{graphView.treeEditorName}</color>外部{TreeName}保存成功,SO生成位置:{BehaviorTreeView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
+            Debug.Log($"<color=#3aff48>{graphView.TreeEditorName}</color> : 外部{TreeName}保存成功,SO生成位置:{BehaviorTreeView.SavePath}/{key.name}.asset\n{System.DateTime.Now.ToString()}");
         }
         
         private void OnDestroy()
@@ -151,7 +152,7 @@ namespace Kurisu.AkiBT.Editor
             if (key != null && cache.ContainsKey(code))
             {
                 if(BehaviorTreeView.AutoSave)
-                    cache[code].GraphView.Save(true);
+                    cache[code].graphView.Save(true);
                 cache.Remove(code);
             }
         }
@@ -204,7 +205,7 @@ namespace Kurisu.AkiBT.Editor
 
                     if (!Application.isPlaying)
                     {
-                        if (GUILayout.Button($"保存{TreeName}", EditorStyles.toolbarButton))
+                        if (GUILayout.Button($"Save {TreeName}", EditorStyles.toolbarButton))
                         {
                             var guiContent = new GUIContent();
                             if (graphView.Save())
@@ -223,7 +224,7 @@ namespace Kurisu.AkiBT.Editor
                         {
                             if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
                             {
-                                string path=EditorUtility.OpenFolderPanel("选择保存路径",Application.dataPath,"");
+                                string path=EditorUtility.OpenFolderPanel("Choose ScriptableObject saving path",Application.dataPath,"");
                                 if(!string.IsNullOrEmpty(path))
                                 {
                                     BehaviorTreeView.SavePath=path.Replace(Application.dataPath,string.Empty);
@@ -242,8 +243,32 @@ namespace Kurisu.AkiBT.Editor
                                 graphView.CopyFromOtherTree(data,Vector2.zero);
                             }
                         }
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
+                        {
+                            var serializedData=graphView.SerializeTreeToJson();
+                            string path=EditorUtility.SaveFilePanel("Choose json file saving path",Application.dataPath,graphView.BehaviorTree._Object.name,"json");
+                            if(!string.IsNullOrEmpty(path))
+                            {
+                                File.WriteAllText(path,serializedData);
+                                Debug.Log($"<color=#3aff48>{GraphView.TreeEditorName}</color>:Save json file successed!");
+                                AssetDatabase.SaveAssets();
+                                AssetDatabase.Refresh();
+                            }
+                        }
+                        if (GUILayout.Button("Copy From Json", EditorStyles.toolbarButton))
+                        {
+                            string path=EditorUtility.OpenFilePanel("Choose json file to copy",Application.dataPath,"json");
+                            if(!string.IsNullOrEmpty(path))
+                            {
+                                var data=File.ReadAllText(path);
+                                if(graphView.CopyFromJsonFile(data))
+                                    ShowNotification(new GUIContent("Json file read successed!"));
+                                else
+                                    ShowNotification(new GUIContent("Json file is in wrong format!"));
+                            }
+                        }
                     }
-                    GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
             );
@@ -261,11 +286,9 @@ namespace Kurisu.AkiBT.Editor
                 return null;
             }
         }
-        void OnNodeSelectionChange(BehaviorTreeNode node)
+        private void OnNodeSelectionChange(BehaviorTreeNode node)
         {
             infoView.UpdateSelection(node);
         }
-
-
     }
 }
