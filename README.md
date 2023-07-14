@@ -8,7 +8,7 @@
 AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function. AkiKurisu Extends it with more features so that you can enjoy it.
 # 安装 Setup
 1. Download [Release Package](https://github.com/AkiKurisu/AkiBT/releases)
-2. Using git URL to download package by Unity PackageManager ```https://github.com/AkiKurisu/AkiBT.git?path=/AkiBT```
+2. Using git URL to download package by Unity PackageManager ```https://github.com/AkiKurisu/AkiBT.git```
 #
 
 ## 支持的版本 Supported version

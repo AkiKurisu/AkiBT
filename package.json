@@ -17,5 +17,9 @@
   },
   "dependencies": {
     "com.unity.nuget.newtonsoft-json": "3.2.1"
+  },
+  "author": {
+    "name": "AkiKurisu",
+    "url": "https://github.com/AkiKurisu"
   }
 }
