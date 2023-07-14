@@ -1,5 +1,5 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/releases)
-# 行为树 AkiBT Verisoin 1.3.0 简介 Intro
+# 行为树 AkiBT Verisoin 1.3.1 简介 Intro
 
 
 [爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
@@ -48,7 +48,7 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 
     <img src="Images/AutoSave.png" width="480"/>
 
-#
+
 
 2. 你可以使用ScriptableObject化的外部行为树来替换组件内的行为树,需要注意的是使用外部行为树需要在打开结点编辑器前设置,同时该功能并非运行外部的行为树,而是在编辑器内以SO为模板绘制行为树,因此“保存行为树”和“自动保存”不会将修改后的行为树覆盖到SO。
    
@@ -56,16 +56,16 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 
     <img src="Images/External.png" width="480"/>
 
-#
+
 3. 增加了ScriptableObject的修改功能,你可以在SO中点击按钮直接编辑SO文件！
    
    You can edit ScriptableObject directly.
    
     <img src="Images/OpenSO.png" width="480"/>
 
-4. 增加了外部数据复制的功能(非覆盖),你可以从上侧工具栏选择“从SO复制”，也可以将AkiBT支持(例如AkiDT对话结点编辑器)的SO文件、AkiBT支持的组件或挂载AkiBT支持组件的GameObject拖拽进编辑器中进行复制粘贴。
+4. 增加了外部数据复制的功能(非覆盖),你可以从上侧工具栏选择```Copy From SO```，也可以将AkiBT支持(例如AkiDT对话结点编辑器)的SO文件、AkiBT支持的组件或挂载AkiBT支持组件的GameObject拖拽进编辑器中进行复制粘贴。
    
-   You can drag GameObject with AkiBT Supported Component(like AkiDT, a Dialogue Node Based Tree Editor),AkiBT Supported Component,AkiBT Supported ScriptableObject into the graph view or click the"从SO复制" button to pick a AkiBT Supported ScriptableObject from your project.
+   You can drag GameObject with AkiBT Supported Component (such as AkiDT, a Dialogue Node Based Tree Editor) ,AkiBT Supported Component,AkiBT Supported ScriptableObject into the graph view or click the ```Copy From SO``` button to pick a AkiBT Supported ScriptableObject from your project.
 
     <img src="Images/DragDrop.gif" width="1920"/>
 
@@ -74,7 +74,7 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 
 增加了装饰器结点类型
 
-    Add Decorator Node.
+Add Decorator Node.
 
 ```C#
  [AkiInfo("Decorator:直到子结点返回Success为止返回Running")]
@@ -107,15 +107,15 @@ public class WaitSuccess : Decorator
   
     I add a menu when you left-click the blackboardRaw,you can easily delate it and refresh all the referenced fields when updating the name of variable.
   
-   * 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
+    * 例如Action/Math/IntOperator可以使用三个共享变量,默认为本地变量,如果你需要共享可以勾选Is Shared,勾选后需要填写变量名称,若运行时缺少该名称共享变量,则仍然作为本地变量.
   
         SharedVariable supports static-using,if you don't want to relate it with variables in blackboard,you just need make 'Is Shared' toggle to False.If you have a variable with invalid name,it will stay unShared in playing mode.
 
     <img src="Images/Operator.png" width="480"/>
 
-* 需要注意的是,共享变量会和SO文件一同被保存和替换
+    * 需要注意的是,共享变量会和SO文件一同被保存和替换
   
-    SharedVariable will be replaced when you save the tree.
+        SharedVariable will be replaced when you save the tree.
 
 
 3. Inspector中也可以进行共享变量的修改和删除功能
@@ -197,7 +197,7 @@ Sometimes you may not care about some nodes,you can add the AkiGroup attribute t
 #
 # 使用方式 How To Use 
 
-Modified from documentation from [UniBT](https://github.com/yoshidan/UniBT)
+Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
 
 <img src="Images/demo.jpg" />
 
@@ -231,7 +231,7 @@ Modified from documentation from [UniBT](https://github.com/yoshidan/UniBT)
 | Composite Node | It has one or more child nodes and controls which child node to update. |
 | Action Node | This is the leaf node. It execute action such as follow player, attack, escape or others you define. |
 | Conditional Node | It has one child node and check the condition whether child is updatable. when having no child, Conditional Node is the leaf node like Action Node. |
-| Decorator Node | It has one child node and 根据子结点返回值更改返回值.
+| Decorator Node | It has one child node and will modify the return value according to the return value of the child node
 
 | Name | Description | 
 |------|-------|
@@ -412,10 +412,10 @@ public class Random : Composite
 ```
 
 ### Create Decorator
-* 装饰器结点类型用来对返回值进行修饰,缩减使用的Conditional或Composite结点数量
+* Decorator node is used to modify the return value and reduce the number of Conditional or Composite nodes used
 * Create C# Script and extends `AkiBT.Decorator`
-* Override `OnDecorate(Status childStatus)` 根据子结点返回值修改返回值.
-* Decorator继承了子结点的CanUpdate,即如果子结点为Conditional,该结点会继承其判断值,如果要修饰CanUpdate可以Override`OnDecorate(bool childCanUpdate)`
+* Override `OnDecorate(Status childStatus)` to modify the return value according to the return value of the child node.
+* Decorator inherits the `CanUpdate` of the child node, that is, if the child node is Conditional, the node will inherit its judgment value. If you want to modify `CanUpdate`, you can override `OnDecorate(bool childCanUpdate)`
 * Override `OnAwake` called by `AkiBT.BehaviorTree.Awake` if needed.
 * Override `OnStart` called by `AkiBT.BehaviorTree.Start` if needed.
 * Composite Node has `gameObject` field with `AkiBT.BehaviorTree` attached.
