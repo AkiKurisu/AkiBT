@@ -3,7 +3,7 @@
   "displayName": "AkiBT",
   "version": "1.3.0",
   "unity": "2021.3",
-  "description": "\u53ef\u89c6\u5316\u884c\u4e3a\u6811\u7f16\u8f91\u5668Node based Behavior Tree.\n*\u652f\u6301\u8fd0\u884c\u65f6\u53ef\u89c6\u5316\u7ed3\u70b9\u72b6\u6001Supports visualizing active node in runtime.\n*\u975e\u5e38\u4fbf\u4e8e\u62d3\u5c55\u548c\u81ea\u5b9a\u4e49\u65b0\u7684\u884c\u4e3aEasily add original behaviors.",
+  "description": "Node based Behavior Tree Editor.\nSupports visualizing active node in runtime.\nEasily add original behaviors.",
   "keywords": [
     "Graph",
     "GraphView",
