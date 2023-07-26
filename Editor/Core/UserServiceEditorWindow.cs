@@ -39,21 +39,25 @@ namespace Kurisu.AkiBT.Editor
         private SerializedObject serviceSerializedObject;
         private Type searchType;
         private SerializedProperty collectionProperty;
-        private void OnEnable() {
-            searchCache=ScriptableObject.CreateInstance<BehaviorTreeSearchCache>();
-            searchCacheSerializedObject=new SerializedObject(searchCache);
-            searchWindow=ScriptableObject.CreateInstance<NodeTypeSearchWindow>();
-            searchWindow.Initialize((T)=>searchType=T);
-            serviceData=BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
+        private void OnEnable()
+        {
+            searchCache = ScriptableObject.CreateInstance<BehaviorTreeSearchCache>();
+            searchCache.allBehaviorTreeSOCache = BehaviorTreeSearchUtility.GetAllBehaviorTreeSO();
+            searchCacheSerializedObject = new SerializedObject(searchCache);
+            searchWindow = ScriptableObject.CreateInstance<NodeTypeSearchWindow>();
+            searchWindow.Initialize((T) => searchType = T);
+            serviceData = BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
             serviceData.ForceSetUp();
-            serviceSerializedObject=new SerializedObject(serviceData);
-            collectionProperty=serviceSerializedObject.FindProperty("serializationCollection.serializationPairs");
+            serviceSerializedObject = new SerializedObject(serviceData);
+            collectionProperty = serviceSerializedObject.FindProperty("serializationCollection.serializationPairs");
         }
-        private void OnGUI() {
+        private void OnGUI()
+        {
             serviceSerializedObject.Update();
             m_ScrollPosition = BeginVerticalScrollView(m_ScrollPosition, false, GUI.skin.verticalScrollbar, "OL Box");
-            mTab = GUILayout.Toolbar (mTab, new string[] {"Serialization Service","Searching Service"});
-            switch (mTab) {
+            mTab = GUILayout.Toolbar(mTab, new string[] { "Serialization Service", "Searching Service" });
+            switch (mTab)
+            {
                 case 0:
                     DrawSerializationService();
                     break;
@@ -67,21 +71,21 @@ namespace Kurisu.AkiBT.Editor
             EditorGUILayout.PropertyField(collectionProperty);
             EditorGUILayout.EndScrollView();
             EditorGUILayout.BeginHorizontal();
-            if(GUILayout.Button("Serialize All Files"))
+            if (GUILayout.Button("Serialize All Files"))
             {
                 ExportAll();
             }
-            if(GUILayout.Button("Import Json Files"))
+            if (GUILayout.Button("Import Json Files"))
             {
                 ImportAll();
             }
-            if(GUILayout.Button("Deserialize All"))
+            if (GUILayout.Button("Deserialize All"))
             {
-                if(EditorUtility.DisplayDialog("User Tips","Deserialize all files will change behaviorTreeSO on the left, make sure to have a backup","Still Deserialize","Cancel"))
+                if (EditorUtility.DisplayDialog("User Tips", "Deserialize all files will change behaviorTreeSO on the left, make sure to have a backup", "Still Deserialize", "Cancel"))
                 {
-                    foreach(var pair in serviceData.serializationCollection.serializationPairs)
+                    foreach (var pair in serviceData.serializationCollection.serializationPairs)
                     {
-                        if(pair.serializedData!=null&&pair.behaviorTreeSO!=null)
+                        if (pair.serializedData != null && pair.behaviorTreeSO != null)
                         {
                             pair.behaviorTreeSO.Deserialize(pair.serializedData.text);
                             EditorUtility.SetDirty(pair.behaviorTreeSO);
@@ -91,11 +95,11 @@ namespace Kurisu.AkiBT.Editor
                     AssetDatabase.Refresh();
                 }
             }
-            if(GUILayout.Button(new GUIContent("Unbind All","This will unbind all json files, not delating")))
+            if (GUILayout.Button(new GUIContent("Unbind All", "This will unbind all json files, not delating")))
             {
-                foreach(var pair in serviceData.serializationCollection.serializationPairs)
+                foreach (var pair in serviceData.serializationCollection.serializationPairs)
                 {
-                    pair.serializedData=null;
+                    pair.serializedData = null;
                 }
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -105,16 +109,33 @@ namespace Kurisu.AkiBT.Editor
         private void DrawSearchingService()
         {
             searchCacheSerializedObject.Update();
-            string typeName=searchType?.FullName??"<Null>";
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label($"Search Name");
+            string newName = GUILayout.TextField(searchCache.searchName);
+            EditorGUILayout.EndHorizontal();
+            string typeName = searchType?.FullName ?? "<Null>";
+            EditorGUILayout.BeginHorizontal();
             GUILayout.Label($"Select Type : {typeName}");
-            if(GUILayout.Button("Select Type"))
+            if (GUILayout.Button("Select Type"))
             {
                 SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), searchWindow);
             }
-            if(searchType!=searchCache.searchType)
+            EditorGUILayout.EndHorizontal();
+            if (searchType != searchCache.searchType || newName != searchCache.searchName)
             {
-                searchCache.searchType=searchType;
-                searchCache.searchResult=BehaviorTreeSearchUtility.SearchBehaviorTreeSO(searchType);
+                searchCache.searchName = newName;
+                searchCache.searchType = searchType;
+                if (searchType == null && string.IsNullOrEmpty(newName))
+                {
+                    searchCache.searchResult = new();
+                }
+                else
+                {
+                    //Use cache for quick search
+                    searchCache.searchResult = BehaviorTreeSearchUtility.SearchBehaviorTreeSO(searchType, serviceData, searchCache.allBehaviorTreeSOCache);
+                    if (!string.IsNullOrEmpty(newName))
+                        searchCache.searchResult = searchCache.searchResult.Where(x => x.behaviorTreeSO.name.Contains(newName)).ToList();
+                }
                 searchCacheSerializedObject.ApplyModifiedProperties();
             }
             EditorGUILayout.PropertyField(searchCacheSerializedObject.FindProperty("searchResult"));
@@ -122,24 +143,24 @@ namespace Kurisu.AkiBT.Editor
         }
         private void ExportAll()
         {
-            string path=EditorUtility.OpenFolderPanel("Choose json files saving path",Application.dataPath,"");
-            if(string.IsNullOrEmpty(path))return;
-            List<string> savePaths=new();
-            for(int i=0;i<serviceData.serializationCollection.serializationPairs.Count;i++)
+            string path = EditorUtility.OpenFolderPanel("Choose json files saving path", Application.dataPath, "");
+            if (string.IsNullOrEmpty(path)) return;
+            List<string> savePaths = new();
+            for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Count; i++)
             {
-                var pair=serviceData.serializationCollection.serializationPairs[i];
-                var serializedData=BehaviorTreeSerializeUtility.SerializeTree(pair.behaviorTreeSO,true,true);
-                string folderPath=path+$"/{pair.behaviorTreeSO.GetType().Name}";
-                if(!Directory.Exists(folderPath))Directory.CreateDirectory(folderPath);
-                string savePath=$"{folderPath}/{pair.behaviorTreeSO.name}_{serviceData.serializationCollection.guids[i]}.json";
+                var pair = serviceData.serializationCollection.serializationPairs[i];
+                var serializedData = BehaviorTreeSerializeUtility.SerializeTree(pair.behaviorTreeSO, true, true);
+                string folderPath = path + $"/{pair.behaviorTreeSO.GetType().Name}";
+                if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+                string savePath = $"{folderPath}/{pair.behaviorTreeSO.name}_{serviceData.serializationCollection.guids[i]}.json";
                 savePaths.Add(savePath);
-                File.WriteAllText(savePath,serializedData);
+                File.WriteAllText(savePath, serializedData);
             }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            for(int i=0;i<serviceData.serializationCollection.serializationPairs.Count;i++)
+            for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Count; i++)
             {
-                serviceData.serializationCollection.serializationPairs[i].serializedData=AssetDatabase.LoadAssetAtPath<TextAsset>(GetRelativePath(savePaths[i]));
+                serviceData.serializationCollection.serializationPairs[i].serializedData = AssetDatabase.LoadAssetAtPath<TextAsset>(GetRelativePath(savePaths[i]));
             }
             serviceSerializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(serviceData);
@@ -148,22 +169,22 @@ namespace Kurisu.AkiBT.Editor
         }
         private void ImportAll()
         {
-            string path=EditorUtility.OpenFolderPanel("Select json files import path",Application.dataPath,"");
-            if(string.IsNullOrEmpty(path))return;
-            string[] subDirectories=Directory.GetDirectories(path);
-            List<string> configPaths=new List<string>();
-            foreach(var directory in subDirectories)
+            string path = EditorUtility.OpenFolderPanel("Select json files import path", Application.dataPath, "");
+            if (string.IsNullOrEmpty(path)) return;
+            string[] subDirectories = Directory.GetDirectories(path);
+            List<string> configPaths = new List<string>();
+            foreach (var directory in subDirectories)
             {
-                string[]files=Directory.GetFiles(directory);
-                foreach(var file in files)
+                string[] files = Directory.GetFiles(directory);
+                foreach (var file in files)
                 {
-                    if(Path.GetExtension(file)==".json")
+                    if (Path.GetExtension(file) == ".json")
                     {
                         configPaths.Add(file);
                     }
                 }
             }
-            var jsonFiles=configPaths.Select(x=>AssetDatabase.LoadAssetAtPath<TextAsset>(GetRelativePath(x))).ToHashSet();
+            var jsonFiles = configPaths.Select(x => AssetDatabase.LoadAssetAtPath<TextAsset>(GetRelativePath(x))).ToHashSet();
             serviceData.serializationCollection.InjectJsonFiles(jsonFiles);
             serviceSerializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(serviceData);
@@ -172,7 +193,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private static string GetRelativePath(string path)
         {
-            return "Assets/"+path.Replace(Application.dataPath,string.Empty);
+            return "Assets/" + path.Replace(Application.dataPath, string.Empty);
         }
     }
 }

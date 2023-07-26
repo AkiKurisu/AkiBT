@@ -24,33 +24,33 @@ namespace Kurisu.AkiBT.Editor
     {
         private const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
         private const string k_UserServiceSettingPath = "Assets/AkiBTUserServiceData.asset";
-        private const string GraphFallBackPath="AkiBT/Graph";
-        private const string InspectorFallBackPath="AkiBT/Inspector";
-        private const string NodeFallBackPath="AkiBT/Node";
+        private const string GraphFallBackPath = "AkiBT/Graph";
+        private const string InspectorFallBackPath = "AkiBT/Inspector";
+        private const string NodeFallBackPath = "AkiBT/Node";
 
-        [SerializeField,Tooltip("编辑器配置,你可以根据编辑器名称使用不同的样式,并为结点搜索提供筛选方案")]
+        [SerializeField, Tooltip("编辑器配置,你可以根据编辑器名称使用不同的样式,并为结点搜索提供筛选方案")]
         private EditorSetting[] settings;
-        [SerializeField,HideInInspector]
+        [SerializeField, HideInInspector]
         private bool autoSave;
-        [SerializeField,HideInInspector]
+        [SerializeField, HideInInspector]
         private string lastPath;
-        [SerializeField,HideInInspector]
+        [SerializeField, HideInInspector]
         private BehaviorTreeUserServiceData serviceData;
         public BehaviorTreeUserServiceData ServiceData
         {
             get
             {
-                if(serviceData==null)
+                if (serviceData == null)
                 {
-                    var guids=AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeUserServiceData)}");
-                    if(guids.Length==0)
+                    var guids = AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeUserServiceData)}");
+                    if (guids.Length == 0)
                     {
                         serviceData = ScriptableObject.CreateInstance<BehaviorTreeUserServiceData>();
                         Debug.Log($"AkiBT User Service Data saving path : {k_UserServiceSettingPath}");
                         AssetDatabase.CreateAsset(serviceData, k_UserServiceSettingPath);
                         AssetDatabase.SaveAssets();
                     }
-                    else serviceData=AssetDatabase.LoadAssetAtPath<BehaviorTreeUserServiceData>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    else serviceData = AssetDatabase.LoadAssetAtPath<BehaviorTreeUserServiceData>(AssetDatabase.GUIDToAssetPath(guids[0]));
                 }
                 return serviceData;
             }
@@ -76,47 +76,47 @@ namespace Kurisu.AkiBT.Editor
         }
         public static StyleSheet GetGraphStyle(string editorName)
         {
-            var setting=GetOrCreateSettings();
-            if(setting.settings==null||setting.settings.Length==0||!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
-            var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
-            return editorSetting.graphStyleSheet??Resources.Load<StyleSheet>(GraphFallBackPath);
-        } 
+            var setting = GetOrCreateSettings();
+            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
+            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            return editorSetting.graphStyleSheet ?? Resources.Load<StyleSheet>(GraphFallBackPath);
+        }
         public static StyleSheet GetInspectorStyle(string editorName)
         {
-            var setting=GetOrCreateSettings();
-            if(setting.settings==null||setting.settings.Length==0||!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
-            var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
-            return editorSetting.inspectorStyleSheet??Resources.Load<StyleSheet>(InspectorFallBackPath);
-        } 
+            var setting = GetOrCreateSettings();
+            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
+            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            return editorSetting.inspectorStyleSheet ?? Resources.Load<StyleSheet>(InspectorFallBackPath);
+        }
         public static StyleSheet GetNodeStyle(string editorName)
         {
-            var setting=GetOrCreateSettings();
-            if(setting.settings==null||setting.settings.Length==0||!setting.settings.Any(x=>x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
-            var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
-            return editorSetting.nodeStyleSheet??Resources.Load<StyleSheet>(NodeFallBackPath);
-        } 
-        public static (string[],string[]) GetMask(string editorName)
+            var setting = GetOrCreateSettings();
+            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
+            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            return editorSetting.nodeStyleSheet ?? Resources.Load<StyleSheet>(NodeFallBackPath);
+        }
+        public static (string[], string[]) GetMask(string editorName)
         {
-            var setting=GetOrCreateSettings();
-            if(setting.settings.Any(x=>x.EditorName.Equals(editorName))) 
+            var setting = GetOrCreateSettings();
+            if (setting.settings.Any(x => x.EditorName.Equals(editorName)))
             {
-                var editorSetting=setting.settings.First(x=>x.EditorName.Equals(editorName));
-                return (editorSetting.ShowGroups,editorSetting.NotShowGroups);
+                var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+                return (editorSetting.ShowGroups, editorSetting.NotShowGroups);
             }
-            return (null,null);
+            return (null, null);
         }
         public static BehaviorTreeSetting GetOrCreateSettings()
         {
-            var guids=AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeSetting)}");
-            BehaviorTreeSetting setting=null;
-            if(guids.Length==0)
+            var guids = AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeSetting)}");
+            BehaviorTreeSetting setting = null;
+            if (guids.Length == 0)
             {
                 setting = ScriptableObject.CreateInstance<BehaviorTreeSetting>();
                 Debug.Log($"AkiBT Setting saving path : {k_BehaviorTreeSettingsPath}");
                 AssetDatabase.CreateAsset(setting, k_BehaviorTreeSettingsPath);
                 AssetDatabase.SaveAssets();
             }
-            else setting=AssetDatabase.LoadAssetAtPath<BehaviorTreeSetting>(AssetDatabase.GUIDToAssetPath(guids[0]));
+            else setting = AssetDatabase.LoadAssetAtPath<BehaviorTreeSetting>(AssetDatabase.GUIDToAssetPath(guids[0]));
             return setting;
         }
 
@@ -130,29 +130,28 @@ namespace Kurisu.AkiBT.Editor
     {
         private SerializedObject m_Settings;
 
-        class Styles
+        private class Styles
         {
-            public static GUIContent mask = new GUIContent("Editor Setting");
+            public static GUIContent GraphEditorSettingStyle = new GUIContent("Graph Editor Setting");
         }
-        public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User)
-            : base(path, scope) {}
+        public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User) : base(path, scope) { }
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
             m_Settings = BehaviorTreeSetting.GetSerializedSettings();
         }
         public override void OnGUI(string searchContext)
         {
-            EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.mask);
+            EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.GraphEditorSettingStyle);
             m_Settings.ApplyModifiedPropertiesWithoutUndo();
         }
         [SettingsProvider]
         public static SettingsProvider CreateMyCustomSettingsProvider()
         {
-            
+
             var provider = new BehaviorTreeSettingsProvider("Project/AkiBT Settings", SettingsScope.Project);
             provider.keywords = GetSearchKeywordsFromGUIContentProperties<Styles>();
             return provider;
-            
+
         }
     }
 }
