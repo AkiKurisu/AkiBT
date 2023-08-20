@@ -280,6 +280,8 @@ public class NavmeshStopAgent : Action
 ## 共享变量 SharedVariable
 
 1. 使用共享变量需要在Awake中初始化从而绑定父级行为树中的变量。
+
+    The use of shared variables needs to be initialized in Awake to bind the variables in the parent behavior tree.
 ```C#
 public class GetGameObjectPosition : Action
 {
@@ -302,6 +304,9 @@ public class GetGameObjectPosition : Action
 
 1. 除了值类型外，你可以使用SharedObject来共享任何继承自UnityEngine.Object类型的对象。如要限制类型可以使用``SharedTObject<T>``这样在编辑器中的下拉栏中你将只能引用具有相同类型的SharedObject
 
+    In addition to value types, you can use SharedObject to share any object that inherits from UnityEngine.Object. If you want to limit the type you can use ``SharedTObject<T>`` so that in the drop-down bar in the editor you will only be able to reference SharedObjects with the same type
 2. 在黑板中，你可以通过创建``SharedObject``并限制其类型来提升类型安全性并且使字段只能拖拽相应类型的对象。
+
+    In the blackboard, you can create a ``SharedObject`` and restrict its type to improve type safety and make the field only drag and drop objects of the corresponding type.
 
 <img src="Images/SharedObject.png" width="480"/>
