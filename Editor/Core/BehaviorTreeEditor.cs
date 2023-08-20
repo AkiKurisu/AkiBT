@@ -3,116 +3,155 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System.Reflection;
+using System;
 namespace Kurisu.AkiBT.Editor
 {
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        const string LabelText="AkiBT 行为树 <size=12>Version1.3.1</size>";
-        const string ButtonText="打开行为树";
+        private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.0</size>";
+        private const string ButtonText = "Edit BehaviorTree";
         protected VisualElement myInspector;
-        private FieldResolverFactory factory=FieldResolverFactory.Instance;
+        private readonly FieldResolverFactory factory = FieldResolverFactory.Instance;
         public override VisualElement CreateInspectorGUI()
         {
             myInspector = new VisualElement();
             var bt = target as IBehaviorTree;
-            var label=new Label(LabelText);
-            label.style.fontSize=20;
+            var label = new Label(LabelText);
+            label.style.fontSize = 20;
+            label.style.unityTextAlign = TextAnchor.MiddleCenter;
             myInspector.Add(label);
             myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
-            var toggle=new PropertyField(serializedObject.FindProperty("updateType"),"更新模式");
+            var toggle = new PropertyField(serializedObject.FindProperty("updateType"), "Update Type");
             myInspector.Add(toggle);
-            var field=new PropertyField(serializedObject.FindProperty("externalBehaviorTree"),"外部行为树");
+            var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
             myInspector.Add(field);
-            var foldout=BehaviorTreeEditorUtility.DrawSharedVariable(bt,factory,target,this);
-            if(foldout!=null)myInspector.Add(foldout);
-            var button=BehaviorTreeEditorUtility.GetButton(()=>{GraphEditorWindow.Show(bt);});
-            if(!Application.isPlaying)
+            BehaviorTreeEditorUtility.DrawSharedVariable(myInspector, bt, factory, target, this);
+            var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(bt); });
+            if (!Application.isPlaying)
             {
-                button.style.backgroundColor=new StyleColor(new Color(140/255f, 160/255f, 250/255f));
-                button.text=ButtonText;
-            } 
+                button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
+                button.text = ButtonText;
+            }
             else
             {
-                button.text="打开行为树(运行中)";
-                button.style.backgroundColor=new StyleColor(new Color(253/255f, 163/255f, 255/255f));
-            }    
-            myInspector.Add(button);   
+                button.text = "Open BehaviorTree (Runtime)";
+                button.style.backgroundColor = new StyleColor(new Color(253 / 255f, 163 / 255f, 255 / 255f));
+            }
+            myInspector.Add(button);
             return myInspector;
-        }     
+        }
     }
     [CustomEditor(typeof(BehaviorTreeSO))]
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
-        const string LabelText="AkiBT 行为树SO <size=12>Version1.3.1</size>";
-        const string ButtonText="打开行为树SO";
+        private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.0</size>";
+        private const string ButtonText = "Edit BehaviorTreeSO";
         protected VisualElement myInspector;
-        private FieldResolverFactory factory=new FieldResolverFactory();
+        private readonly FieldResolverFactory factory = FieldResolverFactory.Instance;
         public override VisualElement CreateInspectorGUI()
         {
             myInspector = new VisualElement();
             var bt = target as IBehaviorTree;
-            var label=new Label(LabelText);
-            label.style.fontSize=20;
+            var label = new Label(LabelText);
+            label.style.fontSize = 20;
+            label.style.unityTextAlign = TextAnchor.MiddleCenter;
             myInspector.Add(label);
             myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
-            myInspector.Add(new Label("行为树描述"));
-            var description=new PropertyField(serializedObject.FindProperty("Description"),string.Empty);
+            myInspector.Add(new Label("BehaviorTree Decscription"));
+            var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
-            var foldout=BehaviorTreeEditorUtility.DrawSharedVariable(bt,factory,target,this);
-            if(foldout!=null)myInspector.Add(foldout);
-            if(!Application.isPlaying)
-            { 
-                var button=BehaviorTreeEditorUtility.GetButton(()=>{GraphEditorWindow.Show(bt);});
-                button.style.backgroundColor=new StyleColor(new Color(140/255f, 160/255f, 250/255f));
-                button.text=ButtonText;
-                myInspector.Add(button);   
+            BehaviorTreeEditorUtility.DrawSharedVariable(myInspector, bt, factory, target, this);
+            if (!Application.isPlaying)
+            {
+                var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(bt); });
+                button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
+                button.text = ButtonText;
+                myInspector.Add(button);
             }
             return myInspector;
-        
-    }
+        }
     }
     internal class BehaviorTreeEditorUtility
     {
         internal static Button GetButton(System.Action clickEvent)
         {
-            var button=new Button(clickEvent);
-            button.style.fontSize=15;
-            button.style.unityFontStyleAndWeight=FontStyle.Bold;
-            button.style.color=Color.white;
+            var button = new Button(clickEvent);
+            button.style.fontSize = 15;
+            button.style.unityFontStyleAndWeight = FontStyle.Bold;
+            button.style.color = Color.white;
             return button;
         }
-        internal static Foldout DrawSharedVariable(IBehaviorTree bt,FieldResolverFactory factory,Object target,UnityEditor.Editor editor)
+        internal static void DrawSharedVariable(VisualElement parent, IBehaviorTree bt, FieldResolverFactory factory, UnityEngine.Object target, UnityEditor.Editor editor)
         {
-            if(bt.SharedVariables.Count==0)return null;
-            var foldout=new Foldout();
-            foldout.value=false;
-            foldout.text="SharedVariables";
-            foreach(var variable in bt.SharedVariables)
-            { 
-                var grid=new Foldout();
-                grid.text=$"{variable.GetType().Name}  :  {variable.Name}";
-                grid.value=false;
-                var content=new VisualElement();
-                content.style.flexDirection=FlexDirection.Row;
-                content.style.justifyContent=Justify.SpaceBetween;
-                var valueField=factory.Create(variable.GetType().GetField("value",BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Public)).GetEditorField(bt.SharedVariables,variable);
-                valueField.style.width=Length.Percent(70f);
+            int count = bt.SharedVariables.Count;
+            if (count == 0) return;
+            var foldout = new Foldout
+            {
+                value = false,
+                text = "SharedVariables"
+            };
+            foreach (var variable in bt.SharedVariables)
+            {
+                var grid = new Foldout
+                {
+                    text = $"{variable.GetType().Name}  :  {variable.Name}",
+                    value = false
+                };
+                var content = new VisualElement();
+                content.style.flexDirection = FlexDirection.Row;
+                content.style.justifyContent = Justify.SpaceBetween;
+                var valueField = factory.Create(variable.GetType().GetField("value", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+                                        .GetEditorField(bt.SharedVariables, variable);
+                if (valueField is TextField field)
+                {
+                    field.multiline = true;
+                    field.style.maxWidth = 250;
+                    field.style.whiteSpace = WhiteSpace.Normal;
+                }
+                valueField.style.width = Length.Percent(70f);
                 content.Add(valueField);
-                var deleteButton=new Button(()=>{ 
-                    bt.SharedVariables.Remove(variable);
-                    foldout.Remove(grid);
+                if (variable is SharedObject sharedObject)
+                {
+                    var objectField = valueField as ObjectField;
+                    try
+                    {
+                        objectField.objectType = Type.GetType(sharedObject.ConstraintTypeAQM, true);
+                        grid.text = $"{variable.GetType().Name} ({objectField.objectType.Name})  :  {variable.Name}";
+                    }
+                    catch
+                    {
+                        objectField.objectType = typeof(UnityEngine.Object);
+                    }
+                }
+                valueField.RegisterCallback<InputEvent>((e) =>
+                {
                     EditorUtility.SetDirty(target);
                     EditorUtility.SetDirty(editor);
                     AssetDatabase.SaveAssets();
                 });
-                deleteButton.text="Delate";
-                deleteButton.style.width=Length.Percent(20f);
+                var deleteButton = new Button(() =>
+                {
+                    bt.SharedVariables.Remove(variable);
+                    foldout.Remove(grid);
+                    if (bt.SharedVariables.Count == 0)
+                    {
+                        parent.Remove(foldout);
+                    }
+                    EditorUtility.SetDirty(target);
+                    EditorUtility.SetDirty(editor);
+                    AssetDatabase.SaveAssets();
+                })
+                {
+                    text = "Delate"
+                };
+                deleteButton.style.width = Length.Percent(20f);
+                deleteButton.style.height = 25;
                 content.Add(deleteButton);
                 grid.Add(content);
-                foldout.Add(grid);   
+                foldout.Add(grid);
             }
-            return foldout;
+            parent.Add(foldout);
         }
     }
 }

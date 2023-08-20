@@ -1,9 +1,8 @@
 using System.Reflection;
 using UnityEditor.UIElements;
-
 namespace Kurisu.AkiBT.Editor
 {
-    public class ObjectResolver : FieldResolver<ObjectField,UnityEngine.Object>
+    public class ObjectResolver : FieldResolver<ObjectField, UnityEngine.Object>
     {
         public ObjectResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {

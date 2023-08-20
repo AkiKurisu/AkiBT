@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT
 
         protected sealed override void OnRun()
         {
-            child?.Run(gameObject,tree);
+            child?.Run(gameObject, Tree);
         }
 
         public override void Awake()
@@ -33,7 +33,7 @@ namespace Kurisu.AkiBT
 
         public override void Start()
         {
-           child?.Start();
+            child?.Start();
         }
 
         public override void PreUpdate()
@@ -46,11 +46,11 @@ namespace Kurisu.AkiBT
 #if UNITY_EDITOR
             UpdateEditor?.Invoke();
 #endif
-            if(child==null)return Status.Failure;
+            if (child == null) return Status.Failure;
             return child.Update();
         }
-        
-        
+
+
         public override void PostUpdate()
         {
             child?.PostUpdate();

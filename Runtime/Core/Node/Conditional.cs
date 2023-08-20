@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT
         /// <summary>
         /// 子结点运行时是否要继续判断
         /// </summary>
-        [SerializeField,Tooltip("勾选后子结点运行时,该结点依然会进行判断,否则在子结点运行时CanUpdate总是返回True")] 
+        [SerializeField, Tooltip("勾选后子结点运行时,该结点依然会进行判断,否则在子结点运行时CanUpdate总是返回True")]
         private bool evaluateOnRunning = false;
 
         [SerializeReference]
@@ -30,9 +30,9 @@ namespace Kurisu.AkiBT
 
         protected sealed override void OnRun()
         {
-            child?.Run(gameObject,tree);
+            child?.Run(gameObject, Tree);
         }
-        
+
         public sealed override void Awake()
         {
             OnAwake();
@@ -51,11 +51,11 @@ namespace Kurisu.AkiBT
             OnStart();
             child?.Start();
         }
-        
+
         protected virtual void OnStart()
         {
         }
-        
+
         protected override Status OnUpdate()
         {
             // no child means leaf node
@@ -77,13 +77,13 @@ namespace Kurisu.AkiBT
             frameScope = null;
             child?.PreUpdate();
         }
-        
+
         public sealed override void PostUpdate()
         {
             frameScope = null;
             child?.PostUpdate();
         }
-        
+
         public override bool CanUpdate()
         {
             if (frameScope != null)
@@ -106,5 +106,5 @@ namespace Kurisu.AkiBT
 
         protected abstract bool IsUpdatable();
     }
-    
+
 }

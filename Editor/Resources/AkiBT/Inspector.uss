@@ -1,6 +1,3 @@
-:root {
-    -unity-font-definition:resource('AkiBT/Font');
-}
 #unity-text-input
 {
     min-width:50px;

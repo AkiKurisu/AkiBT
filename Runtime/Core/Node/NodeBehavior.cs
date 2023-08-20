@@ -12,46 +12,46 @@ namespace Kurisu.AkiBT
         Failure,
         Running
     }
-   /// <summary>
-   /// Based Behavior Class
-   /// If you want to create new types outside of Action, Conditional, Composite and Decorator,
-   /// you can implement this class
-   /// </summary>
+    /// <summary>
+    /// Based Behavior Class
+    /// If you want to create new types outside of Action, Conditional, Composite and Decorator,
+    /// you can implement this class
+    /// </summary>
     [Serializable]
-    public abstract class NodeBehavior 
+    public abstract class NodeBehavior
     {
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [HideInEditorWindow]
-        public Rect graphPosition = new Rect(400,300,100,100);
-        
+        public Rect graphPosition = new Rect(400, 300, 100, 100);
+
         [HideInEditorWindow]
         public string description;
-        
+
         [HideInEditorWindow]
         [NonSerialized]
         public Action<Status> NotifyEditor;
-        [SerializeField,HideInEditorWindow]
+        [SerializeField, HideInEditorWindow]
         private string guid;
-        public string GUID{get=>guid;set=>guid=value;}
-        #endif
-        
+        public string GUID { get => guid; set => guid = value; }
+#endif
+
         protected GameObject gameObject { private set; get; }
-        protected IBehaviorTree tree{ private set; get; }
-        public void Run(GameObject attachedObject,IBehaviorTree attachedTree)
+        protected IBehaviorTree Tree { private set; get; }
+        public void Run(GameObject attachedObject, IBehaviorTree attachedTree)
         {
             gameObject = attachedObject;
-            tree=attachedTree;
+            Tree = attachedTree;
             OnRun();
         }
-        
+
         protected abstract void OnRun();
 
         public virtual void Awake() { }
 
-        public virtual void Start() {}
+        public virtual void Start() { }
 
-        public virtual void PreUpdate() {}
+        public virtual void PreUpdate() { }
 
         public Status Update()
         {
@@ -63,7 +63,7 @@ namespace Kurisu.AkiBT
             return status;
         }
 
-        public virtual void PostUpdate(){}
+        public virtual void PostUpdate() { }
 
         protected abstract Status OnUpdate();
 
@@ -71,18 +71,35 @@ namespace Kurisu.AkiBT
         /// Abort running node when the condition changed.
         /// 启用Abort后Condition发生变动会调用该方法,通常用于中断逻辑
         /// </summary>
-        public virtual void Abort() {}
-        
+        public virtual void Abort() { }
+
         public virtual bool CanUpdate() => true;
-        /// <summary>
-        /// 初始化共享变量
-        /// </summary>
-        /// <param name="shareVariable"></param>
-        /// <typeparam name="T"></typeparam>
-        protected  void InitVariable<T>(SharedVariable<T> shareVariable)
+        protected void InitVariable<T>(T variable) where T : SharedVariable, IBindableVariable<T>
         {
-            shareVariable.GetValueFromTree(tree);
+            if (variable == null) return;
+            if (!variable.IsShared) return;
+            //Special case of binding SharedTObject<T> to SharedObject
+            if (variable is IBindableVariable<SharedObject> objectGetter)
+            {
+                foreach (var sharedVariable in Tree.SharedVariables)
+                {
+                    if (sharedVariable is SharedObject sharedObject && sharedObject.Name == variable.Name)
+                    {
+                        objectGetter.Bind(sharedObject);
+                        return;
+                    }
+                }
+            }
+            foreach (var sharedVariable in Tree.SharedVariables)
+            {
+                if (sharedVariable is IBindableVariable<T> bindable && sharedVariable.Name == variable.Name)
+                {
+                    variable.Bind((T)bindable);
+                    return;
+                }
+            }
+            Debug.LogWarning($"{variable.Name} is not a valid shared variable !");
         }
-        
+
     }
 }

@@ -7,6 +7,3 @@ Label
 {
     white-space: normal 
 }
-:root {
-    -unity-font-definition:resource('AkiBT/Font');
-}

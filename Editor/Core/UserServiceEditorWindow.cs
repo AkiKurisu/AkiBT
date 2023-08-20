@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class UserServiceEditorWindow : EditorWindow
     {
-        [MenuItem("Tools/AkiKurisu/AkiBT User Service")]
+        [MenuItem("Tools/AkiBT/AkiBT User Service")]
         private static void ShowEditorWindow()
         {
             GetWindow<UserServiceEditorWindow>("AkiBT User Service");
@@ -41,10 +41,10 @@ namespace Kurisu.AkiBT.Editor
         private SerializedProperty collectionProperty;
         private void OnEnable()
         {
-            searchCache = ScriptableObject.CreateInstance<BehaviorTreeSearchCache>();
+            searchCache = CreateInstance<BehaviorTreeSearchCache>();
             searchCache.allBehaviorTreeSOCache = BehaviorTreeSearchUtility.GetAllBehaviorTreeSO();
             searchCacheSerializedObject = new SerializedObject(searchCache);
-            searchWindow = ScriptableObject.CreateInstance<NodeTypeSearchWindow>();
+            searchWindow = CreateInstance<NodeTypeSearchWindow>();
             searchWindow.Initialize((T) => searchType = T);
             serviceData = BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
             serviceData.ForceSetUp();

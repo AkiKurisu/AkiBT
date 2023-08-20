@@ -19,23 +19,25 @@ namespace Kurisu.AkiBT.Editor
         /// <returns></returns>
         BehaviorTreeNode DuplicateNode(BehaviorTreeNode node);
         /// <summary>
-        /// 编辑器名称(例如AkiBT,AkiDT)
+        /// 编辑器名称
         /// </summary>
-        string TreeEditorName{get;}
+        string TreeEditorName { get; }
         /// <summary>
         /// 共享变量名称修改事件
         /// </summary>
         event System.Action<SharedVariable> OnPropertyNameChange;
         /// <summary>
-        /// 编辑器内共享变量
+        /// 暴露的共享变量
+        /// Exposed SharedVariables
         /// </summary>
         /// <value></value>
-        List<SharedVariable> ExposedProperties{get;}
-        bool IsRestoring{get;}
+        List<SharedVariable> ExposedProperties { get; }
+        bool IsRestoring { get; }
         /// <summary>
         /// 添加共享变量到黑板
+        /// Add shared variable to blackboard
         /// </summary>
         /// <param name="variable"></param>
-        void AddPropertyToBlackBoard(SharedVariable variable);
+        void AddExposedProperty(SharedVariable variable);
     }
 }

@@ -1,11 +1,14 @@
 using System;
 using System.Reflection;
+#if UNITY_2022_1_OR_NEWER
+using UnityEngine.UIElements;
+#else
 using UnityEditor.UIElements;
+#endif
 using UnityEngine;
-
 namespace Kurisu.AkiBT.Editor
 {
-    public class RectResolver : FieldResolver<RectField,Rect>
+    public class RectResolver : FieldResolver<RectField, Rect>
     {
         public RectResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
@@ -14,6 +17,6 @@ namespace Kurisu.AkiBT.Editor
         {
             return new RectField(fieldInfo.Name);
         }
-        public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(Rect);
+        public static bool IsAcceptable(Type infoType, FieldInfo info) => infoType == typeof(Rect);
     }
 }

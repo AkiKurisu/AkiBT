@@ -5,8 +5,8 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 装饰器结点行为
     /// </summary>
-public class Decorator : NodeBehavior
-{
+    public class Decorator : NodeBehavior
+    {
 
         [SerializeReference]
         private NodeBehavior child;
@@ -22,7 +22,7 @@ public class Decorator : NodeBehavior
 
         protected sealed override void OnRun()
         {
-            child?.Run(gameObject,tree);
+            child?.Run(gameObject, Tree);
         }
         public sealed override void Awake()
         {

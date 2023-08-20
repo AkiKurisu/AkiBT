@@ -10,18 +10,18 @@ namespace Kurisu.AkiBT
     {
         [SerializeReference]
         private List<NodeBehavior> children = new List<NodeBehavior>();
-        
+
         public List<NodeBehavior> Children => children;
 
         protected sealed override void OnRun()
         {
-            children.ForEach( e => e.Run(gameObject,tree));
+            children.ForEach(e => e.Run(gameObject, Tree));
         }
-        
+
         public sealed override void Awake()
         {
             OnAwake();
-            children.ForEach( e => e.Awake());
+            children.ForEach(e => e.Awake());
         }
 
         protected virtual void OnAwake()
@@ -33,7 +33,7 @@ namespace Kurisu.AkiBT
             OnStart();
             children.ForEach(c => c.Start());
         }
-        
+
         protected virtual void OnStart()
         {
         }
@@ -42,22 +42,22 @@ namespace Kurisu.AkiBT
         {
             children.ForEach(c => c.PreUpdate());
         }
-        
+
         public sealed override void PostUpdate()
         {
             children.ForEach(c => c.PostUpdate());
         }
 
-/// <summary>
-/// 组合结点可以增加子结点
-/// </summary>
-/// <param name="child"></param>
+        /// <summary>
+        /// 组合结点可以增加子结点
+        /// </summary>
+        /// <param name="child"></param>
 #if UNITY_EDITOR
         public void AddChild(NodeBehavior child)
         {
             children.Add(child);
         }
 #endif
-        
+
     }
 }
