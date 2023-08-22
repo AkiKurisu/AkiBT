@@ -257,7 +257,7 @@ public class NavmeshStopAgent : Action
 ```
 <img src="Images/AkiLabel.png" width="480"/>
 
-3. AkiGroup特性用以对结点进行分类
+3. AkiGroup用以对结点进行分类
 
     AkiGroup is an advanced attribute using in Node Searching,you can add this attribute to make it easier and more clear to find certain node.
 
