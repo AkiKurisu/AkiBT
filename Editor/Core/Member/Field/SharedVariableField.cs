@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT.Editor
     {
         private readonly bool forceShared;
         private readonly VisualElement foldout;
-        private Toggle toggle;
+        private readonly Toggle toggle;
         private ITreeView treeView;
         private DropdownField nameDropdown;
         private SharedVariable bindExposedProperty;
@@ -78,7 +78,7 @@ namespace Kurisu.AkiBT.Editor
             var list = GetList(treeView);
             value.Name = value.Name ?? string.Empty;
             int index = list.IndexOf(value.Name);
-            nameDropdown = new DropdownField(bindType.Name, GetList(treeView), index);
+            nameDropdown = new DropdownField(bindType.Name, list, index);
             nameDropdown.RegisterCallback<MouseEnterEvent>((evt) => { nameDropdown.choices = GetList(treeView); });
             nameDropdown.RegisterValueChangedCallback(evt => { value.Name = evt.newValue; BindProperty(); });
             foldout.Insert(0, nameDropdown);

@@ -11,6 +11,7 @@ namespace Kurisu.AkiBT.Editor
     {
         private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.0</size>";
         private const string ButtonText = "Edit BehaviorTree";
+        private const string DebugText = "Open BehaviorTree (Runtime)";
         protected VisualElement myInspector;
         private readonly FieldResolverFactory factory = FieldResolverFactory.Instance;
         public override VisualElement CreateInspectorGUI()
@@ -35,7 +36,7 @@ namespace Kurisu.AkiBT.Editor
             }
             else
             {
-                button.text = "Open BehaviorTree (Runtime)";
+                button.text = DebugText;
                 button.style.backgroundColor = new StyleColor(new Color(253 / 255f, 163 / 255f, 255 / 255f));
             }
             myInspector.Add(button);
