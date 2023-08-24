@@ -5,11 +5,9 @@ namespace Kurisu.AkiBT
     [Serializable]
     public class SharedObject : SharedVariable<UnityEngine.Object>, IBindableVariable<SharedObject>
     {
-#if UNITY_EDITOR
         [SerializeField]
         private string constraintTypeAQM;
         public string ConstraintTypeAQM { get => constraintTypeAQM; set => constraintTypeAQM = value; }
-#endif
         public SharedObject(UnityEngine.Object value)
         {
             this.value = value;

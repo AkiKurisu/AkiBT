@@ -230,9 +230,7 @@ public class Invertor : Decorator
 
 ## Attributes
 
-1. AkiInfo用以描述结点行为,可以显示在结点编辑器中.
-   
-   You can use AkiInfo attribute to describe the behavior detail of the node for information.
+1. You can use AkiInfo attribute to describe the behavior detail of the node for information.
 ```C#
   [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
 public class NavmeshStopAgent : Action
@@ -242,7 +240,7 @@ public class NavmeshStopAgent : Action
 ```
 <img src="Images/InfoAttribute.png" />
 
-2. AkiLabel用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.
+1. AkiLabel用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.
    
    AkiLabel attribute is added for replacing label of node's title or field especially for Chinese.
    
