@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:Float类型值运算")]
+    [AkiInfo("Action : Operate float value")]
     [AkiLabel("Math:FloatOperator")]
     [AkiGroup("Math")]
     public class FloatOperator : Action
@@ -20,18 +20,20 @@ namespace Kurisu.AkiBT.Extend
         private SharedFloat float1;
         [SerializeField]
         private SharedFloat float2;
-        [SerializeField,ForceShared]
+        [SerializeField, ForceShared]
         private SharedFloat storeResult;
         [SerializeField]
         private Operation operation;
-        public override void Awake() {
+        public override void Awake()
+        {
             InitVariable(float1);
             InitVariable(float2);
-            InitVariable(storeResult);     
+            InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.Add:
                     storeResult.Value = float1.Value + float2.Value;
                     break;

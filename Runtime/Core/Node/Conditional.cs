@@ -30,7 +30,7 @@ namespace Kurisu.AkiBT
 
         protected sealed override void OnRun()
         {
-            child?.Run(gameObject, Tree);
+            child?.Run(GameObject, Tree);
         }
 
         public sealed override void Awake()

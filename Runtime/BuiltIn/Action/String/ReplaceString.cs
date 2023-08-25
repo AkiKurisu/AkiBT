@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:String类型替换")]
+    [AkiInfo("Action : Replace value of string")]
     [AkiLabel("String:Replace")]
     [AkiGroup("String")]
     public class ReplaceString : Action
@@ -12,7 +12,7 @@ namespace Kurisu.AkiBT.Extend
         private SharedString replaceFrom;
         [SerializeField]
         private SharedString replaceTo;
-        [SerializeField,ForceShared]
+        [SerializeField, ForceShared]
         private SharedString storeResult;
         public override void Awake()
         {

@@ -2,28 +2,28 @@ using UnityEngine;
 using UnityEngine.AI;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
+    [AkiInfo("Action : Stop NavmeshAgent according to isStopped")]
     [AkiLabel("Navmesh:StopAgent")]
     [AkiGroup("Navmesh")]
     public class NavmeshStopAgent : Action
     {
-        [SerializeField, Tooltip("如不填写,则从绑定物体中获取")]
-        private NavMeshAgent agent;
-        [SerializeField, AkiLabel("是否停止")]
+        [SerializeField, Tooltip("If not filled in, it will be obtained from the bound gameObject")]
+        private SharedTObject<NavMeshAgent> agent;
+        [SerializeField, AkiLabel("Whether to stop")]
         private SharedBool isStopped;
         protected override Status OnUpdate()
         {
-            if (agent != null && agent.isStopped != isStopped.Value)
+            if (agent.Value != null && agent.Value.isStopped != isStopped.Value)
             {
-                agent.isStopped = isStopped.Value;
+                agent.Value.isStopped = isStopped.Value;
             }
             return Status.Success;
         }
         public override void Awake()
         {
-            if (agent == null) agent = gameObject.GetComponent<NavMeshAgent>();
+            InitVariable(agent);
+            if (agent.Value == null) agent.Value = GameObject.GetComponent<NavMeshAgent>();
             InitVariable(isStopped);
         }
-
     }
 }

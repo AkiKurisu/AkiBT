@@ -1,13 +1,8 @@
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
-    /// <summary>
-    ///  update the children in order.
-    ///  update only one child per frame.
-    /// </summary>
-    [AkiInfo("Composite:轮盘,按顺序更新子结点,每次Update只会更新当前结点,该结点结束运行后下一次Update再继续更新下一个结点")]
-    [AkiLabel("Rotator轮盘")]
+    [AkiInfo("Composite : Rotator, update child nodes in order, each Update will only update the current node" +
+    ", after the node finishes running, the next Update will continue to update the next node")]
     public class Rotator : Composite
     {
         [SerializeField]

@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Example
         private AIModel model;
         protected override void OnAwake()
         {
-            model=gameObject.GetComponent<AIModel>();
+            model = GameObject.GetComponent<AIModel>();
         }
         protected override bool IsUpdatable()
         {

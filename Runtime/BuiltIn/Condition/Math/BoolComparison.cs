@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Condition:比较Bool值,如果满足条件返回True,否则返回False")]
+    [AkiInfo("Condition : Compare Bool values, if the conditions are met, return Status.Success, otherwise return Status.Failure")]
     [AkiLabel("Math:BoolComparison")]
     [AkiGroup("Math")]
     public class BoolComparison : Conditional
@@ -24,12 +24,13 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override bool IsUpdatable()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.EqualTo:
-                    return bool1.Value==bool2.Value;
+                    return bool1.Value == bool2.Value;
                 case Operation.NotEqualTo:
-                    return bool1.Value!=bool2.Value;
-               
+                    return bool1.Value != bool2.Value;
+
             }
             return true;
         }

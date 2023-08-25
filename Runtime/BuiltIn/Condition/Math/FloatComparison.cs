@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Condition:比较Float值,如果满足条件返回True,否则返回False")]
+    [AkiInfo("Condition : Compare Float values, if the condition is met, return Status.Success, otherwise return Status.Failure")]
     [AkiLabel("Math:FloatComparison")]
     [AkiGroup("Math")]
     public class FloatComparison : Conditional
@@ -28,7 +28,8 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override bool IsUpdatable()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.LessThan:
                     return float1.Value < float2.Value ? true : false;
                 case Operation.LessThanOrEqualTo:

@@ -1,14 +1,14 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:String类型赋值")]
+    [AkiInfo("Action : Set string value")]
     [AkiLabel("String:Set")]
     [AkiGroup("String")]
     public class SetString : Action
     {
         [SerializeField]
         private SharedString value;
-        [SerializeField,ForceShared]
+        [SerializeField, ForceShared]
         private SharedString storeResult;
         public override void Awake()
         {
@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override Status OnUpdate()
         {
-            storeResult.Value=value.Value;
+            storeResult.Value = value.Value;
             return Status.Success;
         }
     }

@@ -1,12 +1,12 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:Vector3类型值运算")]
+    [AkiInfo("Action : Operate Vector3 value")]
     [AkiLabel("Vector3:Operator")]
     [AkiGroup("Vector3")]
-public class Vector3Operator : Action
-{
-    
+    public class Vector3Operator : Action
+    {
+
         public enum Operation
         {
             Add,
@@ -19,16 +19,18 @@ public class Vector3Operator : Action
         private SharedVector3 firstVector3;
         [SerializeField]
         private SharedVector3 secondVector3;
-        [SerializeField,ForceShared]
+        [SerializeField, ForceShared]
         private SharedVector3 storeResult;
-        public override void Awake() {
+        public override void Awake()
+        {
             InitVariable(firstVector3);
             InitVariable(secondVector3);
-            InitVariable(storeResult);  
+            InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.Add:
                     storeResult.Value = firstVector3.Value + secondVector3.Value;
                     break;
@@ -41,5 +43,5 @@ public class Vector3Operator : Action
             }
             return Status.Success;
         }
-}
+    }
 }

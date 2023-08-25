@@ -1,7 +1,6 @@
 namespace Kurisu.AkiBT
 {
-     [AkiInfo("Composite:随机,等待结点结束运行后重新选择下一个结点")]
-     [AkiLabel("Random随机")]
+    [AkiInfo("Composite : Random, random update a child and reselect the next node")]
     public class Random : Composite
     {
         private NodeBehavior runningNode;
@@ -13,7 +12,7 @@ namespace Kurisu.AkiBT
             {
                 return HandleStatus(runningNode.Update(), runningNode);
             }
-            
+
             var result = UnityEngine.Random.Range(0, Children.Count);
             var target = Children[result];
             return HandleStatus(target.Update(), target);

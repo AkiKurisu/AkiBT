@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite:平行,运行所有子结点,如果返回错误则退出返回Failure,否则等待所有子结点同时返回正确;"+
-    "注意:Parallel和Sequence都会按子结点的顺序进行遍历,但Sequence会在子结点出现Running时进行等待,之后的结点就不会被Update,"+
-    "而Parallel始终会运行所有结点"
-    )]
-    [AkiLabel("Parallel平行")]
+    [AkiInfo("Composite: run in parallel, run all sub-nodes, exit and return Failure if an error is returned, otherwise wait for all sub-nodes to return correct at the same time;" +
+     "Note: Both Parallel and Sequence will traverse in the order of child nodes, but Sequence will wait when child node appears to be Running, and the subsequent nodes will not be updated," +
+     "While Parallel always runs all nodes"
+     )]
     public class Parallel : Composite
     {
 
@@ -32,7 +31,8 @@ namespace Kurisu.AkiBT
                 if (result == Status.Running)
                 {
                     runningNodes.Add(c);
-                }else if (result == Status.Failure)
+                }
+                else if (result == Status.Failure)
                 {
                     anyFailed = true;
                 }
@@ -53,7 +53,7 @@ namespace Kurisu.AkiBT
 
         public override void Abort()
         {
-            runningNodes.ForEach( e => e.Abort() );
+            runningNodes.ForEach(e => e.Abort());
             runningNodes.Clear();
         }
 

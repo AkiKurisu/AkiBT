@@ -1,28 +1,25 @@
 using System;
-
 namespace Kurisu.AkiBT
 {
     /// <summary>
-    /// 行为结点在编辑器下拉菜单中进行分类,可以用'/'符号进行子分类
+    /// Nodes are categorized in the editor dropdown menu, and can be sub-categorized with the '/' symbol
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class AkiGroupAttribute : Attribute
     {
         public string Group
-		{
-			get
-			{
-				return this.mGroup;
-			}
-		}
-
-		private readonly string mGroup;
-        public AkiGroupAttribute(string group)
         {
-            this.mGroup=group;
+            get
+            {
+                return this.mGroup;
+            }
         }
 
-	
+        private readonly string mGroup;
+        public AkiGroupAttribute(string group)
+        {
+            this.mGroup = group;
+        }
     }
 
 }

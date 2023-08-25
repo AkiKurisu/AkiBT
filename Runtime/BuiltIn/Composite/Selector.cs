@@ -1,13 +1,14 @@
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite:选择,依次遍历子结点,若返回Failure则继续更新下一个,否则返回Success")]
-    [AkiLabel("Selector选择")]
+    [AkiInfo("Composite : Select, traverse the child nodes in turn," +
+    " if it returns Failure, continue to update the next one, otherwise return Success")]
     public class Selector : Composite
     {
-        [SerializeField,Tooltip("当优先于当前运行结点的子结点判断改变时打断当前运行结点,打断会影响其分支下全部结点;注意:在AkiBT中,Action结点的判断始终"+
-        "为true,只有Conditional结点会发生判断(CanUpdate)的改变"
+        [SerializeField, Tooltip("When the judgment of the child node prior to the current running node is changed," +
+        " the current running node is interrupted, and the interruption will affect all nodes under its branches;" +
+        " Note: in AkiBT, the judgment of the Action node is always" +
+         "For true, only the Conditional node will change the judgment (CanUpdate)"
         )]
         private bool abortOnConditionChanged = true;
 

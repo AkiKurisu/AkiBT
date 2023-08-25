@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:Int类型值运算")]
+    [AkiInfo("Action : Operate int value")]
     [AkiLabel("Math:IntOperator")]
     [AkiGroup("Math")]
     public class IntOperator : Action
@@ -20,18 +20,20 @@ namespace Kurisu.AkiBT.Extend
         private SharedInt int1;
         [SerializeField]
         private SharedInt int2;
-        [SerializeField,ForceShared]
+        [SerializeField, ForceShared]
         private SharedInt storeResult;
         [SerializeField]
         private Operation operation;
-        public override void Awake() {
+        public override void Awake()
+        {
             InitVariable(int1);
             InitVariable(int2);
-            InitVariable(storeResult);     
+            InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.Add:
                     storeResult.Value = int1.Value + int2.Value;
                     break;

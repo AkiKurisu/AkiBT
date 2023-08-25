@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:Bool类型值运算")]
+    [AkiInfo("Action : Operate bool value")]
     [AkiLabel("Math:BoolOperator")]
     [AkiGroup("Math")]
     public class BoolOperator : Action
@@ -15,18 +15,20 @@ namespace Kurisu.AkiBT.Extend
         private SharedBool bool1;
         [SerializeField]
         private SharedBool bool2;
-        [SerializeField,ForceShared]
+        [SerializeField, ForceShared]
         private SharedBool storeResult;
         [SerializeField]
         private Operation operation;
-        public override void Awake() {
+        public override void Awake()
+        {
             InitVariable(bool1);
             InitVariable(bool2);
-            InitVariable(storeResult);  
+            InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.And:
                     storeResult.Value = bool1.Value && bool2.Value;
                     break;

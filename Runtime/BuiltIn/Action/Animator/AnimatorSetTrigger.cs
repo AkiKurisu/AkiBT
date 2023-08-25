@@ -1,23 +1,26 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:触发Animator的Trigger元素")]
+    [AkiInfo("Action : Set trigger parameter of the Animator")]
     [AkiLabel("Animator:SetTrigger")]
     [AkiGroup("Animator")]
     public class AnimatorSetTrigger : AnimatorAction
     {
         [SerializeField]
-        private string parameter;
+        private SharedString parameter;
         private int parameterHash;
         [SerializeField]
-        private bool resetLastTrigger=true;
-        public override void Start() {
-            parameterHash=Animator.StringToHash(parameter);
+        private bool resetLastTrigger = true;
+        public override void Awake()
+        {
+            base.Awake();
+            InitVariable(parameter);
+            parameterHash = Animator.StringToHash(parameter.Value);
         }
         protected override Status OnUpdate()
         {
-            if(resetLastTrigger)_Animator.ResetTrigger(parameterHash);
-            _Animator.SetTrigger(parameterHash);
+            if (resetLastTrigger) Animator.ResetTrigger(parameterHash);
+            Animator.SetTrigger(parameterHash);
             return Status.Success;
         }
     }

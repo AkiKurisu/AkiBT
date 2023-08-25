@@ -3,7 +3,6 @@ using UnityEngine;
 namespace Kurisu.AkiBT
 {
     /// <summary>
-    /// 行为状态
     /// Behavior Status
     /// </summary>
     public enum Status
@@ -36,11 +35,11 @@ namespace Kurisu.AkiBT
         public string GUID { get => guid; set => guid = value; }
 #endif
 
-        protected GameObject gameObject { private set; get; }
+        protected GameObject GameObject { private set; get; }
         protected IBehaviorTree Tree { private set; get; }
         public void Run(GameObject attachedObject, IBehaviorTree attachedTree)
         {
-            gameObject = attachedObject;
+            GameObject = attachedObject;
             Tree = attachedTree;
             OnRun();
         }
@@ -69,7 +68,6 @@ namespace Kurisu.AkiBT
 
         /// <summary>
         /// Abort running node when the condition changed.
-        /// 启用Abort后Condition发生变动会调用该方法,通常用于中断逻辑
         /// </summary>
         public virtual void Abort() { }
 

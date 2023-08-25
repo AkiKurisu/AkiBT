@@ -15,7 +15,7 @@ namespace Kurisu.AkiBT
 
         protected sealed override void OnRun()
         {
-            children.ForEach(e => e.Run(gameObject, Tree));
+            children.ForEach(e => e.Run(GameObject, Tree));
         }
 
         public sealed override void Awake()

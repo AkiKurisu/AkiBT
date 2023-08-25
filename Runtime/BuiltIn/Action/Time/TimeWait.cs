@@ -1,36 +1,38 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:计时器,等待一段时间,期间返回Running,结束返回Success,Abort打断后复原计数")]
+    [AkiInfo("Action : Timer, wait for a period of time, return to Running during the period," +
+    " return to Success at the end, and restore the count after Abort interrupts")]
     [AkiLabel("Time:Wait")]
     public class TimeWait : Action
     {
         [SerializeField]
-        private SharedFloat waitTime; 
+        private SharedFloat waitTime;
         private float timer;
-        public override void Awake() {
+        public override void Awake()
+        {
             InitVariable(waitTime);
         }
         protected override Status OnUpdate()
         {
             AddTimer();
-            if(IsAlready())
+            if (IsAlready())
             {
                 ClearTimer();
                 return Status.Success;
-            }  
+            }
             else
                 return Status.Running;
         }
-        void AddTimer()
+        private void AddTimer()
         {
-             timer+=Time.deltaTime;
+            timer += Time.deltaTime;
         }
-        void ClearTimer()
+        private void ClearTimer()
         {
-             timer=0;
+            timer = 0;
         }
-        bool IsAlready()=>timer>waitTime.Value;
+        private bool IsAlready() => timer > waitTime.Value;
         public override void Abort()
         {
             ClearTimer();

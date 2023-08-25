@@ -1,19 +1,25 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:等待Animator进入指定State")]
+    [AkiInfo("Action : Wait for the Animator to enter the specified State")]
     [AkiLabel("Animator:WaitState")]
     [AkiGroup("Animator")]
     public class AnimatorWaitState : AnimatorAction
     {
         [SerializeField]
-        private string stateName;
+        private SharedString stateName;
         [SerializeField]
-        private int layer=-1;       
+        private SharedInt layer = new(-1);
+        public override void Awake()
+        {
+            base.Awake();
+            InitVariable(stateName);
+            InitVariable(layer);
+        }
         protected override Status OnUpdate()
         {
-            AnimatorStateInfo stateInfo=_Animator.GetCurrentAnimatorStateInfo(layer);
-            if(stateInfo.IsName(stateName))
+            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(layer.Value);
+            if (stateInfo.IsName(stateName.Value))
                 return Status.Success;
             else
                 return Status.Running;

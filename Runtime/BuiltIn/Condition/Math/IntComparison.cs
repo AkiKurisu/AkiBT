@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Condition:比较Int值,如果满足条件返回True,否则返回False")]
+    [AkiInfo("Condition : Compare Int values, if the conditions are met, return Status.Success, otherwise return Status.Failure")]
     [AkiLabel("Math:IntComparison")]
     [AkiGroup("Math")]
     public class IntComparison : Conditional
@@ -28,7 +28,8 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override bool IsUpdatable()
         {
-            switch (operation) {
+            switch (operation)
+            {
                 case Operation.LessThan:
                     return int1.Value < int2.Value ? true : false;
                 case Operation.LessThanOrEqualTo:

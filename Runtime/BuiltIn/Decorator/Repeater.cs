@@ -1,8 +1,9 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Repeater:按指定次数重复执行子结点,如果执行返回Failure则结束循环并返回Failure")]
-    [AkiLabel("Repeater重复")]
+    [AkiInfo("Decorator : Execute the child node repeatedly by the specified number of times" +
+     ", if the execution returns Failure, the loop ends and returns Failure")]
+    [AkiLabel("Repeater")]
     public class Repeater : Decorator
     {
         [SerializeField]
@@ -14,13 +15,13 @@ namespace Kurisu.AkiBT.Extend
         }
         protected override Status OnUpdate()
         {
-            for(int i=lastCount;i<repeatCount.Value;i++)
+            for (int i = lastCount; i < repeatCount.Value; i++)
             {
-                var status=Child.Update();
-                if(status==Status.Success)continue;
-                if(status==Status.Running)
+                var status = Child.Update();
+                if (status == Status.Success) continue;
+                if (status == Status.Running)
                 {
-                    lastCount=i;
+                    lastCount = i;
                 }
                 return status;
             }
@@ -28,7 +29,7 @@ namespace Kurisu.AkiBT.Extend
         }
         public override void Abort()
         {
-            lastCount=0;
+            lastCount = 0;
         }
     }
 }

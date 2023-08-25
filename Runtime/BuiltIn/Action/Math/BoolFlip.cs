@@ -1,20 +1,21 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action:Bool类型反转")]
+    [AkiInfo("Action : Flip bool value")]
     [AkiLabel("Math:BoolFlip")]
     [AkiGroup("Math")]
-public class BoolFlip : Action
-{
-    [SerializeField,ForceShared]
-    private SharedBool boolToFlip;
-    public override void Awake() {
-        InitVariable(boolToFlip);
-    }
-    protected override Status OnUpdate()
+    public class BoolFlip : Action
     {
-        boolToFlip.Value=!boolToFlip.Value;
-        return Status.Success;
+        [SerializeField, ForceShared]
+        private SharedBool boolToFlip;
+        public override void Awake()
+        {
+            InitVariable(boolToFlip);
+        }
+        protected override Status OnUpdate()
+        {
+            boolToFlip.Value = !boolToFlip.Value;
+            return Status.Success;
+        }
     }
-}
 }
