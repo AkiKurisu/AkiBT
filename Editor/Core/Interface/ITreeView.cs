@@ -32,7 +32,6 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         /// <value></value>
         List<SharedVariable> ExposedProperties { get; }
-        bool IsRestoring { get; }
         /// <summary>
         /// 添加共享变量到黑板
         /// Add shared variable to blackboard

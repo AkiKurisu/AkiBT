@@ -10,15 +10,15 @@ namespace Kurisu.AkiBT.Editor
 
         private BehaviorTreeNode cache;
 
-        public RootNode() 
+        public RootNode()
         {
             SetBehavior(typeof(Root));
             title = "Root";
             Child = CreateChildPort();
             outputContainer.Add(Child);
-            capabilities&=~Capabilities.Copiable;
-            capabilities &=~Capabilities.Deletable;//不可删除
-            capabilities &=~Capabilities.Movable;//不可删除
+            capabilities &= ~Capabilities.Copiable;
+            capabilities &= ~Capabilities.Deletable;//不可删除
+            capabilities &= ~Capabilities.Movable;//不可删除
             RefreshExpandedState();
             RefreshPorts();//更新链接
         }
@@ -47,15 +47,15 @@ namespace Kurisu.AkiBT.Editor
         }
         protected override void OnCommit(Stack<BehaviorTreeNode> stack)
         {
-            
+
             var newRoot = new Root();
-            BehaviorTreeNode child=null;
-            if(Child.connected)
+            BehaviorTreeNode child = null;
+            if (Child.connected)
             {
                 child = Child.connections.First().input.node as BehaviorTreeNode;
                 newRoot.Child = child.ReplaceBehavior();
                 stack.Push(child);
-                
+
             }
             newRoot.UpdateEditor = ClearStyle;
             NodeBehavior = newRoot;
@@ -64,7 +64,7 @@ namespace Kurisu.AkiBT.Editor
 
         public void PostCommit(IBehaviorTree tree)
         {
-            tree.Root = (NodeBehavior as Root); 
+            tree.Root = NodeBehavior as Root;
         }
         protected override void OnClearStyle()
         {
@@ -72,6 +72,14 @@ namespace Kurisu.AkiBT.Editor
         }
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+        }
+        public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        {
+            if (!Child.connected)
+            {
+                return new List<IBinaryTreeNode>();
+            }
+            return new List<IBinaryTreeNode>() { Child.connections.First().input.node as BehaviorTreeNode };
         }
     }
 }

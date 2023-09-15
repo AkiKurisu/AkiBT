@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class ConditionalNode : BehaviorTreeNode
     {
-        private Port childPort;
+        private readonly Port childPort;
 
         public Port Child => childPort;
 
@@ -17,8 +17,8 @@ namespace Kurisu.AkiBT.Editor
         {
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
             {
-                var provider =ScriptableObject.CreateInstance< ConditionalSearchWindowProvider>();
-                provider.Init(this,BehaviorTreeSetting.GetMask(mapTreeView.TreeEditorName));
+                var provider = ScriptableObject.CreateInstance<ConditionalSearchWindowProvider>();
+                provider.Init(this, BehaviorTreeSetting.GetMask(mapTreeView.TreeEditorName));
                 SearchWindow.Open(new SearchWindowContext(a.eventInfo.localMousePosition), provider);
             }));
             base.BuildContextualMenu(evt);
@@ -57,6 +57,14 @@ namespace Kurisu.AkiBT.Editor
         protected override void OnClearStyle()
         {
             cache?.ClearStyle();
+        }
+        public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        {
+            if (!childPort.connected)
+            {
+                return new List<IBinaryTreeNode>();
+            }
+            return new List<IBinaryTreeNode>() { childPort.connections.First().input.node as BehaviorTreeNode };
         }
     }
 }

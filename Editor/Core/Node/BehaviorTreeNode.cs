@@ -7,44 +7,46 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public abstract class BehaviorTreeNode : Node{
+    public abstract class BehaviorTreeNode : Node, IBinaryTreeNode
+    {
 
-        public string GUID=>guid;
+        public string GUID => guid;
         private string guid;
-        protected NodeBehavior NodeBehavior {set;  get; }
+        protected NodeBehavior NodeBehavior { set; get; }
 
         private Type dirtyNodeBehaviorType;
         public Port Parent { private set; get; }
-        
+
         private readonly VisualElement container;
 
         private readonly TextField description;
-        public string Description=>description.value;
+        public string Description => description.value;
         private readonly FieldResolverFactory fieldResolverFactory;
-        public bool Copyable{get;private set;}
-        public readonly List<IFieldResolver> resolvers = new List<IFieldResolver>();
+        public bool Copyable { get; private set; }
+        public readonly List<IFieldResolver> resolvers = new();
         public Action<BehaviorTreeNode> onSelectAction;
         protected ITreeView mapTreeView;
         protected bool noValidate;
+        VisualElement IBinaryTreeNode.View => this;
         public override void OnSelected()
         {
             base.OnSelected();
             onSelectAction?.Invoke(this);
         }
-        
+
         protected BehaviorTreeNode()
         {
             fieldResolverFactory = FieldResolverFactory.Instance;
             container = new VisualElement();
             description = new TextField();
-            guid=Guid.NewGuid().ToString();
+            guid = Guid.NewGuid().ToString();
             Initialize();
         }
 
         private void Initialize()
         {
             AddDescription();
-            mainContainer.Add(this.container);
+            mainContainer.Add(container);
             AddParent();
         }
 
@@ -60,19 +62,19 @@ namespace Kurisu.AkiBT.Editor
             resolvers.ForEach(e => e.Restore(NodeBehavior));
             NodeBehavior.NotifyEditor = MarkAsExecuted;
             description.value = NodeBehavior.description;
-            guid=string.IsNullOrEmpty(behavior.GUID)?Guid.NewGuid().ToString():behavior.GUID;
+            guid = string.IsNullOrEmpty(behavior.GUID) ? Guid.NewGuid().ToString() : behavior.GUID;
             OnRestore();
         }
         public void CopyFrom(BehaviorTreeNode copyNode)
         {
-            for(int i=0;i<copyNode.resolvers.Count;i++)
+            for (int i = 0; i < copyNode.resolvers.Count; i++)
             {
                 resolvers[i].Copy(copyNode.resolvers[i]);
             }
             description.value = copyNode.Description;
-            NodeBehavior=Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
+            NodeBehavior = Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            guid=Guid.NewGuid().ToString();
+            guid = Guid.NewGuid().ToString();
         }
 
         protected virtual void OnRestore()
@@ -104,15 +106,15 @@ namespace Kurisu.AkiBT.Editor
         {
             return dirtyNodeBehaviorType;
         }
-            
+
         public void Commit(Stack<BehaviorTreeNode> stack)
         {
             OnCommit(stack);
-            resolvers.ForEach( r => r.Commit(NodeBehavior));
+            resolvers.ForEach(r => r.Commit(NodeBehavior));
             NodeBehavior.description = this.description.value;
             NodeBehavior.graphPosition = GetPosition();
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            NodeBehavior.GUID=this.GUID;
+            NodeBehavior.GUID = this.GUID;
         }
         protected abstract void OnCommit(Stack<BehaviorTreeNode> stack);
 
@@ -135,9 +137,9 @@ namespace Kurisu.AkiBT.Editor
         ///  核心:设置结点行为类型
         /// </summary>
         /// <param name="nodeBehavior"></param>
-        public void SetBehavior(System.Type nodeBehavior,ITreeView ownerTreeView=null)
+        public void SetBehavior(System.Type nodeBehavior, ITreeView ownerTreeView = null)
         {
-            if(ownerTreeView!=null)this.mapTreeView=ownerTreeView;
+            if (ownerTreeView != null) this.mapTreeView = ownerTreeView;
             if (dirtyNodeBehaviorType != null)
             {
                 dirtyNodeBehaviorType = null;
@@ -159,10 +161,10 @@ namespace Kurisu.AkiBT.Editor
                     container.Add(fieldResolver.GetEditorField(mapTreeView));
                     resolvers.Add(fieldResolver);
                 });
-            var label=nodeBehavior.GetCustomAttribute(typeof(AkiLabelAttribute), false) as AkiLabelAttribute;
-            title = label?.Title??nodeBehavior.Name;
-            Copyable=nodeBehavior.GetCustomAttribute(typeof(CopyDisableAttribute), false)==null;
-            noValidate=nodeBehavior.GetCustomAttribute(typeof(NoValidateAttribute),false)!=null;
+            var label = nodeBehavior.GetCustomAttribute(typeof(AkiLabelAttribute), false) as AkiLabelAttribute;
+            title = label?.Title ?? nodeBehavior.Name;
+            Copyable = nodeBehavior.GetCustomAttribute(typeof(CopyDisableAttribute), false) == null;
+            noValidate = nodeBehavior.GetCustomAttribute(typeof(NoValidateAttribute), false) != null;
         }
 
         private static IEnumerable<FieldInfo> GetAllFields(Type t)
@@ -180,20 +182,20 @@ namespace Kurisu.AkiBT.Editor
             switch (status)
             {
                 case Status.Failure:
-                {
-                    style.backgroundColor = Color.red;
-                    break;
-                }
+                    {
+                        style.backgroundColor = Color.red;
+                        break;
+                    }
                 case Status.Running:
-                {
-                    style.backgroundColor = Color.yellow;
-                    break;
-                }
+                    {
+                        style.backgroundColor = Color.yellow;
+                        break;
+                    }
                 case Status.Success:
-                {
-                    style.backgroundColor = Color.green;
-                    break;
-                }
+                    {
+                        style.backgroundColor = Color.green;
+                        break;
+                    }
             }
         }
 
@@ -214,13 +216,14 @@ namespace Kurisu.AkiBT.Editor
             {
                 mapTreeView.SelectGroup(this);
                 return;
-            })); 
+            }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("UnSelect Group", (a) =>
             {
                 mapTreeView.UnSelectGroup();
                 return;
             }));
         }
-       
+
+        public abstract IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren();
     }
 }

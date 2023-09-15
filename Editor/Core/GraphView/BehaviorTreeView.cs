@@ -9,7 +9,7 @@ using System;
 using UnityEditor.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class BehaviorTreeView : GraphView, ITreeView
+    public class BehaviorTreeView : GraphView, ITreeView, IBinaryTreeNode
     {
         public Blackboard _blackboard;
         protected readonly IBehaviorTree behaviorTree;
@@ -25,15 +25,15 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public virtual bool CanSaveToSO => behaviorTree is BehaviorTree;
         public virtual string TreeEditorName => "AkiBT";
-        private readonly NodeResolver nodeResolver = new NodeResolver();
+        private readonly NodeResolver nodeResolver = new();
         /// <summary>
         /// 结点选择委托
         /// </summary>
-        public System.Action<BehaviorTreeNode> onSelectAction;
+        public Action<BehaviorTreeNode> onSelectAction;
         private readonly EditorWindow _window;
-        public bool IsRestoring { get; private set; }
-        private readonly BehaviorNodeConverter converter = new BehaviorNodeConverter();
+        private readonly BehaviorNodeConverter converter = new();
         private readonly DragDropManipulator dragDropManipulator;
+        public VisualElement View => this;
         /// <summary>
         /// 黑板
         /// </summary>
@@ -128,12 +128,12 @@ namespace Kurisu.AkiBT.Editor
             base.BuildContextualMenu(evt);
             var remainTargets = evt.menu.MenuItems().FindAll(e =>
             {
-                switch (e)
+                return e switch
                 {
-                    case BehaviorTreeDropdownMenuAction _: return true;
-                    case DropdownMenuAction a: return a.name == "Create Node" || a.name == "Delete";
-                    default: return false;
-                }
+                    BehaviorTreeDropdownMenuAction _ => true,
+                    DropdownMenuAction a => a.name == "Create Node" || a.name == "Delete",
+                    _ => false,
+                };
             });
             //Remove needless default actions .
             evt.menu.MenuItems().Clear();
@@ -274,7 +274,6 @@ namespace Kurisu.AkiBT.Editor
         internal protected void CopyFromOtherTree(IBehaviorTree otherTree, Vector2 mousePosition)
         {
             var localMousePosition = contentViewContainer.WorldToLocal(mousePosition) - new Vector2(400, 300);
-            IsRestoring = true;
             IEnumerable<BehaviorTreeNode> nodes;
             RootNode rootNode;
             foreach (var variable in otherTree.SharedVariables)
@@ -291,14 +290,11 @@ namespace Kurisu.AkiBT.Editor
                 CreateBlock(new Rect(nodeBlockData.Position, new Vector2(100, 100)), nodeBlockData)
                 .AddElements(nodes.Where(x => nodeBlockData.ChildNodes.Contains(x.GUID)));
             }
-            IsRestoring = false;
         }
         internal void Restore()
         {
-            IsRestoring = true;
             IBehaviorTree tree = behaviorTree.ExternalBehaviorTree ?? behaviorTree;
             OnRestore(tree);
-            IsRestoring = false;
         }
         protected virtual void OnRestore(IBehaviorTree tree)
         {
@@ -437,6 +433,11 @@ namespace Kurisu.AkiBT.Editor
             {
                 return false;
             }
+        }
+
+        public IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        {
+            return new List<IBinaryTreeNode>() { root };
         }
     }
 }

@@ -198,7 +198,7 @@ namespace Kurisu.AkiBT.Editor
             if (Key != null)
             {
                 if (Key is GameObject) StructGraphView(this, (Key as GameObject).GetComponent<IBehaviorTree>());
-                else StructGraphView(this, (Key as IBehaviorTree));
+                else StructGraphView(this, Key as IBehaviorTree);
                 Repaint();
             }
         }
@@ -259,6 +259,10 @@ namespace Kurisu.AkiBT.Editor
                             }
                         }
                         GUILayout.FlexibleSpace();
+                        if (GUILayout.Button("Auto Layout", EditorStyles.toolbarButton))
+                        {
+                            NodeAutoLayouter.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
+                        }
                         if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
                         {
                             var serializedData = graphView.SerializeTreeToJson();

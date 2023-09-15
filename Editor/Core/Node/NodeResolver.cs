@@ -5,20 +5,21 @@ namespace Kurisu.AkiBT.Editor
     public class NodeResolver
     {
         private StyleSheet styleSheetCache;
-        public BehaviorTreeNode CreateNodeInstance(Type type,ITreeView treeView)
+        public BehaviorTreeNode CreateNodeInstance(Type type, ITreeView treeView)
         {
             BehaviorTreeNode node;
             if (type.IsSubclassOf(typeof(Composite)))
             {
                 node = new CompositeNode();
-            } else if (type.IsSubclassOf(typeof(Conditional)))
+            }
+            else if (type.IsSubclassOf(typeof(Conditional)))
             {
                 node = new ConditionalNode();
-            } 
+            }
             else if (type.IsSubclassOf(typeof(Decorator)))
             {
                 node = new DecoratorNode();
-            } 
+            }
             else if (type == typeof(Root))
             {
                 node = new RootNode();
@@ -27,8 +28,8 @@ namespace Kurisu.AkiBT.Editor
             {
                 node = new ActionNode();
             }
-            node.SetBehavior(type,treeView);
-            if(styleSheetCache==null)styleSheetCache=BehaviorTreeSetting.GetNodeStyle(treeView.TreeEditorName);
+            node.SetBehavior(type, treeView);
+            if (styleSheetCache == null) styleSheetCache = BehaviorTreeSetting.GetNodeStyle(treeView.TreeEditorName);
             node.styleSheets.Add(styleSheetCache);
             return node;
         }
