@@ -55,6 +55,7 @@ MonoBehaviour:
     graphStyleSheet: {fileID: 0}
     inspectorStyleSheet: {fileID: 0}
     nodeStyleSheet: {fileID: 0}
+  autoLayoutSiblingDistance: 50
   autoSave: 0
-  savePath: Assets
+  lastPath: 
   serviceData: {fileID: 0}

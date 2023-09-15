@@ -4,7 +4,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeLayoutConvertor : INodeForLayoutConvertor
     {
-        public float SiblingDistance => 80;
+        public float SiblingDistance { get; private set; }
         private NodeAutoLayouter.TreeNode m_LayoutRootNode;
         public NodeAutoLayouter.TreeNode LayoutRootNode => m_LayoutRootNode;
         public IBinaryTreeNode PrimRootNode => m_PrimRootNode;
@@ -13,6 +13,7 @@ namespace Kurisu.AkiBT.Editor
         public INodeForLayoutConvertor Init(IBinaryTreeNode primRootNode)
         {
             m_PrimRootNode = primRootNode;
+            SiblingDistance = BehaviorTreeSetting.GetOrCreateSettings().AutoLayoutSiblingDistance;
             return this;
         }
         public NodeAutoLayouter.TreeNode PrimNode2LayoutNode()

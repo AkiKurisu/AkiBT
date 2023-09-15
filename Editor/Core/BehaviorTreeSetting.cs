@@ -1,23 +1,24 @@
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    [System.Serializable]
+    [Serializable]
     internal class EditorSetting
     {
-        [Tooltip("编辑器名称,默认编辑器则填入AkiBT")]
+        [Tooltip("Editor implementation that this setting belongs to, according to field `TreeEditorName` in IBehaviorTreeView")]
         public string EditorName;
-        [Tooltip("显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
+        [Tooltip("Display type, filter AkiGroup according to this list, nodes without category will always be displayed")]
         public string[] ShowGroups;
-        [Tooltip("不显示的类型,根据该列表对AkiGroup进行筛选,无类别的结点始终会被显示")]
+        [Tooltip("The type that is not displayed, filter the AkiGroup according to this list, and the nodes without categories will always be displayed")]
         public string[] NotShowGroups;
-        [Tooltip("你可以自定义Graph视图的样式")]
+        [Tooltip("You can customize the style of the Graph view")]
         public StyleSheet graphStyleSheet;
-        [Tooltip("你可以自定义Inspector检查器的样式")]
+        [Tooltip("You can customize the style of the Inspector inspector")]
         public StyleSheet inspectorStyleSheet;
-        [Tooltip("你可以自定义Node结点的样式")]
+        [Tooltip("You can customize the style of Node nodes")]
         public StyleSheet nodeStyleSheet;
     }
     public class BehaviorTreeSetting : ScriptableObject
@@ -28,8 +29,10 @@ namespace Kurisu.AkiBT.Editor
         private const string InspectorFallBackPath = "AkiBT/Inspector";
         private const string NodeFallBackPath = "AkiBT/Node";
 
-        [SerializeField, Tooltip("编辑器配置,你可以根据编辑器名称使用不同的样式,并为结点搜索提供筛选方案")]
+        [SerializeField, Tooltip("Editor configuration, you can use different styles based on the editor name and provide filtering solutions for node search")]
         private EditorSetting[] settings;
+        [SerializeField]
+        private float autoLayoutSiblingDistance = 50f;
         [SerializeField, HideInInspector]
         private bool autoSave;
         [SerializeField, HideInInspector]
@@ -45,7 +48,7 @@ namespace Kurisu.AkiBT.Editor
                     var guids = AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeUserServiceData)}");
                     if (guids.Length == 0)
                     {
-                        serviceData = ScriptableObject.CreateInstance<BehaviorTreeUserServiceData>();
+                        serviceData = CreateInstance<BehaviorTreeUserServiceData>();
                         Debug.Log($"AkiBT User Service Data saving path : {k_UserServiceSettingPath}");
                         AssetDatabase.CreateAsset(serviceData, k_UserServiceSettingPath);
                         AssetDatabase.SaveAssets();
@@ -74,6 +77,12 @@ namespace Kurisu.AkiBT.Editor
             get => autoSave;
             set => autoSave = value;
         }
+        /// <summary>
+        /// Auto node layout sibling distance
+        /// </summary> <summary>
+        /// 
+        /// </summary>
+        public float AutoLayoutSiblingDistance => autoLayoutSiblingDistance;
         public static StyleSheet GetGraphStyle(string editorName)
         {
             var setting = GetOrCreateSettings();
@@ -111,7 +120,7 @@ namespace Kurisu.AkiBT.Editor
             BehaviorTreeSetting setting = null;
             if (guids.Length == 0)
             {
-                setting = ScriptableObject.CreateInstance<BehaviorTreeSetting>();
+                setting = CreateInstance<BehaviorTreeSetting>();
                 Debug.Log($"AkiBT Setting saving path : {k_BehaviorTreeSettingsPath}");
                 AssetDatabase.CreateAsset(setting, k_BehaviorTreeSettingsPath);
                 AssetDatabase.SaveAssets();
@@ -132,7 +141,8 @@ namespace Kurisu.AkiBT.Editor
 
         private class Styles
         {
-            public static GUIContent GraphEditorSettingStyle = new GUIContent("Graph Editor Setting");
+            public static GUIContent GraphEditorSettingStyle = new("Graph Editor Setting");
+            public static GUIContent LayoutDistanceStype = new("Layout Distance", "Auto node layout sibling distance");
         }
         public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User) : base(path, scope) { }
         public override void OnActivate(string searchContext, VisualElement rootElement)
@@ -142,14 +152,17 @@ namespace Kurisu.AkiBT.Editor
         public override void OnGUI(string searchContext)
         {
             EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.GraphEditorSettingStyle);
+            EditorGUILayout.PropertyField(m_Settings.FindProperty("autoLayoutSiblingDistance"), Styles.LayoutDistanceStype);
             m_Settings.ApplyModifiedPropertiesWithoutUndo();
         }
         [SettingsProvider]
         public static SettingsProvider CreateMyCustomSettingsProvider()
         {
 
-            var provider = new BehaviorTreeSettingsProvider("Project/AkiBT Settings", SettingsScope.Project);
-            provider.keywords = GetSearchKeywordsFromGUIContentProperties<Styles>();
+            var provider = new BehaviorTreeSettingsProvider("Project/AkiBT Settings", SettingsScope.Project)
+            {
+                keywords = GetSearchKeywordsFromGUIContentProperties<Styles>()
+            };
             return provider;
 
         }
