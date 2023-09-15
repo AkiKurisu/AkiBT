@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-    [System.Serializable]
+    [Serializable]
     public class SharedVector3 : SharedVariable<Vector3>, IBindableVariable<SharedVector3>
     {
         public SharedVector3(Vector3 value)

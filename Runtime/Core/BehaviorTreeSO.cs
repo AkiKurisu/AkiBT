@@ -62,8 +62,8 @@ namespace Kurisu.AkiBT
         {
             var template = BehaviorTreeSerializeUtility.DeserializeTree(serializedData);
             if (template == null) return;
-            this.root = template.Root;
-            this.sharedVariables = new List<SharedVariable>(template.Variables);
+            root = template.Root;
+            sharedVariables = new List<SharedVariable>(template.Variables);
         }
     }
 }

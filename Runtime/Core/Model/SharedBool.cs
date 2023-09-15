@@ -1,6 +1,7 @@
+using System;
 namespace Kurisu.AkiBT
 {
-    [System.Serializable]
+    [Serializable]
     public class SharedBool : SharedVariable<bool>, IBindableVariable<SharedBool>
     {
         public SharedBool(bool value)

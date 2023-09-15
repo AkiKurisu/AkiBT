@@ -1,6 +1,7 @@
+using System;
 namespace Kurisu.AkiBT
 {
-    [System.Serializable]
+    [Serializable]
     public class SharedFloat : SharedVariable<float>, IBindableVariable<SharedFloat>
     {
         public SharedFloat(float value)

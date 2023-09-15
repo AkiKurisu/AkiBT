@@ -1,17 +1,18 @@
-[![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/releases)
-# 行为树 AkiBT Verisoin 1.4.0 简介 Intro
+[![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg?style=social)](https://github.com/AkiKurisu/AkiBT/releases)
+[![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
+# 行为树 AkiBT Version 1.4.1 简介 Intro
 
-[爱姬kurisu](https://space.bilibili.com/20472331)优化GraphView视图并拓展内置行为和编辑器功能的行为树.  
-行为树衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
+AkiBT是一款由[爱姬kurisu](https://space.bilibili.com/20472331)优化并拓展的行为树结点编辑器.  
+行为树编辑器衍生自[UniBT](https://github.com/yoshidan/UniBT),原作者[Yoshida](https://github.com/yoshidan/).
 
-AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function. AkiKurisu Extends it with more features so that you can enjoy it.
+AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function. AkiKurisu extends it with more features so that you can enjoy it.
 
 ## 安装 Setup
 1. Download [Release Package](https://github.com/AkiKurisu/AkiBT/releases)
 2. Using git URL to download package by Unity PackageManager ```https://github.com/AkiKurisu/AkiBT.git```
 
 
-## 支持的版本 Supported version
+## 支持的版本 Supported Version
 
 * Unity 2021.3 or later.
 
@@ -69,13 +70,13 @@ Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
 
     <img src="Images/DragDrop.gif" width="1920"/>
 
-2. 共享变量SharedVariable可以在黑板中添加,目前支持Float、Int、Vector3、Bool、String、UnityEngine.Object类型变量
+2. 共享变量SharedVariable可以在黑板中添加,变量目前支持Float、Int、Vector3、Bool、String、UnityEngine.Object以及其继承子类型
    
-    SharedVariable let you have access to add it in a blackboard and share value between different node.Now it supports Float,Int,Vector3,Bool,String,UnityEngine.Object,
+    SharedVariable let you have access to add it in a blackboard and share value between different node.Now it supports Float,Int,Vector3,Bool,String,UnityEngine.Object and its subclass
 
     <img src="Images/SharedVariable.png" />
 
-   * 注意：修改共享变量名称的方式为双击变量,为空时自动删除
+   * 修改共享变量名称的方式为双击变量,为空时自动删除
     
         You can edit variable's name by double-click it and the variable will auto delate when it's name becomes empty.
 
@@ -102,7 +103,7 @@ Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
 
 2. 开发便捷服务 User Service
 
-    插件目前内置了新的User Service(Tools/AkiKurisu/AkiBT User Service), 提供了两个功能Serialize Service和Search Service
+    插件目前内置了新的User Service(Tools/AkiBT/AkiBT User Service), 提供了两个功能Serialize Service和Search Service
 
     * Serialize Service:由于AkiBT使用ScriptableObject进行数据存储,在修改结点的字段名称时会导致数据的丢失（该问题可以通过在修改字段上添加`FormerlySerializedAsAttribute`进行避免）。而对于结点的名称、命名空间进行修改后也会导致整个结点无法被反序列化，从而丢失该结点以及之后结点的所有数据。序列化为Json后，你可以使用文本编辑器批量对结点进行修改，再重新反序列化为ScriptableObject。
 
@@ -110,7 +111,7 @@ Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
     
     * Search Service:选择结点类型快速找到使用该结点的所有行为树, 结合Serialize Service可以同时找到对应的Json文件。
 
-    The plug-in currently has a new User Service (Tools/AkiKurisu/AkiBT User Service) built in, which provides two functions Serialize Service and Search Service
+    The plugin currently has a new User Service (Tools/AkiBT/AkiBT User Service) built in, which provides two functions Serialize Service and Search Service
 
      * Serialize Service: Since AkiBT uses ScriptableObject for data storage, data loss will occur when modifying the field name of the node (this problem can be avoided by adding `FormerlySerializedAsAttribute` to the modified field). However, after modifying the name and namespace of the node, the entire node cannot be deserialized, thus losing all data of the node and subsequent nodes. After serializing to Json, you can use a text editor to modify the nodes in batches, and then re-deserialize to ScriptableObject.
 

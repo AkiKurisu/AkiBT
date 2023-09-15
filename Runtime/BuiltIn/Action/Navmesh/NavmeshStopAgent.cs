@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT.Extend
     {
         [SerializeField, Tooltip("If not filled in, it will be obtained from the bound gameObject")]
         private SharedTObject<NavMeshAgent> agent;
-        [SerializeField, AkiLabel("Whether to stop")]
+        [SerializeField, Tooltip("Whether to stop")]
         private SharedBool isStopped;
         protected override Status OnUpdate()
         {

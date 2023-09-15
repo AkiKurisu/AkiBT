@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.0</size>";
+        private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.1</size>";
         private const string ButtonText = "Edit BehaviorTree";
         private const string DebugText = "Open BehaviorTree (Runtime)";
         protected VisualElement myInspector;
@@ -46,7 +46,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTreeSO))]
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
-        private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.0</size>";
+        private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.1</size>";
         private const string ButtonText = "Edit BehaviorTreeSO";
         protected VisualElement myInspector;
         private readonly FieldResolverFactory factory = FieldResolverFactory.Instance;
@@ -59,7 +59,7 @@ namespace Kurisu.AkiBT.Editor
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
             myInspector.Add(label);
             myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
-            myInspector.Add(new Label("BehaviorTree Decscription"));
+            myInspector.Add(new Label("BehaviorTree Description"));
             var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
             BehaviorTreeEditorUtility.DrawSharedVariable(myInspector, bt, factory, target, this);

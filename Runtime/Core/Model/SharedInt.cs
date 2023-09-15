@@ -1,6 +1,7 @@
+using System;
 namespace Kurisu.AkiBT
 {
-    [System.Serializable]
+    [Serializable]
     public class SharedInt : SharedVariable<int>, IBindableVariable<SharedInt>
     {
         public SharedInt(int value)
