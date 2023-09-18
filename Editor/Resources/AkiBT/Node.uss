@@ -20,20 +20,23 @@
 {
     flex-direction:column
 }
-CompositeNode #title {
+.CompositeNode #title {
     background-color: rgba(76, 255, 85, 0.91);
     color: white;
 }
-ActionNode #title {
+.ActionNode #title {
     background-color: rgba(251, 114, 153, 0.91);
 }
-ConditionalNode #title {
+.ConditionalNode #title {
     background-color: rgba(0, 255, 255, 0.91);
 
 }
-DecoratorNode #title {
+.DecoratorNode #title {
     background-color: rgba(14, 240, 180, 0.91);
 
+}
+.CompositeStack {
+   background-color: rgba(97, 95, 212, 0.91);
 }
 RootNode #title {
     background-color: rgba(191, 117, 255, 0.91);

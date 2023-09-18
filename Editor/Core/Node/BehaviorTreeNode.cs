@@ -7,9 +7,25 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public abstract class BehaviorTreeNode : Node, IBinaryTreeNode
+    public interface IBehaviorTreeNode
     {
-
+        Node View { get; }
+        string GUID { get; }
+        Port Parent { get; }
+        Action<IBehaviorTreeNode> OnSelectAction { get; set; }
+        void Restore(NodeBehavior behavior);
+        void Commit(Stack<IBehaviorTreeNode> stack);
+        bool Validate(Stack<IBehaviorTreeNode> stack);
+        Type GetBehavior();
+        void SetBehavior(Type nodeBehavior, ITreeView ownerTreeView = null);
+        void CopyFrom(IBehaviorTreeNode copyNode);
+        NodeBehavior ReplaceBehavior();
+        void ClearStyle();
+        IFieldResolver GetFieldResolver(string fieldName);
+    }
+    public abstract class BehaviorTreeNode : Node, IBinaryTreeNode, IBehaviorTreeNode
+    {
+        public Node View => this;
         public string GUID => guid;
         private string guid;
         protected NodeBehavior NodeBehavior { set; get; }
@@ -22,16 +38,16 @@ namespace Kurisu.AkiBT.Editor
         private readonly TextField description;
         public string Description => description.value;
         private readonly FieldResolverFactory fieldResolverFactory;
-        public bool Copyable { get; private set; }
         public readonly List<IFieldResolver> resolvers = new();
-        public Action<BehaviorTreeNode> onSelectAction;
+        protected readonly List<FieldInfo> fieldInfos = new();
+        public Action<IBehaviorTreeNode> OnSelectAction { get; set; }
         protected ITreeView mapTreeView;
         protected bool noValidate;
         VisualElement IBinaryTreeNode.View => this;
         public override void OnSelected()
         {
             base.OnSelected();
-            onSelectAction?.Invoke(this);
+            OnSelectAction?.Invoke(this);
         }
 
         protected BehaviorTreeNode()
@@ -41,6 +57,12 @@ namespace Kurisu.AkiBT.Editor
             description = new TextField();
             guid = Guid.NewGuid().ToString();
             Initialize();
+        }
+        public IFieldResolver GetFieldResolver(string fieldName)
+        {
+            int index = fieldInfos.FindIndex(x => x.Name == fieldName);
+            if (index != -1) return resolvers[index];
+            else return null;
         }
 
         private void Initialize()
@@ -65,13 +87,14 @@ namespace Kurisu.AkiBT.Editor
             guid = string.IsNullOrEmpty(behavior.GUID) ? Guid.NewGuid().ToString() : behavior.GUID;
             OnRestore();
         }
-        public void CopyFrom(BehaviorTreeNode copyNode)
+        public void CopyFrom(IBehaviorTreeNode copyNode)
         {
-            for (int i = 0; i < copyNode.resolvers.Count; i++)
+            var node = copyNode as BehaviorTreeNode;
+            for (int i = 0; i < node.resolvers.Count; i++)
             {
-                resolvers[i].Copy(copyNode.resolvers[i]);
+                resolvers[i].Copy(node.resolvers[i]);
             }
-            description.value = copyNode.Description;
+            description.value = node.Description;
             NodeBehavior = Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
             NodeBehavior.NotifyEditor = MarkAsExecuted;
             guid = Guid.NewGuid().ToString();
@@ -84,7 +107,7 @@ namespace Kurisu.AkiBT.Editor
 
         public NodeBehavior ReplaceBehavior()
         {
-            this.NodeBehavior = Activator.CreateInstance(GetBehavior()) as NodeBehavior;
+            NodeBehavior = Activator.CreateInstance(GetBehavior()) as NodeBehavior;
             return NodeBehavior;
         }
 
@@ -93,8 +116,24 @@ namespace Kurisu.AkiBT.Editor
             Parent = Port.Create<Edge>(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(Port));
             Parent.portName = "Parent";
             inputContainer.Add(Parent);
+            RegisterCallback<DetachFromPanelEvent>(OnDetach);
+            RegisterCallback<AttachToPanelEvent>(OnAttach);
         }
-
+        private void OnAttach(AttachToPanelEvent evt)
+        {
+            if (GetFirstAncestorOfType<CompositeStack>() == null) return;
+            if (Parent.connected)
+            {
+                var edge = Parent.connections.First();
+                edge.input?.Disconnect(edge);
+                edge.RemoveFromHierarchy();
+            }
+            Parent.SetEnabled(false);
+        }
+        private void OnDetach(DetachFromPanelEvent evt)
+        {
+            Parent.SetEnabled(true);
+        }
         protected Port CreateChildPort()
         {
             var port = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(Port));
@@ -107,18 +146,18 @@ namespace Kurisu.AkiBT.Editor
             return dirtyNodeBehaviorType;
         }
 
-        public void Commit(Stack<BehaviorTreeNode> stack)
+        public void Commit(Stack<IBehaviorTreeNode> stack)
         {
             OnCommit(stack);
             resolvers.ForEach(r => r.Commit(NodeBehavior));
-            NodeBehavior.description = this.description.value;
+            NodeBehavior.description = description.value;
             NodeBehavior.graphPosition = GetPosition();
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            NodeBehavior.GUID = this.GUID;
+            NodeBehavior.GUID = GUID;
         }
-        protected abstract void OnCommit(Stack<BehaviorTreeNode> stack);
+        protected abstract void OnCommit(Stack<IBehaviorTreeNode> stack);
 
-        public bool Validate(Stack<BehaviorTreeNode> stack)
+        public bool Validate(Stack<IBehaviorTreeNode> stack)
         {
             var valid = GetBehavior() != null && OnValidate(stack);
             if (valid)
@@ -132,12 +171,12 @@ namespace Kurisu.AkiBT.Editor
             return valid;
         }
 
-        protected abstract bool OnValidate(Stack<BehaviorTreeNode> stack);
+        protected abstract bool OnValidate(Stack<IBehaviorTreeNode> stack);
         /// <summary>
         ///  核心:设置结点行为类型
         /// </summary>
         /// <param name="nodeBehavior"></param>
-        public void SetBehavior(System.Type nodeBehavior, ITreeView ownerTreeView = null)
+        public void SetBehavior(Type nodeBehavior, ITreeView ownerTreeView = null)
         {
             if (ownerTreeView != null) this.mapTreeView = ownerTreeView;
             if (dirtyNodeBehaviorType != null)
@@ -145,25 +184,26 @@ namespace Kurisu.AkiBT.Editor
                 dirtyNodeBehaviorType = null;
                 container.Clear();
                 resolvers.Clear();
+                fieldInfos.Clear();
             }
             dirtyNodeBehaviorType = nodeBehavior;
 
             nodeBehavior
                 .GetFields(BindingFlags.Public | BindingFlags.Instance)
-                .Where(field => field.GetCustomAttribute<HideInEditorWindow>() == null)//根据Atrribute判断是否需要隐藏
-                .Concat(GetAllFields(nodeBehavior))//Concat合并列表
+                .Where(field => field.GetCustomAttribute<HideInEditorWindow>() == null)
+                .Concat(GetAllFields(nodeBehavior))
                 .Where(field => field.IsInitOnly == false)
                 .ToList().ForEach((p) =>
                 {
-                    var fieldResolver = fieldResolverFactory.Create(p);//工厂创建暴露引用
+                    var fieldResolver = fieldResolverFactory.Create(p);
                     var defaultValue = Activator.CreateInstance(nodeBehavior) as NodeBehavior;
                     fieldResolver.Restore(defaultValue);
                     container.Add(fieldResolver.GetEditorField(mapTreeView));
                     resolvers.Add(fieldResolver);
+                    fieldInfos.Add(p);
                 });
             var label = nodeBehavior.GetCustomAttribute(typeof(AkiLabelAttribute), false) as AkiLabelAttribute;
             title = label?.Title ?? nodeBehavior.Name;
-            Copyable = nodeBehavior.GetCustomAttribute(typeof(CopyDisableAttribute), false) == null;
             noValidate = nodeBehavior.GetCustomAttribute(typeof(NoValidateAttribute), false) != null;
         }
 

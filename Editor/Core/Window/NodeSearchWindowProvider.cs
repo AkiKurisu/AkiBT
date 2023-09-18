@@ -11,7 +11,7 @@ namespace Kurisu.AkiBT.Editor
     {
         private BehaviorTreeView graphView;
         private EditorWindow graphEditor;
-        private readonly NodeResolver nodeResolver = new NodeResolver();
+        private readonly NodeResolverFactory nodeResolver = NodeResolverFactory.Instance;
         private Texture2D _indentationIcon;
         private string[] showGroups;
         private string[] notShowGroups;
@@ -64,24 +64,24 @@ namespace Kurisu.AkiBT.Editor
                 graphView.CreateBlock(newRect);
                 return true;
             }
-            var node = this.nodeResolver.CreateNodeInstance(type, graphView);
-            node.SetPosition(newRect);
-            graphView.AddElement(node);
-            node.onSelectAction = graphView.onSelectAction;
+            var node = nodeResolver.Create(type, graphView);
+            node.View.SetPosition(newRect);
+            graphView.AddElement(node.View);
+            node.OnSelectAction = graphView.onSelectAction;
             return true;
         }
     }
     public class CertainNodeSearchWindowProvider<T> : ScriptableObject, ISearchWindowProvider where T : NodeBehavior
     {
-        private BehaviorTreeNode node;
+        private IBehaviorTreeNode node;
         private Texture2D _indentationIcon;
         private string[] showGroups;
         private string[] notShowGroups;
-        public void Init(BehaviorTreeNode node, (string[], string[]) mask)
+        public void Init(IBehaviorTreeNode node, (string[], string[]) mask)
         {
             this.node = node;
-            this.showGroups = mask.Item1;
-            this.notShowGroups = mask.Item2;
+            showGroups = mask.Item1;
+            notShowGroups = mask.Item2;
             _indentationIcon = new Texture2D(1, 1);
             _indentationIcon.SetPixel(0, 0, new Color(0, 0, 0, 0));
             _indentationIcon.Apply();
@@ -89,7 +89,7 @@ namespace Kurisu.AkiBT.Editor
         List<SearchTreeEntry> ISearchWindowProvider.CreateSearchTree(SearchWindowContext context)
         {
             var entries = new List<SearchTreeEntry>();
-            Dictionary<string, List<Type>> attributeDict = new Dictionary<string, List<Type>>();
+            Dictionary<string, List<Type>> attributeDict = new();
 
             entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {typeof(T).Name}"), 0));
             List<Type> nodeTypes = SubclassSearchUtility.FindSubClassTypes(typeof(T));
@@ -109,7 +109,7 @@ namespace Kurisu.AkiBT.Editor
 
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
-            var type = searchTreeEntry.userData as System.Type;
+            var type = searchTreeEntry.userData as Type;
             this.node.SetBehavior(type);
             return true;
         }

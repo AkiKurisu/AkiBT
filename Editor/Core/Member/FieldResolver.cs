@@ -5,11 +5,10 @@ using UnityEngine;
 using System.Collections.Generic;
 namespace Kurisu.AkiBT.Editor
 {
-    internal sealed class Ordered : Attribute
+    public sealed class Ordered : Attribute
     {
         public int Order = 100;
     }
-
     public interface IFieldResolver
     {
         /// <summary>
@@ -67,17 +66,18 @@ namespace Kurisu.AkiBT.Editor
         }
         public VisualElement GetEditorField(List<SharedVariable> ExposedProperties, SharedVariable variable)
         {
-            this.editorField.RegisterValueChangedCallback(evt =>
+            editorField.RegisterValueChangedCallback(evt =>
             {
                 var index = ExposedProperties.FindIndex(x => x.Name == variable.Name);
                 ExposedProperties[index].SetValue(evt.newValue);
             });
-            this.editorField.value = (K)variable.GetValue();
-            return this.editorField;
+            editorField.value = (K)variable.GetValue();
+            return editorField;
         }
         public void Copy(IFieldResolver resolver)
         {
             if (resolver is not FieldResolver<T, K>) return;
+            if (fieldInfo.GetCustomAttribute<CopyDisableAttribute>() != null) return;
             editorField.value = (K)resolver.Value;
         }
         public void Restore(NodeBehavior behavior)

@@ -16,7 +16,6 @@ MonoBehaviour:
   - EditorName: AkiBT
     ShowGroups: []
     NotShowGroups:
-    - Skill
     - Dialogue
     - Option
     - Piece

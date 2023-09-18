@@ -312,7 +312,7 @@ namespace Kurisu.AkiBT.Editor
                 return null;
             }
         }
-        private void OnNodeSelectionChange(BehaviorTreeNode node)
+        private void OnNodeSelectionChange(IBehaviorTreeNode node)
         {
             infoView.UpdateSelection(node);
         }

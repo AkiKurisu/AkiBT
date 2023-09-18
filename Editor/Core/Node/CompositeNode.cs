@@ -7,9 +7,8 @@ namespace Kurisu.AkiBT.Editor
 {
     public class CompositeNode : BehaviorTreeNode
     {
-        public readonly List<Port> ChildPorts = new();
-
-        private readonly List<BehaviorTreeNode> cache = new();
+        public List<Port> ChildPorts = new();
+        private readonly List<IBehaviorTreeNode> cache = new();
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
@@ -25,6 +24,7 @@ namespace Kurisu.AkiBT.Editor
 
         public CompositeNode()
         {
+            AddToClassList(nameof(CompositeNode));
             AddChild();
         }
 
@@ -45,7 +45,7 @@ namespace Kurisu.AkiBT.Editor
             });
         }
 
-        protected override bool OnValidate(Stack<BehaviorTreeNode> stack)
+        protected override bool OnValidate(Stack<IBehaviorTreeNode> stack)
         {
             if (ChildPorts.Count <= 0 && !noValidate) return false;
             foreach (var port in ChildPorts)
@@ -56,19 +56,19 @@ namespace Kurisu.AkiBT.Editor
                     style.backgroundColor = Color.red;
                     return false;
                 }
-                stack.Push(port.connections.First().input.node as BehaviorTreeNode);
+                stack.Push(PortHelper.FindChildNode(port));
             }
             style.backgroundColor = new StyleColor(StyleKeyword.Null);
             return true;
         }
 
-        protected override void OnCommit(Stack<BehaviorTreeNode> stack)
+        protected override void OnCommit(Stack<IBehaviorTreeNode> stack)
         {
             cache.Clear();
             foreach (var port in ChildPorts)
             {
                 if (port.connections.Count() == 0) continue;
-                var child = port.connections.First().input.node as BehaviorTreeNode;
+                var child = PortHelper.FindChildNode(port);
                 (NodeBehavior as Composite).AddChild(child.ReplaceBehavior());
                 stack.Push(child);
                 cache.Add(child);
@@ -84,7 +84,7 @@ namespace Kurisu.AkiBT.Editor
         }
         public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
         {
-            return ChildPorts.Where(x => x.connected).Select(x => x.connections.First().input.node as BehaviorTreeNode).Reverse().ToList();
+            return ChildPorts.Where(x => x.connected).Select(x => PortHelper.FindChildNode(x)).OfType<IBinaryTreeNode>().Reverse().ToList();
         }
     }
 }

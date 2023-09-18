@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Editor
         /// 将选中结点加入Group并创建Block
         /// </summary>
         /// <param name="node"></param>
-        void SelectGroup(BehaviorTreeNode node);
+        void SelectGroup(IBehaviorTreeNode node);
         /// <summary>
         /// 取消Group
         /// </summary>
@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        BehaviorTreeNode DuplicateNode(BehaviorTreeNode node);
+        IBehaviorTreeNode DuplicateNode(IBehaviorTreeNode node);
         /// <summary>
         /// 编辑器名称
         /// </summary>

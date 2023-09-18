@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
@@ -8,7 +7,7 @@ namespace Kurisu.AkiBT.Editor
     {
         public readonly Port Child;
 
-        private BehaviorTreeNode cache;
+        private IBehaviorTreeNode cache;
 
         public RootNode()
         {
@@ -36,23 +35,23 @@ namespace Kurisu.AkiBT.Editor
             (NodeBehavior as Root).UpdateEditor = ClearStyle;
         }
 
-        protected override bool OnValidate(Stack<BehaviorTreeNode> stack)
+        protected override bool OnValidate(Stack<IBehaviorTreeNode> stack)
         {
             if (!Child.connected)
             {
                 return true;
             }
-            stack.Push(Child.connections.First().input.node as BehaviorTreeNode);
+            stack.Push(PortHelper.FindChildNode(Child));
             return true;
         }
-        protected override void OnCommit(Stack<BehaviorTreeNode> stack)
+        protected override void OnCommit(Stack<IBehaviorTreeNode> stack)
         {
 
             var newRoot = new Root();
-            BehaviorTreeNode child = null;
+            IBehaviorTreeNode child = null;
             if (Child.connected)
             {
-                child = Child.connections.First().input.node as BehaviorTreeNode;
+                child = PortHelper.FindChildNode(Child);
                 newRoot.Child = child.ReplaceBehavior();
                 stack.Push(child);
 
@@ -79,7 +78,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 return new List<IBinaryTreeNode>();
             }
-            return new List<IBinaryTreeNode>() { Child.connections.First().input.node as BehaviorTreeNode };
+            return new List<IBinaryTreeNode>() { PortHelper.FindChildNode(Child) as IBinaryTreeNode };
         }
     }
 }

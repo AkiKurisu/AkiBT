@@ -21,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
             var entries = new List<SearchTreeEntry>
             {
                 new SearchTreeGroupEntry(new GUIContent("Select Object Type"), 0),
-                new SearchTreeEntry(new GUIContent("<No Constraint>", _indentationIcon)) { level = 1, userData = null }
+                new(new GUIContent("<No Constraint>", _indentationIcon)) { level = 1, userData = null }
             };
             List<Type> nodeTypes = SubclassSearchUtility.FindSubClassTypes(typeof(UnityEngine.Object));
             var groups = nodeTypes.GroupBy(t => t.Assembly);

@@ -8,12 +8,12 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
-    public class UserServiceEditorWindow : EditorWindow
+    public class ServiceEditorWindow : EditorWindow
     {
-        [MenuItem("Tools/AkiBT/AkiBT User Service")]
+        [MenuItem("Tools/AkiBT/AkiBT Service")]
         private static void ShowEditorWindow()
         {
-            GetWindow<UserServiceEditorWindow>("AkiBT User Service");
+            GetWindow<ServiceEditorWindow>("AkiBT Service");
         }
         private NodeTypeSearchWindow searchWindow;
         private BehaviorTreeSearchCache searchCache;
@@ -35,7 +35,7 @@ namespace Kurisu.AkiBT.Editor
             }
         }
         private SerializedObject searchCacheSerializedObject;
-        private BehaviorTreeUserServiceData serviceData;
+        private BehaviorTreeServiceData serviceData;
         private SerializedObject serviceSerializedObject;
         private Type searchType;
         private SerializedProperty collectionProperty;

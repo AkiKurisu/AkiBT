@@ -38,22 +38,22 @@ namespace Kurisu.AkiBT.Editor
         [SerializeField, HideInInspector]
         private string lastPath;
         [SerializeField, HideInInspector]
-        private BehaviorTreeUserServiceData serviceData;
-        public BehaviorTreeUserServiceData ServiceData
+        private BehaviorTreeServiceData serviceData;
+        public BehaviorTreeServiceData ServiceData
         {
             get
             {
                 if (serviceData == null)
                 {
-                    var guids = AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeUserServiceData)}");
+                    var guids = AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeServiceData)}");
                     if (guids.Length == 0)
                     {
-                        serviceData = CreateInstance<BehaviorTreeUserServiceData>();
+                        serviceData = CreateInstance<BehaviorTreeServiceData>();
                         Debug.Log($"AkiBT User Service Data saving path : {k_UserServiceSettingPath}");
                         AssetDatabase.CreateAsset(serviceData, k_UserServiceSettingPath);
                         AssetDatabase.SaveAssets();
                     }
-                    else serviceData = AssetDatabase.LoadAssetAtPath<BehaviorTreeUserServiceData>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    else serviceData = AssetDatabase.LoadAssetAtPath<BehaviorTreeServiceData>(AssetDatabase.GUIDToAssetPath(guids[0]));
                 }
                 return serviceData;
             }

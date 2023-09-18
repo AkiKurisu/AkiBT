@@ -5,13 +5,13 @@ using UnityEngine.UIElements;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
-    public class DecoratorNode : BehaviorTreeNode
+    public class DecoratorNode : BehaviorTreeNode, IChildPortable
     {
         private readonly Port childPort;
 
         public Port Child => childPort;
 
-        private BehaviorTreeNode cache;
+        private IBehaviorTreeNode cache;
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
@@ -26,21 +26,22 @@ namespace Kurisu.AkiBT.Editor
 
         public DecoratorNode()
         {
+            AddToClassList(nameof(DecoratorNode));
             childPort = CreateChildPort();
             outputContainer.Add(childPort);
         }
 
-        protected override bool OnValidate(Stack<BehaviorTreeNode> stack)
+        protected override bool OnValidate(Stack<IBehaviorTreeNode> stack)
         {
             if (!childPort.connected)
             {
                 return false;
             }
-            stack.Push(childPort.connections.First().input.node as BehaviorTreeNode);
+            stack.Push(PortHelper.FindChildNode(childPort));
             return true;
         }
 
-        protected override void OnCommit(Stack<BehaviorTreeNode> stack)
+        protected override void OnCommit(Stack<IBehaviorTreeNode> stack)
         {
             if (!childPort.connected)
             {
@@ -48,7 +49,7 @@ namespace Kurisu.AkiBT.Editor
                 cache = null;
                 return;
             }
-            var child = childPort.connections.First().input.node as BehaviorTreeNode;
+            var child = PortHelper.FindChildNode(childPort);
             (NodeBehavior as Decorator).Child = child.ReplaceBehavior();
             stack.Push(child);
             cache = child;
@@ -64,7 +65,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 return new List<IBinaryTreeNode>();
             }
-            return new List<IBinaryTreeNode>() { childPort.connections.First().input.node as BehaviorTreeNode };
+            return new List<IBinaryTreeNode>() { childPort.connections.First().input.node as IBinaryTreeNode };
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
@@ -18,6 +19,18 @@ namespace Kurisu.AkiBT.Editor
                 //Clone to prevent self modify
                 RemoveElements(containedElements.ToArray());
             }));
+        }
+        public void Commit(List<GroupBlockData> blockData)
+        {
+            var nodes = containedElements
+                                .OfType<IBehaviorTreeNode>()
+                                .Select(x => x.GUID).ToList();
+            blockData.Add(new GroupBlockData
+            {
+                ChildNodes = nodes,
+                Title = title,
+                Position = GetPosition().position
+            });
         }
     }
 }

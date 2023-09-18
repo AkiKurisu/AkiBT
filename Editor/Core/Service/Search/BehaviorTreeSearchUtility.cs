@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT.Editor
         {
             return SearchBehaviorTreeSO(searchType, BehaviorTreeSetting.GetOrCreateSettings().ServiceData, GetAllBehaviorTreeSO());
         }
-        public static List<BehaviorTreeSerializationPair> SearchBehaviorTreeSO(Type searchType, BehaviorTreeUserServiceData serviceData, List<BehaviorTreeSO> searchList)
+        public static List<BehaviorTreeSerializationPair> SearchBehaviorTreeSO(Type searchType, BehaviorTreeServiceData serviceData, List<BehaviorTreeSO> searchList)
         {
             if (serviceData == null) serviceData = BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
             if (searchList == null) searchList = GetAllBehaviorTreeSO();
