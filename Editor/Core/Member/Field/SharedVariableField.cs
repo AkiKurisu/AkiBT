@@ -27,7 +27,7 @@ namespace Kurisu.AkiBT.Editor
             contentContainer.Add(foldout);
             bindType = objectType;
             toggle = new Toggle("Is Shared");
-            toggle.RegisterValueChangedCallback(evt => { value.IsShared = evt.newValue; OnToggle(evt.newValue); });
+            toggle.RegisterValueChangedCallback(evt => { value.IsShared = evt.newValue; OnToggle(evt.newValue); NotifyValueChange(); });
             if (forceShared)
             {
                 toggle.value = true;
@@ -80,7 +80,7 @@ namespace Kurisu.AkiBT.Editor
             int index = list.IndexOf(value.Name);
             nameDropdown = new DropdownField(bindType.Name, list, index);
             nameDropdown.RegisterCallback<MouseEnterEvent>((evt) => { nameDropdown.choices = GetList(treeView); });
-            nameDropdown.RegisterValueChangedCallback(evt => { value.Name = evt.newValue; BindProperty(); });
+            nameDropdown.RegisterValueChangedCallback(evt => { value.Name = evt.newValue; BindProperty(); NotifyValueChange(); });
             foldout.Insert(0, nameDropdown);
         }
         private void RemoveNameDropDown()
@@ -96,9 +96,9 @@ namespace Kurisu.AkiBT.Editor
         private void AddValueField()
         {
             ValueField = CreateValueField();
-            ValueField.RegisterValueChangedCallback(evt => value.Value = evt.newValue);
+            ValueField.RegisterValueChangedCallback(evt => { value.Value = evt.newValue; NotifyValueChange(); });
             if (value != null) ValueField.value = value.Value;
-            this.foldout.Insert(0, ValueField);
+            foldout.Insert(0, ValueField);
         }
         protected abstract BaseField<K> CreateValueField();
         public sealed override T value
@@ -118,7 +118,14 @@ namespace Kurisu.AkiBT.Editor
             if (ValueField != null) ValueField.value = value.Value;
             BindProperty();
             OnToggle(value.IsShared);
+            NotifyValueChange();
             OnValueUpdate();
+        }
+        protected void NotifyValueChange()
+        {
+            using ChangeEvent<T> changeEvent = ChangeEvent<T>.GetPooled(value, value);
+            changeEvent.target = this;
+            SendEvent(changeEvent);
         }
         protected virtual void OnValueUpdate() { }
     }
