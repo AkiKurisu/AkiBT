@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public interface IBinaryTreeNode
+    public interface ILayoutTreeNode
     {
         VisualElement View { get; }
-        IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren();
+        IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren();
     }
     /// <summary>
     /// Modfied from https://gitee.com/NKG_admin/NKGMobaBasedOnET/tree/master/Unity/Assets/Model/NKGMOBA/Helper/NodeGraph/Core
@@ -16,10 +16,10 @@ namespace Kurisu.AkiBT.Editor
         /// 节点间的距离
         /// </summary>
         float SiblingDistance { get; }
-        IBinaryTreeNode PrimRootNode { get; }
+        ILayoutTreeNode PrimRootNode { get; }
         NodeAutoLayouter.TreeNode LayoutRootNode { get; }
 
-        INodeForLayoutConvertor Init(IBinaryTreeNode primRootNode);
+        INodeForLayoutConvertor Init(ILayoutTreeNode primRootNode);
         NodeAutoLayouter.TreeNode PrimNode2LayoutNode();
         void LayoutNode2PrimNode();
     }

@@ -72,13 +72,13 @@ namespace Kurisu.AkiBT.Editor
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
         }
-        public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        public override IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
             if (!Child.connected)
             {
-                return new List<IBinaryTreeNode>();
+                return new List<ILayoutTreeNode>();
             }
-            return new List<IBinaryTreeNode>() { PortHelper.FindChildNode(Child) as IBinaryTreeNode };
+            return new List<ILayoutTreeNode>() { PortHelper.FindChildNode(Child) as ILayoutTreeNode };
         }
     }
 }

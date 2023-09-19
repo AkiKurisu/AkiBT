@@ -82,9 +82,9 @@ namespace Kurisu.AkiBT.Editor
                 node.ClearStyle();
             }
         }
-        public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        public override IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
-            return ChildPorts.Where(x => x.connected).Select(x => PortHelper.FindChildNode(x)).OfType<IBinaryTreeNode>().Reverse().ToList();
+            return ChildPorts.Where(x => x.connected).Select(x => PortHelper.FindChildNode(x)).OfType<ILayoutTreeNode>().Reverse().ToList();
         }
     }
 }

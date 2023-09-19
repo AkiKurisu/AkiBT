@@ -30,9 +30,9 @@ namespace Kurisu.AkiBT.Editor
         protected override void OnClearStyle()
         {
         }
-        public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        public override IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
-            return new List<IBinaryTreeNode>();
+            return new List<ILayoutTreeNode>();
         }
     }
 }

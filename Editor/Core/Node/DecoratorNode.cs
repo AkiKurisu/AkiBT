@@ -59,13 +59,13 @@ namespace Kurisu.AkiBT.Editor
         {
             cache?.ClearStyle();
         }
-        public override IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        public override IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
             if (!childPort.connected)
             {
-                return new List<IBinaryTreeNode>();
+                return new List<ILayoutTreeNode>();
             }
-            return new List<IBinaryTreeNode>() { childPort.connections.First().input.node as IBinaryTreeNode };
+            return new List<ILayoutTreeNode>() { childPort.connections.First().input.node as ILayoutTreeNode };
         }
     }
 }

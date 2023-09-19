@@ -9,7 +9,7 @@ using System;
 using UnityEditor.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class BehaviorTreeView : GraphView, ITreeView, IBinaryTreeNode
+    public class BehaviorTreeView : GraphView, ITreeView, ILayoutTreeNode
     {
         public Blackboard _blackboard;
         protected readonly IBehaviorTree behaviorTree;
@@ -422,9 +422,9 @@ namespace Kurisu.AkiBT.Editor
             }
         }
 
-        public IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        public IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
-            return new List<IBinaryTreeNode>() { root };
+            return new List<ILayoutTreeNode>() { root };
         }
     }
 }

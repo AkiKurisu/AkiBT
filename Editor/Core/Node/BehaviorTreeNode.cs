@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT.Editor
         void ClearStyle();
         IFieldResolver GetFieldResolver(string fieldName);
     }
-    public abstract class BehaviorTreeNode : Node, IBinaryTreeNode, IBehaviorTreeNode
+    public abstract class BehaviorTreeNode : Node, ILayoutTreeNode, IBehaviorTreeNode
     {
         public Node View => this;
         public string GUID => guid;
@@ -43,7 +43,7 @@ namespace Kurisu.AkiBT.Editor
         public Action<IBehaviorTreeNode> OnSelectAction { get; set; }
         protected ITreeView mapTreeView;
         protected bool noValidate;
-        VisualElement IBinaryTreeNode.View => this;
+        VisualElement ILayoutTreeNode.View => this;
         public override void OnSelected()
         {
             base.OnSelected();
@@ -264,6 +264,6 @@ namespace Kurisu.AkiBT.Editor
             }));
         }
 
-        public abstract IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren();
+        public abstract IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren();
     }
 }

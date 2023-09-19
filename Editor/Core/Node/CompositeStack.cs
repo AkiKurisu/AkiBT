@@ -46,7 +46,7 @@ namespace Kurisu.AkiBT.Editor
             evt.StopPropagation();
         }
     }
-    public abstract class CompositeStack : StackNode, IBehaviorTreeNode, IBinaryTreeNode
+    public abstract class CompositeStack : StackNode, IBehaviorTreeNode, ILayoutTreeNode
     {
         public CompositeStack() : base()
         {
@@ -89,7 +89,7 @@ namespace Kurisu.AkiBT.Editor
         private readonly List<FieldInfo> fieldInfos = new();
         public Action<IBehaviorTreeNode> OnSelectAction { get; set; }
 
-        VisualElement IBinaryTreeNode.View => this;
+        VisualElement ILayoutTreeNode.View => this;
 
         protected ITreeView mapTreeView;
         public IFieldResolver GetFieldResolver(string fieldName)
@@ -276,16 +276,16 @@ namespace Kurisu.AkiBT.Editor
             }));
         }
 
-        public IReadOnlyList<IBinaryTreeNode> GetBinaryTreeChildren()
+        public IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
-            var list = new List<IBinaryTreeNode>();
+            var list = new List<ILayoutTreeNode>();
             contentContainer
             .Query<BehaviorTreeNode>()
             .ToList()
-            .OfType<IBinaryTreeNode>()
+            .OfType<ILayoutTreeNode>()
             .Reverse()
             .ToList()
-            .ForEach(x => list.AddRange(x.GetBinaryTreeChildren()));
+            .ForEach(x => list.AddRange(x.GetLayoutTreeChildren()));
             return list;
         }
     }

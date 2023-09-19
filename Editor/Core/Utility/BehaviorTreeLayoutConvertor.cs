@@ -7,10 +7,10 @@ namespace Kurisu.AkiBT.Editor
         public float SiblingDistance { get; private set; }
         private NodeAutoLayouter.TreeNode m_LayoutRootNode;
         public NodeAutoLayouter.TreeNode LayoutRootNode => m_LayoutRootNode;
-        public IBinaryTreeNode PrimRootNode => m_PrimRootNode;
-        private IBinaryTreeNode m_PrimRootNode;
+        public ILayoutTreeNode PrimRootNode => m_PrimRootNode;
+        private ILayoutTreeNode m_PrimRootNode;
         private const NodeAutoLayouter.CalculateMode CalculateMode = NodeAutoLayouter.CalculateMode.Horizontal | NodeAutoLayouter.CalculateMode.Positive;
-        public INodeForLayoutConvertor Init(IBinaryTreeNode primRootNode)
+        public INodeForLayoutConvertor Init(ILayoutTreeNode primRootNode)
         {
             m_PrimRootNode = primRootNode;
             SiblingDistance = BehaviorTreeSetting.GetOrCreateSettings().AutoLayoutSiblingDistance;
@@ -35,11 +35,11 @@ namespace Kurisu.AkiBT.Editor
             return m_LayoutRootNode;
         }
 
-        private void Convert2LayoutNode(IBinaryTreeNode rootPrimNode,
+        private void Convert2LayoutNode(ILayoutTreeNode rootPrimNode,
             NodeAutoLayouter.TreeNode rootLayoutNode, float lastHeightPoint,
             NodeAutoLayouter.CalculateMode calculateMode)
         {
-            foreach (var childNode in rootPrimNode.GetBinaryTreeChildren())
+            foreach (var childNode in rootPrimNode.GetLayoutTreeChildren())
             {
                 NodeAutoLayouter.TreeNode childLayoutNode =
                     new(childNode.View.layout.height + SiblingDistance, childNode.View.layout.width,
@@ -53,18 +53,18 @@ namespace Kurisu.AkiBT.Editor
 
         public void LayoutNode2PrimNode()
         {
-            var rootNode = m_PrimRootNode.GetBinaryTreeChildren()[0];
+            var rootNode = m_PrimRootNode.GetLayoutTreeChildren()[0];
             var offSet = (rootNode.View as GraphElement).contentRect.position - m_LayoutRootNode.children[0].GetPos() + new Vector2(400, 300);
             Convert2PrimNode(rootNode, m_LayoutRootNode.children[0], offSet);
         }
 
         private void Convert2PrimNode(
-            IBinaryTreeNode rootPrimNode,
+            ILayoutTreeNode rootPrimNode,
             NodeAutoLayouter.TreeNode rootLayoutNode,
             Vector2 offSet
         )
         {
-            var children = rootPrimNode.GetBinaryTreeChildren();
+            var children = rootPrimNode.GetLayoutTreeChildren();
             for (int i = 0; i < rootLayoutNode.children.Count; i++)
             {
                 Convert2PrimNode(children[i], rootLayoutNode.children[i], offSet);
