@@ -63,14 +63,14 @@ namespace Kurisu.AkiBT.Editor
             if (IsShared)
             {
                 RemoveNameDropDown();
-                if (nameDropdown == null && value != null && treeView != null) AddNameDropDown();
+                if (value != null && treeView != null) AddNameDropDown();
                 RemoveValueField();
             }
             else
             {
                 RemoveNameDropDown();
                 RemoveValueField();
-                if (ValueField == null) AddValueField();
+                AddValueField();
             }
         }
         private void AddNameDropDown()
@@ -108,11 +108,11 @@ namespace Kurisu.AkiBT.Editor
                 if (value != null) base.value = value.Clone() as T;
                 else base.value = new T();
                 if (forceShared) base.value.IsShared = true;
-                UpdateValue();
+                Repaint();
             }
         }
         protected BaseField<K> ValueField { get; set; }
-        private void UpdateValue()
+        public void Repaint()
         {
             toggle.value = value.IsShared;
             if (ValueField != null) ValueField.value = value.Value;

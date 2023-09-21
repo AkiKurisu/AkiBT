@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
-    public class ConditionalNode : BehaviorTreeNode
+    public class ConditionalNode : BehaviorTreeNode, IChildPortable
     {
         private readonly Port childPort;
 

@@ -43,7 +43,7 @@ namespace Kurisu.AkiBT.Editor
             foldout.style.flexDirection = FlexDirection.Row;
             contentContainer.Add(foldout);
             toggle = new Toggle("Is Shared");
-            toggle.RegisterValueChangedCallback(evt => { value.IsShared = evt.newValue; OnToggle(evt.newValue); });
+            toggle.RegisterValueChangedCallback(evt => { value.IsShared = evt.newValue; OnToggle(evt.newValue); NotifyValueChange(); });
             if (forceShared)
             {
                 toggle.value = true;
@@ -81,21 +81,21 @@ namespace Kurisu.AkiBT.Editor
             if (IsShared)
             {
                 RemoveNameDropDown();
-                if (nameDropdown == null && value != null && treeView != null) AddNameDropDown();
+                if (value != null && treeView != null) AddNameDropDown();
                 RemoveValueField();
             }
             else
             {
                 RemoveNameDropDown();
                 RemoveValueField();
-                if (ValueField == null) AddValueField();
+                AddValueField();
             }
         }
         private void AddNameDropDown()
         {
             nameDropdown = new DropdownField($"Shared {typeof(T).Name}", GetList(treeView), value.Name ?? string.Empty);
             nameDropdown.RegisterCallback<MouseEnterEvent>((evt) => { nameDropdown.choices = GetList(treeView); });
-            nameDropdown.RegisterValueChangedCallback(evt => { value.Name = evt.newValue; BindProperty(); });
+            nameDropdown.RegisterValueChangedCallback(evt => { value.Name = evt.newValue; BindProperty(); NotifyValueChange(); });
             foldout.Insert(0, nameDropdown);
         }
         private void RemoveNameDropDown()
@@ -114,7 +114,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 objectType = typeof(T)
             };
-            ValueField.RegisterValueChangedCallback(evt => value.Value = (T)evt.newValue);
+            ValueField.RegisterValueChangedCallback(evt => { value.Value = (T)evt.newValue; NotifyValueChange(); });
             if (value != null) ValueField.value = value.Value;
             foldout.Insert(0, ValueField);
         }
@@ -125,16 +125,23 @@ namespace Kurisu.AkiBT.Editor
                 if (value != null) base.value = value.Clone() as SharedTObject<T>;
                 else base.value = new SharedTObject<T>();
                 if (forceShared) base.value.IsShared = true;
-                UpdateValue();
+                Repaint();
             }
         }
         private ObjectField ValueField { get; set; }
-        private void UpdateValue()
+        public void Repaint()
         {
             toggle.value = value.IsShared;
             if (ValueField != null) ValueField.value = value.Value;
             BindProperty();
             OnToggle(value.IsShared);
+            NotifyValueChange();
+        }
+        protected void NotifyValueChange()
+        {
+            using ChangeEvent<SharedTObject<T>> changeEvent = ChangeEvent<SharedTObject<T>>.GetPooled(value, value);
+            changeEvent.target = this;
+            SendEvent(changeEvent);
         }
     }
 }

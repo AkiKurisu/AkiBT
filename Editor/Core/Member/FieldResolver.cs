@@ -39,13 +39,13 @@ namespace Kurisu.AkiBT.Editor
     {
         private readonly FieldInfo fieldInfo;
         private T editorField;
+        public T EditorField => editorField;
         public object Value => editorField.value;
-        protected FieldResolver(FieldInfo fieldInfo)
+        public FieldResolver(FieldInfo fieldInfo)
         {
             this.fieldInfo = fieldInfo;
             SetEditorField();
         }
-
         private void SetEditorField()
         {
             editorField = CreateEditorField(fieldInfo);
