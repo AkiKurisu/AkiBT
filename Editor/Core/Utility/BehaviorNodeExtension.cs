@@ -5,26 +5,10 @@ namespace Kurisu.AkiBT.Editor
 {
     public static class BehaviorNodeExtension
     {
-        public static string GetSharedStringValue(this IBehaviorTreeNode node, ITreeView treeView, string fieldName)
-        {
-            return node.GetSharedVariableValue<string>(treeView, fieldName) ?? string.Empty;
-        }
-        public static int GetSharedIntValue(this IBehaviorTreeNode node, ITreeView treeView, string fieldName)
-        {
-            return node.GetSharedVariableValue<int>(treeView, fieldName);
-        }
-        public static float GetSharedFloatValue(this IBehaviorTreeNode node, ITreeView treeView, string fieldName)
-        {
-            return node.GetSharedVariableValue<float>(treeView, fieldName);
-        }
-        public static Vector3 GetSharedVector3Value(this IBehaviorTreeNode node, ITreeView treeView, string fieldName)
-        {
-            return node.GetSharedVariableValue<Vector3>(treeView, fieldName);
-        }
-        public static T GetSharedVariableValue<T>(this IBehaviorTreeNode node, ITreeView treeView, string fieldName)
+        public static T GetSharedVariableValue<T>(this IBehaviorTreeNode node, string fieldName)
         {
             var sharedVariable = node.GetSharedVariable<SharedVariable<T>>(fieldName);
-            return sharedVariable != null ? treeView.GetSharedVariableValue(sharedVariable) : default;
+            return sharedVariable != null ? node.MapTreeView.GetSharedVariableValue(sharedVariable) : default;
         }
         public static T GetSharedVariable<T>(this IBehaviorTreeNode node, string fieldName) where T : SharedVariable
         {

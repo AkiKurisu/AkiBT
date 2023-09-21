@@ -91,7 +91,7 @@ namespace Kurisu.AkiBT.Editor
 
         VisualElement ILayoutTreeNode.View => this;
 
-        protected ITreeView mapTreeView;
+        public ITreeView MapTreeView { get; private set; }
         public IFieldResolver GetFieldResolver(string fieldName)
         {
             int index = fieldInfos.FindIndex(x => x.Name == fieldName);
@@ -134,7 +134,7 @@ namespace Kurisu.AkiBT.Editor
             .ForEach(
                 x =>
                 {
-                    var newNode = mapTreeView.DuplicateNode(x);
+                    var newNode = MapTreeView.DuplicateNode(x);
                     if (x is IChildPortable portable)
                         copyMapCache[x.GetHashCode()] = portable;
                     AddElement(newNode.View);
@@ -195,7 +195,7 @@ namespace Kurisu.AkiBT.Editor
         }
         public void SetBehavior(Type nodeBehavior, ITreeView ownerTreeView = null)
         {
-            if (ownerTreeView != null) mapTreeView = ownerTreeView;
+            if (ownerTreeView != null) MapTreeView = ownerTreeView;
             if (dirtyNodeBehaviorType != null)
             {
                 dirtyNodeBehaviorType = null;
@@ -216,7 +216,7 @@ namespace Kurisu.AkiBT.Editor
                     var fieldResolver = fieldResolverFactory.Create(p);
                     fieldResolver.Restore(defaultValue);
 
-                    fieldContainer.Add(fieldResolver.GetEditorField(mapTreeView));
+                    fieldContainer.Add(fieldResolver.GetEditorField(MapTreeView));
 
                     resolvers.Add(fieldResolver);
                     fieldInfos.Add(p);
@@ -264,15 +264,15 @@ namespace Kurisu.AkiBT.Editor
         {
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>
             {
-                mapTreeView.DuplicateNode(this);
+                MapTreeView.DuplicateNode(this);
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Select Group", (a) =>
             {
-                mapTreeView.SelectGroup(this);
+                MapTreeView.SelectGroup(this);
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("UnSelect Group", (a) =>
             {
-                mapTreeView.UnSelectGroup();
+                MapTreeView.UnSelectGroup();
             }));
         }
 
