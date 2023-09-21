@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using UnityEditor;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using Newtonsoft.Json;
@@ -8,13 +9,35 @@ namespace Kurisu.AkiBT
 {
     public class BehaviorTreeSerializeUtility
     {
+        private struct UObject
+        {
+            public int instanceID;
+        }
         public static string SerializeTree(IBehaviorTree behaviorTree, bool indented = false, bool serializeEditorData = false)
         {
             return TemplateToIL(TreeToTemplate(behaviorTree), indented, serializeEditorData);
         }
         public static BehaviorTreeTemplate DeserializeTree(string serializedData)
         {
+#if UNITY_EDITOR
+            JObject obj = JObject.Parse(serializedData);
+            foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
+            {
+                if (prop.Name == "instanceID")
+                {
+                    var UObject = AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath((string)prop.Value));
+                    if (UObject == null)
+                    {
+                        prop.Value = 0;
+                        continue;
+                    }
+                    prop.Value = UObject.GetInstanceID();
+                }
+            }
+            return JsonUtility.FromJson<BehaviorTreeTemplate>(obj.ToString(Formatting.Indented));
+#else
             return JsonUtility.FromJson<BehaviorTreeTemplate>(serializedData);
+#endif
         }
         public static BehaviorTreeTemplate TreeToTemplate(IBehaviorTree behaviorTree)
         {
@@ -25,10 +48,10 @@ namespace Kurisu.AkiBT
         {
             var json = JsonUtility.ToJson(template);
 #if UNITY_EDITOR
-            //Remove editor only fields in behaviorTree manually
             JObject obj = JObject.Parse(json);
             foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
             {
+                //Remove editor only fields in behaviorTree manually
                 if (!serializeEditorData)
                     if (prop.Name == "graphPosition" || prop.Name == "description" || prop.Name == "guid")
                     {
@@ -38,12 +61,20 @@ namespace Kurisu.AkiBT
                 {
                     string propertyName = prop.Name;
                     if (prop.Parent?.Parent != null) propertyName = (prop.Parent?.Parent as JProperty).Name;
-                    Debug.LogWarning($"<color=#fcbe03>{template.TemplateName}</color> :  Can't serialize UnityEngine.Object field for {propertyName}, desearialization may be failed !");
+                    var UObject = EditorUtility.InstanceIDToObject((int)prop.Value);
+                    if (UObject == null) continue;
+                    string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
+                    if (string.IsNullOrEmpty(guid))
+                    {
+                        Debug.LogWarning($"<color=#fcbe03>{template.TemplateName}</color> :  Can't serialize UnityEngine.Object field : {propertyName}");
+                        continue;
+                    }
+                    //Convert to GUID
+                    prop.Value = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
                 }
             }
             return obj.ToString(indented ? Formatting.Indented : Formatting.None);
 #else
-            //Don't need remove in build version as those fields won't be serialized
             return json;
 #endif
         }

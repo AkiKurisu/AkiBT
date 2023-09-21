@@ -29,7 +29,7 @@ AkiBT is a visual node editor derived from UniBT created by Yoshida for making b
 
 Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
 
-<img src="Images/demo.jpg" />
+   <img src="Images/demo.jpg" />
 
 1. Add `AkiBT.BehaviorTree` component for any GameObject.  
    <img src="Images/started1.png" width="480"/>
@@ -90,16 +90,19 @@ Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
 
     You can edit the setting in ProjectSetting where you can add mask for the node group you want to see in the SearchWindow.To be mentioned,the mask is relating to the editor you used.As default,the AkiBT editor is named with 'AkiBT',so you should edit the 'EditorName' with it. 
 
-<img src="Images/Setting.png" width="480"/>
+   <img src="Images/Setting.png" width="480"/>
 
+4. 序列化最佳实践：在Editor中使用Json序列化会保存引用``UnityEngine.Object``（以下简称UObject）对象的GUID，Runtime时Json反序列时无法获取UObject对象，你需要在Runtime通过别的方式加载所需要的UObject对象，例如将行为树中对UObject的引用全部改为SharedTObject和SharedObject，在Runtime通过其名称从你的资源加载方案中获取，例如Addressable的资源地址或AssetBundle的文件路径。
+
+   Serialization best practice: Using Json serialization in the Editor will save the GUID that refers to the ``UnityEngine.Object ``(hereinafter referred to as UObject) object. The UObject object cannot be obtained when Json is deserialized at runtime. You need to load the required objects in other ways at runtime. UObject objects, for example, change all references to UObject in the behavior tree to SharedTObject and SharedObject, and obtain them from your resource loading scheme through their names at runtime, such as the resource address of Addressable or the file path of AssetBundle.
 
 ## 拓展功能 Extra Module
 
 1. 运行时更新 Runtime Update Support
    
-   你可以使用[AkiBTVM](https://github.com/AkiKurisu/AkiBTVM)实现运行时编辑行为树
+   你可以使用[AkiBTDSL](https://github.com/AkiKurisu/AkiBTDSL)实现运行时或在项目外编辑行为树
 
-   You can have access to runtime-updating by using [AkiBTVM](https://github.com/AkiKurisu/AkiBTVM) 
+   You can have access to runtime-updating or editing outside project by using [AkiBTDSL](https://github.com/AkiKurisu/AkiBTDSL) 
 
 2. 开发便捷服务 User Service
 
