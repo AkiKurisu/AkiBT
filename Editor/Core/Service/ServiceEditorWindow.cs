@@ -95,7 +95,7 @@ namespace Kurisu.AkiBT.Editor
                     AssetDatabase.Refresh();
                 }
             }
-            if (GUILayout.Button(new GUIContent("Unbind All", "This will unbind all json files, not delating")))
+            if (GUILayout.Button(new GUIContent("Unbind All", "This will unbind all json files, not delate")))
             {
                 foreach (var pair in serviceData.serializationCollection.serializationPairs)
                 {
@@ -172,7 +172,7 @@ namespace Kurisu.AkiBT.Editor
             string path = EditorUtility.OpenFolderPanel("Select json files import path", Application.dataPath, "");
             if (string.IsNullOrEmpty(path)) return;
             string[] subDirectories = Directory.GetDirectories(path);
-            List<string> configPaths = new List<string>();
+            List<string> configPaths = new();
             foreach (var directory in subDirectories)
             {
                 string[] files = Directory.GetFiles(directory);

@@ -7,8 +7,8 @@ namespace Kurisu.AkiBT.Editor
     public class DragDropManipulator : PointerManipulator
     {
         private UnityEngine.Object droppedObject = null;
-        public Action<UnityEngine.Object, Vector3> OnDragOver;
-        public DragDropManipulator(Action<UnityEngine.Object, Vector3> OnDragOver)
+        public Action<UnityEngine.Object, Vector2> OnDragOver;
+        public DragDropManipulator(Action<UnityEngine.Object, Vector2> OnDragOver)
         {
             this.OnDragOver = OnDragOver;
         }

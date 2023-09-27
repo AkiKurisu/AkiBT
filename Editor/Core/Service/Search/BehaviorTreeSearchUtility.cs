@@ -12,8 +12,8 @@ namespace Kurisu.AkiBT.Editor
         public static List<BehaviorTreeSerializationPair> SearchBehaviorTreeSO(Type searchType, BehaviorTreeServiceData serviceData, List<BehaviorTreeSO> searchList)
         {
             if (serviceData == null) serviceData = BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
-            if (searchList == null) searchList = GetAllBehaviorTreeSO();
-            Stack<NodeBehavior> stack = new Stack<NodeBehavior>();
+            searchList ??= GetAllBehaviorTreeSO();
+            Stack<NodeBehavior> stack = new();
             List<BehaviorTreeSO> behaviorTreeSOs = new();
             List<BehaviorTreeSerializationPair> pairs = new();
             foreach (var treeSO in searchList)

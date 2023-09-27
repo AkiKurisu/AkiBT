@@ -244,7 +244,7 @@ namespace Kurisu.AkiBT.Editor
             }
             return compatiblePorts;
         }
-        protected void CopyFromObject(UnityEngine.Object data, Vector3 mousePosition)
+        public void CopyFromObject(UnityEngine.Object data, Vector2 mousePosition)
         {
             if (data is GameObject gameObject)
             {
@@ -273,7 +273,7 @@ namespace Kurisu.AkiBT.Editor
             _window.ShowNotification(new GUIContent("Data Dropped Succeed !"));
             CopyFromTree(data as IBehaviorTree, mousePosition);
         }
-        internal protected void CopyFromTree(IBehaviorTree otherTree, Vector2 mousePosition)
+        public void CopyFromTree(IBehaviorTree otherTree, Vector2 mousePosition)
         {
             var localMousePosition = contentViewContainer.WorldToLocal(mousePosition) - new Vector2(400, 300);
             IEnumerable<IBehaviorTreeNode> nodes;
@@ -414,7 +414,7 @@ namespace Kurisu.AkiBT.Editor
         {
             return BehaviorTreeSerializeUtility.SerializeTree(behaviorTree, false, true);
         }
-        internal protected bool CopyFromJson(string serializedData, Vector3 mousePosition)
+        public bool CopyFromJson(string serializedData, Vector3 mousePosition)
         {
             var temp = ScriptableObject.CreateInstance<BehaviorTreeSO>();
             try
