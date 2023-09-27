@@ -9,10 +9,6 @@ namespace Kurisu.AkiBT
 {
     public class BehaviorTreeSerializeUtility
     {
-        private struct UObject
-        {
-            public int instanceID;
-        }
         public static string SerializeTree(IBehaviorTree behaviorTree, bool indented = false, bool serializeEditorData = false)
         {
             return TemplateToIL(TreeToTemplate(behaviorTree), indented, serializeEditorData);
