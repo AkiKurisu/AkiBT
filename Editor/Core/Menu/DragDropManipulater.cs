@@ -1,16 +1,16 @@
+using System;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
     public class DragDropManipulator : PointerManipulator
     {
-        private Object droppedObject = null;
-        public event System.Action<Object,Vector3> OnDragOverEvent;
-        public DragDropManipulator(GraphView root)
+        private UnityEngine.Object droppedObject = null;
+        public Action<UnityEngine.Object, Vector3> OnDragOver;
+        public DragDropManipulator(Action<UnityEngine.Object, Vector3> OnDragOver)
         {
-            target = root;
+            this.OnDragOver = OnDragOver;
         }
 
         protected override void RegisterCallbacksOnTarget()
@@ -48,7 +48,7 @@ namespace Kurisu.AkiBT.Editor
             }
         }
 
-        
+
 
         // This method runs if a user makes the pointer leave the bounds of the target while a drag is in progress.
         private void OnDragLeave(DragLeaveEvent _)
@@ -66,12 +66,12 @@ namespace Kurisu.AkiBT.Editor
         private void OnDragPerform(DragPerformEvent _)
         {
             // Set droppedObject and draggedName fields to refer to dragged object.
-            if(DragAndDrop.objectReferences.Length==0)return;
+            if (DragAndDrop.objectReferences.Length == 0) return;
             droppedObject = DragAndDrop.objectReferences[0];
             Event currentEvent = Event.current;
-            OnDragOverEvent?.Invoke(droppedObject,currentEvent.mousePosition);        
-            droppedObject=null;
+            OnDragOver(droppedObject, currentEvent.mousePosition);
+            droppedObject = null;
         }
-    
+
     }
 }

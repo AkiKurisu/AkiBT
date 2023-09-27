@@ -32,7 +32,6 @@ namespace Kurisu.AkiBT.Editor
         public Action<IBehaviorTreeNode> onSelectAction;
         private readonly EditorWindow _window;
         private readonly BehaviorNodeConverter converter = new();
-        private readonly DragDropManipulator dragDropManipulator;
         public VisualElement View => this;
         public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
         {
@@ -50,13 +49,7 @@ namespace Kurisu.AkiBT.Editor
                 button = MouseButton.MiddleMouse,
             });
             // 添加选框
-            this.AddManipulator(new SelectionDragger());
-            this.AddManipulator(new RectangleSelector());
-            this.AddManipulator(new FreehandSelector());
-            this.AddManipulator(contentDragger);
-            dragDropManipulator = new DragDropManipulator(this);
-            dragDropManipulator.OnDragOverEvent += CopyFromObject;
-            this.AddManipulator(dragDropManipulator);
+            AddManipulators();
             provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
             provider.Initialize(this, editor, BehaviorTreeSetting.GetMask(TreeEditorName));
             nodeCreationRequest += context =>
@@ -66,6 +59,20 @@ namespace Kurisu.AkiBT.Editor
             serializeGraphElements += CopyOperation;
             canPasteSerializedData += (data) => true;
             unserializeAndPaste += OnPaste;
+        }
+        protected virtual void AddManipulators()
+        {
+            this.AddManipulator(new SelectionDragger());
+            this.AddManipulator(new RectangleSelector());
+            this.AddManipulator(new FreehandSelector());
+            var contentDragger = new ContentDragger();
+            //鼠标中键移动
+            contentDragger.activators.Add(new ManipulatorActivationFilter()
+            {
+                button = MouseButton.MiddleMouse,
+            });
+            this.AddManipulator(contentDragger);
+            this.AddManipulator(new DragDropManipulator(CopyFromObject));
         }
         private string CopyOperation(IEnumerable<GraphElement> elements)
         {
@@ -104,7 +111,7 @@ namespace Kurisu.AkiBT.Editor
         }
         public GroupBlock CreateBlock(Rect rect, GroupBlockData blockData = null)
         {
-            if (blockData == null) blockData = new GroupBlockData();
+            blockData ??= new GroupBlockData();
             var group = new GroupBlock
             {
                 autoUpdateGeometry = true,
@@ -237,14 +244,14 @@ namespace Kurisu.AkiBT.Editor
             }
             return compatiblePorts;
         }
-        private void CopyFromObject(UnityEngine.Object data, Vector3 mousePosition)
+        protected void CopyFromObject(UnityEngine.Object data, Vector3 mousePosition)
         {
             if (data is GameObject gameObject)
             {
                 if (gameObject.TryGetComponent(out IBehaviorTree tree))
                 {
                     _window.ShowNotification(new GUIContent("GameObject Dropped Succeed !"));
-                    CopyFromOtherTree(tree, mousePosition);
+                    CopyFromTree(tree, mousePosition);
                     return;
                 }
                 _window.ShowNotification(new GUIContent("Invalid Drag GameObject !"));
@@ -252,7 +259,7 @@ namespace Kurisu.AkiBT.Editor
             }
             if (data is TextAsset asset)
             {
-                if (CopyFromJsonFile(asset.text, mousePosition))
+                if (CopyFromJson(asset.text, mousePosition))
                     _window.ShowNotification(new GUIContent("Text Asset Dropped Succeed !"));
                 else
                     _window.ShowNotification(new GUIContent("Invalid Drag Text Asset !"));
@@ -264,9 +271,9 @@ namespace Kurisu.AkiBT.Editor
                 return;
             }
             _window.ShowNotification(new GUIContent("Data Dropped Succeed !"));
-            CopyFromOtherTree(data as IBehaviorTree, mousePosition);
+            CopyFromTree(data as IBehaviorTree, mousePosition);
         }
-        internal protected void CopyFromOtherTree(IBehaviorTree otherTree, Vector2 mousePosition)
+        internal protected void CopyFromTree(IBehaviorTree otherTree, Vector2 mousePosition)
         {
             var localMousePosition = contentViewContainer.WorldToLocal(mousePosition) - new Vector2(400, 300);
             IEnumerable<IBehaviorTreeNode> nodes;
@@ -329,7 +336,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 if (select is not IBehaviorTreeNode) continue;
                 var node = select as Node;
-                var block = graphElements.ToList().OfType<GroupBlock>().FirstOrDefault(x => x.ContainsElement(node));
+                var block = graphElements.OfType<GroupBlock>().FirstOrDefault(x => x.ContainsElement(node));
                 block?.RemoveElement(node);
             }
         }
@@ -383,7 +390,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 behaviorTree.SharedVariables.Add(sharedVariable);
             }
-            List<GroupBlock> NodeBlocks = graphElements.ToList().OfType<GroupBlock>().ToList();
+            List<GroupBlock> NodeBlocks = graphElements.OfType<GroupBlock>().ToList();
             behaviorTree.BlockData.Clear();
             foreach (var block in NodeBlocks)
             {
@@ -407,13 +414,13 @@ namespace Kurisu.AkiBT.Editor
         {
             return BehaviorTreeSerializeUtility.SerializeTree(behaviorTree, false, true);
         }
-        internal bool CopyFromJsonFile(string serializedData, Vector3 mousePosition)
+        internal protected bool CopyFromJson(string serializedData, Vector3 mousePosition)
         {
             var temp = ScriptableObject.CreateInstance<BehaviorTreeSO>();
             try
             {
                 temp.Deserialize(serializedData);
-                CopyFromOtherTree(temp, mousePosition);
+                CopyFromTree(temp, mousePosition);
                 return true;
             }
             catch

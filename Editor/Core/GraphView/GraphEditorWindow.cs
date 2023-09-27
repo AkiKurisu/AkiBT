@@ -90,7 +90,7 @@ namespace Kurisu.AkiBT.Editor
             window.graphView.onSelectAction = window.OnNodeSelectionChange;//绑定委托
             GenerateBlackBoard(window.graphView);
             window.graphView.Restore();
-            window.rootVisualElement.Add(window.CreateToolBar(window.graphView));
+            window.rootVisualElement.Add(window.CreateToolBar());
             window.rootVisualElement.Add(window.graphView);
         }
 
@@ -138,7 +138,7 @@ namespace Kurisu.AkiBT.Editor
             _graphView.Add(blackboard);
             _graphView._blackboard = blackboard;
         }
-        private void SaveDataToSO(string path)
+        private void SaveToSO(string path)
         {
             var treeSO = CreateInstance(SOType);
             if (!graphView.Save())
@@ -202,104 +202,112 @@ namespace Kurisu.AkiBT.Editor
                 Repaint();
             }
         }
-        private VisualElement CreateToolBar(BehaviorTreeView graphView)
+        private VisualElement CreateToolBar()
         {
             return new IMGUIContainer(
                 () =>
                 {
                     GUILayout.BeginHorizontal(EditorStyles.toolbar);
-
-                    if (!Application.isPlaying)
-                    {
-                        if (GUILayout.Button($"Save {TreeName}", EditorStyles.toolbarButton))
-                        {
-                            var guiContent = new GUIContent();
-                            if (graphView.Save())
-                            {
-                                guiContent.text = $"Update {TreeName} Succeed!";
-                                ShowNotification(guiContent);
-                            }
-                            else
-                            {
-                                guiContent.text = $"Invalid {TreeName}, please check the node connection for errors!";
-                                ShowNotification(guiContent);
-                            }
-                        }
-                        bool newValue = GUILayout.Toggle(Setting.AutoSave, "Auto Save", EditorStyles.toolbarButton);
-                        if (newValue != Setting.AutoSave)
-                        {
-                            Setting.AutoSave = newValue;
-                            EditorUtility.SetDirty(setting);
-                            AssetDatabase.SaveAssets();
-                        }
-                        if (graphView.CanSaveToSO)
-                        {
-                            if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
-                            {
-                                string path = EditorUtility.OpenFolderPanel("Select ScriptableObject save path", Setting.LastPath, "");
-                                if (!string.IsNullOrEmpty(path))
-                                {
-                                    Setting.LastPath = path;
-                                    SaveDataToSO(path.Replace(Application.dataPath, string.Empty));
-                                }
-
-                            }
-                        }
-                        if (GUILayout.Button("Copy From SO", EditorStyles.toolbarButton))
-                        {
-                            string path = EditorUtility.OpenFilePanel("Select ScriptableObject to copy", Setting.LastPath, "asset");
-                            var data = LoadDataFromFile(path.Replace(Application.dataPath, string.Empty));
-                            if (data != null)
-                            {
-                                Setting.LastPath = path;
-                                EditorUtility.SetDirty(setting);
-                                AssetDatabase.SaveAssets();
-                                ShowNotification(new GUIContent("Data Dropped Succeed!"));
-                                graphView.CopyFromOtherTree(data, new Vector3(400, 300));
-                            }
-                        }
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("Auto Layout", EditorStyles.toolbarButton))
-                        {
-                            NodeAutoLayouter.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
-                        }
-                        if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
-                        {
-                            var serializedData = graphView.SerializeTreeToJson();
-                            string path = EditorUtility.SaveFilePanel("Select json file save path", Setting.LastPath, graphView.BehaviorTree._Object.name, "json");
-                            if (!string.IsNullOrEmpty(path))
-                            {
-                                FileInfo info = new FileInfo(path);
-                                Setting.LastPath = info.Directory.FullName;
-                                EditorUtility.SetDirty(setting);
-                                File.WriteAllText(path, serializedData);
-                                Debug.Log($"<color=#3aff48>{GraphView.TreeEditorName}</color>:Save json file succeed!");
-                                AssetDatabase.SaveAssets();
-                                AssetDatabase.Refresh();
-                            }
-                        }
-                        if (GUILayout.Button("Copy From Json", EditorStyles.toolbarButton))
-                        {
-                            string path = EditorUtility.OpenFilePanel("Select json file to copy", Setting.LastPath, "json");
-                            if (!string.IsNullOrEmpty(path))
-                            {
-                                FileInfo info = new FileInfo(path);
-                                Setting.LastPath = info.Directory.FullName;
-                                EditorUtility.SetDirty(setting);
-                                AssetDatabase.SaveAssets();
-                                var data = File.ReadAllText(path);
-                                if (graphView.CopyFromJsonFile(data, new Vector3(400, 300)))
-                                    ShowNotification(new GUIContent("Json file Read Succeed!"));
-                                else
-                                    ShowNotification(new GUIContent("Json file is in wrong format!"));
-                            }
-                        }
-                    }
+                    DrawLeftToolBar();
+                    GUILayout.FlexibleSpace();
+                    DrawRightToolBar();
                     GUILayout.EndHorizontal();
                 }
             );
         }
-        private IBehaviorTree LoadDataFromFile(string path)
+        protected virtual void DrawLeftToolBar()
+        {
+            if (Application.isPlaying) return;
+
+            if (GUILayout.Button($"Save {TreeName}", EditorStyles.toolbarButton))
+            {
+                var guiContent = new GUIContent();
+                if (graphView.Save())
+                {
+                    guiContent.text = $"Update {TreeName} Succeed!";
+                    ShowNotification(guiContent);
+                }
+                else
+                {
+                    guiContent.text = $"Invalid {TreeName}, please check the node connection for errors!";
+                    ShowNotification(guiContent);
+                }
+            }
+            bool newValue = GUILayout.Toggle(Setting.AutoSave, "Auto Save", EditorStyles.toolbarButton);
+            if (newValue != Setting.AutoSave)
+            {
+                Setting.AutoSave = newValue;
+                EditorUtility.SetDirty(setting);
+                AssetDatabase.SaveAssets();
+            }
+            if (graphView.CanSaveToSO)
+            {
+                if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
+                {
+                    string path = EditorUtility.OpenFolderPanel("Select ScriptableObject save path", Setting.LastPath, "");
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        Setting.LastPath = path;
+                        SaveToSO(path.Replace(Application.dataPath, string.Empty));
+                    }
+
+                }
+            }
+            if (GUILayout.Button("Copy From SO", EditorStyles.toolbarButton))
+            {
+                string path = EditorUtility.OpenFilePanel("Select ScriptableObject to copy", Setting.LastPath, "asset");
+                var data = LoadDataFromFile(path.Replace(Application.dataPath, string.Empty));
+                if (data != null)
+                {
+                    Setting.LastPath = path;
+                    EditorUtility.SetDirty(setting);
+                    AssetDatabase.SaveAssets();
+                    ShowNotification(new GUIContent("Data Dropped Succeed!"));
+                    graphView.CopyFromTree(data, new Vector3(400, 300));
+                }
+            }
+        }
+        protected virtual void DrawRightToolBar()
+        {
+            if (Application.isPlaying) return;
+
+            if (GUILayout.Button("Auto Layout", EditorStyles.toolbarButton))
+            {
+                NodeAutoLayouter.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
+            }
+            if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
+            {
+                var serializedData = graphView.SerializeTreeToJson();
+                string path = EditorUtility.SaveFilePanel("Select json file save path", Setting.LastPath, graphView.BehaviorTree._Object.name, "json");
+                if (!string.IsNullOrEmpty(path))
+                {
+                    FileInfo info = new(path);
+                    Setting.LastPath = info.Directory.FullName;
+                    EditorUtility.SetDirty(setting);
+                    File.WriteAllText(path, serializedData);
+                    Debug.Log($"<color=#3aff48>{GraphView.TreeEditorName}</color>:Save json file succeed!");
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.Refresh();
+                }
+            }
+            if (GUILayout.Button("Copy From Json", EditorStyles.toolbarButton))
+            {
+                string path = EditorUtility.OpenFilePanel("Select json file to copy", Setting.LastPath, "json");
+                if (!string.IsNullOrEmpty(path))
+                {
+                    FileInfo info = new(path);
+                    Setting.LastPath = info.Directory.FullName;
+                    EditorUtility.SetDirty(setting);
+                    AssetDatabase.SaveAssets();
+                    var data = File.ReadAllText(path);
+                    if (graphView.CopyFromJson(data, new Vector3(400, 300)))
+                        ShowNotification(new GUIContent("Json file Read Succeed!"));
+                    else
+                        ShowNotification(new GUIContent("Json file is in wrong format!"));
+                }
+            }
+        }
+        protected IBehaviorTree LoadDataFromFile(string path)
         {
             try
             {
@@ -308,7 +316,7 @@ namespace Kurisu.AkiBT.Editor
             }
             catch
             {
-                this.ShowNotification(new GUIContent($"Invalid Path:Assets/{path}, please pick ScriptableObject inherited from BehaviorTreeSO"));
+                ShowNotification(new GUIContent($"Invalid Path:Assets/{path}, please pick ScriptableObject inherited from BehaviorTreeSO"));
                 return null;
             }
         }
