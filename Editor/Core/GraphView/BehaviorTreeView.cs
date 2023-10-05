@@ -101,7 +101,7 @@ namespace Kurisu.AkiBT.Editor
         public IBehaviorTreeNode DuplicateNode(IBehaviorTreeNode node)
         {
             var newNode = nodeResolver.Create(node.GetBehavior(), this);
-            Rect newRect = node.View.GetPosition();
+            Rect newRect = node.GetWorldPosition();
             newRect.position += new Vector2(50, 50);
             newNode.View.SetPosition(newRect);
             newNode.OnSelectAction = onSelectAction;
