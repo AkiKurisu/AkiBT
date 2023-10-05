@@ -288,5 +288,6 @@ namespace Kurisu.AkiBT.Editor
             .ForEach(x => list.AddRange(x.GetLayoutTreeChildren()));
             return list;
         }
+        public Rect GetWorldPosition() => GetPosition();
     }
 }

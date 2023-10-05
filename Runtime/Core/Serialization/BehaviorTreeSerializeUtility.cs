@@ -16,24 +16,26 @@ namespace Kurisu.AkiBT
         public static BehaviorTreeTemplate DeserializeTree(string serializedData)
         {
 #if UNITY_EDITOR
-            JObject obj = JObject.Parse(serializedData);
-            foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
+            if (!string.IsNullOrEmpty(serializedData))
             {
-                if (prop.Name == "instanceID")
+                JObject obj = JObject.Parse(serializedData);
+                foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
                 {
-                    var UObject = AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath((string)prop.Value));
-                    if (UObject == null)
+                    if (prop.Name == "instanceID")
                     {
-                        prop.Value = 0;
-                        continue;
+                        var UObject = AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath((string)prop.Value));
+                        if (UObject == null)
+                        {
+                            prop.Value = 0;
+                            continue;
+                        }
+                        prop.Value = UObject.GetInstanceID();
                     }
-                    prop.Value = UObject.GetInstanceID();
                 }
+                return JsonUtility.FromJson<BehaviorTreeTemplate>(obj.ToString(Formatting.Indented));
             }
-            return JsonUtility.FromJson<BehaviorTreeTemplate>(obj.ToString(Formatting.Indented));
-#else
-            return JsonUtility.FromJson<BehaviorTreeTemplate>(serializedData);
 #endif
+            return JsonUtility.FromJson<BehaviorTreeTemplate>(serializedData);
         }
         public static BehaviorTreeTemplate TreeToTemplate(IBehaviorTree behaviorTree)
         {

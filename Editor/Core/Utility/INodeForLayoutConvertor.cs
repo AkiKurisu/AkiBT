@@ -17,10 +17,10 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         float SiblingDistance { get; }
         ILayoutTreeNode PrimRootNode { get; }
-        NodeAutoLayouter.TreeNode LayoutRootNode { get; }
+        NodeAutoLayoutHelper.TreeNode LayoutRootNode { get; }
 
         INodeForLayoutConvertor Init(ILayoutTreeNode primRootNode);
-        NodeAutoLayouter.TreeNode PrimNode2LayoutNode();
+        NodeAutoLayoutHelper.TreeNode PrimNode2LayoutNode();
         void LayoutNode2PrimNode();
     }
 }

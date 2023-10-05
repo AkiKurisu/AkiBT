@@ -5,18 +5,18 @@ namespace Kurisu.AkiBT.Editor
     public class BehaviorTreeLayoutConvertor : INodeForLayoutConvertor
     {
         public float SiblingDistance { get; private set; }
-        private NodeAutoLayouter.TreeNode m_LayoutRootNode;
-        public NodeAutoLayouter.TreeNode LayoutRootNode => m_LayoutRootNode;
+        private NodeAutoLayoutHelper.TreeNode m_LayoutRootNode;
+        public NodeAutoLayoutHelper.TreeNode LayoutRootNode => m_LayoutRootNode;
         public ILayoutTreeNode PrimRootNode => m_PrimRootNode;
         private ILayoutTreeNode m_PrimRootNode;
-        private const NodeAutoLayouter.CalculateMode CalculateMode = NodeAutoLayouter.CalculateMode.Horizontal | NodeAutoLayouter.CalculateMode.Positive;
+        private const NodeAutoLayoutHelper.CalculateMode CalculateMode = NodeAutoLayoutHelper.CalculateMode.Horizontal | NodeAutoLayoutHelper.CalculateMode.Positive;
         public INodeForLayoutConvertor Init(ILayoutTreeNode primRootNode)
         {
             m_PrimRootNode = primRootNode;
             SiblingDistance = BehaviorTreeSetting.GetOrCreateSettings().AutoLayoutSiblingDistance;
             return this;
         }
-        public NodeAutoLayouter.TreeNode PrimNode2LayoutNode()
+        public NodeAutoLayoutHelper.TreeNode PrimNode2LayoutNode()
         {
             if (m_PrimRootNode.View.layout.width == float.NaN)
             {
@@ -24,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
             }
 
             m_LayoutRootNode =
-                new NodeAutoLayouter.TreeNode(m_PrimRootNode.View.layout.height + SiblingDistance,
+                new NodeAutoLayoutHelper.TreeNode(m_PrimRootNode.View.layout.height + SiblingDistance,
                     m_PrimRootNode.View.layout.width,
                     m_PrimRootNode.View.layout.y,
                     CalculateMode);
@@ -36,12 +36,12 @@ namespace Kurisu.AkiBT.Editor
         }
 
         private void Convert2LayoutNode(ILayoutTreeNode rootPrimNode,
-            NodeAutoLayouter.TreeNode rootLayoutNode, float lastHeightPoint,
-            NodeAutoLayouter.CalculateMode calculateMode)
+            NodeAutoLayoutHelper.TreeNode rootLayoutNode, float lastHeightPoint,
+            NodeAutoLayoutHelper.CalculateMode calculateMode)
         {
             foreach (var childNode in rootPrimNode.GetLayoutTreeChildren())
             {
-                NodeAutoLayouter.TreeNode childLayoutNode =
+                NodeAutoLayoutHelper.TreeNode childLayoutNode =
                     new(childNode.View.layout.height + SiblingDistance, childNode.View.layout.width,
                         lastHeightPoint + SiblingDistance,
                         calculateMode);
@@ -60,7 +60,7 @@ namespace Kurisu.AkiBT.Editor
 
         private void Convert2PrimNode(
             ILayoutTreeNode rootPrimNode,
-            NodeAutoLayouter.TreeNode rootLayoutNode,
+            NodeAutoLayoutHelper.TreeNode rootLayoutNode,
             Vector2 offSet
         )
         {

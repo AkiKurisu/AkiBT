@@ -273,7 +273,7 @@ namespace Kurisu.AkiBT.Editor
 
             if (GUILayout.Button("Auto Layout", EditorStyles.toolbarButton))
             {
-                NodeAutoLayouter.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
+                NodeAutoLayoutHelper.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
             }
             if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
             {

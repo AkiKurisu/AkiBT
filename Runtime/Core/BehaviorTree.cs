@@ -20,7 +20,7 @@ namespace Kurisu.AkiBT
         Object IBehaviorTree._Object => gameObject;
         [HideInInspector]
         [SerializeReference]
-        protected List<SharedVariable> sharedVariables = new List<SharedVariable>();
+        protected List<SharedVariable> sharedVariables = new();
         [SerializeField,
         Tooltip("Switch to UpdateType.Manual to use manual updates and call BehaviorTree.Tick()")]
         private UpdateType updateType;
@@ -30,7 +30,7 @@ namespace Kurisu.AkiBT
         private BehaviorTreeSO externalBehaviorTree;
         public BehaviorTreeSO ExternalBehaviorTree => externalBehaviorTree;
         [SerializeField, HideInInspector]
-        private List<GroupBlockData> blockData = new List<GroupBlockData>();
+        private List<GroupBlockData> blockData = new();
         public List<GroupBlockData> BlockData { get => blockData; set => blockData = value; }
 #endif
         public Root Root

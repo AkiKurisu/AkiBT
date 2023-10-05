@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT
     public class BehaviorTreeSO : ScriptableObject, IBehaviorTree
     {
         [SerializeReference, HideInInspector]
-        protected Root root = new Root();
+        protected Root root = new();
         Object IBehaviorTree._Object => this;
         public Root Root
         {
@@ -30,11 +30,10 @@ namespace Kurisu.AkiBT
         [SerializeField, HideInInspector]
         private List<GroupBlockData> blockData = new();
         public List<GroupBlockData> BlockData { get => blockData; set => blockData = value; }
-        [Multiline, SerializeField]
+        [Multiline]
         public string Description;
 #endif
-        [HideInInspector]
-        [SerializeReference]
+        [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
         /// <summary>
         /// 外部传入绑定对象并初始化,调用Awake和Start方法
@@ -64,6 +63,9 @@ namespace Kurisu.AkiBT
             if (template == null) return;
             root = template.Root;
             sharedVariables = new List<SharedVariable>(template.Variables);
+#if UNITY_EDITOR
+            blockData = new List<GroupBlockData>(template.BlockData);
+#endif
         }
     }
 }

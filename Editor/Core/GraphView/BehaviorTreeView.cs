@@ -31,7 +31,7 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public Action<IBehaviorTreeNode> onSelectAction;
         private readonly EditorWindow _window;
-        private readonly BehaviorNodeConverter converter = new();
+        private readonly BehaviorNodeConvertor converter = new();
         public VisualElement View => this;
         public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
         {
@@ -287,11 +287,7 @@ namespace Kurisu.AkiBT.Editor
             var edge = rootNode.Child.connections.First();
             RemoveElement(edge);
             RemoveElement(rootNode);
-            foreach (var nodeBlockData in otherTree.BlockData)
-            {
-                CreateBlock(new Rect(nodeBlockData.Position, new Vector2(100, 100)), nodeBlockData)
-                .AddElements(nodes.Where(x => nodeBlockData.ChildNodes.Contains(x.GUID)).Select(x => x.View));
-            }
+            RestoreBlocks(otherTree, nodes);
         }
         internal void Restore()
         {

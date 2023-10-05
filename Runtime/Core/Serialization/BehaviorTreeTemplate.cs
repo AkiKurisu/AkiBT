@@ -11,6 +11,11 @@ namespace Kurisu.AkiBT
         public List<SharedVariable> Variables => variables;
         public Root Root => root;
         public string TemplateName { get; }
+#if UNITY_EDITOR
+        [SerializeField]
+        private List<GroupBlockData> blockData = new();
+        public List<GroupBlockData> BlockData => blockData;
+#endif
         public BehaviorTreeTemplate(IBehaviorTree behaviorTree)
         {
             TemplateName = behaviorTree._Object.name;
@@ -19,6 +24,9 @@ namespace Kurisu.AkiBT
             {
                 variables.Add(variable.Clone() as SharedVariable);
             }
+#if UNITY_EDITOR
+            blockData = behaviorTree.BlockData;
+#endif
             root = behaviorTree.Root;
         }
     }

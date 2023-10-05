@@ -23,6 +23,7 @@ namespace Kurisu.AkiBT.Editor
         NodeBehavior ReplaceBehavior();
         void ClearStyle();
         IFieldResolver GetFieldResolver(string fieldName);
+        Rect GetWorldPosition();
     }
     public abstract class BehaviorTreeNode : Node, ILayoutTreeNode, IBehaviorTreeNode
     {
@@ -266,5 +267,17 @@ namespace Kurisu.AkiBT.Editor
         }
 
         public abstract IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren();
+        public virtual Rect GetWorldPosition()
+        {
+            CompositeStack parent;
+            var rect = GetPosition();
+            if ((parent = GetFirstAncestorOfType<CompositeStack>()) != null)
+            {
+                var parentRect = parent.GetPosition();
+                rect.x += parentRect.x;
+                rect.y += parentRect.y;
+            }
+            return rect;
+        }
     }
 }

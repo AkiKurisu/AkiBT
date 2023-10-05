@@ -22,7 +22,7 @@ namespace Kurisu.AkiBT
 
 #if UNITY_EDITOR
         [HideInEditorWindow]
-        public Rect graphPosition = new Rect(400, 300, 100, 100);
+        public Rect graphPosition = new(400, 300, 100, 100);
 
         [HideInEditorWindow]
         public string description;
