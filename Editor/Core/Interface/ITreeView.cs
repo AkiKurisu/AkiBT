@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 namespace Kurisu.AkiBT.Editor
 {
     public interface ITreeView
     {
+        GraphView View { get; }
         /// <summary>
         /// 将选中结点加入Group并创建Block
         /// </summary>
@@ -25,18 +28,13 @@ namespace Kurisu.AkiBT.Editor
         /// <summary>
         /// 共享变量名称修改事件
         /// </summary>
-        event System.Action<SharedVariable> OnPropertyNameChange;
+        event Action<SharedVariable> OnPropertyNameChange;
         /// <summary>
         /// 暴露的共享变量
         /// Exposed SharedVariables
         /// </summary>
         /// <value></value>
         List<SharedVariable> ExposedProperties { get; }
-        /// <summary>
-        /// 添加共享变量到黑板
-        /// Add shared variable to blackboard
-        /// </summary>
-        /// <param name="variable"></param>
-        void AddExposedProperty(SharedVariable variable);
+        IBlackBoard BlackBoard { get; }
     }
 }

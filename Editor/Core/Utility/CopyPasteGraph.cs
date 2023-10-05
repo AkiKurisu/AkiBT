@@ -96,7 +96,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 if (select is not Edge edge) continue;
                 if (!portCopyDict.ContainsKey(edge.input) || !portCopyDict.ContainsKey(edge.output)) continue;
-                var newEdge = BehaviorTreeView.ConnectPorts(portCopyDict[edge.output], portCopyDict[edge.input]);
+                var newEdge = PortHelper.ConnectPorts(portCopyDict[edge.output], portCopyDict[edge.input]);
                 sourceView.AddElement(newEdge);
                 copyElements.Add(newEdge);
             }

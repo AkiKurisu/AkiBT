@@ -4,20 +4,17 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
-using System.Reflection;
 using System;
-using UnityEditor.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeView : GraphView, ITreeView, ILayoutTreeNode
     {
-        public Blackboard _blackboard;
+        public IBlackBoard BlackBoard { get; internal set; }
         protected readonly IBehaviorTree behaviorTree;
         public IBehaviorTree BehaviorTree => behaviorTree;
         protected RootNode root;
         private readonly List<SharedVariable> exposedProperties = new();
         public List<SharedVariable> ExposedProperties => exposedProperties;
-        private readonly FieldResolverFactory fieldResolverFactory = FieldResolverFactory.Instance;
         protected NodeSearchWindowProvider provider;
         public event Action<SharedVariable> OnPropertyNameChange;
         /// <summary>
@@ -32,7 +29,8 @@ namespace Kurisu.AkiBT.Editor
         public Action<IBehaviorTreeNode> onSelectAction;
         private readonly EditorWindow _window;
         private readonly BehaviorNodeConvertor converter = new();
-        public VisualElement View => this;
+        VisualElement ILayoutTreeNode.View => this;
+        public GraphView View => this;
         public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
         {
             _window = editor;
@@ -42,13 +40,6 @@ namespace Kurisu.AkiBT.Editor
             styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(TreeEditorName));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new GridBackground());
-            var contentDragger = new ContentDragger();
-            //鼠标中键移动
-            contentDragger.activators.Add(new ManipulatorActivationFilter()
-            {
-                button = MouseButton.MiddleMouse,
-            });
-            // 添加选框
             AddManipulators();
             provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
             provider.Initialize(this, editor, BehaviorTreeSetting.GetMask(TreeEditorName));
@@ -66,7 +57,6 @@ namespace Kurisu.AkiBT.Editor
             this.AddManipulator(new RectangleSelector());
             this.AddManipulator(new FreehandSelector());
             var contentDragger = new ContentDragger();
-            //鼠标中键移动
             contentDragger.activators.Add(new ManipulatorActivationFilter()
             {
                 button = MouseButton.MiddleMouse,
@@ -83,16 +73,10 @@ namespace Kurisu.AkiBT.Editor
             }
             return "Copy Nodes";
         }
-        /// <summary>
-        /// 粘贴结点
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
         private void OnPaste(string a, string b)
         {
             List<ISelectable> copyElements = new CopyPasteGraph(this, selection).GetCopyElements();
             ClearSelection();
-            //再次选择
             copyElements.ForEach(node =>
             {
                 node.Select(this, true);
@@ -141,93 +125,6 @@ namespace Kurisu.AkiBT.Editor
             evt.menu.MenuItems().Clear();
             remainTargets.ForEach(evt.menu.MenuItems().Add);
         }
-        public void AddExposedProperty(SharedVariable variable)
-        {
-            var localPropertyValue = variable.GetValue();
-            if (string.IsNullOrEmpty(variable.Name)) variable.Name = variable.GetType().Name;
-            var localPropertyName = variable.Name;
-            int index = 1;
-            while (ExposedProperties.Any(x => x.Name == localPropertyName))
-            {
-                localPropertyName = $"{variable.Name}{index}";
-                index++;
-            }
-            variable.Name = localPropertyName;
-            ExposedProperties.Add(variable);
-            var container = new VisualElement();
-            var field = new BlackboardField { text = localPropertyName, typeText = variable.GetType().Name };
-            field.capabilities &= ~Capabilities.Deletable;
-            field.capabilities &= ~Capabilities.Movable;
-            container.Add(field);
-            FieldInfo info = variable.GetType().GetField("value", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-            var fieldResolver = fieldResolverFactory.Create(info);
-            var valueField = fieldResolver.GetEditorField(exposedProperties, variable);
-            var placeHolder = new VisualElement();
-            placeHolder.Add(valueField);
-            if (variable is SharedObject sharedObject)
-            {
-                placeHolder.Add(GetConstraintField(sharedObject, (ObjectField)valueField));
-            }
-            var sa = new BlackboardRow(field, placeHolder);
-            sa.AddManipulator(new ContextualMenuManipulator((evt) => BuildBlackboardMenu(evt, container)));
-            container.Add(sa);
-            _blackboard.Add(container);
-        }
-        private VisualElement GetConstraintField(SharedObject sharedObject, ObjectField objectField)
-        {
-            const string NonConstraint = "No Constraint";
-            var placeHolder = new VisualElement();
-            string constraintTypeName;
-            try
-            {
-                objectField.objectType = Type.GetType(sharedObject.ConstraintTypeAQM, true);
-                constraintTypeName = "Constraint Type : " + objectField.objectType.Name;
-            }
-            catch
-            {
-                objectField.objectType = typeof(UnityEngine.Object);
-                constraintTypeName = NonConstraint;
-            }
-            var typeField = new Label(constraintTypeName);
-            placeHolder.Add(typeField);
-            var button = new Button()
-            {
-                text = "Change Constraint Type"
-            };
-            button.clicked += () =>
-             {
-                 var provider = ScriptableObject.CreateInstance<ObjectTypeSearchWindow>();
-                 provider.Initialize((type) =>
-                 {
-                     if (type == null)
-                     {
-                         typeField.text = sharedObject.ConstraintTypeAQM = NonConstraint;
-                         objectField.objectType = typeof(UnityEngine.Object);
-                     }
-                     else
-                     {
-                         objectField.objectType = type;
-                         sharedObject.ConstraintTypeAQM = type.AssemblyQualifiedName;
-                         typeField.text = "Constraint Type : " + type.Name;
-                     }
-                 });
-                 SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), provider);
-             };
-
-            placeHolder.Add(button);
-            return placeHolder;
-        }
-        private void BuildBlackboardMenu(ContextualMenuPopulateEvent evt, VisualElement element)
-        {
-            evt.menu.MenuItems().Clear();
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Delate Variable", (a) =>
-            {
-                int index = _blackboard.contentContainer.IndexOf(element);
-                ExposedProperties.RemoveAt(index - 1);
-                _blackboard.Remove(element);
-                return;
-            }));
-        }
         public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter)
         {
             var compatiblePorts = new List<Port>();
@@ -273,15 +170,17 @@ namespace Kurisu.AkiBT.Editor
             _window.ShowNotification(new GUIContent("Data Dropped Succeed !"));
             CopyFromTree(data as IBehaviorTree, mousePosition);
         }
+        /// <summary>
+        /// Copy graph view nodes from other tree
+        /// </summary>
+        /// <param name="otherTree"></param>
+        /// <param name="mousePosition"></param>
         public void CopyFromTree(IBehaviorTree otherTree, Vector2 mousePosition)
         {
             var localMousePosition = contentViewContainer.WorldToLocal(mousePosition) - new Vector2(400, 300);
             IEnumerable<IBehaviorTreeNode> nodes;
             RootNode rootNode;
-            foreach (var variable in otherTree.SharedVariables)
-            {
-                AddExposedProperty(variable.Clone() as SharedVariable);//Clone新的共享变量
-            }
+            RestoreSharedVariables(otherTree);
             (rootNode, nodes) = converter.ConvertToNode(otherTree, this, localMousePosition);
             foreach (var node in nodes) node.OnSelectAction = onSelectAction;
             var edge = rootNode.Child.connections.First();
@@ -289,11 +188,43 @@ namespace Kurisu.AkiBT.Editor
             RemoveElement(rootNode);
             RestoreBlocks(otherTree, nodes);
         }
+        /// <summary>
+        /// Serialize current editing behavior tree to json format
+        /// </summary>
+        /// <returns></returns>
+        public string SerializeTreeToJson()
+        {
+            return BehaviorTreeSerializeUtility.SerializeTree(behaviorTree, false, true);
+        }
+        /// <summary>
+        /// Copy BehaviorTree from json file
+        /// </summary>
+        /// <param name="serializedData">json data</param>
+        /// <param name="mousePosition">drag or init position</param>
+        /// <returns></returns>
+        public bool CopyFromJson(string serializedData, Vector3 mousePosition)
+        {
+            var temp = ScriptableObject.CreateInstance<BehaviorTreeSO>();
+            try
+            {
+                temp.Deserialize(serializedData);
+                CopyFromTree(temp, mousePosition);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         internal void Restore()
         {
             IBehaviorTree tree = behaviorTree.ExternalBehaviorTree != null ? behaviorTree.ExternalBehaviorTree : behaviorTree;
             OnRestore(tree);
         }
+        /// <summary>
+        /// Restore behavior tree to the graph view nodes
+        /// </summary>
+        /// <param name="tree"></param>
         protected virtual void OnRestore(IBehaviorTree tree)
         {
             RestoreSharedVariables(tree);
@@ -302,14 +233,14 @@ namespace Kurisu.AkiBT.Editor
             foreach (var node in nodes) node.OnSelectAction = onSelectAction;
             RestoreBlocks(tree, nodes);
         }
-        protected void RestoreSharedVariables(IBehaviorTree tree)
+        private void RestoreSharedVariables(IBehaviorTree tree)
         {
             foreach (var variable in tree.SharedVariables)
             {
-                AddExposedProperty(variable.Clone() as SharedVariable);//Clone新的共享变量
+                BlackBoard.AddExposedProperty(variable.Clone() as SharedVariable);
             }
         }
-        protected void RestoreBlocks(IBehaviorTree tree, IEnumerable<IBehaviorTreeNode> nodes)
+        private void RestoreBlocks(IBehaviorTree tree, IEnumerable<IBehaviorTreeNode> nodes)
         {
             foreach (var nodeBlockData in tree.BlockData)
             {
@@ -395,36 +326,6 @@ namespace Kurisu.AkiBT.Editor
             // notify to unity editor that the tree is changed.
             EditorUtility.SetDirty(behaviorTree._Object);
         }
-        internal static Edge ConnectPorts(Port output, Port input)
-        {
-            var tempEdge = new Edge
-            {
-                output = output,
-                input = input
-            };
-            tempEdge.input.Connect(tempEdge);
-            tempEdge.output.Connect(tempEdge);
-            return tempEdge;
-        }
-        public string SerializeTreeToJson()
-        {
-            return BehaviorTreeSerializeUtility.SerializeTree(behaviorTree, false, true);
-        }
-        public bool CopyFromJson(string serializedData, Vector3 mousePosition)
-        {
-            var temp = ScriptableObject.CreateInstance<BehaviorTreeSO>();
-            try
-            {
-                temp.Deserialize(serializedData);
-                CopyFromTree(temp, mousePosition);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
             return new List<ILayoutTreeNode>() { root };

@@ -93,50 +93,12 @@ namespace Kurisu.AkiBT.Editor
             window.rootVisualElement.Add(window.CreateToolBar());
             window.rootVisualElement.Add(window.graphView);
         }
-
-
-
         private static void GenerateBlackBoard(BehaviorTreeView _graphView)
         {
-            var blackboard = new Blackboard(_graphView);
-            blackboard.Add(new BlackboardSection { title = "Shared Variables" });
-            blackboard.addItemRequested = _blackboard =>
-            {
-                var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Int"), false, () => _graphView.AddExposedProperty(new SharedInt()));
-                menu.AddItem(new GUIContent("Float"), false, () => _graphView.AddExposedProperty(new SharedFloat()));
-                menu.AddItem(new GUIContent("Bool"), false, () => _graphView.AddExposedProperty(new SharedBool()));
-                menu.AddItem(new GUIContent("Vector3"), false, () => _graphView.AddExposedProperty(new SharedVector3()));
-                menu.AddItem(new GUIContent("String"), false, () => _graphView.AddExposedProperty(new SharedString()));
-                menu.AddItem(new GUIContent("Object"), false, () => _graphView.AddExposedProperty(new SharedObject()));
-                menu.ShowAsContext();
-            };
-
-            blackboard.editTextRequested = (_blackboard, element, newValue) =>
-            {
-                var oldPropertyName = ((BlackboardField)element).text;
-                var index = _graphView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
-                if (string.IsNullOrEmpty(newValue))
-                {
-                    blackboard.contentContainer.RemoveAt(index + 1);
-                    _graphView.ExposedProperties.RemoveAt(index);
-                    return;
-                }
-                if (_graphView.ExposedProperties.Any(x => x.Name == newValue))
-                {
-                    EditorUtility.DisplayDialog("Error", "A variable with the same name already exists !",
-                        "OK");
-                    return;
-                }
-
-                var targetIndex = _graphView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
-                _graphView.ExposedProperties[targetIndex].Name = newValue;
-                _graphView.NotifyEditSharedVariable(_graphView.ExposedProperties[targetIndex]);
-                ((BlackboardField)element).text = newValue;
-            };
+            var blackboard = new AdvancedBlackBoard(_graphView);
             blackboard.SetPosition(new Rect(10, 100, 300, 400));
             _graphView.Add(blackboard);
-            _graphView._blackboard = blackboard;
+            _graphView.BlackBoard = blackboard;
         }
         private void SaveToSO(string path)
         {
