@@ -268,11 +268,11 @@ namespace Kurisu.AkiBT.Editor
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Select Group", (a) =>
             {
-                MapTreeView.SelectGroup(this);
+                MapTreeView.GroupBlockController.SelectGroup(this);
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("UnSelect Group", (a) =>
             {
-                MapTreeView.UnSelectGroup();
+                MapTreeView.GroupBlockController.UnSelectGroup();
             }));
         }
 

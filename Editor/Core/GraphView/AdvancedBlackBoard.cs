@@ -11,11 +11,12 @@ namespace Kurisu.AkiBT.Editor
 {
     public class AdvancedBlackBoard : Blackboard, IBlackBoard
     {
+        public event Action<SharedVariable> OnPropertyNameChange;
         private readonly FieldResolverFactory fieldResolverFactory = FieldResolverFactory.Instance;
         private readonly ScrollView scrollView;
         public VisualElement RawContainer => scrollView;
         private readonly List<SharedVariable> exposedProperties;
-        public AdvancedBlackBoard(BehaviorTreeView treeView) : base(treeView.View)
+        public AdvancedBlackBoard(ITreeView treeView) : base(treeView.View)
         {
             var header = this.Q("header");
             header.style.height = new StyleLength(50);
@@ -25,38 +26,38 @@ namespace Kurisu.AkiBT.Editor
             exposedProperties = treeView.ExposedProperties;
             InitRequestDelegate(treeView);
         }
-        private void InitRequestDelegate(BehaviorTreeView _graphView)
+        private void InitRequestDelegate(ITreeView treeView)
         {
             addItemRequested = _blackboard =>
-                {
-                    var menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("Int"), false, () => AddExposedProperty(new SharedInt()));
-                    menu.AddItem(new GUIContent("Float"), false, () => AddExposedProperty(new SharedFloat()));
-                    menu.AddItem(new GUIContent("Bool"), false, () => AddExposedProperty(new SharedBool()));
-                    menu.AddItem(new GUIContent("Vector3"), false, () => AddExposedProperty(new SharedVector3()));
-                    menu.AddItem(new GUIContent("String"), false, () => AddExposedProperty(new SharedString()));
-                    menu.AddItem(new GUIContent("Object"), false, () => AddExposedProperty(new SharedObject()));
-                    menu.ShowAsContext();
-                };
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Int"), false, () => AddExposedProperty(new SharedInt()));
+                menu.AddItem(new GUIContent("Float"), false, () => AddExposedProperty(new SharedFloat()));
+                menu.AddItem(new GUIContent("Bool"), false, () => AddExposedProperty(new SharedBool()));
+                menu.AddItem(new GUIContent("Vector3"), false, () => AddExposedProperty(new SharedVector3()));
+                menu.AddItem(new GUIContent("String"), false, () => AddExposedProperty(new SharedString()));
+                menu.AddItem(new GUIContent("Object"), false, () => AddExposedProperty(new SharedObject()));
+                menu.ShowAsContext();
+            };
             editTextRequested = (_blackboard, element, newValue) =>
             {
                 var oldPropertyName = ((BlackboardField)element).text;
-                var index = _graphView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
+                var index = treeView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
                 if (string.IsNullOrEmpty(newValue))
                 {
                     RawContainer.RemoveAt(index + 1);
-                    _graphView.ExposedProperties.RemoveAt(index);
+                    treeView.ExposedProperties.RemoveAt(index);
                     return;
                 }
-                if (_graphView.ExposedProperties.Any(x => x.Name == newValue))
+                if (treeView.ExposedProperties.Any(x => x.Name == newValue))
                 {
                     EditorUtility.DisplayDialog("Error", "A variable with the same name already exists !",
                         "OK");
                     return;
                 }
-                var targetIndex = _graphView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
-                _graphView.ExposedProperties[targetIndex].Name = newValue;
-                _graphView.NotifyEditSharedVariable(_graphView.ExposedProperties[targetIndex]);
+                var targetIndex = treeView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
+                treeView.ExposedProperties[targetIndex].Name = newValue;
+                OnPropertyNameChange?.Invoke(treeView.ExposedProperties[targetIndex]);
                 ((BlackboardField)element).text = newValue;
             };
 

@@ -1,20 +1,19 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 namespace Kurisu.AkiBT.Editor
 {
     public interface ITreeView
     {
+        EditorWindow EditorWindow { get; }
         GraphView View { get; }
+        IControlGroupBlock GroupBlockController { get; }
         /// <summary>
-        /// 将选中结点加入Group并创建Block
+        /// 结点选择委托
         /// </summary>
-        /// <param name="node"></param>
-        void SelectGroup(IBehaviorTreeNode node);
-        /// <summary>
-        /// 取消Group
-        /// </summary>
-        void UnSelectGroup();
+        /// <value></value>
+        Action<IBehaviorTreeNode> OnNodeSelect { get; }
         /// <summary>
         /// 复制结点
         /// </summary>
@@ -25,10 +24,6 @@ namespace Kurisu.AkiBT.Editor
         /// 编辑器名称
         /// </summary>
         string TreeEditorName { get; }
-        /// <summary>
-        /// 共享变量名称修改事件
-        /// </summary>
-        event Action<SharedVariable> OnPropertyNameChange;
         /// <summary>
         /// 暴露的共享变量
         /// Exposed SharedVariables

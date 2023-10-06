@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,16 +8,14 @@ namespace Kurisu.AkiBT.Editor
 {
     public class NodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider
     {
-        private BehaviorTreeView graphView;
-        private EditorWindow graphEditor;
+        private ITreeView graphView;
         private readonly NodeResolverFactory nodeResolver = NodeResolverFactory.Instance;
         private Texture2D _indentationIcon;
         private string[] showGroups;
         private string[] notShowGroups;
-        public void Initialize(BehaviorTreeView graphView, EditorWindow graphEditor, (string[], string[]) mask)
+        public void Initialize(ITreeView graphView, (string[], string[]) mask)
         {
             this.graphView = graphView;
-            this.graphEditor = graphEditor;
             showGroups = mask.Item1;
             notShowGroups = mask.Item2;
             _indentationIcon = new Texture2D(1, 1);
@@ -55,19 +52,19 @@ namespace Kurisu.AkiBT.Editor
         }
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
-            var worldMousePosition = graphEditor.rootVisualElement.ChangeCoordinatesTo(this.graphEditor.rootVisualElement.parent, context.screenMousePosition - this.graphEditor.position.position);
-            var localMousePosition = graphView.contentViewContainer.WorldToLocal(worldMousePosition);
+            var worldMousePosition = graphView.EditorWindow.rootVisualElement.ChangeCoordinatesTo(graphView.EditorWindow.rootVisualElement.parent, context.screenMousePosition - graphView.EditorWindow.position.position);
+            var localMousePosition = graphView.View.contentViewContainer.WorldToLocal(worldMousePosition);
             Rect newRect = new(localMousePosition, new Vector2(100, 100));
             var type = searchTreeEntry.userData as Type;
             if (type == typeof(GroupBlock))
             {
-                graphView.CreateBlock(newRect);
+                graphView.GroupBlockController.CreateBlock(newRect);
                 return true;
             }
             var node = nodeResolver.Create(type, graphView);
             node.View.SetPosition(newRect);
-            graphView.AddElement(node.View);
-            node.OnSelectAction = graphView.onSelectAction;
+            graphView.View.AddElement(node.View);
+            node.OnSelectAction = graphView.OnNodeSelect;
             return true;
         }
     }
@@ -110,7 +107,7 @@ namespace Kurisu.AkiBT.Editor
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
             var type = searchTreeEntry.userData as Type;
-            this.node.SetBehavior(type);
+            node.SetBehavior(type);
             return true;
         }
     }

@@ -38,7 +38,7 @@ namespace Kurisu.AkiBT.Editor
         public void InitField(ITreeView treeView)
         {
             this.treeView = treeView;
-            treeView.OnPropertyNameChange += (variable) =>
+            treeView.BlackBoard.OnPropertyNameChange += (variable) =>
             {
                 if (variable != bindExposedProperty) return;
                 nameDropdown.value = variable.Name;

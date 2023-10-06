@@ -9,49 +9,71 @@ namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeView : GraphView, ITreeView, ILayoutTreeNode
     {
-        public IBlackBoard BlackBoard { get; internal set; }
+        public IBlackBoard BlackBoard { get; protected set; }
         protected readonly IBehaviorTree behaviorTree;
         public IBehaviorTree BehaviorTree => behaviorTree;
         protected RootNode root;
-        private readonly List<SharedVariable> exposedProperties = new();
-        public List<SharedVariable> ExposedProperties => exposedProperties;
-        protected NodeSearchWindowProvider provider;
-        public event Action<SharedVariable> OnPropertyNameChange;
-        /// <summary>
-        /// 是否可以保存为SO,如果可以会在ToolBar中提供按钮
-        /// </summary>
-        public virtual bool CanSaveToSO => behaviorTree is BehaviorTree;
+        public List<SharedVariable> ExposedProperties { get; } = new();
         public virtual string TreeEditorName => "AkiBT";
         private readonly NodeResolverFactory nodeResolver = NodeResolverFactory.Instance;
-        /// <summary>
-        /// 结点选择委托
-        /// </summary>
-        public Action<IBehaviorTreeNode> onSelectAction;
-        private readonly EditorWindow _window;
+        public Action<IBehaviorTreeNode> OnNodeSelect { get; set; }
+        public EditorWindow EditorWindow { get; internal set; }
         private readonly BehaviorNodeConvertor converter = new();
         VisualElement ILayoutTreeNode.View => this;
         public GraphView View => this;
+        public IControlGroupBlock GroupBlockController { get; protected set; }
         public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
         {
-            _window = editor;
+            EditorWindow = editor;
             behaviorTree = bt;
+            ConstructTreeView();
+        }
+        /// <summary>
+        /// Build tree view elements
+        /// </summary>
+        protected virtual void ConstructTreeView()
+        {
+            SetStyle();
+            AddManipulators();
+            AddNodeProvider();
+            AddGroupBlockController();
+            RegisterSerializationCallBack();
+            AddBlackBoard();
+        }
+        private void SetStyle()
+        {
             style.flexGrow = 1;
             style.flexShrink = 1;
             styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(TreeEditorName));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new GridBackground());
-            AddManipulators();
-            provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
-            provider.Initialize(this, editor, BehaviorTreeSetting.GetMask(TreeEditorName));
+        }
+        private void AddNodeProvider()
+        {
+            var provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
+            provider.Initialize(this, BehaviorTreeSetting.GetMask(TreeEditorName));
             nodeCreationRequest += context =>
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
             };
-            serializeGraphElements += CopyOperation;
+        }
+        private void AddGroupBlockController()
+        {
+            GroupBlockController = new GroupBlockController(this);
+        }
+        private void RegisterSerializationCallBack()
+        {
             canPasteSerializedData += (data) => true;
             unserializeAndPaste += OnPaste;
         }
-        protected virtual void AddManipulators()
+        private void AddBlackBoard()
+        {
+            var blackboard = new AdvancedBlackBoard(this);
+            blackboard.SetPosition(new Rect(10, 100, 300, 400));
+            Add(blackboard);
+            BlackBoard = blackboard;
+        }
+        private void AddManipulators()
         {
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
@@ -64,18 +86,9 @@ namespace Kurisu.AkiBT.Editor
             this.AddManipulator(contentDragger);
             this.AddManipulator(new DragDropManipulator(CopyFromObject));
         }
-        private string CopyOperation(IEnumerable<GraphElement> elements)
-        {
-            ClearSelection();
-            foreach (GraphElement n in elements)
-            {
-                AddToSelection(n);
-            }
-            return "Copy Nodes";
-        }
         private void OnPaste(string a, string b)
         {
-            List<ISelectable> copyElements = new CopyPasteGraph(this, selection).GetCopyElements();
+            List<ISelectable> copyElements = new CopyPasteGraph(this, selection).GetPasteElements();
             ClearSelection();
             copyElements.ForEach(node =>
             {
@@ -88,26 +101,10 @@ namespace Kurisu.AkiBT.Editor
             Rect newRect = node.GetWorldPosition();
             newRect.position += new Vector2(50, 50);
             newNode.View.SetPosition(newRect);
-            newNode.OnSelectAction = onSelectAction;
+            newNode.OnSelectAction = OnNodeSelect;
             AddElement(newNode.View);
             newNode.CopyFrom(node);
             return newNode;
-        }
-        public GroupBlock CreateBlock(Rect rect, GroupBlockData blockData = null)
-        {
-            blockData ??= new GroupBlockData();
-            var group = new GroupBlock
-            {
-                autoUpdateGeometry = true,
-                title = blockData.Title
-            };
-            AddElement(group);
-            group.SetPosition(rect);
-            return group;
-        }
-        internal void NotifyEditSharedVariable(SharedVariable variable)
-        {
-            OnPropertyNameChange?.Invoke(variable);
         }
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
@@ -141,33 +138,38 @@ namespace Kurisu.AkiBT.Editor
             }
             return compatiblePorts;
         }
+        /// <summary>
+        /// Copy graph view nodes from UObject
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="mousePosition"></param>
         public void CopyFromObject(UnityEngine.Object data, Vector2 mousePosition)
         {
             if (data is GameObject gameObject)
             {
                 if (gameObject.TryGetComponent(out IBehaviorTree tree))
                 {
-                    _window.ShowNotification(new GUIContent("GameObject Dropped Succeed !"));
+                    EditorWindow.ShowNotification(new GUIContent("GameObject Dropped Succeed !"));
                     CopyFromTree(tree, mousePosition);
                     return;
                 }
-                _window.ShowNotification(new GUIContent("Invalid Drag GameObject !"));
+                EditorWindow.ShowNotification(new GUIContent("Invalid Drag GameObject !"));
                 return;
             }
             if (data is TextAsset asset)
             {
                 if (CopyFromJson(asset.text, mousePosition))
-                    _window.ShowNotification(new GUIContent("Text Asset Dropped Succeed !"));
+                    EditorWindow.ShowNotification(new GUIContent("Text Asset Dropped Succeed !"));
                 else
-                    _window.ShowNotification(new GUIContent("Invalid Drag Text Asset !"));
+                    EditorWindow.ShowNotification(new GUIContent("Invalid Drag Text Asset !"));
                 return;
             }
             if (data is not IBehaviorTree)
             {
-                _window.ShowNotification(new GUIContent("Invalid Drag Data !"));
+                EditorWindow.ShowNotification(new GUIContent("Invalid Drag Data !"));
                 return;
             }
-            _window.ShowNotification(new GUIContent("Data Dropped Succeed !"));
+            EditorWindow.ShowNotification(new GUIContent("Data Dropped Succeed !"));
             CopyFromTree(data as IBehaviorTree, mousePosition);
         }
         /// <summary>
@@ -182,7 +184,7 @@ namespace Kurisu.AkiBT.Editor
             RootNode rootNode;
             RestoreSharedVariables(otherTree);
             (rootNode, nodes) = converter.ConvertToNode(otherTree, this, localMousePosition);
-            foreach (var node in nodes) node.OnSelectAction = onSelectAction;
+            foreach (var node in nodes) node.OnSelectAction = OnNodeSelect;
             var edge = rootNode.Child.connections.First();
             RemoveElement(edge);
             RemoveElement(rootNode);
@@ -216,7 +218,10 @@ namespace Kurisu.AkiBT.Editor
                 return false;
             }
         }
-        internal void Restore()
+        /// <summary>
+        /// Restore graph view nodes from editing behavior tree
+        /// </summary>
+        public void Restore()
         {
             IBehaviorTree tree = behaviorTree.ExternalBehaviorTree != null ? behaviorTree.ExternalBehaviorTree : behaviorTree;
             OnRestore(tree);
@@ -230,7 +235,7 @@ namespace Kurisu.AkiBT.Editor
             RestoreSharedVariables(tree);
             IEnumerable<IBehaviorTreeNode> nodes;
             (root, nodes) = converter.ConvertToNode(tree, this, Vector2.zero);
-            foreach (var node in nodes) node.OnSelectAction = onSelectAction;
+            foreach (var node in nodes) node.OnSelectAction = OnNodeSelect;
             RestoreBlocks(tree, nodes);
         }
         private void RestoreSharedVariables(IBehaviorTree tree)
@@ -244,41 +249,21 @@ namespace Kurisu.AkiBT.Editor
         {
             foreach (var nodeBlockData in tree.BlockData)
             {
-                CreateBlock(new Rect(nodeBlockData.Position, new Vector2(100, 100)), nodeBlockData)
+                GroupBlockController.CreateBlock(new Rect(nodeBlockData.Position, new Vector2(100, 100)), nodeBlockData)
                 .AddElements(nodes.Where(x => nodeBlockData.ChildNodes.Contains(x.GUID)).Select(x => x.View));
             }
         }
-        void ITreeView.SelectGroup(IBehaviorTreeNode node)
-        {
-            var block = CreateBlock(new Rect((node as Node).transform.position, new Vector2(100, 100)));
-            foreach (var select in selection)
-            {
-                if (select is not IBehaviorTreeNode || select is RootNode) continue;
-                block.AddElement(select as Node);
-            }
-        }
-        void ITreeView.UnSelectGroup()
-        {
-            foreach (var select in selection)
-            {
-                if (select is not IBehaviorTreeNode) continue;
-                var node = select as Node;
-                var block = graphElements.OfType<GroupBlock>().FirstOrDefault(x => x.ContainsElement(node));
-                block?.RemoveElement(node);
-            }
-        }
 
-        internal bool Save(bool autoSave = false)
+        internal bool Save()
         {
             if (Application.isPlaying) return false;
             if (Validate())
             {
                 Commit(behaviorTree);
-                if (autoSave) Debug.Log($"<color=#3aff48>{TreeEditorName}</color>[{behaviorTree._Object.name}] auto save succeed ! {System.DateTime.Now.ToString()}");
+
                 AssetDatabase.SaveAssets();
                 return true;
             }
-            if (autoSave) Debug.Log($"<color=#ff2f2f>{TreeEditorName}</color>[{behaviorTree._Object.name}] auto save failed ! {System.DateTime.Now.ToString()}");
             return false;
         }
 

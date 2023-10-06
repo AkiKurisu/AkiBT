@@ -5,18 +5,18 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    internal class CopyPasteGraph
+    public class CopyPasteGraph
     {
-        private readonly BehaviorTreeView sourceView;
-        private readonly List<ISelectable> copyElements;
+        private readonly ITreeView sourceView;
+        private readonly List<ISelectable> pasteElements;
         private readonly Dictionary<Port, Port> portCopyDict;
         private readonly Dictionary<IBehaviorTreeNode, IBehaviorTreeNode> nodeCopyDict;
-        private readonly List<ISelectable> selection;
-        public CopyPasteGraph(BehaviorTreeView sourceView, List<ISelectable> selection)
+        private readonly List<ISelectable> copyElements;
+        public CopyPasteGraph(ITreeView sourceView, List<ISelectable> copyElements)
         {
             this.sourceView = sourceView;
-            this.selection = selection;
-            copyElements = new List<ISelectable>();
+            this.copyElements = copyElements;
+            pasteElements = new List<ISelectable>();
             portCopyDict = new Dictionary<Port, Port>();
             nodeCopyDict = new Dictionary<IBehaviorTreeNode, IBehaviorTreeNode>();
             DistinctNodes();
@@ -24,22 +24,22 @@ namespace Kurisu.AkiBT.Editor
             CopyEdges();
             CopyGroupBlocks();
         }
-        public List<ISelectable> GetCopyElements() => copyElements;
+        public List<ISelectable> GetPasteElements() => pasteElements;
         private void DistinctNodes()
         {
-            var containerNodes = selection.OfType<CompositeStack>().ToArray();
+            var containerNodes = copyElements.OfType<CompositeStack>().ToArray();
             foreach (var containerNode in containerNodes)
             {
-                containerNode.contentContainer.Query<BehaviorTreeNode>().ForEach(x => selection.Remove(x));
+                containerNode.contentContainer.Query<BehaviorTreeNode>().ForEach(x => copyElements.Remove(x));
             }
         }
         private void CopyNodes()
         {
-            foreach (var select in selection)
+            foreach (var select in copyElements)
             {
                 if (select is not IBehaviorTreeNode selectNode) continue;
                 var node = sourceView.DuplicateNode(selectNode);
-                copyElements.Add(node.View);
+                pasteElements.Add(node.View);
                 nodeCopyDict.Add(selectNode, node);
                 CopyPort(selectNode, node);
             }
@@ -92,24 +92,24 @@ namespace Kurisu.AkiBT.Editor
 
         private void CopyEdges()
         {
-            foreach (var select in selection)
+            foreach (var select in copyElements)
             {
                 if (select is not Edge edge) continue;
                 if (!portCopyDict.ContainsKey(edge.input) || !portCopyDict.ContainsKey(edge.output)) continue;
                 var newEdge = PortHelper.ConnectPorts(portCopyDict[edge.output], portCopyDict[edge.input]);
-                sourceView.AddElement(newEdge);
-                copyElements.Add(newEdge);
+                sourceView.View.AddElement(newEdge);
+                pasteElements.Add(newEdge);
             }
         }
         private void CopyGroupBlocks()
         {
-            foreach (var select in selection)
+            foreach (var select in copyElements)
             {
                 if (select is not GroupBlock selectBlock) continue;
                 var nodes = selectBlock.containedElements.OfType<IBehaviorTreeNode>();
                 Rect newRect = selectBlock.GetPosition();
                 newRect.position += new Vector2(50, 50);
-                var block = sourceView.CreateBlock(newRect);
+                var block = sourceView.GroupBlockController.CreateBlock(newRect);
                 block.title = selectBlock.title;
                 block.AddElements(nodes.Where(x => nodeCopyDict.ContainsKey(x)).Select(x => nodeCopyDict[x].View));
             }

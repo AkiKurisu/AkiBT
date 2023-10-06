@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-    [System.Serializable]
+    [Serializable]
     public class GroupBlockData
     {
-        public List<string> ChildNodes = new List<string>();
+        public List<string> ChildNodes = new();
         public Vector2 Position;
-        public string Title= "Node Block";
+        public string Title = "Group Block";
     }
 }
