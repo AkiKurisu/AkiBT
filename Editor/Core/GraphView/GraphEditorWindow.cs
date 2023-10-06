@@ -47,8 +47,9 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         /// <param name="bt"></param>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="K"></typeparam>
         /// <returns></returns>
-        protected static T Create<T>(IBehaviorTree bt) where T : GraphEditorWindow
+        public static T Create<T>(IBehaviorTree bt) where T : GraphEditorWindow
         {
             var key = bt._Object.GetHashCode();
             if (cache.ContainsKey(key))
@@ -56,19 +57,23 @@ namespace Kurisu.AkiBT.Editor
                 return (T)cache[key];
             }
             var window = CreateInstance<T>();
-            window.rootVisualElement.Clear();
-            window.rootVisualElement.Add(window.CreateToolBar());
-            window.graphView = StructGraphView(window, bt);
-            window.rootVisualElement.Add(window.graphView);
+            window.RepaintGraphView(bt);
             window.titleContent = new GUIContent($"{window.graphView.TreeEditorName} ({bt._Object.name})");
             window.Key = bt._Object;
             cache[key] = window;
             return window;
         }
-        private static BehaviorTreeView StructGraphView(GraphEditorWindow window, IBehaviorTree behaviorTree)
+        private void RepaintGraphView(IBehaviorTree bt)
         {
-            var graphView = new BehaviorTreeView(behaviorTree, window);
-            var infoView = new InfoView(window.InfoText);
+            rootVisualElement.Clear();
+            rootVisualElement.Add(CreateToolBar());
+            graphView = StructGraphView(bt);
+            rootVisualElement.Add(graphView);
+        }
+        protected virtual BehaviorTreeView StructGraphView(IBehaviorTree bt)
+        {
+            var graphView = new BehaviorTreeView(bt, this);
+            var infoView = new InfoView(InfoText);
             infoView.styleSheets.Add(Resources.Load<StyleSheet>("AkiBT/Info"));
             graphView.Add(infoView);
             graphView.OnNodeSelect = (node) => infoView.UpdateSelection(node);
@@ -150,8 +155,8 @@ namespace Kurisu.AkiBT.Editor
         {
             if (Key != null)
             {
-                if (Key is GameObject) StructGraphView(this, (Key as GameObject).GetComponent<IBehaviorTree>());
-                else StructGraphView(this, Key as IBehaviorTree);
+                if (Key is GameObject) RepaintGraphView((Key as GameObject).GetComponent<IBehaviorTree>());
+                else RepaintGraphView(Key as IBehaviorTree);
                 Repaint();
             }
         }
