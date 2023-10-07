@@ -124,19 +124,7 @@ namespace Kurisu.AkiBT.Editor
         }
         public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter)
         {
-            var compatiblePorts = new List<Port>();
-            foreach (var port in ports.ToList())
-            {
-                if (startAnchor.node == port.node ||
-                    startAnchor.direction == port.direction ||
-                    startAnchor.portType != port.portType)
-                {
-                    continue;
-                }
-
-                compatiblePorts.Add(port);
-            }
-            return compatiblePorts;
+            return PortHelper.GetCompatiblePorts(View, startAnchor);
         }
         /// <summary>
         /// Copy graph view nodes from UObject
