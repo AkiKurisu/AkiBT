@@ -5,14 +5,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class CopyPasteGraph
+    public class CopyPasteConvertor
     {
         private readonly ITreeView sourceView;
         private readonly List<ISelectable> pasteElements;
         private readonly Dictionary<Port, Port> portCopyDict;
         private readonly Dictionary<IBehaviorTreeNode, IBehaviorTreeNode> nodeCopyDict;
         private readonly List<ISelectable> copyElements;
-        public CopyPasteGraph(ITreeView sourceView, List<ISelectable> copyElements)
+        public CopyPasteConvertor(ITreeView sourceView, List<ISelectable> copyElements)
         {
             this.sourceView = sourceView;
             this.copyElements = copyElements;

@@ -88,7 +88,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private void OnPaste(string a, string b)
         {
-            List<ISelectable> copyElements = new CopyPasteGraph(this, selection).GetPasteElements();
+            List<ISelectable> copyElements = new CopyPasteConvertor(this, selection).GetPasteElements();
             ClearSelection();
             copyElements.ForEach(node =>
             {
