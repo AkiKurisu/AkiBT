@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 using System.IO;
 namespace Kurisu.AkiBT.Editor
 {
-    public class GraphEditorWindow : EditorWindow
+    public class GraphEditorWindow : EditorWindow, IHasCustomMenu
     {
         // GraphView window per UObject
         private static readonly Dictionary<int, GraphEditorWindow> cache = new();
@@ -83,7 +83,7 @@ namespace Kurisu.AkiBT.Editor
         private void SaveToSO(string path)
         {
             var treeSO = CreateInstance(SOType);
-            if (!graphView.Save())
+            if (!graphView.Validate())
             {
                 Debug.LogWarning($"<color=#ff2f2f>{graphView.TreeEditorName}</color> : Save failed, ScriptableObject wasn't created !\n{DateTime.Now}");
                 return;
@@ -97,28 +97,44 @@ namespace Kurisu.AkiBT.Editor
 
         private void OnDestroy()
         {
-            int code = Key.GetHashCode();
-            if (Key != null && cache.ContainsKey(code))
+            int code;
+            if (Key != null && cache.ContainsKey(code = Key.GetHashCode()))
             {
-                if (Setting.AutoSave)
+                if (Setting.AutoSave && !Application.isPlaying)
                 {
                     if (!cache[code].graphView.Save())
                     {
-                        var newWindow = cache[code] = Instantiate(this);
-                        newWindow.rootVisualElement.Clear();
-                        newWindow.rootVisualElement.Add(newWindow.CreateToolBar());
-                        newWindow.graphView = graphView;
-                        newWindow.rootVisualElement.Add(graphView);
-                        graphView.EditorWindow = newWindow;
-                        newWindow.Key = Key;
-                        newWindow.Show();
-                        newWindow.ShowNotification(new GUIContent("Auto save failed !"));
+                        var msg = "Auto save failed, do you want to discard change ?";
+                        if (EditorUtility.DisplayDialog("Warning", msg, "Cancel", "Discard"))
+                        {
+                            var newWindow = cache[code] = Clone();
+                            newWindow.Show();
+                        }
+                        else
+                        {
+                            cache.Remove(code);
+                        }
                         return;
                     }
                     Debug.Log($"<color=#3aff48>{graphView.TreeEditorName}</color>[{graphView.BehaviorTree._Object.name}] saved succeed ! {DateTime.Now}");
                 }
                 cache.Remove(code);
             }
+        }
+        /// <summary>
+        /// Clone the editor window for preventing data lossing when reloading or quitting
+        /// </summary>
+        /// <returns></returns>
+        protected virtual GraphEditorWindow Clone()
+        {
+            var newWindow = Instantiate(this);
+            newWindow.rootVisualElement.Clear();
+            newWindow.rootVisualElement.Add(newWindow.CreateToolBar());
+            newWindow.graphView = graphView;
+            newWindow.rootVisualElement.Add(graphView);
+            graphView.EditorWindow = newWindow;
+            newWindow.Key = Key;
+            return newWindow;
         }
 
         private void OnPlayModeStateChanged(PlayModeStateChange playModeStateChange)
@@ -150,7 +166,10 @@ namespace Kurisu.AkiBT.Editor
         {
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
-
+        void IHasCustomMenu.AddItemsToMenu(GenericMenu menu)
+        {
+            menu.AddItem(new GUIContent("Reload"), false, Reload);
+        }
         private void Reload()
         {
             if (Key != null)
@@ -173,10 +192,12 @@ namespace Kurisu.AkiBT.Editor
                 }
             );
         }
+        /// <summary>
+        /// Override to customize left toolbar
+        /// </summary>
         protected virtual void DrawLeftToolBar()
         {
-            if (Application.isPlaying) return;
-
+            GUI.enabled = !Application.isPlaying;
             if (GUILayout.Button($"Save {TreeName}", EditorStyles.toolbarButton))
             {
                 var guiContent = new GUIContent();
@@ -191,6 +212,7 @@ namespace Kurisu.AkiBT.Editor
                     ShowNotification(guiContent);
                 }
             }
+            GUI.enabled = true;
             bool newValue = GUILayout.Toggle(Setting.AutoSave, "Auto Save", EditorStyles.toolbarButton);
             if (newValue != Setting.AutoSave)
             {
@@ -208,6 +230,7 @@ namespace Kurisu.AkiBT.Editor
                 }
 
             }
+            GUI.enabled = !Application.isPlaying;
             if (GUILayout.Button("Copy From SO", EditorStyles.toolbarButton))
             {
                 string path = EditorUtility.OpenFilePanel("Select ScriptableObject to copy", Setting.LastPath, "asset");
@@ -221,11 +244,13 @@ namespace Kurisu.AkiBT.Editor
                     graphView.CopyFromTree(data, new Vector3(400, 300));
                 }
             }
+            GUI.enabled = true;
         }
+        /// <summary>
+        /// Override to customize right toolbar
+        /// </summary>
         protected virtual void DrawRightToolBar()
         {
-            if (Application.isPlaying) return;
-
             if (GUILayout.Button("Auto Layout", EditorStyles.toolbarButton))
             {
                 NodeAutoLayoutHelper.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
@@ -245,6 +270,7 @@ namespace Kurisu.AkiBT.Editor
                     AssetDatabase.Refresh();
                 }
             }
+            GUI.enabled = !Application.isPlaying;
             if (GUILayout.Button("Copy From Json", EditorStyles.toolbarButton))
             {
                 string path = EditorUtility.OpenFilePanel("Select json file to copy", Setting.LastPath, "json");
@@ -261,6 +287,7 @@ namespace Kurisu.AkiBT.Editor
                         ShowNotification(new GUIContent("Json file is in wrong format!"));
                 }
             }
+            GUI.enabled = true;
         }
         protected IBehaviorTree LoadDataFromFile(string path)
         {

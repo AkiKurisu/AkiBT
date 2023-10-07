@@ -260,14 +260,13 @@ namespace Kurisu.AkiBT.Editor
             if (Validate())
             {
                 Commit(behaviorTree);
-
                 AssetDatabase.SaveAssets();
                 return true;
             }
             return false;
         }
 
-        protected virtual bool Validate()
+        internal protected virtual bool Validate()
         {
             //validate nodes by DFS.
             var stack = new Stack<IBehaviorTreeNode>();
