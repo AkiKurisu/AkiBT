@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Condition : Get the Bool parameter of Animator, if it is consistent with the status, return Status.Success, otherwise return Status.Failure")]
-    [AkiLabel("Animator:BoolCondition")]
+    [AkiLabel("Animator : BoolCondition")]
     [AkiGroup("Animator")]
     public class AnimatorBoolCondition : AnimatorCondition
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Operate float value")]
-    [AkiLabel("Math:FloatOperator")]
+    [AkiLabel("Math : FloatOperator")]
     [AkiGroup("Math")]
     public class FloatOperator : Action
     {

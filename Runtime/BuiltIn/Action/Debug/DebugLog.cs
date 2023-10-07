@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Log some text")]
-    [AkiLabel("Debug:Log")]
+    [AkiLabel("Debug : Log")]
     [AkiGroup("Debug")]
     public class DebugLog : Action
     {

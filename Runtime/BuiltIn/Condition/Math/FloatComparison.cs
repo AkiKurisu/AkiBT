@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Condition : Compare Float values, if the condition is met, return Status.Success, otherwise return Status.Failure")]
-    [AkiLabel("Math:FloatComparison")]
+    [AkiLabel("Math : FloatComparison")]
     [AkiGroup("Math")]
     public class FloatComparison : Conditional
     {

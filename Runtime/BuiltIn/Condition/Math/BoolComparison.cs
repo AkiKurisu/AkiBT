@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Condition : Compare Bool values, if the conditions are met, return Status.Success, otherwise return Status.Failure")]
-    [AkiLabel("Math:BoolComparison")]
+    [AkiLabel("Math : BoolComparison")]
     [AkiGroup("Math")]
     public class BoolComparison : Conditional
     {

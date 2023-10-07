@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Flip bool value")]
-    [AkiLabel("Math:BoolFlip")]
+    [AkiLabel("Math : BoolFlip")]
     [AkiGroup("Math")]
     public class BoolFlip : Action
     {

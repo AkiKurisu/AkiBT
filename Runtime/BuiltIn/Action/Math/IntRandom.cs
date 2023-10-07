@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Int type set random value")]
-    [AkiLabel("Math:IntRandom")]
+    [AkiLabel("Math : IntRandom")]
     [AkiGroup("Math")]
     public class IntRandom : Action
     {

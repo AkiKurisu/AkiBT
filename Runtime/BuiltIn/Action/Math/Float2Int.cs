@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Convert float type to int type")]
-    [AkiLabel("Math:Float2Int")]
+    [AkiLabel("Math : Float2Int")]
     [AkiGroup("Math")]
     public class Float2Int : Action
     {

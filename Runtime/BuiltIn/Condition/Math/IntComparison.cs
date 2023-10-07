@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Condition : Compare Int values, if the conditions are met, return Status.Success, otherwise return Status.Failure")]
-    [AkiLabel("Math:IntComparison")]
+    [AkiLabel("Math : IntComparison")]
     [AkiGroup("Math")]
     public class IntComparison : Conditional
     {

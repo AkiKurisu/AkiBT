@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Calculate the distance between two Vector3")]
-    [AkiLabel("Vector3:Distance")]
+    [AkiLabel("Vector3 : Distance")]
     [AkiGroup("Vector3")]
     public class Vector3Distance : Action
     {

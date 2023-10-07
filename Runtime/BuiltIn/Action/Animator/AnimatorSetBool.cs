@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Set the Bool element of Animator according to status")]
-    [AkiLabel("Animator:SetBool")]
+    [AkiLabel("Animator : SetBool")]
     [AkiGroup("Animator")]
     public class AnimatorSetBool : AnimatorAction
     {

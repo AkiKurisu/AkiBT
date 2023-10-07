@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Random get Vector3 value")]
-    [AkiLabel("Vector3:Random")]
+    [AkiLabel("Vector3 : Random")]
     [AkiGroup("Vector3")]
     public class Vector3Random : Action
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Get Transform.Position")]
-    [AkiLabel("Transform:GetPosition")]
+    [AkiLabel("Transform : GetPosition")]
     [AkiGroup("Transform")]
     public class TransformGetPosition : Action
     {

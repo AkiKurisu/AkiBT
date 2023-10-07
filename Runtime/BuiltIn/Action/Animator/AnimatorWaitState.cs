@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Wait for the Animator to enter the specified State")]
-    [AkiLabel("Animator:WaitState")]
+    [AkiLabel("Animator : WaitState")]
     [AkiGroup("Animator")]
     public class AnimatorWaitState : AnimatorAction
     {

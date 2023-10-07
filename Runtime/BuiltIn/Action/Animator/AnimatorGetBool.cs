@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Get the Bool element of the Animator")]
-    [AkiLabel("Animator:GetBool")]
+    [AkiLabel("Animator : GetBool")]
     [AkiGroup("Animator")]
     public class AnimatorGetBool : AnimatorAction
     {

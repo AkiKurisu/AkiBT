@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Int type takes absolute value")]
-    [AkiLabel("Math:IntAbs")]
+    [AkiLabel("Math : IntAbs")]
     [AkiGroup("Math")]
     public class IntAbs : Action
     {

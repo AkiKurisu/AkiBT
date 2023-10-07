@@ -104,9 +104,9 @@ namespace Kurisu.AkiBT.Editor
                 {
                     if (!cache[code].graphView.Save())
                     {
-                        var newWindow = Instantiate(this);
+                        var newWindow = cache[code] = Instantiate(this);
                         newWindow.rootVisualElement.Clear();
-                        newWindow.rootVisualElement.Add(cache[code].CreateToolBar());
+                        newWindow.rootVisualElement.Add(newWindow.CreateToolBar());
                         newWindow.graphView = graphView;
                         newWindow.rootVisualElement.Add(graphView);
                         graphView.EditorWindow = newWindow;

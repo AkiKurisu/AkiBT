@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Operate int value")]
-    [AkiLabel("Math:IntOperator")]
+    [AkiLabel("Math : IntOperator")]
     [AkiGroup("Math")]
     public class IntOperator : Action
     {

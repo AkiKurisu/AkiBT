@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Set int value")]
-    [AkiLabel("Math:SetInt")]
+    [AkiLabel("Math : SetInt")]
     [AkiGroup("Math")]
     public class SetInt : Action
     {

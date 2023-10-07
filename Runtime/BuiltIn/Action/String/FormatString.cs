@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Format value of string")]
-    [AkiLabel("String:Format")]
+    [AkiLabel("String : Format")]
     [AkiGroup("String")]
     public class FormatString : Action
     {

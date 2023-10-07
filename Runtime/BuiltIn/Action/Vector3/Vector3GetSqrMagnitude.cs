@@ -3,7 +3,7 @@ namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Calculate the square of the Vector3 modulus, " +
     "the performance is better than Distance, but the accuracy will be lost")]
-    [AkiLabel("Vector3:GetSqrMagnitude")]
+    [AkiLabel("Vector3 : GetSqrMagnitude")]
     [AkiGroup("Vector3")]
     public class Vector3GetSqrMagnitude : Action
     {

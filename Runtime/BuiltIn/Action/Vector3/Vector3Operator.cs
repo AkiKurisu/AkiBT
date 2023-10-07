@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Operate Vector3 value")]
-    [AkiLabel("Vector3:Operator")]
+    [AkiLabel("Vector3 : Operator")]
     [AkiGroup("Vector3")]
     public class Vector3Operator : Action
     {

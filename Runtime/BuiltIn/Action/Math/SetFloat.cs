@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Set float value")]
-    [AkiLabel("Math:SetFloat")]
+    [AkiLabel("Math : SetFloat")]
     [AkiGroup("Math")]
     public class SetFloat : Action
     {

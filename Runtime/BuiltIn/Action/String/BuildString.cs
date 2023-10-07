@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Build value of string")]
-    [AkiLabel("String:Build")]
+    [AkiLabel("String : Build")]
     [AkiGroup("String")]
     public class BuildString : Action
     {

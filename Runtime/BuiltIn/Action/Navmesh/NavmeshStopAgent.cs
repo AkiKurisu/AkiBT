@@ -3,7 +3,7 @@ using UnityEngine.AI;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Stop NavmeshAgent according to isStopped")]
-    [AkiLabel("Navmesh:StopAgent")]
+    [AkiLabel("Navmesh : StopAgent")]
     [AkiGroup("Navmesh")]
     public class NavmeshStopAgent : Action
     {

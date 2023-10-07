@@ -2,7 +2,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Replace value of string")]
-    [AkiLabel("String:Replace")]
+    [AkiLabel("String : Replace")]
     [AkiGroup("String")]
     public class ReplaceString : Action
     {

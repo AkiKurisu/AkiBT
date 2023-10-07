@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
     [AkiInfo("Action : Set random string value")]
-    [AkiLabel("String:Random")]
+    [AkiLabel("String : Random")]
     [AkiGroup("String")]
     public class StringRandom : Action
     {
