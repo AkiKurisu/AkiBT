@@ -4,8 +4,20 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.IO;
+using UnityEditor.Callbacks;
+using System.Reflection;
 namespace Kurisu.AkiBT.Editor
 {
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class DefaultAssetTypeAttribute : Attribute
+    {
+        public Type AssetType { get; }
+        public DefaultAssetTypeAttribute(Type type)
+        {
+            AssetType = type;
+        }
+    }
+    [DefaultAssetType(typeof(BehaviorTreeSO))]
     public class GraphEditorWindow : EditorWindow, IHasCustomMenu
     {
         // GraphView window per UObject
@@ -13,7 +25,6 @@ namespace Kurisu.AkiBT.Editor
         private BehaviorTreeView graphView;
         public BehaviorTreeView GraphView => graphView;
         private UnityEngine.Object Key { get; set; }
-        protected virtual Type SOType => typeof(BehaviorTreeSO);
         protected virtual string TreeName => "Behavior Tree";
         protected virtual string InfoText => "Welcome to AkiBT, an ultra-simple behavior tree !";
         private static BehaviorTreeSetting setting;
@@ -24,6 +35,48 @@ namespace Kurisu.AkiBT.Editor
                 if (setting == null) setting = BehaviorTreeSetting.GetOrCreateSettings();
                 return setting;
             }
+        }
+        public Type GetAssetType()
+        {
+            var attribute = GetType().GetCustomAttribute<DefaultAssetTypeAttribute>();
+            return attribute?.AssetType ?? typeof(BehaviorTreeSO);
+        }
+        [OnOpenAsset]
+        private static bool OnOpenAsset(int instanceId, int _)
+        {
+            if (cache.ContainsKey(instanceId))
+            {
+                cache[instanceId].Show();
+                cache[instanceId].Focus();
+                return true;
+            }
+            var asset = EditorUtility.InstanceIDToObject(instanceId);
+            if (asset.GetType() == typeof(BehaviorTreeSO))
+            {
+                Show((IBehaviorTree)asset);
+                return true;
+            }
+            if (asset.GetType().IsSubclassOf(typeof(BehaviorTreeSO)))
+            {
+                var windowTypes = SubclassSearchUtility.FindSubClassTypes(typeof(GraphEditorWindow));
+                foreach (var windowType in windowTypes)
+                {
+                    var attribute = windowType.GetCustomAttribute<DefaultAssetTypeAttribute>();
+                    if (attribute != null && attribute.AssetType == asset.GetType())
+                    {
+                        var bt = (IBehaviorTree)asset;
+                        var window = CreateInstance(windowType) as GraphEditorWindow;
+                        window.RepaintGraphView(bt);
+                        window.titleContent = new GUIContent($"{window.graphView.TreeEditorName} ({bt._Object.name})");
+                        window.Key = bt._Object;
+                        cache[instanceId] = window;
+                        window.Show();
+                        window.Focus();
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         [MenuItem("Tools/AkiBT/AkiBT Editor")]
         private static void ShowEditorWindow()
@@ -82,7 +135,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private void SaveToSO(string path)
         {
-            var treeSO = CreateInstance(SOType);
+            var treeSO = CreateInstance(GetAssetType());
             if (!graphView.Validate())
             {
                 Debug.LogWarning($"<color=#ff2f2f>{graphView.TreeEditorName}</color> : Save failed, ScriptableObject wasn't created !\n{DateTime.Now}");
