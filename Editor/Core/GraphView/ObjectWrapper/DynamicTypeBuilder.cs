@@ -7,10 +7,10 @@ namespace Kurisu.AkiBT.Editor
     // Code from Unity.Kinematica
     internal static class DynamicTypeBuilder
     {
-        const string kDynamicTypeBuilderAssemblyName = "DynamicTypeBuilderAssembly";
-        static ModuleBuilder m_ModuleBuilder;
+        private const string kDynamicTypeBuilderAssemblyName = "DynamicTypeBuilderAssembly";
+        private static ModuleBuilder m_ModuleBuilder;
 
-        static ModuleBuilder CreateModuleBuilder()
+        private static ModuleBuilder CreateModuleBuilder()
         {
             if (m_ModuleBuilder != null)
                 return m_ModuleBuilder;
@@ -22,7 +22,7 @@ namespace Kurisu.AkiBT.Editor
             return m_ModuleBuilder;
         }
 
-        const string k_DynamicTypePrefix = "DynamicTypeDerivingFrom";
+        private const string k_DynamicTypePrefix = "DynamicTypeDerivingFrom";
         public static Type MakeDerivedType<T>(Type baseClass)
         {
             ModuleBuilder moduleBuilder = CreateModuleBuilder();
@@ -35,7 +35,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 //Get rid of the '`N' after the class name for the # of generic args
                 //TODO: If there are >= 10 args (highly unlikely) this will break (:
-                typeName = typeName.Substring(0, typeName.Length - 2);
+                typeName = typeName[..^2];
                 typeName += $"_{string.Join("_", baseClass.GetGenericArguments().Select(t => t.FullName))}";
             }
 
