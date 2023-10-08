@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 namespace Kurisu.AkiBT.Editor
 {
+    // Code from Unity.Kinematica
     internal static class DynamicTypeBuilder
     {
         const string kDynamicTypeBuilderAssemblyName = "DynamicTypeBuilderAssembly";

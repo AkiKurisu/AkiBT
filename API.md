@@ -162,8 +162,7 @@ public class IsHateGt: Conditional
 * Private [SerializeField] field and public field can be set on Behavior Tree editor window.
 
 ```c#
-[AkiInfo("Composite:随机选择,等待结点结束运行后重新选择")]
-[AkiLabel("Random随机选择")]
+[AkiInfo("Composite : Random, random update a child and reselect the next node")]
 public class Random : Composite
 {
     private NodeBehavior runningNode;
@@ -212,8 +211,8 @@ public class Random : Composite
 * Private [SerializeField] field and public field can be set on Behavior Tree editor window.
 
 ```c#
-[AkiInfo("Decorator:子结点返回Success则反转为Failure,为Failure则反转为Successs,返回Running则保持Running")]
-[AkiLabel("Invertor反转")]
+[AkiInfo("Decorator : If the child node returns Success, it is reversed to Failure," +
+   " if it is Failure, it is reversed to Success.")]
 public class Invertor : Decorator
 {
     protected override Status OnDecorate(Status childeStatus)
@@ -230,9 +229,11 @@ public class Invertor : Decorator
 
 ## Attributes
 
-1. You can use AkiInfo attribute to describe the behavior detail of the node for information.
+1. ``AkiInfo``用以描述结点行为
+   
+   You can use ``AkiInfo`` attribute to describe the behavior detail of the node for information.
 ```C#
-  [AkiInfo("Action:根据isStopped停止NavmeshAgent")]
+[AkiInfo("Action : Stop NavmeshAgent according to isStopped")]
 public class NavmeshStopAgent : Action
 {
     private NavMeshAgent _navMeshAgent;
@@ -240,31 +241,31 @@ public class NavmeshStopAgent : Action
 ```
 <img src="Images/InfoAttribute.png" />
 
-1. AkiLabel用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.
+2. ``AkiLabel``用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.
    
-   AkiLabel attribute is added for replacing label of node's title or field especially for Chinese.
+   ``AkiLabel`` attribute is added for replacing label of node's title or field especially for Chinese.
    
 ```C#
-[AkiLabel("Navmesh:StopAgent")]
+[AkiLabel("Navmesh : StopAgent")]
 public class NavmeshStopAgent : Action
 {
     private NavMeshAgent _navMeshAgent;
-    [SerializeField,AkiLabel("是否停止")]
+    [SerializeField,AkiLabel("Whether to stop")]
     private SharedBool isStopped;
     }
 ```
 <img src="Images/AkiLabel.png" width="480"/>
 
-3. AkiGroup用以对结点进行分类
+3. ``AkiGroup``用以对结点进行分类
 
-    AkiGroup is an advanced attribute using in Node Searching,you can add this attribute to make it easier and more clear to find certain node.
+    ``AkiGroup`` is an advanced attribute using in Node Searching,you can add this attribute to make it easier and more clear to find certain node.
 
 ```c#
-    [AkiGroup("Animator")]
-    public class AnimatorSetBool : AnimatorAction
-    {
-        
-    }
+[AkiGroup("Animator")]
+public class AnimatorSetBool : AnimatorAction
+{
+    
+}
 ```
 
 <img src="Images/AkiGroup.png" width="480"/>
@@ -274,6 +275,34 @@ public class NavmeshStopAgent : Action
         You can also subcategory the SearchWindow by using ``'/'``.
 
 <img src="Images/SubCategories.png" width="480"/>
+
+4. ``ForceShared``用以强制共享共享变量
+
+    ``ForceShared`` is used to force shared variables to be shared
+
+```c#
+public class SetFloat : Action
+{
+    [SerializeField]
+    private float setValue;
+    //Force this variable to be shared
+    [SerializeField, ForceShared]
+    private SharedFloat floatToSet;
+}
+```
+
+5. ``WrapObject``用以显示UIElement不支持显示的对象，将使用IMGUI进行显示
+
+    ``WrapObject`` is used to display objects that UIElement does not support display, and IMGUI will be used to display them.
+
+```c#
+ public class InvokeUnityEvent : Action
+{
+    //Use IMGUI to show UnityEvent
+    [SerializeField, WrapObject]
+    private UnityEvent unityEvent;
+}
+```
 
 ## SharedVariable
 

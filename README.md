@@ -92,9 +92,9 @@ Modified from [UniBT documentation](https://github.com/yoshidan/UniBT)
 
    <img src="Images/Setting.png" width="480"/>
 
-4. 序列化最佳实践：在Editor中使用Json序列化会保存引用``UnityEngine.Object``（以下简称UObject）对象的GUID，Runtime时Json反序列时无法获取UObject对象，你需要在Runtime通过别的方式加载所需要的UObject对象，例如将行为树中对UObject的引用全部改为SharedTObject和SharedObject，在Runtime通过其名称从你的资源加载方案中获取，例如Addressable的资源地址或AssetBundle的文件路径。
+4. Json序列化最佳实践：在Editor中使用Json序列化会保存引用``UnityEngine.Object``（以下简称UObject）对象的GUID，Runtime时Json反序列时无法获取UObject对象，你需要在Runtime通过别的方式加载所需要的UObject对象，例如将行为树中对UObject的引用全部改为SharedTObject和SharedObject，在Runtime通过其名称从你的资源加载方案中获取，例如Addressable的资源地址或AssetBundle的文件路径。
 
-   Serialization best practice: Using Json serialization in the Editor will save the GUID that refers to the ``UnityEngine.Object ``(hereinafter referred to as UObject) object. The UObject object cannot be obtained when Json is deserialized at runtime. You need to load the required objects in other ways at runtime. UObject objects, for example, change all references to UObject in the behavior tree to SharedTObject and SharedObject, and obtain them from your resource loading scheme through their names at runtime, such as the resource address of Addressable or the file path of AssetBundle.
+  Json Serialization best practice: Using Json serialization in the Editor will save the GUID that refers to the ``UnityEngine.Object ``(hereinafter referred to as UObject) object. The UObject object cannot be obtained when Json is deserialized at runtime. You need to load the required objects in other ways at runtime. UObject objects, for example, change all references to UObject in the behavior tree to SharedTObject and SharedObject, and obtain them from your resource loading scheme through their names at runtime, such as the resource address of Addressable or the file path of AssetBundle.
 
 ## 拓展功能 Extra Module
 

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
+    // Code from Unity.Kinematica
     internal static class GenericObjectWrapperHelper
     {
         public static ScriptableObject Wrap<T>()
