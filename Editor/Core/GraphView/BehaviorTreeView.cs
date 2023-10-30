@@ -184,7 +184,7 @@ namespace Kurisu.AkiBT.Editor
         /// <returns></returns>
         public string SerializeTreeToJson()
         {
-            return BehaviorTreeSerializeUtility.SerializeTree(behaviorTree, false, true);
+            return SerializeUtility.SerializeTree(behaviorTree, false, true);
         }
         /// <summary>
         /// Copy BehaviorTree from json file

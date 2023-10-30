@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-    public class BehaviorTreeSerializeUtility
+    public class SerializeUtility
     {
         public static string SerializeTree(IBehaviorTree behaviorTree, bool indented = false, bool serializeEditorData = false)
         {

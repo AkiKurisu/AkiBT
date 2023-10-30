@@ -149,7 +149,7 @@ namespace Kurisu.AkiBT.Editor
             for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Count; i++)
             {
                 var pair = serviceData.serializationCollection.serializationPairs[i];
-                var serializedData = BehaviorTreeSerializeUtility.SerializeTree(pair.behaviorTreeSO, true, true);
+                var serializedData = SerializeUtility.SerializeTree(pair.behaviorTreeSO, true, true);
                 string folderPath = path + $"/{pair.behaviorTreeSO.GetType().Name}";
                 if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
                 string savePath = $"{folderPath}/{pair.behaviorTreeSO.name}_{serviceData.serializationCollection.guids[i]}.json";

@@ -36,7 +36,6 @@ namespace Kurisu.AkiBT
         [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
         /// <summary>
-        /// 外部传入绑定对象并初始化,调用Awake和Start方法
         /// Bind GameObject and Init behaviorTree through Awake and Start method
         /// </summary>
         /// <param name="gameObject"></param>
@@ -47,7 +46,6 @@ namespace Kurisu.AkiBT
             root.Start();
         }
         /// <summary>
-        /// 外部调用Update更新,此方法运行完全基于SO
         /// Update BehaviorTree externally, this method is completely based on ScriptableObject
         /// </summary>
         public virtual Status Update()
@@ -59,7 +57,7 @@ namespace Kurisu.AkiBT
         }
         public virtual void Deserialize(string serializedData)
         {
-            var template = BehaviorTreeSerializeUtility.DeserializeTree(serializedData);
+            var template = SerializeUtility.DeserializeTree(serializedData);
             if (template == null) return;
             root = template.Root;
             sharedVariables = new List<SharedVariable>(template.Variables);
@@ -67,5 +65,17 @@ namespace Kurisu.AkiBT
             blockData = new List<GroupBlockData>(template.BlockData);
 #endif
         }
+#if AKIBT_REFLECTION
+        /// <summary>
+        /// This will be called when the object is loaded for the first time when entering PlayMode
+        /// Currently we only need to map variables once per scriptableObject
+        /// </summary>
+        //TODO: After adding Scene-Scope BlackBoard and Game-Scope BlackBoard, map time will be changed
+        private void Awake()
+        {
+            root.Run(null, this);
+            SharedVariableMapper.MapSharedVariables(this);
+        }
+#endif
     }
 }

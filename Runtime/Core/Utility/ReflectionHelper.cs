@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-namespace Kurisu.AkiBT.Editor
+namespace Kurisu.AkiBT
 {
     /// <summary>
     /// Code from https://stackoverflow.com/questions/39092168/c-sharp-copying-unityevent-information-using-reflection
@@ -34,7 +34,7 @@ namespace Kurisu.AkiBT.Editor
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">The object.</param>
         /// <returns>A deep copy of obj.</returns>
-        /// <exception cref="System.ArgumentNullException">Object cannot be null</exception>
+        /// <exception cref="ArgumentNullException">Object cannot be null</exception>
         public static T DeepCopy<T>(T obj)
         {
             if (obj == null)

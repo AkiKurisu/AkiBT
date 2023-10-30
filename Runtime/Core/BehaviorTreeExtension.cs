@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
@@ -24,6 +25,10 @@ namespace Kurisu.AkiBT
             }
             Debug.LogError($"Can't find shared variable : {variableName}", behaviorTree._Object);
             return null;
+        }
+        public static TraverseIterator Traverse(this IBehaviorTree behaviorTree)
+        {
+            return new TraverseIterator(behaviorTree);
         }
     }
 }

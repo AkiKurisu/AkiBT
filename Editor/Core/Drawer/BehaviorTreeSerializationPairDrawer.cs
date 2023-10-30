@@ -21,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
             GUI.enabled = textProperty.objectReferenceValue != null;
             if (GUI.Button(position, "Serialize"))
             {
-                var serializedData = BehaviorTreeSerializeUtility.SerializeTree(soProperty.objectReferenceValue as BehaviorTreeSO, true, true);
+                var serializedData = SerializeUtility.SerializeTree(soProperty.objectReferenceValue as BehaviorTreeSO, true, true);
                 var textPath = Application.dataPath + AssetDatabase.GetAssetPath(textProperty.objectReferenceValue).Replace("Assets", string.Empty);
                 File.WriteAllText(textPath, serializedData);
                 AssetDatabase.SaveAssets();

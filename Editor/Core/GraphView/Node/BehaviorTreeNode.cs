@@ -31,12 +31,9 @@ namespace Kurisu.AkiBT.Editor
         public string GUID => guid;
         private string guid;
         protected NodeBehavior NodeBehavior { set; get; }
-
         private Type dirtyNodeBehaviorType;
         public Port Parent { private set; get; }
-
         private readonly VisualElement container;
-
         private readonly TextField description;
         public string Description => description.value;
         private readonly FieldResolverFactory fieldResolverFactory;
@@ -44,7 +41,6 @@ namespace Kurisu.AkiBT.Editor
         protected readonly List<FieldInfo> fieldInfos = new();
         public Action<IBehaviorTreeNode> OnSelectAction { get; set; }
         public ITreeView MapTreeView { get; private set; }
-        protected bool noValidate;
         VisualElement ILayoutTreeNode.View => this;
         public override void OnSelected()
         {
@@ -175,9 +171,10 @@ namespace Kurisu.AkiBT.Editor
 
         protected abstract bool OnValidate(Stack<IBehaviorTreeNode> stack);
         /// <summary>
-        ///  核心:设置结点行为类型
+        /// Set the bound behavior
         /// </summary>
         /// <param name="nodeBehavior"></param>
+        /// <param name="ownerTreeView"></param>
         public void SetBehavior(Type nodeBehavior, ITreeView ownerTreeView = null)
         {
             if (ownerTreeView != null) this.MapTreeView = ownerTreeView;
@@ -206,8 +203,10 @@ namespace Kurisu.AkiBT.Editor
                 });
             var label = nodeBehavior.GetCustomAttribute(typeof(AkiLabelAttribute), false) as AkiLabelAttribute;
             title = label?.Title ?? nodeBehavior.Name;
-            noValidate = nodeBehavior.GetCustomAttribute(typeof(NoValidateAttribute), false) != null;
+            OnBehaviorSet();
+
         }
+        protected virtual void OnBehaviorSet() { }
 
         private static IEnumerable<FieldInfo> GetAllFields(Type t)
         {

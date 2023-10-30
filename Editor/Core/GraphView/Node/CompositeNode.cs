@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,6 +8,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class CompositeNode : BehaviorTreeNode
     {
+        public bool NoValidate { get; private set; }
         public List<Port> ChildPorts = new();
         private readonly List<IBehaviorTreeNode> cache = new();
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -34,8 +36,11 @@ namespace Kurisu.AkiBT.Editor
             ChildPorts.Add(child);
             outputContainer.Add(child);
         }
-
-        private void RemoveUnnecessaryChildren()
+        protected override void OnBehaviorSet()
+        {
+            NoValidate = GetBehavior().GetCustomAttribute(typeof(NoValidateAttribute), false) != null;
+        }
+        public void RemoveUnnecessaryChildren()
         {
             var unnecessary = ChildPorts.Where(p => !p.connected).ToList();
             unnecessary.ForEach(e =>
@@ -47,12 +52,12 @@ namespace Kurisu.AkiBT.Editor
 
         protected override bool OnValidate(Stack<IBehaviorTreeNode> stack)
         {
-            if (ChildPorts.Count <= 0 && !noValidate) return false;
+            if (ChildPorts.Count <= 0 && !NoValidate) return false;
             foreach (var port in ChildPorts)
             {
                 if (!port.connected)
                 {
-                    if (noValidate) continue;
+                    if (NoValidate) continue;
                     style.backgroundColor = Color.red;
                     return false;
                 }
@@ -84,7 +89,11 @@ namespace Kurisu.AkiBT.Editor
         }
         public override IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
-            return ChildPorts.Where(x => x.connected).Select(x => PortHelper.FindChildNode(x)).OfType<ILayoutTreeNode>().Reverse().ToList();
+            return ChildPorts.Where(x => x.connected)
+                    .Select(x => PortHelper.FindChildNode(x))
+                    .OfType<ILayoutTreeNode>()
+                    .Reverse()
+                    .ToList();
         }
     }
 }

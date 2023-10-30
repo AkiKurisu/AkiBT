@@ -16,10 +16,10 @@ namespace Kurisu.AkiBT.Editor
             Child = CreateChildPort();
             outputContainer.Add(Child);
             capabilities &= ~Capabilities.Copiable;
-            capabilities &= ~Capabilities.Deletable;//不可删除
-            capabilities &= ~Capabilities.Movable;//不可删除
+            capabilities &= ~Capabilities.Deletable;
+            capabilities &= ~Capabilities.Movable;
             RefreshExpandedState();
-            RefreshPorts();//更新链接
+            RefreshPorts();
         }
 
         protected override void AddParent()

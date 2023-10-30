@@ -72,7 +72,17 @@ namespace Kurisu.AkiBT
         public virtual void Abort() { }
 
         public virtual bool CanUpdate() => true;
-        protected void InitVariable<T>(T variable) where T : SharedVariable, IBindableVariable<T>
+        protected void InitVariable<T>(T variable, bool forceInit = false) where T : SharedVariable, IBindableVariable<T>
+        {
+            //Skip init variable if use reflection runtime
+            //Add reference to internal method to prevent generic method from being stripped
+#if AKIBT_REFLECTION
+            if (forceInit) InitVariableInternal(variable);
+#else
+            InitVariableInternal(variable);
+#endif
+        }
+        internal void InitVariableInternal<T>(T variable) where T : SharedVariable, IBindableVariable<T>
         {
             if (variable == null) return;
             if (!variable.IsShared) return;
@@ -98,6 +108,5 @@ namespace Kurisu.AkiBT
             }
             Debug.LogWarning($"{variable.Name} is not a valid shared variable !");
         }
-
     }
 }

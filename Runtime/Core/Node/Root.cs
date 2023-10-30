@@ -5,7 +5,7 @@ namespace Kurisu.AkiBT
     /// 根结点行为
     /// </summary>
     [AkiInfo("Root:根节点,你不能删除它")]
-    public class Root : NodeBehavior
+    public class Root : NodeBehavior, IIterable
     {
         [SerializeReference]
         internal NodeBehavior child;
@@ -59,6 +59,15 @@ namespace Kurisu.AkiBT
         public override void Abort()
         {
             child?.Abort();
+        }
+        public NodeBehavior GetChildAt(int index)
+        {
+            return child;
+        }
+
+        public int GetChildCount()
+        {
+            return child == null ? 0 : 1;
         }
 
     }

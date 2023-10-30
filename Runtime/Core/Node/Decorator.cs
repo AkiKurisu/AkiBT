@@ -5,7 +5,7 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 装饰器结点行为
     /// </summary>
-    public class Decorator : NodeBehavior
+    public class Decorator : NodeBehavior, IIterable
     {
 
         [SerializeReference]
@@ -86,6 +86,15 @@ namespace Kurisu.AkiBT
                 isRunning = false;
                 child?.Abort();
             }
+        }
+        public NodeBehavior GetChildAt(int index)
+        {
+            return child;
+        }
+
+        public int GetChildCount()
+        {
+            return child == null ? 0 : 1;
         }
     }
 }

@@ -50,6 +50,9 @@ namespace Kurisu.AkiBT
         private void Awake()
         {
             root.Run(gameObject, this);
+#if AKIBT_REFLECTION
+            SharedVariableMapper.MapSharedVariables(this);
+#endif
             root.Awake();
         }
 

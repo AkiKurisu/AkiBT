@@ -13,12 +13,11 @@ namespace Kurisu.AkiBT.Editor
         {
             if (serviceData == null) serviceData = BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
             searchList ??= GetAllBehaviorTreeSO();
-            Stack<NodeBehavior> stack = new();
             List<BehaviorTreeSO> behaviorTreeSOs = new();
             List<BehaviorTreeSerializationPair> pairs = new();
             foreach (var treeSO in searchList)
             {
-                SearchBehavior(treeSO, stack, searchType, behaviorTreeSOs);
+                SearchBehavior(treeSO, searchType, behaviorTreeSOs);
             }
             foreach (var so in behaviorTreeSOs)
             {
@@ -37,44 +36,19 @@ namespace Kurisu.AkiBT.Editor
             }
             return behaviorTreeSOs;
         }
-        private static void SearchBehavior(BehaviorTreeSO treeSO, Stack<NodeBehavior> stack, Type checkType, List<BehaviorTreeSO> behaviorTreeSOs)
+        private static void SearchBehavior(BehaviorTreeSO treeSO, Type checkType, List<BehaviorTreeSO> behaviorTreeSOs)
         {
             if (checkType == null)
             {
                 behaviorTreeSOs.Add(treeSO);
                 return;
             }
-            stack.Clear();
-            stack.Push(treeSO.Root);
-            while (stack.Count > 0)
+            foreach (var node in treeSO.Traverse())
             {
-                var node = stack.Pop();
-                if (node == null) return;
                 if (node.GetType() == checkType)
                 {
                     behaviorTreeSOs.Add(treeSO);
                     return;
-                }
-                if (node is Root)
-                {
-                    stack.Push((node as Root).Child);
-                    continue;
-                }
-                if (node is Conditional)
-                {
-                    var child = (node as Conditional).Child;
-                    if (child != null) stack.Push(child);
-                    continue;
-                }
-                if (node is Decorator)
-                {
-                    stack.Push((node as Decorator).Child);
-                    continue;
-                }
-                if (node is Composite)
-                {
-                    foreach (var child in (node as Composite).Children) stack.Push(child);
-                    continue;
                 }
             }
         }

@@ -84,11 +84,15 @@ namespace Kurisu.AkiBT.Editor
                             if (node is CompositeNode compositeNode)
                             {
                                 var addible = nb.Children.Count - compositeNode.ChildPorts.Count;
+                                if (compositeNode.NoValidate && nb.Children.Count == 0)
+                                {
+                                    compositeNode.RemoveUnnecessaryChildren();
+                                    break;
+                                }
                                 for (var i = 0; i < addible; i++)
                                 {
                                     compositeNode.AddChild();
                                 }
-
                                 for (var i = 0; i < nb.Children.Count; i++)
                                 {
                                     stack.Push(new EdgePair(nb.Children[i], new PortAdapter(compositeNode.ChildPorts[i])));

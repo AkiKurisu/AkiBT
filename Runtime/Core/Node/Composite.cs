@@ -6,10 +6,10 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 组合类型结点行为
     /// </summary>
-    public abstract class Composite : NodeBehavior
+    public abstract class Composite : NodeBehavior, IIterable
     {
         [SerializeReference]
-        private List<NodeBehavior> children = new List<NodeBehavior>();
+        private List<NodeBehavior> children = new();
 
         public List<NodeBehavior> Children => children;
 
@@ -57,7 +57,18 @@ namespace Kurisu.AkiBT
         {
             children.Add(child);
         }
+
+
 #endif
+        public NodeBehavior GetChildAt(int index)
+        {
+            return children[index];
+        }
+
+        public int GetChildCount()
+        {
+            return children.Count;
+        }
 
     }
 }

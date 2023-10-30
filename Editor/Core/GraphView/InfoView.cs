@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
@@ -14,11 +15,10 @@ namespace Kurisu.AkiBT.Editor
         {
             Clear();
             IMGUIContainer container = new();
-            AkiInfoAttribute[] array;
-            if ((array = node.GetBehavior().GetCustomAttributes(typeof(AkiInfoAttribute), false) as AkiInfoAttribute[]).Length > 0)
+            AkiInfoAttribute infoAttribute;
+            if ((infoAttribute = node.GetBehavior().GetCustomAttribute<AkiInfoAttribute>()) != null)
             {
-                Label label = new(array[0].Description);
-                container.Add(label);
+                container.Add(new Label(infoAttribute.Description));
             }
             Add(container);
         }

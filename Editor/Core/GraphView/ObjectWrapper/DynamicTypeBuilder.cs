@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Editor
     // Code from Unity.Kinematica
     internal static class DynamicTypeBuilder
     {
-        private const string kDynamicTypeBuilderAssemblyName = "DynamicTypeBuilderAssembly";
+        private const string kDynamicTypeBuilderAssemblyName = "AkiBTDynamicTypeBuilderAssembly";
         private static ModuleBuilder m_ModuleBuilder;
 
         private static ModuleBuilder CreateModuleBuilder()
@@ -22,7 +22,7 @@ namespace Kurisu.AkiBT.Editor
             return m_ModuleBuilder;
         }
 
-        private const string k_DynamicTypePrefix = "DynamicTypeDerivingFrom";
+        private const string k_DynamicTypePrefix = "AkiBTDynamicTypeDerivingFrom";
         public static Type MakeDerivedType<T>(Type baseClass)
         {
             ModuleBuilder moduleBuilder = CreateModuleBuilder();
