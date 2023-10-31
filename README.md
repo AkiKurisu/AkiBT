@@ -133,22 +133,22 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
 
 <img src="Images/GameScope.png"/>
 
-不同的作用域直接可以互相依赖例如``SceneVariableScope``可以将``GameVariableScope``设置为Parent从而获取应用内的全局共享变量
+不同的作用域之间可以互相依赖例如``SceneVariableScope``可以将``GameVariableScope``设置为ParentScope从而获取应用内的全局共享变量
 
 #### 如何绑定全局共享变量？
 
-   在Inspector中查看字段，点击``Is Global``将其标记，在共享变量初始化前为先绑定至全局共享变量
+   在Inspector中查看字段，点击``Is Global``将其标记，行为树将在共享变量初始化前先绑定全局共享变量
 
    <img src="Images/SetGlobal.png"/>
 
    * 标记后按钮文本为绿色
-### 泛型共享变量 SharedTObject
+### 泛型对象共享变量 SharedTObject
 
-   在自定义结点中，你可以使用`SharedTObject<T>`来创建一个泛型共享变量，其绑定逻辑与SharedObject相同可见``IBindableVariable<T>``，好处是你可以拥有更安全的类型检查
+   在自定义结点中，你可以使用`SharedTObject<T>`来创建一个泛型对象（UnityEngine.Object）共享变量，其绑定逻辑与`SharedObject`相同，可见``IBindableVariable<T>``，好处是你可以拥有更安全的类型检查
 
 ### 初始化共享变量
 
-   在AkiBT中支持两种方式初始化共享变量，这一步骤是为了将结点中的共享变量与行为树中的相绑定，你需要在使用变量之前请确保它已经被初始化。
+   在AkiBT中支持两种方式初始化共享变量，这一步骤是为了将结点中的共享变量与行为树中的相绑定，在使用变量之前请确保它已经被初始化。
    第一种是手动初始化，示例如下
 
    ```C#
@@ -162,7 +162,7 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
         }
     }
    ```
-   第二种是使用C#的反射来完成，你需要在ProjectSetting/AkiBTSetting中启用`Enable Runtime Reflection`，行为树将在Awake时使用反射获取所有共享变量并初始化
+   第二种是使用C#的反射来完成，你需要在ProjectSetting/AkiBTSetting中勾选`Enable Runtime Reflection`，行为树将在初次加载时使用反射获取所有共享变量进行初始化
 
    <img src="Images/EnableReflection.png"/>
 

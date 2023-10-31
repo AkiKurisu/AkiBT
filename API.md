@@ -306,9 +306,9 @@ public class SetFloat : Action
 
 ## SharedVariable
 
-1. 使用共享变量需要在Awake中初始化从而绑定父级行为树中的变量。
+1. 如没有启用`Runtime Reflection`使用共享变量前需要在`Awake()`中初始化从而绑定父级行为树中的变量。
 
-    The use of shared variables needs to be initialized in Awake to bind the variables in the parent behavior tree.
+    Before using of shared variables needs to be initialized in `Awake()` if disabled `Runtime Reflection` to bind the variables in the parent behavior tree.
 ```C#
 public class GetGameObjectPosition : Action
 {

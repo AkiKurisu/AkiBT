@@ -58,7 +58,7 @@ namespace Kurisu.AkiBT
             foreach (var variable in variableSource.SharedVariables)
             {
                 if (!variable.IsGlobal) continue;
-                variable.MapTo(globalVariables);
+                variable.MapToInternal(globalVariables);
             }
         }
         /// <summary>
@@ -66,7 +66,7 @@ namespace Kurisu.AkiBT
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="variableSource"></param>
-        public static void MapTo(this SharedVariable variable, IVariableSource variableSource)
+        internal static void MapToInternal(this SharedVariable variable, IVariableSource variableSource)
         {
             if (variable == null) return;
             if (!variable.IsShared && !variable.IsGlobal) return;

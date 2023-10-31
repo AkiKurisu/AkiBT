@@ -76,7 +76,7 @@ namespace Kurisu.AkiBT
         {
             //Skip init variable if use reflection runtime
 #if !AKIBT_REFLECTION
-            sharedVariable.Map(Tree);
+            sharedVariable.MapToInternal(Tree);
 #endif
         }
     }

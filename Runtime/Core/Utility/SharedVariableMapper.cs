@@ -27,7 +27,7 @@ namespace Kurisu.AkiBT
                 }
                 foreach (var fieldInfo in fields)
                 {
-                    (fieldInfo.GetValue(behavior) as SharedVariable).MapTo(behaviorTree);
+                    (fieldInfo.GetValue(behavior) as SharedVariable).MapToInternal(behaviorTree);
                 }
             }
         }
