@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
+using UObject = UnityEngine.Object;
 namespace Kurisu.AkiBT
 {
     [Serializable]
-    public class SharedObject : SharedVariable<UnityEngine.Object>, IBindableVariable<SharedObject>
+    public class SharedObject : SharedVariable<UObject>
     {
         [SerializeField]
         private string constraintTypeAQM;
         public string ConstraintTypeAQM { get => constraintTypeAQM; set => constraintTypeAQM = value; }
-        public SharedObject(UnityEngine.Object value)
+        public SharedObject(UObject value)
         {
             this.value = value;
         }
@@ -18,17 +19,26 @@ namespace Kurisu.AkiBT
         }
         public override object Clone()
         {
-            return new SharedObject() { Value = value, Name = Name, IsShared = IsShared, ConstraintTypeAQM = ConstraintTypeAQM };
-        }
-
-        public void Bind(SharedObject other)
-        {
-            base.Bind(other);
+            return new SharedObject() { Value = value, Name = Name, IsShared = IsShared, ConstraintTypeAQM = ConstraintTypeAQM, IsGlobal = IsGlobal };
         }
     }
     [Serializable]
-    public class SharedTObject<TObject> : SharedVariable<TObject>, IBindableVariable<SharedObject>, IBindableVariable<SharedTObject<TObject>> where TObject : UnityEngine.Object
+    public class SharedTObject<TObject> : SharedVariable<TObject>, IBindableVariable<UObject> where TObject : UObject
     {
+        //Special case of binding SharedTObject<T> to SharedObject
+        UObject IBindableVariable<UObject>.Value
+        {
+            get
+            {
+                return Value;
+            }
+
+            set
+            {
+                Value = (TObject)value;
+            }
+        }
+
         public SharedTObject(TObject value)
         {
             this.value = value;
@@ -39,18 +49,24 @@ namespace Kurisu.AkiBT
         }
         public override object Clone()
         {
-            return new SharedTObject<TObject>() { Value = value, Name = Name, IsShared = IsShared };
+            return new SharedTObject<TObject>() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
         }
-
-        public void Bind(SharedObject other)
+        public override void Bind(SharedVariable other)
         {
-            Getter = () => (TObject)other.Value;
+            //Special case of binding SharedObject to SharedTObject<T>
+            if (other is IBindableVariable<UObject> sharedObject)
+            {
+                Bind(sharedObject);
+            }
+            else
+            {
+                base.Bind(other);
+            }
+        }
+        public void Bind(IBindableVariable<UObject> other)
+        {
+            Getter = () => { return (TObject)other.Value; };
             Setter = (evt) => other.Value = evt;
-        }
-
-        public void Bind(SharedTObject<TObject> other)
-        {
-            base.Bind(other);
         }
     }
 }

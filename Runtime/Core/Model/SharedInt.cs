@@ -2,7 +2,7 @@ using System;
 namespace Kurisu.AkiBT
 {
     [Serializable]
-    public class SharedInt : SharedVariable<int>, IBindableVariable<SharedInt>
+    public class SharedInt : SharedVariable<int>
     {
         public SharedInt(int value)
         {
@@ -14,12 +14,7 @@ namespace Kurisu.AkiBT
         }
         public override object Clone()
         {
-            return new SharedInt() { Value = value, Name = Name, IsShared = IsShared };
-        }
-
-        public void Bind(SharedInt other)
-        {
-            base.Bind(other);
+            return new SharedInt() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
         }
     }
 }

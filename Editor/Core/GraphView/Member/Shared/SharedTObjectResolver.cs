@@ -64,7 +64,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private static List<string> GetList(ITreeView treeView)
         {
-            return treeView.ExposedProperties
+            return treeView.SharedVariables
             .Where(x => x is SharedObject sharedObject && sharedObject.ConstraintTypeAQM == typeof(T).AssemblyQualifiedName)
             .Select(v => v.Name)
             .ToList();
@@ -72,7 +72,7 @@ namespace Kurisu.AkiBT.Editor
         private void BindProperty()
         {
             if (treeView == null) return;
-            bindExposedProperty = treeView.ExposedProperties
+            bindExposedProperty = treeView.SharedVariables
             .Where(x => x is SharedObject sharedObject && sharedObject.ConstraintTypeAQM == typeof(T).AssemblyQualifiedName && x.Name.Equals(value.Name))
             .FirstOrDefault();
         }

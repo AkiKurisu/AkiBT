@@ -1,7 +1,8 @@
+using System;
 namespace Kurisu.AkiBT
 {
-    [System.Serializable]
-    public class SharedString : SharedVariable<string>, IBindableVariable<SharedString>
+    [Serializable]
+    public class SharedString : SharedVariable<string>
     {
         public SharedString(string value)
         {
@@ -13,12 +14,7 @@ namespace Kurisu.AkiBT
         }
         public override object Clone()
         {
-            return new SharedString() { Value = value, Name = Name, IsShared = IsShared };
-        }
-
-        public void Bind(SharedString other)
-        {
-            base.Bind(other);
+            return new SharedString() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
         }
     }
 }

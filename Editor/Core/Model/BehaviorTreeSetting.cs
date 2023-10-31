@@ -158,9 +158,14 @@ namespace Kurisu.AkiBT.Editor
         }
         public override void OnGUI(string searchContext)
         {
+            GUILayout.BeginVertical("Editor Settings", GUI.skin.box);
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
             EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.GraphEditorSettingStyle);
             EditorGUILayout.PropertyField(m_Settings.FindProperty("autoLayoutSiblingDistance"), Styles.LayoutDistanceStyle);
             m_Settings.ApplyModifiedPropertiesWithoutUndo();
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical("Runtime Settings", GUI.skin.box);
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
             var newValue = EditorGUILayout.ToggleLeft(Styles.EnableReflectionStyle, useReflection);
             if (newValue != useReflection)
             {
@@ -174,6 +179,7 @@ namespace Kurisu.AkiBT.Editor
                     ScriptingSymbolHelper.RemoveScriptingSymbol(ReflectionSymbol);
                 }
             }
+            GUILayout.EndVertical();
         }
         [SettingsProvider]
         public static SettingsProvider CreateMyCustomSettingsProvider()

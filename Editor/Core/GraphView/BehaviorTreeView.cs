@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT.Editor
         protected readonly IBehaviorTree behaviorTree;
         public IBehaviorTree BehaviorTree => behaviorTree;
         protected RootNode root;
-        public List<SharedVariable> ExposedProperties { get; } = new();
+        public List<SharedVariable> SharedVariables { get; } = new();
         public virtual string TreeEditorName => "AkiBT";
         private readonly NodeResolverFactory nodeResolver = NodeResolverFactory.Instance;
         public Action<IBehaviorTreeNode> OnNodeSelect { get; set; }
@@ -68,7 +68,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private void AddBlackBoard()
         {
-            var blackboard = new AdvancedBlackBoard(this);
+            var blackboard = new AdvancedBlackBoard(this, View);
             blackboard.SetPosition(new Rect(10, 100, 300, 400));
             Add(blackboard);
             BlackBoard = blackboard;
@@ -285,7 +285,7 @@ namespace Kurisu.AkiBT.Editor
             }
             root.PostCommit(behaviorTree);
             behaviorTree.SharedVariables.Clear();
-            foreach (var sharedVariable in ExposedProperties)
+            foreach (var sharedVariable in SharedVariables)
             {
                 behaviorTree.SharedVariables.Add(sharedVariable);
             }

@@ -41,12 +41,13 @@ namespace Kurisu.AkiBT
         /// <param name="gameObject"></param>
         public void Init(GameObject gameObject)
         {
+            this.MapGlobal();
             root.Run(gameObject, this);
             root.Awake();
             root.Start();
         }
         /// <summary>
-        /// Update BehaviorTree externally, this method is completely based on ScriptableObject
+        /// Update BehaviorTree externally
         /// </summary>
         public virtual Status Update()
         {
@@ -70,11 +71,9 @@ namespace Kurisu.AkiBT
         /// This will be called when the object is loaded for the first time when entering PlayMode
         /// Currently we only need to map variables once per scriptableObject
         /// </summary>
-        //TODO: After adding Scene-Scope BlackBoard and Game-Scope BlackBoard, map time will be changed
         private void Awake()
         {
-            root.Run(null, this);
-            SharedVariableMapper.MapSharedVariables(this);
+            SharedVariableMapper.Traverse(this);
         }
 #endif
     }

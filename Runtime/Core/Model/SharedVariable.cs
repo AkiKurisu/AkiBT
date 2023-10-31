@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT
 
 		}
 		/// <summary>
-		/// Whether to use shared variable
+		/// Whether variable is shared
 		/// </summary>
 		/// <value></value>
 		public bool IsShared
@@ -20,6 +20,17 @@ namespace Kurisu.AkiBT
 		}
 		[SerializeField]
 		private bool isShared;
+		/// <summary>
+		/// Whether variable is global
+		/// </summary>
+		/// <value></value>
+		public bool IsGlobal
+		{
+			get => isGlobal;
+			set => isGlobal = value;
+		}
+		[SerializeField]
+		private bool isGlobal;
 		public string Name
 		{
 			get
@@ -33,22 +44,25 @@ namespace Kurisu.AkiBT
 		}
 		public abstract object GetValue();
 		public abstract void SetValue(object value);
-
-		public abstract object Clone();
-
-		[SerializeField]
-		private string mName;
-	}
-	public interface IBindableVariable<K> where K : SharedVariable
-	{
 		/// <summary>
 		/// Bind to other sharedVariable
 		/// </summary>
 		/// <param name="other"></param>
-		public void Bind(K other);
+		public abstract void Bind(SharedVariable other);
+		/// <summary>
+		/// Clone shared variable by deep copy, an option here is to override for preventing using reflection
+		/// </summary>
+		/// <returns></returns>
+		public virtual object Clone()
+		{
+			return ReflectionHelper.DeepCopy(this);
+		}
+
+		[SerializeField]
+		private string mName;
 	}
 	[Serializable]
-	public abstract class SharedVariable<T> : SharedVariable, IBindableVariable<SharedVariable<T>>
+	public abstract class SharedVariable<T> : SharedVariable, IBindableVariable<T>
 	{
 		public T Value
 		{
@@ -89,10 +103,21 @@ namespace Kurisu.AkiBT
 		}
 		protected Func<T> Getter;
 		protected Action<T> Setter;
-		public void Bind(SharedVariable<T> other)
+		public void Bind(IBindableVariable<T> other)
 		{
 			Getter = () => other.Value;
 			Setter = (evt) => other.Value = evt;
+		}
+		public override void Bind(SharedVariable other)
+		{
+			if (other is IBindableVariable<T> variable)
+			{
+				Bind(variable);
+			}
+			else
+			{
+				Debug.LogError($"Variable named with {Name} bind failed!");
+			}
 		}
 		[SerializeField]
 		protected T value;

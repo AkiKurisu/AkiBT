@@ -36,7 +36,7 @@ namespace Kurisu.AkiBT.Editor
         }
         public static bool TryGetExposedProperty<T>(this ITreeView treeView, string name, out T variable) where T : SharedVariable
         {
-            variable = (T)treeView.ExposedProperties.Where(x => x is T && x.Name.Equals(name)).FirstOrDefault();
+            variable = (T)treeView.SharedVariables.Where(x => x is T && x.Name.Equals(name)).FirstOrDefault();
             return variable != null;
         }
     }

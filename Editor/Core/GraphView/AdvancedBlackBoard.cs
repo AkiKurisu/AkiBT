@@ -16,17 +16,17 @@ namespace Kurisu.AkiBT.Editor
         private readonly ScrollView scrollView;
         public VisualElement RawContainer => scrollView;
         private readonly List<SharedVariable> exposedProperties;
-        public AdvancedBlackBoard(ITreeView treeView) : base(treeView.View)
+        public AdvancedBlackBoard(IVariableSource variableSource, GraphView graphView) : base(graphView)
         {
             var header = this.Q("header");
             header.style.height = new StyleLength(50);
             Add(scrollView = new());
             scrollView.Add(new BlackboardSection { title = "Shared Variables" });
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-            exposedProperties = treeView.ExposedProperties;
-            InitRequestDelegate(treeView);
+            exposedProperties = variableSource.SharedVariables;
+            InitRequestDelegate(variableSource);
         }
-        private void InitRequestDelegate(ITreeView treeView)
+        private void InitRequestDelegate(IVariableSource variableSource)
         {
             addItemRequested = _blackboard =>
             {
@@ -42,22 +42,22 @@ namespace Kurisu.AkiBT.Editor
             editTextRequested = (_blackboard, element, newValue) =>
             {
                 var oldPropertyName = ((BlackboardField)element).text;
-                var index = treeView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
+                var index = variableSource.SharedVariables.FindIndex(x => x.Name == oldPropertyName);
                 if (string.IsNullOrEmpty(newValue))
                 {
                     RawContainer.RemoveAt(index + 1);
-                    treeView.ExposedProperties.RemoveAt(index);
+                    variableSource.SharedVariables.RemoveAt(index);
                     return;
                 }
-                if (treeView.ExposedProperties.Any(x => x.Name == newValue))
+                if (variableSource.SharedVariables.Any(x => x.Name == newValue))
                 {
                     EditorUtility.DisplayDialog("Error", "A variable with the same name already exists !",
                         "OK");
                     return;
                 }
-                var targetIndex = treeView.ExposedProperties.FindIndex(x => x.Name == oldPropertyName);
-                treeView.ExposedProperties[targetIndex].Name = newValue;
-                OnPropertyNameChange?.Invoke(treeView.ExposedProperties[targetIndex]);
+                var targetIndex = variableSource.SharedVariables.FindIndex(x => x.Name == oldPropertyName);
+                variableSource.SharedVariables[targetIndex].Name = newValue;
+                OnPropertyNameChange?.Invoke(variableSource.SharedVariables[targetIndex]);
                 ((BlackboardField)element).text = newValue;
             };
 

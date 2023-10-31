@@ -1,30 +1,81 @@
-using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
     public static class BehaviorTreeExtension
     {
         /// <summary>
-        /// Get shared variable by its name
+        /// Get shared variable by it's name
         /// </summary>
         /// <param name="name">Variable Name</param>
         /// <returns></returns>
-        public static SharedVariable GetSharedVariable(this IBehaviorTree behaviorTree, string variableName)
+        public static SharedVariable GetSharedVariable(this IVariableSource variableScope, string variableName)
         {
             if (string.IsNullOrEmpty(variableName))
             {
-                Debug.LogError($"Shared variable name cannot be empty", behaviorTree._Object);
                 return null;
             }
-            foreach (var variable in behaviorTree.SharedVariables)
+            foreach (var variable in variableScope.SharedVariables)
             {
                 if (variable.Name.Equals(variableName))
                 {
                     return variable;
                 }
             }
-            Debug.LogError($"Can't find shared variable : {variableName}", behaviorTree._Object);
             return null;
+        }
+        /// <summary>
+        /// Try get shared variable by it's name
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <param name="variableName"></param>
+        /// <param name="sharedVariable"></param>
+        /// <returns></returns>
+        public static bool TryGetSharedVariable(this IVariableSource variableScope, string variableName, out SharedVariable sharedVariable)
+        {
+            if (string.IsNullOrEmpty(variableName))
+            {
+                sharedVariable = null;
+                return false;
+            }
+            foreach (var variable in variableScope.SharedVariables)
+            {
+                if (variable.Name.Equals(variableName))
+                {
+                    sharedVariable = variable;
+                    return true;
+                }
+            }
+            sharedVariable = null;
+            return false;
+        }
+        /// <summary>
+        /// Map variable to global variables
+        /// </summary>
+        /// <param name="variableSource"></param>
+        public static void MapGlobal(this IVariableSource variableSource)
+        {
+            var globalVariables = GlobalVariables.Instance;
+            foreach (var variable in variableSource.SharedVariables)
+            {
+                if (!variable.IsGlobal) continue;
+                variable.MapTo(globalVariables);
+            }
+        }
+        /// <summary>
+        /// Map variable to target variable source
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <param name="variableSource"></param>
+        public static void MapTo(this SharedVariable variable, IVariableSource variableSource)
+        {
+            if (variable == null) return;
+            if (!variable.IsShared && !variable.IsGlobal) return;
+            if (!variableSource.TryGetSharedVariable(variable.Name, out SharedVariable sharedVariable))
+            {
+                Debug.LogWarning($"Can not map {variable.Name} to {variableSource} !");
+                return;
+            }
+            variable.Bind(sharedVariable);
         }
         public static TraverseIterator Traverse(this IBehaviorTree behaviorTree)
         {

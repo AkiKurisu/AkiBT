@@ -31,7 +31,7 @@ namespace Kurisu.AkiBT
         public BehaviorTreeSO ExternalBehaviorTree => externalBehaviorTree;
         [SerializeField, HideInInspector]
         private List<GroupBlockData> blockData = new();
-        public List<GroupBlockData> BlockData { get => blockData; set => blockData = value; }
+        public List<GroupBlockData> BlockData => blockData;
 #endif
         public Root Root
         {
@@ -49,10 +49,11 @@ namespace Kurisu.AkiBT
         }
         private void Awake()
         {
-            root.Run(gameObject, this);
+            this.MapGlobal();
 #if AKIBT_REFLECTION
-            SharedVariableMapper.MapSharedVariables(this);
+            SharedVariableMapper.Traverse(this);
 #endif
+            root.Run(gameObject, this);
             root.Awake();
         }
 

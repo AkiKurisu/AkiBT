@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 namespace Kurisu.AkiBT.Editor
 {
-    public interface ITreeView
+    public interface ITreeView : IVariableSource
     {
         EditorWindow EditorWindow { get; }
         GraphView View { get; }
@@ -24,12 +23,6 @@ namespace Kurisu.AkiBT.Editor
         /// 编辑器名称
         /// </summary>
         string TreeEditorName { get; }
-        /// <summary>
-        /// 暴露的共享变量
-        /// Exposed SharedVariables
-        /// </summary>
-        /// <value></value>
-        List<SharedVariable> ExposedProperties { get; }
         IBlackBoard BlackBoard { get; }
     }
 }
