@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Extend
     [AkiGroup("UnityEvent")]
     public class InvokeUnityEvent : Action
     {
-        [SerializeField, WrapObject]
+        [SerializeField, WrapField]
         private UnityEvent unityEvent;
         protected override Status OnUpdate()
         {

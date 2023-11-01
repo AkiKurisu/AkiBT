@@ -54,12 +54,12 @@ namespace Kurisu.AkiBT.Editor
         public void InitField(ITreeView treeView)
         {
             this.treeView = treeView;
-            treeView.BlackBoard.OnPropertyNameChange += (variable) =>
+            treeView.BlackBoard.View.RegisterCallback<VariableChangeEvent>(evt =>
             {
-                if (variable != bindExposedProperty) return;
-                nameDropdown.value = variable.Name;
-                value.Name = variable.Name;
-            };
+                if (evt.ChangeType != VariableChangeType.NameChange) return;
+                if (evt.Variable != bindExposedProperty) return;
+                nameDropdown.value = value.Name = evt.Variable.Name;
+            });
             OnToggle(toggle.value);
         }
         private static List<string> GetList(ITreeView treeView)

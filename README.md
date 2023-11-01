@@ -2,7 +2,7 @@
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
 # 行为树 AkiBT Version 1.4.2 简介
 
-***Read this document in English: [English Document](./README.md)***
+***Read this document in English: [English Document](./README_EN.md)***
 
 AkiBT是一款由[爱姬kurisu](https://space.bilibili.com/20472331)优化并拓展的行为树结点编辑器.  
 AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者为[Yoshida](https://github.com/yoshidan/)，丰富了大量现代行为树编辑器功能.
@@ -18,11 +18,13 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
 
 ## 依赖
 
-* Newtonsoft.Json 可在Unity PackageManager中进行下载
+* Newtonsoft.Json 
+
+   可在Unity PackageManager中进行下载
 
 ## 特点
 * 支持使用可视化节点编辑器构造行为树
-* 支持运行时可视化结点状态Debug
+* 支持运行时可视化结点状态，调试行为树
 * 基于GraphView框架，非常便于拓展编辑器和自定义新的行为
 * 所见即所得的编辑界面，所有字段都在图上，这也是AkiBT和其他编辑器设计方式最大的不同
 
@@ -166,8 +168,13 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
 
    <img src="Images/EnableReflection.png"/>
 
+### 调试行为树
 
-### Runtime Json序列化
+   运行时可以在Inspector或编辑器中修改共享变量从而调试行为树，全局变量需要在其相应作用域进行修改
+
+   <img src="Images/DebugVariable.png"/>
+
+### Json序列化
 
    在Editor中使用Json序列化会保存引用``UnityEngine.Object``（以下简称UObject）对象的GUID，而Runtime时Json反序列时无法获取UObject对象，你需要在Runtime通过别的方式加载所需要的UObject对象，例如将行为树中对UObject的引用全部改为``SharedTObject<T>``和``SharedObject``，在Runtime通过其名称从你的资源加载方案中获取，例如`Addressable`的资源地址或`AssetBundle`的文件路径。
 
@@ -193,6 +200,8 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
    ### 1. Serialize Service:
     
    由于AkiBT使用ScriptableObject进行数据存储,在修改结点的字段名称时会导致数据的丢失（该问题可以通过在修改字段上添加`FormerlySerializedAsAttribute`进行避免）。而对于结点的名称、命名空间进行修改后也会导致整个结点无法被反序列化，从而丢失该结点以及之后结点的所有数据。批量序列化为Json后，你可以使用文本编辑器批量对结点Ctrl+F进行修改，再使用Serialize Service重新批量反序列化为ScriptableObject。
+
+   <img src="Images/SerializeService.png"/>
 
    需要注意的是, 并非所有的字段都被序列化，Serialize Service只对行为树的结点和共享变量进行序列化，反序列化同理，继承类型的字段需要你额外进行处理。
     

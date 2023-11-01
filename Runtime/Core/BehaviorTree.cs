@@ -18,8 +18,7 @@ namespace Kurisu.AkiBT
         [HideInInspector, SerializeReference]
         protected Root root = new();
         Object IBehaviorTree._Object => gameObject;
-        [HideInInspector]
-        [SerializeReference]
+        [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
         [SerializeField,
         Tooltip("Switch to UpdateType.Manual to use manual updates and call BehaviorTree.Tick()")]
@@ -40,13 +39,7 @@ namespace Kurisu.AkiBT
             set => root = value;
 #endif
         }
-        public List<SharedVariable> SharedVariables
-        {
-            get => sharedVariables;
-#if UNITY_EDITOR
-            set => sharedVariables = value;
-#endif
-        }
+        public List<SharedVariable> SharedVariables => sharedVariables;
         private void Awake()
         {
             this.MapGlobal();

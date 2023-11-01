@@ -9,10 +9,11 @@ namespace Kurisu.AkiBT.Editor
         }
         protected override ObjectField CreateEditorField(FieldInfo fieldInfo)
         {
-            var editorField = new ObjectField(fieldInfo.Name);
-            editorField.objectType = fieldInfo.FieldType;
+            var editorField = new ObjectField(fieldInfo.Name)
+            {
+                objectType = fieldInfo.FieldType
+            };
             return editorField;
         }
-
     }
 }

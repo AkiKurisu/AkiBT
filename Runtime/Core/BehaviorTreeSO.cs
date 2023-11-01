@@ -18,13 +18,7 @@ namespace Kurisu.AkiBT
             set => root = value;
 #endif
         }
-        public List<SharedVariable> SharedVariables
-        {
-            get => sharedVariables;
-#if UNITY_EDITOR
-            set => sharedVariables = value;
-#endif
-        }
+        public List<SharedVariable> SharedVariables => sharedVariables;
 #if UNITY_EDITOR
         public virtual BehaviorTreeSO ExternalBehaviorTree => null;
         [SerializeField, HideInInspector]

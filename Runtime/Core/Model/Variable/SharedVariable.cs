@@ -50,6 +50,10 @@ namespace Kurisu.AkiBT
 		/// <param name="other"></param>
 		public abstract void Bind(SharedVariable other);
 		/// <summary>
+		/// Unbind self
+		/// </summary>
+		public abstract void Unbind();
+		/// <summary>
 		/// Clone shared variable by deep copy, an option here is to override for preventing using reflection
 		/// </summary>
 		/// <returns></returns>
@@ -60,6 +64,7 @@ namespace Kurisu.AkiBT
 
 		[SerializeField]
 		private string mName;
+		public abstract ObserveVariable Observe();
 	}
 	[Serializable]
 	public abstract class SharedVariable<T> : SharedVariable, IBindableVariable<T>
@@ -119,7 +124,55 @@ namespace Kurisu.AkiBT
 				Debug.LogError($"Variable named with {Name} bind failed!");
 			}
 		}
+		public override void Unbind()
+		{
+			Getter = null;
+			Setter = null;
+		}
 		[SerializeField]
 		protected T value;
+		public override ObserveVariable Observe()
+		{
+			return ObserveT();
+		}
+		public ObserveVariable<T> ObserveT()
+		{
+			var proxy = new ObserveVariable<T>(this);
+			Setter ??= (evt) => { value = evt; };
+			Setter += (evt) => proxy.OnValueChange.Invoke(evt);
+			return proxy;
+		}
+	}
+	/// <summary>
+	/// Proxy variable to observe value change
+	/// </summary>
+	public class ObserveVariable
+	{
+		public Action<object> OnValueChange;
+	}
+	public class ObserveVariable<T> : ObserveVariable, IBindableVariable<T>
+	{
+		public T Value
+		{
+			get
+			{
+				return Getter();
+			}
+			set
+			{
+				Setter(value);
+			}
+		}
+		private Func<T> Getter;
+		private Action<T> Setter;
+		public void Bind(IBindableVariable<T> other)
+		{
+			Getter = () => other.Value;
+			Setter = (evt) => other.Value = evt;
+		}
+		public ObserveVariable(SharedVariable<T> variable)
+		{
+			Bind(variable);
+		}
 	}
 }

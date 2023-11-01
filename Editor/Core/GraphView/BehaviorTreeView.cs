@@ -230,7 +230,15 @@ namespace Kurisu.AkiBT.Editor
         {
             foreach (var variable in tree.SharedVariables)
             {
-                BlackBoard.AddExposedProperty(variable.Clone() as SharedVariable);
+                //In play mode, use original variable to observe value change
+                if (Application.isPlaying)
+                {
+                    BlackBoard.AddSharedVariable(variable);
+                }
+                else
+                {
+                    BlackBoard.AddSharedVariable(variable.Clone() as SharedVariable);
+                }
             }
         }
         private void RestoreBlocks(IBehaviorTree tree, IEnumerable<IBehaviorTreeNode> nodes)

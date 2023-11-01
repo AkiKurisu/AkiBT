@@ -40,14 +40,28 @@ namespace Kurisu.AkiBT.Editor
             var blackBoard = new AdvancedBlackBoard(proxy, new VirtualGraphView());
             foreach (var variable in source.SharedVariables)
             {
-                blackBoard.AddExposedProperty(variable.Clone() as SharedVariable);
+                //In play mode, use original variable to observe value change
+                if (Application.isPlaying)
+                {
+                    blackBoard.AddSharedVariable(variable);
+                }
+                else
+                {
+                    blackBoard.AddSharedVariable(variable.Clone() as SharedVariable);
+                }
             }
             blackBoard.style.position = Position.Relative;
             blackBoard.style.width = Length.Percent(100f);
             myInspector.Add(blackBoard);
+
+            if (Application.isPlaying) return myInspector;
+
             var button = BehaviorTreeEditorUtility.GetButton(proxy.Update);
+            button.clicked += () => { button.SetEnabled(false); };
             button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
             button.text = ButtonText;
+            button.SetEnabled(false);
+            blackBoard.RegisterCallback<VariableChangeEvent>(_ => button.SetEnabled(true));
             myInspector.Add(button);
             myInspector.Add(new PropertyField(serializedObject.FindProperty("parentScope"), "Parent Scope"));
             return myInspector;
@@ -68,14 +82,28 @@ namespace Kurisu.AkiBT.Editor
             var blackBoard = new AdvancedBlackBoard(proxy, new VirtualGraphView());
             foreach (var variable in source.SharedVariables)
             {
-                blackBoard.AddExposedProperty(variable.Clone() as SharedVariable);
+                //In play mode, use original variable to observe value change
+                if (Application.isPlaying)
+                {
+                    blackBoard.AddSharedVariable(variable);
+                }
+                else
+                {
+                    blackBoard.AddSharedVariable(variable.Clone() as SharedVariable);
+                }
             }
             blackBoard.style.position = Position.Relative;
             blackBoard.style.width = Length.Percent(100f);
             myInspector.Add(blackBoard);
+
+            if (Application.isPlaying) return myInspector;
+
             var button = BehaviorTreeEditorUtility.GetButton(proxy.Update);
+            button.clicked += () => { button.SetEnabled(false); };
             button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
             button.text = ButtonText;
+            button.SetEnabled(false);
+            blackBoard.RegisterCallback<VariableChangeEvent>(_ => button.SetEnabled(true));
             myInspector.Add(button);
             myInspector.Add(new PropertyField(serializedObject.FindProperty("parentScope"), "Parent Scope"));
             return myInspector;

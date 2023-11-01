@@ -2,6 +2,8 @@
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
 # AkiBT Version 1.4.2 Intro
 
+* 2023/11/1 English document will be updated soon!
+
 ***Read this document in Chinese: [中文文档](./README.md)***
 
 AkiBT is a visual node editor derived from UniBT created by Yoshida for making behavior tree or other tree-based function. AkiKurisu extends it with more features so that you can enjoy it.

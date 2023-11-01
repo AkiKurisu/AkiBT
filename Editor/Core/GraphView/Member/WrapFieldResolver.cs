@@ -4,29 +4,29 @@ using UnityEditor;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class WrapObjectResolver<T> : FieldResolver<WrapObjectField<T>, T>
+    public class WrapFieldResolver<T> : FieldResolver<WrapField<T>, T>
     {
-        public WrapObjectResolver(FieldInfo fieldInfo) : base(fieldInfo)
+        public WrapFieldResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        private WrapObjectField<T> editorField;
-        protected override WrapObjectField<T> CreateEditorField(FieldInfo fieldInfo)
+        private WrapField<T> editorField;
+        protected override WrapField<T> CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new WrapObjectField<T>(fieldInfo.Name);
+            editorField = new WrapField<T>(fieldInfo.Name);
             return editorField;
         }
         public static bool IsAcceptable(Type infoType, FieldInfo fieldInfo)
         {
-            return infoType == typeof(T) && fieldInfo.GetCustomAttribute<WrapObjectAttribute>() != null;
+            return infoType == typeof(T) && fieldInfo.GetCustomAttribute<WrapFieldAttribute>() != null;
         }
     }
-    public class WrapObjectField<T> : BaseField<T>
+    public class WrapField<T> : BaseField<T>
     {
         GenericObjectWrapper<T> m_Instance;
         private GenericObjectWrapper<T> Instance => m_Instance != null ? m_Instance : GetInstance();
         private SerializedObject m_SerializedObject;
         private SerializedProperty m_SerializedProperty;
-        public WrapObjectField(string label) : base(label, null)
+        public WrapField(string label) : base(label, null)
         {
             var element = CreateView();
             Add(element);
@@ -47,9 +47,16 @@ namespace Kurisu.AkiBT.Editor
                 EditorGUILayout.PropertyField(m_SerializedProperty);
                 if (m_SerializedObject.ApplyModifiedProperties())
                 {
-                    base.value = Instance.Value;
+                    ChangeValueWithNotify(base.value, Instance.Value);
                 }
             });
+        }
+        private void ChangeValueWithNotify(T oldValue, T newValue)
+        {
+            base.value = newValue;
+            using ChangeEvent<T> changeEvent = ChangeEvent<T>.GetPooled(oldValue, newValue);
+            changeEvent.target = this;
+            SendEvent(changeEvent);
         }
         public sealed override T value
         {
@@ -64,7 +71,7 @@ namespace Kurisu.AkiBT.Editor
                 {
                     Instance.Value = ReflectionHelper.DeepCopy(value);
                 }
-                base.value = Instance.Value;
+                ChangeValueWithNotify(base.value, Instance.Value);
             }
         }
     }
