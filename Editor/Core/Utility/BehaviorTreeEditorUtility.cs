@@ -19,7 +19,7 @@ namespace Kurisu.AkiBT.Editor
         {
             externalTree = behaviorTree.GetType()
             .GetField("externalBehaviorTree", BindingFlags.Instance | BindingFlags.NonPublic)
-            .GetValue(behaviorTree) as IBehaviorTree;
+            ?.GetValue(behaviorTree) as IBehaviorTree;
             return externalTree != null;
         }
         internal static Button GetButton(System.Action clickEvent)
