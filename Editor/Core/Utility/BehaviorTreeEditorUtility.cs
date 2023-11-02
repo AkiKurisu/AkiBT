@@ -58,6 +58,7 @@ namespace Kurisu.AkiBT.Editor
                 {
                     var index = source.SharedVariables.FindIndex(x => x.Name == variable.Name);
                     source.SharedVariables[index].SetValue(obj);
+                    NotifyEditor();
                 });
                 if (Application.isPlaying)
                 {
@@ -90,10 +91,6 @@ namespace Kurisu.AkiBT.Editor
                         objectField.objectType = typeof(UnityEngine.Object);
                     }
                 }
-                valueField.RegisterCallback<InputEvent>((e) =>
-                {
-                    NotifyEditor();
-                });
                 //Is Global Field
                 var globalToggle = new Button()
                 {
