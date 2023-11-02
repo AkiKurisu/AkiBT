@@ -1,0 +1,336 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77eff6e90efa77848b31d5d488608422, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: 
+  root:
+    rid: 3829957492932608000
+  blockData:
+  - ChildNodes:
+    - 2249924a-2649-4e7f-acaf-8dbe4575f93e
+    - 69138e3e-14d4-41d4-9c81-8ae60fba63e4
+    - aea6cdf5-14ef-44b5-aba0-1618670157e1
+    - cb091969-e1dd-4a1f-b3cf-77359c505fe9
+    Position: {x: 736, y: -171.33333}
+    Title: "1.Player\u4F1A\u5728\u8DDD\u79BBEnemy4\u7C73\u5916\u540E\u8FFD\u8E2AEnemy"
+  - ChildNodes:
+    - 9b2f3d5d-0324-4098-8024-794639aac4ce
+    - 637075ac-5acb-4387-a762-1e696d3687d7
+    - 116f8212-8893-4852-9948-57a80283f864
+    - 3f17a88c-41b8-4459-87e2-40679b82d42c
+    - 43fdd7b1-eff2-4b00-91b4-147ac686a85b
+    - 524f25f1-e81b-4022-a7af-18e60fc9b285
+    - a24cfa8a-288f-4889-8c7f-25a46999d3a4
+    Position: {x: 726.6667, y: 353.33334}
+    Title: "\u70B9\u51FBPlayer\u6302\u8F7D\u7684AIModel\u811A\u672C\u4E2D\u7684canMove\u53D8\u91CF\u6765\u63A7\u5236Player\u7684\u79FB\u52A8"
+  Description: 
+  sharedVariables:
+  - rid: 3829957492932608001
+  - rid: 3829957492932608002
+  - rid: 3829957492932608003
+  - rid: 3829957492932608004
+  - rid: 3829957492932608005
+  references:
+    version: 2
+    RefIds:
+    - rid: 3829957492932608000
+      type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 400
+          y: 300
+          width: 80.66666
+          height: 78.66669
+        description: 
+        guid: 62af98e2-f570-46d1-9791-fbbe12472797
+        child:
+          rid: 3829957492932608006
+    - rid: 3829957492932608001
+      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        isGlobal: 0
+        mName: enemyPos
+        value: {x: 0, y: 0, z: 0}
+    - rid: 3829957492932608002
+      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        isGlobal: 0
+        mName: playerPos
+        value: {x: 0, y: 0, z: 0}
+    - rid: 3829957492932608003
+      type: {class: SharedFloat, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        isGlobal: 0
+        mName: distance
+        value: 0
+    - rid: 3829957492932608004
+      type: {class: SharedObject, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        isGlobal: 1
+        mName: enemy
+        value: {fileID: 0}
+        constraintTypeAQM: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+    - rid: 3829957492932608005
+      type: {class: SharedBool, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        isGlobal: 1
+        mName: canMove
+        value: 1
+    - rid: 3829957492932608006
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 499.33334
+          y: 300
+          width: 175.33334
+          height: 166
+        description: 
+        guid: 9fa25840-f68d-4af5-86c3-a4d0d0fcde99
+        children:
+        - rid: 3829957492932608007
+        - rid: 3829957492932608008
+        - rid: 3829957492932608009
+        abortOnConditionChanged: 0
+    - rid: 3829957492932608007
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 761.3333
+          y: -11.333334
+          width: 175.33337
+          height: 142
+        description: "\u83B7\u53D6\u4F4D\u7F6E"
+        guid: 69138e3e-14d4-41d4-9c81-8ae60fba63e4
+        children:
+        - rid: 3829957492932608010
+        - rid: 3829957492932608011
+        abortOnConditionChanged: 0
+    - rid: 3829957492932608008
+      type: {class: Vector3Distance, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 761.3333
+          y: 136
+          width: 270.00006
+          height: 217.33333
+        description: "\u8BA1\u7B97\u8DDD\u79BB"
+        guid: 2249924a-2649-4e7f-acaf-8dbe4575f93e
+        firstVector3:
+          isShared: 1
+          isGlobal: 0
+          mName: enemyPos
+          value: {x: 0, y: 0, z: 0}
+        secondVector3:
+          isShared: 1
+          isGlobal: 0
+          mName: playerPos
+          value: {x: 0, y: 0, z: 0}
+        storeResult:
+          isShared: 1
+          isGlobal: 0
+          mName: distance
+          value: 0
+    - rid: 3829957492932608009
+      type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 752
+          y: 534.6666
+          width: 175.33331
+          height: 142
+        description: 
+        guid: 9b2f3d5d-0324-4098-8024-794639aac4ce
+        children:
+        - rid: 3829957492932608012
+        - rid: 3829957492932608013
+        abortOnConditionChanged: 0
+    - rid: 3829957492932608010
+      type: {class: TransformGetPosition, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1044
+          y: -110
+          width: 240.66663
+          height: 178
+        description: 
+        guid: cb091969-e1dd-4a1f-b3cf-77359c505fe9
+        target:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: {fileID: 0}
+        storeResult:
+          isShared: 1
+          isGlobal: 0
+          mName: playerPos
+          value: {x: 0, y: 0, z: 0}
+    - rid: 3829957492932608011
+      type: {class: GetGameObjectPosition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1359.3334
+          y: 39.999996
+          width: 276.66663
+          height: 179.33334
+        description: "\u6837\u4F8B\u7ED3\u70B9"
+        guid: aea6cdf5-14ef-44b5-aba0-1618670157e1
+        target:
+          isShared: 1
+          isGlobal: 0
+          mName: enemy
+          value: {fileID: 0}
+        result:
+          isShared: 1
+          isGlobal: 0
+          mName: enemyPos
+          value: {x: 0, y: 0, z: 0}
+    - rid: 3829957492932608012
+      type: {class: BoolComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 959.3333
+          y: 414.6667
+          width: 244.00006
+          height: 215.33334
+        description: 
+        guid: 116f8212-8893-4852-9948-57a80283f864
+        evaluateOnRunning: 0
+        child:
+          rid: 3829957492932608014
+        bool1:
+          isShared: 1
+          isGlobal: 0
+          mName: canMove
+          value: 1
+        bool2:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: 1
+        operation: 0
+    - rid: 3829957492932608013
+      type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 948
+          y: 644
+          width: 273.33337
+          height: 175.33331
+        description: "\u505C\u6B62\u79FB\u52A8"
+        guid: 637075ac-5acb-4387-a762-1e696d3687d7
+        agent:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: {fileID: 0}
+        isStopped:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: 1
+    - rid: 3829957492932608014
+      type: {class: FloatComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1221.3334
+          y: 538
+          width: 244
+          height: 217.33331
+        description: "\u5224\u65AD\u8DDD\u79BB>4"
+        guid: 3f17a88c-41b8-4459-87e2-40679b82d42c
+        evaluateOnRunning: 0
+        child:
+          rid: 3829957492932608015
+        float1:
+          isShared: 1
+          isGlobal: 0
+          mName: distance
+          value: 0
+        float2:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: 4
+        operation: 5
+    - rid: 3829957492932608015
+      type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1492
+          y: 566
+          width: 175.33337
+          height: 142
+        description: "\u79FB\u52A8\u5E8F\u5217"
+        guid: 43fdd7b1-eff2-4b00-91b4-147ac686a85b
+        children:
+        - rid: 3829957492932608016
+        - rid: 3829957492932608017
+        abortOnConditionChanged: 0
+    - rid: 3829957492932608016
+      type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1681.3334
+          y: 488.66666
+          width: 273.33325
+          height: 175.33337
+        description: "\u5173\u95ED\u505C\u6B62"
+        guid: a24cfa8a-288f-4889-8c7f-25a46999d3a4
+        agent:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: {fileID: 0}
+        isStopped:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: 0
+    - rid: 3829957492932608017
+      type: {class: NavmeshSetDestination, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 1681.3334
+          y: 656.6666
+          width: 273.33325
+          height: 178
+        description: "\u79FB\u52A8\u5230enemyPos"
+        guid: 524f25f1-e81b-4022-a7af-18e60fc9b285
+        agent:
+          isShared: 0
+          isGlobal: 0
+          mName: 
+          value: {fileID: 0}
+        destination:
+          isShared: 1
+          isGlobal: 0
+          mName: enemyPos
+          value: {x: 0, y: 0, z: 0}

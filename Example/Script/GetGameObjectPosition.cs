@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT.Example
     [AkiGroup("Example")]
     public class GetGameObjectPosition : Action
     {
-        [SerializeField, AkiLabel("获取对象")]
+        [SerializeField, Tooltip("获取对象")]
         private SharedTObject<GameObject> target;
         [SerializeField, Tooltip("获取的位置会存储在该共享变量中")]
         private SharedVector3 result;

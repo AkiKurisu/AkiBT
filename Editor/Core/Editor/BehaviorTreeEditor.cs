@@ -54,12 +54,13 @@ namespace Kurisu.AkiBT.Editor
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
         private HashSet<ObserveProxyVariable> observeProxies;
+        private IBehaviorTree Tree => target as IBehaviorTree;
         private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.2</size>";
         private const string ButtonText = "Edit BehaviorTreeSO";
+        private const string DebugText = "Debug BehaviorTreeSO";
         public override VisualElement CreateInspectorGUI()
         {
             var myInspector = new VisualElement();
-            var bt = target as IBehaviorTree;
             var label = new Label(LabelText);
             label.style.fontSize = 20;
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
@@ -68,13 +69,17 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(new Label("BehaviorTree Description"));
             var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
-            observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, bt, target, this);
+            observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, Tree, target, this);
+            var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(Tree); });
             if (!Application.isPlaying)
             {
-                var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(bt); });
                 button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
                 button.text = ButtonText;
-                myInspector.Add(button);
+            }
+            else
+            {
+                button.text = DebugText;
+                button.style.backgroundColor = new StyleColor(new Color(253 / 255f, 163 / 255f, 255 / 255f));
             }
             return myInspector;
         }

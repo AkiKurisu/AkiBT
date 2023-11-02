@@ -22,12 +22,21 @@ namespace Kurisu.AkiBT
 #endif
         [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
+#if AKIBT_REFLECTION
+        public bool IsInitialized { get; private set; }
+#endif
         /// <summary>
         /// Bind GameObject and Init behaviorTree through Awake and Start method
         /// </summary>
         /// <param name="gameObject"></param>
         public void Init(GameObject gameObject)
         {
+#if AKIBT_REFLECTION
+            if (!IsInitialized)
+            {
+                Initialize();
+            }
+#endif
             this.MapGlobal();
             root.Run(gameObject, this);
             root.Awake();
@@ -60,6 +69,22 @@ namespace Kurisu.AkiBT
         /// </summary>
         private void Awake()
         {
+            if (!IsInitialized)
+            {
+                Initialize();
+            }
+        }
+        /// <summary>
+        /// Traverse behaviors and bind shared variables
+        /// </summary>
+        public void Initialize()
+        {
+            if (IsInitialized)
+            {
+                Debug.LogWarning($"{name} initialize duplicate");
+                return;
+            }
+            IsInitialized = true;
             SharedVariableMapper.Traverse(this);
         }
 #endif

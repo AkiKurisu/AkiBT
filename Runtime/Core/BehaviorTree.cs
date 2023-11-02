@@ -7,11 +7,11 @@ namespace Kurisu.AkiBT
         Auto,
         Manual
     }
-    [DisallowMultipleComponent]
     /// <summary>
     /// Behavior Tree Component
     /// Awake, Start and Update using UnityEngine's life cycle
     /// </summary>
+    [DisallowMultipleComponent]
     public class BehaviorTree : MonoBehaviour, IBehaviorTree
     {
 
@@ -44,7 +44,16 @@ namespace Kurisu.AkiBT
             }
             this.MapGlobal();
 #if AKIBT_REFLECTION
-            SharedVariableMapper.Traverse(this);
+            if (externalBehaviorTree)
+            {
+                //Prevent remap for external tree
+                if (!externalBehaviorTree.IsInitialized)
+                    externalBehaviorTree.Initialize();
+            }
+            else
+            {
+                SharedVariableMapper.Traverse(this);
+            }
 #endif
             root.Run(gameObject, this);
             root.Awake();
