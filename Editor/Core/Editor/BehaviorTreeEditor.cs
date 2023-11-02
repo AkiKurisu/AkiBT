@@ -13,7 +13,7 @@ namespace Kurisu.AkiBT.Editor
         private HashSet<ObserveProxyVariable> observeProxies;
         private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.2</size>";
         private const string ButtonText = "Edit BehaviorTree";
-        private const string DebugText = "Open BehaviorTree (Runtime)";
+        private const string DebugText = "Debug BehaviorTree";
         private IBehaviorTree Tree => target as IBehaviorTree;
         public override VisualElement CreateInspectorGUI()
         {
@@ -26,6 +26,7 @@ namespace Kurisu.AkiBT.Editor
             var toggle = new PropertyField(serializedObject.FindProperty("updateType"), "Update Type");
             myInspector.Add(toggle);
             var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
+            field.SetEnabled(!Application.isPlaying);
             myInspector.Add(field);
             observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, Tree, target, this);
             var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(Tree); });
@@ -44,6 +45,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private void OnDisable()
         {
+            if (observeProxies == null) return;
             foreach (var proxy in observeProxies)
             {
                 proxy.Dispose();
@@ -80,6 +82,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private void OnDisable()
         {
+            if (observeProxies == null) return;
             foreach (var proxy in observeProxies)
             {
                 proxy.Dispose();

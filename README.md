@@ -66,7 +66,8 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
 
 ### 保存、复制和粘贴
 
-   
+   你可以点击结点Ctrl+C&&Ctrl+V或右键选择Duplicate复制结点，你也可以批量选择进行复制粘贴
+
    你可以从上侧工具栏选择```Copy From SO```，也可以将BehaviorTreeSO、BehaviorTree组件或挂载BehaviorTree的GameObject、Json文件拖拽进编辑器中进行复制粘贴。
    
 
@@ -84,10 +85,10 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
 
    * SharedObject支持进行类型限制,详见[SharedVariable](./API.md#SharedVariable)
 
-   * 修改共享变量名称的方式为双击变量,为空时自动删除，修改后同时更新其余引用的字段
+   * 双击共享变量以修改名称,为空时删除，修改后同时更新引用该变量的结点字段
         
 
-   * Inspector中也可以进行共享变量的修改和删除功能
+   * Inspector可以对共享变量进行修改和删除
 
    <img src="Images/ChangeVariableInInspector.png" width="480"/>
 

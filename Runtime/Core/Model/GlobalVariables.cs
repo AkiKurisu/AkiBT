@@ -44,7 +44,7 @@ namespace Kurisu.AkiBT
         {
             if (instance != this)
             {
-                Debug.LogWarning("Only current scope should be disposed!");
+                Debug.LogWarning("Only scope current used should be disposed!");
                 return;
             }
             instance = null;

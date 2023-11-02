@@ -12,7 +12,15 @@
     - [Create Composite](#create-composite)
     - [Create Decorator](#create-decorator)
   - [Attributes](#attributes)
+    - [AkiInfoAttribute](#akiinfoattribute)
+    - [AkiLabelAttribute](#akilabelattribute)
+    - [AkiGroupAttribute](#akigroupattribute)
+    - [ForceSharedAttribute](#forcesharedattribute)
+    - [WrapFieldAttribute](#wrapfieldattribute)
   - [SharedVariable](#sharedvariable)
+    - [How to use](#how-to-use)
+    - [API Reference](#api-reference)
+
 
 ## Behavior Node Type
 
@@ -229,9 +237,11 @@ public class Invertor : Decorator
 
 ## Attributes
 
-1. ``AkiInfo``用以描述结点行为
+### AkiInfoAttribute
    
-   You can use ``AkiInfo`` attribute to describe the behavior detail of the node for information.
+``AkiInfo``用以描述结点行为
+``AkiInfo`` is used to describe the information of node.
+
 ```C#
 [AkiInfo("Action : Stop NavmeshAgent according to isStopped")]
 public class NavmeshStopAgent : Action
@@ -241,9 +251,11 @@ public class NavmeshStopAgent : Action
 ```
 <img src="Images/InfoAttribute.png" />
 
-2. ``AkiLabel``用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.
-   
-   ``AkiLabel`` attribute is added for replacing label of node's title or field especially for Chinese.
+### AkiLabelAttribute
+
+``AkiLabel``用以替换编辑器中的结点名称,新版本中你同样可以使用AkiLabel替换编辑器中的字段名称.
+
+``AkiLabel`` is added for replacing label of node's title or field especially for Chinese.
    
 ```C#
 [AkiLabel("Navmesh : StopAgent")]
@@ -256,9 +268,11 @@ public class NavmeshStopAgent : Action
 ```
 <img src="Images/AkiLabel.png" width="480"/>
 
-3. ``AkiGroup``用以对结点进行分类
+### AkiGroupAttribute
+    
+``AkiGroup``用以对结点进行分类
 
-    ``AkiGroup`` is an advanced attribute using in Node Searching,you can add this attribute to make it easier and more clear to find certain node.
+``AkiGroup`` is an advanced attribute to category node
 
 ```c#
 [AkiGroup("Animator")]
@@ -270,15 +284,17 @@ public class AnimatorSetBool : AnimatorAction
 
 <img src="Images/AkiGroup.png" width="480"/>
 
-   * 你可以使用``'/'``符号进行子分类
+* 你可以使用``'/'``符号进行子分类
 
-        You can also subcategory the SearchWindow by using ``'/'``.
+* You can also subcategory the SearchWindow by using ``'/'``.
 
 <img src="Images/SubCategories.png" width="480"/>
 
-4. ``ForceShared``用以强制共享共享变量
+### ForceSharedAttribute
+    
+``ForceShared``用以强制共享共享变量
 
-    ``ForceShared`` is used to force shared variables to be shared
+``ForceShared`` is used to force shared variables to be shared
 
 ```c#
 public class SetFloat : Action
@@ -291,20 +307,24 @@ public class SetFloat : Action
 }
 ```
 
-5. ``WrapObject``用以显示UIElement不支持显示的对象，将使用IMGUI进行显示
+### WrapFieldAttribute
 
-    ``WrapObject`` is used to display objects that UIElement does not support display, and IMGUI will be used to display them.
+``WrapField``用以显示UIElement不支持显示的对象，将使用IMGUI进行显示
+
+``WrapField`` is used to display objects that UIElement does not support display, and IMGUI will be used to display them.
 
 ```c#
  public class InvokeUnityEvent : Action
 {
     //Use IMGUI to show UnityEvent
-    [SerializeField, WrapObject]
+    [SerializeField, WrapField]
     private UnityEvent unityEvent;
 }
 ```
 
 ## SharedVariable
+
+### How to use
 
 1. 如没有启用`Runtime Reflection`使用共享变量前需要在`Awake()`中初始化从而绑定父级行为树中的变量。
 
@@ -337,3 +357,24 @@ public class GetGameObjectPosition : Action
     In the blackboard, you can create a ``SharedObject`` and restrict its type to improve type safety and make the field only drag and drop objects of the corresponding type.
 
 <img src="Images/SharedObject.png" width="480"/>
+
+### API Reference
+
+1. Property Reference
+   
+   | Name     | Description                                 |
+   | -------- | ------------------------------------------- |
+   | IsGlobal | Whether varible binding to global variables |
+   | IsShared | Whether varible is shared in behavior tree  |
+   | Name     | Variable's name, important for binding      |
+
+2. Method Reference
+
+    | Name     | Description                     |
+    | -------- | ------------------------------- |
+    | SetValue | Set variable value              |
+    | GetValue | Get variable value              |
+    | Bind     | Bind to other sharedVariable    |
+    | Unbind   | Unbind self                     |
+    | Observe  | Create a observe proxy variable |
+   

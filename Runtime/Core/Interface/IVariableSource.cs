@@ -8,6 +8,9 @@ namespace Kurisu.AkiBT
     {
         List<SharedVariable> SharedVariables { get; }
     }
+    /// <summary>
+    /// Global variables scope
+    /// </summary>
     public interface IVariableScope
     {
         /// <summary>

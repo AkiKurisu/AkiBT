@@ -211,7 +211,9 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public void Restore()
         {
-            IBehaviorTree tree = behaviorTree.ExternalBehaviorTree != null ? behaviorTree.ExternalBehaviorTree : behaviorTree;
+            IBehaviorTree tree;
+            if (!Application.isPlaying && behaviorTree.ExternalBehaviorTree) tree = behaviorTree.ExternalBehaviorTree;
+            else tree = behaviorTree;
             OnRestore(tree);
         }
         /// <summary>

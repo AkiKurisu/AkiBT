@@ -23,10 +23,10 @@ namespace Kurisu.AkiBT
         [SerializeField,
         Tooltip("Switch to UpdateType.Manual to use manual updates and call BehaviorTree.Tick()")]
         private UpdateType updateType;
-#if UNITY_EDITOR
         [SerializeField, Tooltip("Use the external behavior tree to replace the behavior tree in the component," +
         " and the behavior tree in the component will be overwritten when saving")]
         private BehaviorTreeSO externalBehaviorTree;
+#if UNITY_EDITOR
         public BehaviorTreeSO ExternalBehaviorTree => externalBehaviorTree;
         [SerializeField, HideInInspector]
         private List<GroupBlockData> blockData = new();
@@ -42,6 +42,13 @@ namespace Kurisu.AkiBT
         public List<SharedVariable> SharedVariables => sharedVariables;
         private void Awake()
         {
+            if (externalBehaviorTree)
+            {
+                var instance = Instantiate(externalBehaviorTree);
+                sharedVariables.Clear();
+                sharedVariables.AddRange(instance.SharedVariables);
+                root = instance.Root;
+            }
             this.MapGlobal();
 #if AKIBT_REFLECTION
             SharedVariableMapper.Traverse(this);

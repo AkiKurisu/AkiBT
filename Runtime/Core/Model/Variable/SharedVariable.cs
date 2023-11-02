@@ -2,6 +2,9 @@ using UnityEngine;
 using System;
 namespace Kurisu.AkiBT
 {
+	/// <summary>
+	/// Variable can be shared between behaviors in behavior tree
+	/// </summary>
 	[Serializable]
 	public abstract class SharedVariable : ICloneable
 	{
