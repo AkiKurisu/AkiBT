@@ -64,7 +64,11 @@ namespace Kurisu.AkiBT
 
 		[SerializeField]
 		private string mName;
-		public abstract ObserveVariable Observe();
+		/// <summary>
+		/// Create a observe proxy variable
+		/// </summary>
+		/// <returns></returns>
+		public abstract ObserveProxyVariable Observe();
 	}
 	[Serializable]
 	public abstract class SharedVariable<T> : SharedVariable, IBindableVariable<T>
@@ -131,26 +135,59 @@ namespace Kurisu.AkiBT
 		}
 		[SerializeField]
 		protected T value;
-		public override ObserveVariable Observe()
+		public override ObserveProxyVariable Observe()
 		{
 			return ObserveT();
 		}
-		public ObserveVariable<T> ObserveT()
+		public ObserveProxyVariable<T> ObserveT()
 		{
-			var proxy = new ObserveVariable<T>(this);
 			Setter ??= (evt) => { value = evt; };
-			Setter += (evt) => proxy.OnValueChange.Invoke(evt);
+			var wrapper = new SetterWrapper<T>((w) => { Setter -= w.Invoke; });
+			var proxy = new ObserveProxyVariable<T>(this, wrapper);
+			Setter += wrapper.Invoke;
 			return proxy;
+		}
+	}
+	public class SetterWrapper<T> : IDisposable
+	{
+		private readonly Action<SetterWrapper<T>> Unregister;
+		public Action<T> Setter;
+		public void Invoke(T value)
+		{
+			if (Setter == null)
+			{
+				Debug.LogWarning("Wrapper setter is null, which is not expected!");
+				return;
+			}
+			Setter(value);
+		}
+		public void Dispose()
+		{
+			Unregister(this);
+		}
+		public SetterWrapper(Action<SetterWrapper<T>> unRegister)
+		{
+			Unregister = unRegister;
 		}
 	}
 	/// <summary>
 	/// Proxy variable to observe value change
 	/// </summary>
-	public class ObserveVariable
+	public abstract class ObserveProxyVariable : IDisposable
 	{
-		public Action<object> OnValueChange;
+		public event Action<object> OnValueChange;
+		protected void Notify(object value)
+		{
+			OnValueChange?.Invoke(value);
+		}
+		public abstract void Dispose();
+		/// <summary>
+		/// Unbind self
+		/// </summary>
+		public abstract void Unbind();
+
 	}
-	public class ObserveVariable<T> : ObserveVariable, IBindableVariable<T>
+	public class ObserveProxyVariable<T> : ObserveProxyVariable, IBindableVariable<T>
 	{
 		public T Value
 		{
@@ -165,14 +202,30 @@ namespace Kurisu.AkiBT
 		}
 		private Func<T> Getter;
 		private Action<T> Setter;
+		private readonly SetterWrapper<T> setterWrapper;
 		public void Bind(IBindableVariable<T> other)
 		{
 			Getter = () => other.Value;
 			Setter = (evt) => other.Value = evt;
 		}
-		public ObserveVariable(SharedVariable<T> variable)
+		public ObserveProxyVariable(SharedVariable<T> variable, SetterWrapper<T> setterWrapper)
 		{
+			this.setterWrapper = setterWrapper;
+			setterWrapper.Setter = Notify;
 			Bind(variable);
+		}
+		private void Notify(T value)
+		{
+			base.Notify(value);
+		}
+		public sealed override void Dispose()
+		{
+			setterWrapper.Dispose();
+		}
+		public override void Unbind()
+		{
+			Getter = null;
+			Setter = null;
 		}
 	}
 }

@@ -10,6 +10,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
+        private HashSet<ObserveProxyVariable> observeProxies;
         private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.2</size>";
         private const string ButtonText = "Edit BehaviorTree";
         private const string DebugText = "Open BehaviorTree (Runtime)";
@@ -26,7 +27,7 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(toggle);
             var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
             myInspector.Add(field);
-            BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, Tree, target, this);
+            observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, Tree, target, this);
             var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(Tree); });
             if (!Application.isPlaying)
             {
@@ -41,10 +42,18 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(button);
             return myInspector;
         }
+        private void OnDisable()
+        {
+            foreach (var proxy in observeProxies)
+            {
+                proxy.Dispose();
+            }
+        }
     }
     [CustomEditor(typeof(BehaviorTreeSO))]
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
+        private HashSet<ObserveProxyVariable> observeProxies;
         private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.2</size>";
         private const string ButtonText = "Edit BehaviorTreeSO";
         public override VisualElement CreateInspectorGUI()
@@ -59,7 +68,7 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(new Label("BehaviorTree Description"));
             var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
-            BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, bt, target, this);
+            observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, bt, target, this);
             if (!Application.isPlaying)
             {
                 var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(bt); });
@@ -69,8 +78,15 @@ namespace Kurisu.AkiBT.Editor
             }
             return myInspector;
         }
+        private void OnDisable()
+        {
+            foreach (var proxy in observeProxies)
+            {
+                proxy.Dispose();
+            }
+        }
     }
-    internal class BehaviorTreeEditorUtility
+    public class BehaviorTreeEditorUtility
     {
         internal static Button GetButton(System.Action clickEvent)
         {
@@ -80,11 +96,12 @@ namespace Kurisu.AkiBT.Editor
             button.style.color = Color.white;
             return button;
         }
-        internal static void DrawSharedVariables(VisualElement parent, IVariableSource source, UnityEngine.Object target, UnityEditor.Editor editor)
+        public static HashSet<ObserveProxyVariable> DrawSharedVariables(VisualElement parent, IVariableSource source, UnityEngine.Object target, UnityEditor.Editor editor)
         {
+            var observeProxies = new HashSet<ObserveProxyVariable>();
             var factory = FieldResolverFactory.Instance;
             int count = source.SharedVariables.Count;
-            if (count == 0) return;
+            if (count == 0) return observeProxies;
             var foldout = new Foldout
             {
                 value = false,
@@ -110,11 +127,13 @@ namespace Kurisu.AkiBT.Editor
                 });
                 if (Application.isPlaying)
                 {
-                    variable.Observe().OnValueChange += (x) => fieldResolver.Value = x;
+                    var observeProxy = variable.Observe();
+                    observeProxy.OnValueChange += (x) => fieldResolver.Value = x;
                     fieldResolver.Value = variable.GetValue();
                     //Disable since you should only edit global variable in source
                     if (variable.IsGlobal) valueField.SetEnabled(false);
                     valueField.tooltip = "Global variable can only edited in source at runtime";
+                    observeProxies.Add(observeProxy);
                 }
                 if (valueField is TextField field)
                 {
@@ -185,6 +204,7 @@ namespace Kurisu.AkiBT.Editor
                 foldout.Add(grid);
             }
             parent.Add(foldout);
+            return observeProxies;
             void NotifyEditor()
             {
                 EditorUtility.SetDirty(target);

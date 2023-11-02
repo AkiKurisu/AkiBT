@@ -16,6 +16,7 @@ namespace Kurisu.AkiBT.Editor
         private readonly ScrollView scrollView;
         public VisualElement RawContainer => scrollView;
         private readonly List<SharedVariable> sharedVariables;
+        private readonly HashSet<ObserveProxyVariable> observeProxies = new();
         public AdvancedBlackBoard(IVariableSource variableSource, GraphView graphView) : base(graphView)
         {
             var header = this.Q("header");
@@ -23,8 +24,16 @@ namespace Kurisu.AkiBT.Editor
             Add(scrollView = new());
             scrollView.Add(new BlackboardSection { title = "Shared Variables" });
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            RegisterCallback<DetachFromPanelEvent>(OnDispose);
             sharedVariables = variableSource.SharedVariables;
             if (!Application.isPlaying) InitRequestDelegate();
+        }
+        private void OnDispose(DetachFromPanelEvent _)
+        {
+            foreach (var proxy in observeProxies)
+            {
+                proxy.Dispose();
+            }
         }
         private void InitRequestDelegate()
         {
@@ -103,7 +112,9 @@ namespace Kurisu.AkiBT.Editor
             });
             if (Application.isPlaying)
             {
-                variable.Observe().OnValueChange += (x) => fieldResolver.Value = x;
+                var observe = variable.Observe();
+                observe.OnValueChange += (x) => fieldResolver.Value = x;
+                observeProxies.Add(observe);
                 fieldResolver.Value = variable.GetValue();
                 //Disable since you should only edit global variable in source
                 if (variable.IsGlobal)
