@@ -63,7 +63,7 @@ namespace Kurisu.AkiBT.Editor
 
         public void PostCommit(IBehaviorTree tree)
         {
-            tree.Root = NodeBehavior as Root;
+            BehaviorTreeEditorUtility.SetRoot(tree, NodeBehavior as Root);
         }
         protected override void OnClearStyle()
         {

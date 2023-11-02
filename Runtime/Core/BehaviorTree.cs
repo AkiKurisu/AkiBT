@@ -17,6 +17,7 @@ namespace Kurisu.AkiBT
 
         [HideInInspector, SerializeReference]
         protected Root root = new();
+        public Root Root => root;
         Object IBehaviorTree._Object => gameObject;
         [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
@@ -27,18 +28,10 @@ namespace Kurisu.AkiBT
         " and the behavior tree in the component will be overwritten when saving")]
         private BehaviorTreeSO externalBehaviorTree;
 #if UNITY_EDITOR
-        public BehaviorTreeSO ExternalBehaviorTree => externalBehaviorTree;
         [SerializeField, HideInInspector]
         private List<GroupBlockData> blockData = new();
         public List<GroupBlockData> BlockData => blockData;
 #endif
-        public Root Root
-        {
-            get => root;
-#if UNITY_EDITOR
-            set => root = value;
-#endif
-        }
         public List<SharedVariable> SharedVariables => sharedVariables;
         private void Awake()
         {

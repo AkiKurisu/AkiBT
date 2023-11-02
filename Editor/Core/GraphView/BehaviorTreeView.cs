@@ -211,10 +211,14 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public void Restore()
         {
-            IBehaviorTree tree;
-            if (!Application.isPlaying && behaviorTree.ExternalBehaviorTree) tree = behaviorTree.ExternalBehaviorTree;
-            else tree = behaviorTree;
-            OnRestore(tree);
+            if (!Application.isPlaying && BehaviorTreeEditorUtility.TryGetExternalTree(behaviorTree, out IBehaviorTree tree))
+            {
+                OnRestore(tree);
+            }
+            else
+            {
+                OnRestore(behaviorTree);
+            }
         }
         /// <summary>
         /// Restore behavior tree to the graph view nodes

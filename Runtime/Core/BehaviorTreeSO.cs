@@ -10,20 +10,13 @@ namespace Kurisu.AkiBT
     {
         [SerializeReference, HideInInspector]
         protected Root root = new();
+        public Root Root => root;
         Object IBehaviorTree._Object => this;
-        public Root Root
-        {
-            get => root;
-#if UNITY_EDITOR
-            set => root = value;
-#endif
-        }
         public List<SharedVariable> SharedVariables => sharedVariables;
 #if UNITY_EDITOR
-        public virtual BehaviorTreeSO ExternalBehaviorTree => null;
         [SerializeField, HideInInspector]
         private List<GroupBlockData> blockData = new();
-        public List<GroupBlockData> BlockData { get => blockData; set => blockData = value; }
+        public List<GroupBlockData> BlockData => blockData;
         [Multiline]
         public string Description;
 #endif
