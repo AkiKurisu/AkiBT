@@ -4,8 +4,7 @@
 
 ***Read this document in English: [English Document](./README_EN.md)***
 
-AkiBT是一款由[爱姬kurisu](https://space.bilibili.com/20472331)优化并拓展的行为树结点编辑器.  
-AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者为[Yoshida](https://github.com/yoshidan/)，丰富了大量现代行为树编辑器功能.
+AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结点编辑器, UniBT原作者为[Yoshida](https://github.com/yoshidan/)，在前者基础上丰富了大量现代行为树编辑器功能.
 
 ## 安装
 1. 下载最新的[Release Package](https://github.com/AkiKurisu/AkiBT/releases)
@@ -198,7 +197,7 @@ AkiBT以[UniBT](https://github.com/yoshidan/UniBT)作为基础, UniBT原作者�
 
    插件目前内置了新的User Service(Tools/AkiBT/AkiBT User Service), 提供了两个功能Serialize Service和Search Service
 
-   ### 1. Serialize Service:
+   ### 1. Serialize Service
     
    由于AkiBT使用ScriptableObject进行数据存储,在修改结点的字段名称时会导致数据的丢失（该问题可以通过在修改字段上添加`FormerlySerializedAsAttribute`进行避免）。而对于结点的名称、命名空间进行修改后也会导致整个结点无法被反序列化，从而丢失该结点以及之后结点的所有数据。批量序列化为Json后，你可以使用文本编辑器批量对结点Ctrl+F进行修改，再使用Serialize Service重新批量反序列化为ScriptableObject。
 
