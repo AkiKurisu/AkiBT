@@ -81,6 +81,7 @@ namespace Kurisu.AkiBT.Editor
                 button.text = DebugText;
                 button.style.backgroundColor = new StyleColor(new Color(253 / 255f, 163 / 255f, 255 / 255f));
             }
+            myInspector.Add(button);
             return myInspector;
         }
         private void OnDisable()
