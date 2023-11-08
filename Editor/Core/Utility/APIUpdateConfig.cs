@@ -24,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
             public SerializeType targetType;
         }
         [field: SerializeField]
-        public Pair[] Pairs { get; private set; }
+        public Pair[] Pairs { get; set; }
     }
     [CustomPropertyDrawer(typeof(APIUpdateConfig.SerializeType))]
     public class SerializeTypeDrawer : PropertyDrawer
