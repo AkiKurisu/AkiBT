@@ -17,11 +17,11 @@ namespace Kurisu.AkiBT.Editor
            .ToList();
             foreach (var asset in assets)
             {
-                IterateAPI(asset, updateConfig);
+                UpdateAPI(asset, updateConfig);
             }
         }
 
-        private static void IterateAPI(ScriptableObject asset, APIUpdateConfig updateConfig)
+        public static void UpdateAPI(ScriptableObject asset, APIUpdateConfig updateConfig)
         {
             var serializeObject = new SerializedObject(asset)
             {

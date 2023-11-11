@@ -146,7 +146,7 @@ namespace Kurisu.AkiBT
 		{
 			Setter ??= (evt) => { value = evt; };
 			var wrapper = new SetterWrapper<T>((w) => { Setter -= w.Invoke; });
-			var proxy = new ObserveProxyVariable<T>(this, wrapper);
+			var proxy = new ObserveProxyVariable<T>(this, in wrapper);
 			Setter += wrapper.Invoke;
 			return proxy;
 		}
@@ -157,11 +157,6 @@ namespace Kurisu.AkiBT
 		public Action<T> Setter;
 		public void Invoke(T value)
 		{
-			if (Setter == null)
-			{
-				Debug.LogWarning("Wrapper setter is null, which is not expected!");
-				return;
-			}
 			Setter(value);
 		}
 		public void Dispose()
@@ -178,16 +173,12 @@ namespace Kurisu.AkiBT
 	/// </summary>
 	public abstract class ObserveProxyVariable : IDisposable
 	{
-		public event Action<object> OnValueChange;
-		protected void Notify(object value)
-		{
-			OnValueChange?.Invoke(value);
-		}
 		public abstract void Dispose();
 		/// <summary>
 		/// Unbind self
 		/// </summary>
 		public abstract void Unbind();
+		public abstract void Register(Action<object> observeCallBack);
 
 	}
 	public class ObserveProxyVariable<T> : ObserveProxyVariable, IBindableVariable<T>
@@ -211,15 +202,16 @@ namespace Kurisu.AkiBT
 			Getter = () => other.Value;
 			Setter = (evt) => other.Value = evt;
 		}
-		public ObserveProxyVariable(SharedVariable<T> variable, SetterWrapper<T> setterWrapper)
+		public ObserveProxyVariable(SharedVariable<T> variable, in SetterWrapper<T> setterWrapper)
 		{
 			this.setterWrapper = setterWrapper;
 			setterWrapper.Setter = Notify;
 			Bind(variable);
 		}
+		public event Action<T> OnValueChange;
 		private void Notify(T value)
 		{
-			base.Notify(value);
+			OnValueChange?.Invoke(value);
 		}
 		public sealed override void Dispose()
 		{
@@ -229,6 +221,11 @@ namespace Kurisu.AkiBT
 		{
 			Getter = null;
 			Setter = null;
+		}
+
+		public override void Register(Action<object> observeCallBack)
+		{
+			OnValueChange += (x) => observeCallBack?.Invoke(x);
 		}
 	}
 }

@@ -10,11 +10,17 @@ namespace Kurisu.AkiBT.Editor
         [Serializable]
         public class SerializeType
         {
-            public Type Type => Type.GetType(assemblyQualifiedName);
+            private Type type;
+            public Type Type => type ??= Type.GetType(assemblyQualifiedName);
             public string assemblyQualifiedName;
             public string GetFullTypeName()
             {
                 return $"{Type.Assembly.GetName().Name} {Type.FullName}";
+            }
+            public SerializeType() { }
+            public SerializeType(Type type)
+            {
+                assemblyQualifiedName = type.AssemblyQualifiedName;
             }
         }
         [Serializable]
@@ -22,6 +28,12 @@ namespace Kurisu.AkiBT.Editor
         {
             public SerializeType sourceType;
             public SerializeType targetType;
+            public Pair() { }
+            public Pair(Type sourceType, Type targetType)
+            {
+                this.sourceType = new SerializeType(sourceType);
+                this.targetType = new SerializeType(targetType);
+            }
         }
         [field: SerializeField]
         public Pair[] Pairs { get; set; }

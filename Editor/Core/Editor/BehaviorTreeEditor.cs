@@ -2,13 +2,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
-using System.Collections.Generic;
 namespace Kurisu.AkiBT.Editor
 {
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        private HashSet<ObserveProxyVariable> observeProxies;
         private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.2</size>";
         private const string ButtonText = "Edit BehaviorTree";
         private const string DebugText = "Debug BehaviorTree";
@@ -26,7 +24,10 @@ namespace Kurisu.AkiBT.Editor
             var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
             field.SetEnabled(!Application.isPlaying);
             myInspector.Add(field);
-            observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, Tree, target, this);
+            if (Tree.SharedVariables.Count != 0)
+            {
+                myInspector.Add(new SharedVariablesFoldout(Tree, target, this));
+            }
             var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(Tree); });
             if (!Application.isPlaying)
             {
@@ -41,19 +42,10 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(button);
             return myInspector;
         }
-        private void OnDisable()
-        {
-            if (observeProxies == null) return;
-            foreach (var proxy in observeProxies)
-            {
-                proxy.Dispose();
-            }
-        }
     }
     [CustomEditor(typeof(BehaviorTreeSO))]
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
-        private HashSet<ObserveProxyVariable> observeProxies;
         private IBehaviorTree Tree => target as IBehaviorTree;
         private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.2</size>";
         private const string ButtonText = "Edit BehaviorTreeSO";
@@ -69,7 +61,10 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(new Label("BehaviorTree Description"));
             var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
-            observeProxies = BehaviorTreeEditorUtility.DrawSharedVariables(myInspector, Tree, target, this);
+            if (Tree.SharedVariables.Count != 0)
+            {
+                myInspector.Add(new SharedVariablesFoldout(Tree, target, this));
+            }
             var button = BehaviorTreeEditorUtility.GetButton(() => { GraphEditorWindow.Show(Tree); });
             if (!Application.isPlaying)
             {
@@ -83,14 +78,6 @@ namespace Kurisu.AkiBT.Editor
             }
             myInspector.Add(button);
             return myInspector;
-        }
-        private void OnDisable()
-        {
-            if (observeProxies == null) return;
-            foreach (var proxy in observeProxies)
-            {
-                proxy.Dispose();
-            }
         }
     }
 }

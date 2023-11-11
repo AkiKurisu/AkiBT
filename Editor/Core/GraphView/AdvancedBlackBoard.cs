@@ -113,7 +113,7 @@ namespace Kurisu.AkiBT.Editor
             if (Application.isPlaying)
             {
                 var observe = variable.Observe();
-                observe.OnValueChange += (x) => fieldResolver.Value = x;
+                observe.Register(x => fieldResolver.Value = x);
                 observeProxies.Add(observe);
                 fieldResolver.Value = variable.GetValue();
                 //Disable since you should only edit global variable in source

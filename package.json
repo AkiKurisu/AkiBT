@@ -21,5 +21,12 @@
   "author": {
     "name": "AkiKurisu",
     "url": "https://github.com/AkiKurisu"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "AI Example",
+      "description": "Contains sample behaviorTree for AI",
+      "path": "Samples~/Example"
+    }
+  ]
 }
