@@ -22,8 +22,14 @@ namespace Kurisu.AkiBT
 #endif
         [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
+        /// <summary>
+        /// Whether behaviorTreeSO is initialized
+        /// </summary>
+        /// <value></value>
 #if AKIBT_REFLECTION
         public bool IsInitialized { get; private set; }
+#else
+        public bool IsInitialized=>true;
 #endif
         /// <summary>
         /// Bind GameObject and Init behaviorTree through Awake and Start method
@@ -61,6 +67,10 @@ namespace Kurisu.AkiBT
 #if UNITY_EDITOR
             blockData = new List<GroupBlockData>(template.BlockData);
 #endif
+#if AKIBT_REFLECTION
+            IsInitialized = true;
+            SharedVariableMapper.Traverse(this);
+#endif
         }
 #if AKIBT_REFLECTION
         /// <summary>
@@ -74,19 +84,21 @@ namespace Kurisu.AkiBT
                 Initialize();
             }
         }
+#endif
         /// <summary>
         /// Traverse behaviors and bind shared variables
         /// </summary>
         public void Initialize()
         {
+#if AKIBT_REFLECTION
             if (IsInitialized)
             {
-                Debug.LogWarning($"{name} initialize duplicate");
+                Debug.LogWarning($"{name} initialize duplicate which should not occur");
                 return;
             }
             IsInitialized = true;
             SharedVariableMapper.Traverse(this);
-        }
 #endif
+        }
     }
 }

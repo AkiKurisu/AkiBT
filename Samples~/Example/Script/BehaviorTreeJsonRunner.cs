@@ -10,7 +10,6 @@ namespace Kurisu.AkiBT.Example
         {
             behaviorTreeSO = ScriptableObject.CreateInstance<BehaviorTreeSO>();
             behaviorTreeSO.Deserialize(serializedData.text);
-            if (!behaviorTreeSO.IsInitialized) behaviorTreeSO.Initialize();
             behaviorTreeSO.Init(gameObject);
         }
         private void Update()
