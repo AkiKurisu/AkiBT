@@ -77,9 +77,13 @@ namespace Kurisu.AkiBT
             }
             variable.Bind(sharedVariable);
         }
-        public static TraverseIterator Traverse(this IBehaviorTree behaviorTree)
+        public static TraverseIterator Traverse(this IBehaviorTree behaviorTree, bool includeChildren = true)
         {
-            return new TraverseIterator(behaviorTree);
+            return new TraverseIterator(behaviorTree.Root, includeChildren);
+        }
+        public static TraverseIterator Traverse(this NodeBehavior nodeBehavior, bool includeChildren = true)
+        {
+            return new TraverseIterator(nodeBehavior, includeChildren);
         }
     }
 }

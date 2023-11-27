@@ -5,22 +5,26 @@ namespace Kurisu.AkiBT
     {
         private static readonly Stack<NodeBehavior> stack = new();
         private static readonly object iteratorLock = new();
-        private readonly IBehaviorTree behaviorTree;
-        public TraverseIterator(IBehaviorTree behaviorTree)
+        private readonly NodeBehavior iterateRoot;
+        private readonly bool includeChildren;
+        public TraverseIterator(NodeBehavior iterateRoot, bool includeChildren)
         {
-            this.behaviorTree = behaviorTree;
+            this.iterateRoot = iterateRoot;
+            this.includeChildren = includeChildren;
         }
         public IEnumerator<NodeBehavior> GetEnumerator()
         {
             lock (iteratorLock)
             {
+                int depth = 0;
                 stack.Clear();
-                stack.Push(behaviorTree.Root);
+                stack.Push(iterateRoot);
                 while (stack.Count != 0)
                 {
                     var top = stack.Pop();
                     yield return top;
-                    if (top is not IIterable iterable) continue;
+                    if ((!includeChildren && depth > 0) || top is not IIterable iterable) continue;
+                    ++depth;
                     for (int i = iterable.GetChildCount() - 1; i >= 0; --i)
                     {
                         stack.Push(iterable.GetChildAt(i));

@@ -87,8 +87,7 @@ namespace Kurisu.AkiBT.Editor
             int index = 1;
             while (sharedVariables.Any(x => x.Name == localPropertyName))
             {
-                localPropertyName = $"{variable.Name}{index}";
-                index++;
+                localPropertyName = $"{variable.Name}{index++}";
             }
             variable.Name = localPropertyName;
             sharedVariables.Add(variable);

@@ -93,7 +93,10 @@ namespace Kurisu.AkiBT.Editor
         }
         private void AddNameDropDown()
         {
-            nameDropdown = new DropdownField($"Shared {typeof(T).Name}", GetList(treeView), value.Name ?? string.Empty);
+            var list = GetList(treeView);
+            value.Name = value.Name ?? string.Empty;
+            int index = list.IndexOf(value.Name);
+            nameDropdown = new DropdownField($"Shared {typeof(T).Name}", list, index);
             nameDropdown.RegisterCallback<MouseEnterEvent>((evt) => { nameDropdown.choices = GetList(treeView); });
             nameDropdown.RegisterValueChangedCallback(evt => { value.Name = evt.newValue; BindProperty(); NotifyValueChange(); });
             foldout.Insert(0, nameDropdown);
