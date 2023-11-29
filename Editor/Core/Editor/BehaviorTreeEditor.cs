@@ -58,7 +58,6 @@ namespace Kurisu.AkiBT.Editor
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
             myInspector.Add(label);
             myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
-            myInspector.Add(new Label("BehaviorTree Description"));
             var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
             if (Tree.SharedVariables.Count != 0)

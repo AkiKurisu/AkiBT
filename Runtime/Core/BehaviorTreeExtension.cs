@@ -1,4 +1,3 @@
-using UnityEngine;
 namespace Kurisu.AkiBT
 {
     public static class BehaviorTreeExtension
@@ -22,6 +21,10 @@ namespace Kurisu.AkiBT
                 }
             }
             return null;
+        }
+        public static SharedVariable<T> GetSharedVariable<T>(this IVariableSource variableScope, string variableName)
+        {
+            return variableScope.GetSharedVariable(variableName) as SharedVariable<T>;
         }
         /// <summary>
         /// Try get shared variable by it's name
@@ -48,6 +51,16 @@ namespace Kurisu.AkiBT
             sharedVariable = null;
             return false;
         }
+        public static bool TryGetSharedVariable<T>(this IVariableSource variableScope, string variableName, out SharedVariable<T> sharedTVariable)
+        {
+            if (variableScope.TryGetSharedVariable(variableName, out SharedVariable sharedVariable))
+            {
+                sharedTVariable = sharedVariable as SharedVariable<T>;
+                return sharedTVariable != null;
+            }
+            sharedTVariable = null;
+            return false;
+        }
         /// <summary>
         /// Map variable to global variables
         /// </summary>
@@ -58,23 +71,19 @@ namespace Kurisu.AkiBT
             foreach (var variable in variableSource.SharedVariables)
             {
                 if (!variable.IsGlobal) continue;
-                variable.MapToInternal(globalVariables);
+                variable.MapTo(globalVariables);
             }
         }
         /// <summary>
-        /// Map variable to target variable source
+        /// Map variable to target variable source if variable is shared or is global
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="variableSource"></param>
-        internal static void MapToInternal(this SharedVariable variable, IVariableSource variableSource)
+        public static void MapTo(this SharedVariable variable, IVariableSource variableSource)
         {
             if (variable == null) return;
             if (!variable.IsShared && !variable.IsGlobal) return;
-            if (!variableSource.TryGetSharedVariable(variable.Name, out SharedVariable sharedVariable))
-            {
-                Debug.LogWarning($"Can not map {variable.Name} to {variableSource} !");
-                return;
-            }
+            if (!variableSource.TryGetSharedVariable(variable.Name, out SharedVariable sharedVariable)) return;
             variable.Bind(sharedVariable);
         }
         public static TraverseIterator Traverse(this IBehaviorTree behaviorTree, bool includeChildren = true)
