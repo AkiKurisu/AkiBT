@@ -28,7 +28,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(GameVariableScope))]
     public class GameVariableScopeEditor : UnityEditor.Editor
     {
-        private const string ButtonText = "Save Change";
+        private bool isDirty;
         public override VisualElement CreateInspectorGUI()
         {
             var source = target as GameVariableScope;
@@ -56,13 +56,8 @@ namespace Kurisu.AkiBT.Editor
 
             if (Application.isPlaying) return myInspector;
 
-            var button = BehaviorTreeEditorUtility.GetButton(proxy.Update);
-            button.clicked += () => { button.SetEnabled(false); };
-            button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
-            button.text = ButtonText;
-            button.SetEnabled(false);
-            blackBoard.RegisterCallback<VariableChangeEvent>(_ => button.SetEnabled(true));
-            myInspector.Add(button);
+            myInspector.RegisterCallback<DetachFromPanelEvent>(_ => { if (isDirty) proxy.Update(); });
+            blackBoard.RegisterCallback<VariableChangeEvent>(_ => isDirty = true);
             myInspector.Add(new PropertyField(serializedObject.FindProperty("parentScope"), "Parent Scope"));
             return myInspector;
         }
@@ -70,7 +65,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(SceneVariableScope))]
     public class SceneVariableScopeEditor : UnityEditor.Editor
     {
-        private const string ButtonText = "Save Change";
+        private bool isDirty;
         public override VisualElement CreateInspectorGUI()
         {
             var source = target as SceneVariableScope;
@@ -98,13 +93,8 @@ namespace Kurisu.AkiBT.Editor
 
             if (Application.isPlaying) return myInspector;
 
-            var button = BehaviorTreeEditorUtility.GetButton(proxy.Update);
-            button.clicked += () => { button.SetEnabled(false); };
-            button.style.backgroundColor = new StyleColor(new Color(140 / 255f, 160 / 255f, 250 / 255f));
-            button.text = ButtonText;
-            button.SetEnabled(false);
-            blackBoard.RegisterCallback<VariableChangeEvent>(_ => button.SetEnabled(true));
-            myInspector.Add(button);
+            myInspector.RegisterCallback<DetachFromPanelEvent>(_ => { if (isDirty) proxy.Update(); });
+            blackBoard.RegisterCallback<VariableChangeEvent>(_ => isDirty = true);
             myInspector.Add(new PropertyField(serializedObject.FindProperty("parentScope"), "Parent Scope"));
             return myInspector;
         }

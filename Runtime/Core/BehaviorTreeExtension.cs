@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Kurisu.AkiBT
 {
     public static class BehaviorTreeExtension
@@ -22,9 +24,16 @@ namespace Kurisu.AkiBT
             }
             return null;
         }
-        public static SharedVariable<T> GetSharedVariable<T>(this IVariableSource variableScope, string variableName)
+        public static SharedVariable<T> GetSharedVariable<T>(this IVariableSource variableScope, string variableName) where T : unmanaged
         {
             return variableScope.GetSharedVariable(variableName) as SharedVariable<T>;
+        }
+        public static T GetObject<T>(this IVariableSource variableScope, string variableName) where T : Object
+        {
+            var variable = variableScope.GetSharedVariable(variableName);
+            if (variable is SharedVariable<T> tVariable) return tVariable.Value;
+            if (variable is SharedObject sharedObject) return sharedObject.Value as T;
+            return null;
         }
         /// <summary>
         /// Try get shared variable by it's name
@@ -51,7 +60,7 @@ namespace Kurisu.AkiBT
             sharedVariable = null;
             return false;
         }
-        public static bool TryGetSharedVariable<T>(this IVariableSource variableScope, string variableName, out SharedVariable<T> sharedTVariable)
+        public static bool TryGetSharedVariable<T>(this IVariableSource variableScope, string variableName, out SharedVariable<T> sharedTVariable) where T : unmanaged
         {
             if (variableScope.TryGetSharedVariable(variableName, out SharedVariable sharedVariable))
             {
