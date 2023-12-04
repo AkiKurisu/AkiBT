@@ -1,5 +1,4 @@
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
     public static class BehaviorTreeExtension
@@ -27,6 +26,10 @@ namespace Kurisu.AkiBT
         public static SharedVariable<T> GetSharedVariable<T>(this IVariableSource variableScope, string variableName) where T : unmanaged
         {
             return variableScope.GetSharedVariable(variableName) as SharedVariable<T>;
+        }
+        public static SharedVariable<string> GetSharedString(this IVariableSource variableScope, string variableName)
+        {
+            return variableScope.GetSharedVariable(variableName) as SharedVariable<string>;
         }
         public static T GetObject<T>(this IVariableSource variableScope, string variableName) where T : Object
         {
@@ -65,6 +68,16 @@ namespace Kurisu.AkiBT
             if (variableScope.TryGetSharedVariable(variableName, out SharedVariable sharedVariable))
             {
                 sharedTVariable = sharedVariable as SharedVariable<T>;
+                return sharedTVariable != null;
+            }
+            sharedTVariable = null;
+            return false;
+        }
+        public static bool TryGetSharedString(this IVariableSource variableScope, string variableName, out SharedVariable<string> sharedTVariable)
+        {
+            if (variableScope.TryGetSharedVariable(variableName, out SharedVariable sharedVariable))
+            {
+                sharedTVariable = sharedVariable as SharedVariable<string>;
                 return sharedTVariable != null;
             }
             sharedTVariable = null;
