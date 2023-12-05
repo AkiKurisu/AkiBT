@@ -400,7 +400,7 @@ You can write an editor class to provide your node which is similar to customize
 public class SampleResolver : INodeResolver
 {
     //Create custom node
-    public IDialogueNode CreateNodeInstance(Type type)
+    public IBehaviorTreeNode CreateNodeInstance(Type type)
     {
         return new SampleNode();
     }
