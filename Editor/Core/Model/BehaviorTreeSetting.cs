@@ -9,11 +9,11 @@ namespace Kurisu.AkiBT.Editor
     internal class EditorSetting
     {
         [Tooltip("Editor implementation that this setting belongs to, according to field `TreeEditorName` in IBehaviorTreeView")]
-        public string EditorName;
+        public string EditorName = "AkiBT";
         [AkiGroupSelector, Tooltip("Display type, filter AkiGroup according to this list, nodes without category will always be displayed")]
-        public string[] ShowGroups;
+        public string[] ShowGroups = new string[0];
         [AkiGroupSelector, Tooltip("The type that is not displayed, filter the AkiGroup according to this list, and the nodes without categories will always be displayed")]
-        public string[] NotShowGroups;
+        public string[] NotShowGroups = new string[0];
         [Tooltip("You can customize the style of the Graph view")]
         public StyleSheet graphStyleSheet;
         [Tooltip("You can customize the style of the Inspector inspector")]
