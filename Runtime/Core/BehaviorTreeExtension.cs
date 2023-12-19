@@ -16,7 +16,7 @@ namespace Kurisu.AkiBT
             }
             foreach (var variable in variableScope.SharedVariables)
             {
-                if (variable.Name.Equals(variableName))
+                if (variableName == variable.Name)
                 {
                     return variable;
                 }
@@ -54,7 +54,7 @@ namespace Kurisu.AkiBT
             }
             foreach (var variable in variableScope.SharedVariables)
             {
-                if (variable.Name.Equals(variableName))
+                if (variableName == variable.Name)
                 {
                     sharedVariable = variable;
                     return true;
