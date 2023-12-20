@@ -243,7 +243,7 @@ namespace Kurisu.AkiBT.Editor
                 }
                 else
                 {
-                    BlackBoard.AddSharedVariable(variable.Clone() as SharedVariable);
+                    BlackBoard.AddSharedVariable(variable.Clone());
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace Kurisu.AkiBT.Editor
             }
         }
 
-        internal bool Save()
+        public bool Save()
         {
             if (Application.isPlaying) return false;
             if (Validate())
@@ -268,7 +268,7 @@ namespace Kurisu.AkiBT.Editor
             return false;
         }
 
-        internal protected virtual bool Validate()
+        public virtual bool Validate()
         {
             //validate nodes by DFS.
             var stack = new Stack<IBehaviorTreeNode>();

@@ -60,7 +60,7 @@ namespace Kurisu.AkiBT
 		/// Clone shared variable by deep copy, an option here is to override for preventing using reflection
 		/// </summary>
 		/// <returns></returns>
-		public virtual object Clone()
+		public virtual SharedVariable Clone()
 		{
 			return ReflectionHelper.DeepCopy(this);
 		}
@@ -72,6 +72,11 @@ namespace Kurisu.AkiBT
 		/// </summary>
 		/// <returns></returns>
 		public abstract ObserveProxyVariable Observe();
+
+		object ICloneable.Clone()
+		{
+			return Clone();
+		}
 	}
 	[Serializable]
 	public abstract class SharedVariable<T> : SharedVariable, IBindableVariable<T>

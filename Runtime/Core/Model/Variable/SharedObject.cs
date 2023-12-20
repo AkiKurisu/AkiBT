@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT
         {
 
         }
-        public override object Clone()
+        public override SharedVariable Clone()
         {
             return new SharedObject() { Value = value, Name = Name, IsShared = IsShared, ConstraintTypeAQM = ConstraintTypeAQM, IsGlobal = IsGlobal };
         }
@@ -47,7 +47,7 @@ namespace Kurisu.AkiBT
         {
 
         }
-        public override object Clone()
+        public override SharedVariable Clone()
         {
             return new SharedTObject<TObject>() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
         }

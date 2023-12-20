@@ -142,14 +142,19 @@ namespace Kurisu.AkiBT.Editor
         {
             evt.menu.MenuItems().Clear();
             if (Application.isPlaying) return;
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Delate Variable", (a) =>
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Delate", (a) =>
             {
                 int index = RawContainer.IndexOf(element);
                 var variable = sharedVariables[index - 1];
                 sharedVariables.RemoveAt(index - 1);
                 RawContainer.Remove(element);
                 NotifyVariableChanged(variable, VariableChangeType.Delate);
-                return;
+            }));
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Duplicate", (a) =>
+            {
+                int index = RawContainer.IndexOf(element);
+                var variable = sharedVariables[index - 1];
+                AddSharedVariableWithNotify(variable.Clone());
             }));
         }
         private VisualElement GetConstraintField(SharedObject sharedObject, ObjectField objectField)
