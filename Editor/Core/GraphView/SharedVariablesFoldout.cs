@@ -43,7 +43,7 @@ namespace Kurisu.AkiBT.Editor
                     fieldResolver.Value = variable.GetValue();
                     //Disable since you should only edit global variable in source
                     if (variable.IsGlobal) valueField.SetEnabled(false);
-                    valueField.tooltip = "Global variable can only edited in source at runtime";
+                    valueField.tooltip = "Global variable can only be edited in source at runtime";
                     observeProxies.Add(observeProxy);
                 }
                 if (valueField is TextField field)
