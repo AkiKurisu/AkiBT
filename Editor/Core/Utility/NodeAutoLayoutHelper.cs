@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
     /// <summary>
-    /// Modfied from https://gitee.com/NKG_admin/NKGMobaBasedOnET/tree/master/Unity/Assets/Model/NKGMOBA/Helper/NodeGraph/Core
+    /// Modified from https://gitee.com/NKG_admin/NKGMobaBasedOnET/tree/master/Unity/Assets/Model/NKGMOBA/Helper/NodeGraph/Core
     /// </summary>
     public class NodeAutoLayoutHelper
     {

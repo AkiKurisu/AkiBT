@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Editor
         IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren();
     }
     /// <summary>
-    /// Modfied from https://gitee.com/NKG_admin/NKGMobaBasedOnET/tree/master/Unity/Assets/Model/NKGMOBA/Helper/NodeGraph/Core
+    /// Modified from https://gitee.com/NKG_admin/NKGMobaBasedOnET/tree/master/Unity/Assets/Model/NKGMOBA/Helper/NodeGraph/Core
     /// </summary>
     public interface INodeForLayoutConvertor
     {
