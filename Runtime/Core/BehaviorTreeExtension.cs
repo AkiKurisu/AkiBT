@@ -104,8 +104,7 @@ namespace Kurisu.AkiBT
         public static void MapTo(this SharedVariable variable, IVariableSource variableSource)
         {
             if (variable == null) return;
-            if (!variable.IsExposed) return;
-            if (!variable.IsShared && !variable.IsGlobal) return;
+            if (!variable.IsShared && !variable.IsGlobal && !variable.IsExposed) return;
             if (!variableSource.TryGetSharedVariable(variable.Name, out SharedVariable sharedVariable)) return;
             variable.Bind(sharedVariable);
         }
