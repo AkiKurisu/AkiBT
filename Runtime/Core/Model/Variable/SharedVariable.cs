@@ -34,6 +34,17 @@ namespace Kurisu.AkiBT
 		}
 		[SerializeField]
 		private bool isGlobal;
+		/// <summary>
+		/// Whether variable is exposed to editor
+		/// </summary>
+		/// <value></value>
+		public bool IsExposed
+		{
+			get => isExposed;
+			set => isExposed = value;
+		}
+		[SerializeField]
+		private bool isExposed;
 		public string Name
 		{
 			get
@@ -64,7 +75,6 @@ namespace Kurisu.AkiBT
 		{
 			return ReflectionHelper.DeepCopy(this);
 		}
-
 		[SerializeField]
 		private string mName;
 		/// <summary>
@@ -154,6 +164,23 @@ namespace Kurisu.AkiBT
 			var proxy = new ObserveProxyVariable<T>(this, in wrapper);
 			Setter += wrapper.Invoke;
 			return proxy;
+		}
+		public sealed override SharedVariable Clone()
+		{
+			var variable = CloneT();
+			variable.CopyProperty(this);
+			return variable;
+		}
+		protected virtual SharedVariable<T> CloneT()
+		{
+			return ReflectionHelper.DeepCopy(this);
+		}
+		protected void CopyProperty(SharedVariable other)
+		{
+			IsGlobal = other.IsGlobal;
+			IsExposed = other.IsExposed;
+			IsShared = other.IsShared;
+			Name = other.Name;
 		}
 	}
 	public class SetterWrapper<T> : IDisposable

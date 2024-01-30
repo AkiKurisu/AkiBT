@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using System.Linq;
 namespace Kurisu.AkiBT.Editor
 {
     [CustomEditor(typeof(BehaviorTree))]
@@ -24,7 +25,7 @@ namespace Kurisu.AkiBT.Editor
             var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
             field.SetEnabled(!Application.isPlaying);
             myInspector.Add(field);
-            if (Tree.SharedVariables.Count != 0)
+            if (Tree.SharedVariables.Count(x => x.IsExposed) != 0)
             {
                 myInspector.Add(new SharedVariablesFoldout(Tree, target, this));
             }
@@ -60,7 +61,7 @@ namespace Kurisu.AkiBT.Editor
             myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
             var description = new PropertyField(serializedObject.FindProperty("Description"), string.Empty);
             myInspector.Add(description);
-            if (Tree.SharedVariables.Count != 0)
+            if (Tree.SharedVariables.Count(x => x.IsExposed) != 0)
             {
                 myInspector.Add(new SharedVariablesFoldout(Tree, target, this));
             }

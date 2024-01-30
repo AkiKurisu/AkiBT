@@ -5,41 +5,49 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class CopyPasteConvertor
+    public class CopyPasteGraphConvertor
     {
         private readonly ITreeView sourceView;
-        private readonly List<ISelectable> pasteElements;
+        private readonly List<GraphElement> copyElements;
         private readonly Dictionary<Port, Port> portCopyDict;
         private readonly Dictionary<IBehaviorTreeNode, IBehaviorTreeNode> nodeCopyDict;
-        private readonly List<ISelectable> copyElements;
-        public CopyPasteConvertor(ITreeView sourceView, List<ISelectable> copyElements)
+        private readonly List<GraphElement> sourceElements;
+        private readonly HashSet<Edge> sourceEdges;
+        public CopyPasteGraphConvertor(ITreeView sourceView, List<GraphElement> sourceElements, Vector2 positionOffSet)
         {
             this.sourceView = sourceView;
-            this.copyElements = copyElements;
-            pasteElements = new List<ISelectable>();
+            this.sourceElements = sourceElements;
+            copyElements = new List<GraphElement>();
             portCopyDict = new Dictionary<Port, Port>();
             nodeCopyDict = new Dictionary<IBehaviorTreeNode, IBehaviorTreeNode>();
+            sourceEdges = sourceElements.OfType<Edge>().ToHashSet();
             DistinctNodes();
             CopyNodes();
             CopyEdges();
             CopyGroupBlocks();
+            foreach (var pair in nodeCopyDict)
+            {
+                Rect newRect = pair.Key.GetWorldPosition();
+                newRect.position += positionOffSet;
+                pair.Value.View.SetPosition(newRect);
+            }
         }
-        public List<ISelectable> GetPasteElements() => pasteElements;
+        public List<GraphElement> GetCopyElements() => copyElements;
         private void DistinctNodes()
         {
-            var containerNodes = copyElements.OfType<CompositeStack>().ToArray();
+            var containerNodes = sourceElements.OfType<CompositeStack>().ToArray();
             foreach (var containerNode in containerNodes)
             {
-                containerNode.contentContainer.Query<BehaviorTreeNode>().ForEach(x => copyElements.Remove(x));
+                containerNode.contentContainer.Query<BehaviorTreeNode>().ForEach(x => sourceElements.Remove(x));
             }
         }
         private void CopyNodes()
         {
-            foreach (var select in copyElements)
+            foreach (var select in sourceElements)
             {
                 if (select is not IBehaviorTreeNode selectNode) continue;
                 var node = sourceView.DuplicateNode(selectNode);
-                pasteElements.Add(node.View);
+                copyElements.Add(node.View);
                 nodeCopyDict.Add(selectNode, node);
                 CopyPort(selectNode, node);
             }
@@ -92,18 +100,17 @@ namespace Kurisu.AkiBT.Editor
 
         private void CopyEdges()
         {
-            foreach (var select in copyElements)
+            foreach (var edge in sourceEdges)
             {
-                if (select is not Edge edge) continue;
                 if (!portCopyDict.ContainsKey(edge.input) || !portCopyDict.ContainsKey(edge.output)) continue;
                 var newEdge = PortHelper.ConnectPorts(portCopyDict[edge.output], portCopyDict[edge.input]);
                 sourceView.View.AddElement(newEdge);
-                pasteElements.Add(newEdge);
+                copyElements.Add(newEdge);
             }
         }
         private void CopyGroupBlocks()
         {
-            foreach (var select in copyElements)
+            foreach (var select in sourceElements)
             {
                 if (select is not GroupBlock selectBlock) continue;
                 var nodes = selectBlock.containedElements.OfType<IBehaviorTreeNode>();

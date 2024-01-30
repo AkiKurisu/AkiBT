@@ -12,9 +12,9 @@ namespace Kurisu.AkiBT
         {
 
         }
-        public override SharedVariable Clone()
+        protected override SharedVariable<float> CloneT()
         {
-            return new SharedFloat() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
+            return new SharedFloat() { Value = value };
         }
     }
 }

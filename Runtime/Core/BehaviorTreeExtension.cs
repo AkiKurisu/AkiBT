@@ -92,7 +92,7 @@ namespace Kurisu.AkiBT
             var globalVariables = GlobalVariables.Instance;
             foreach (var variable in variableSource.SharedVariables)
             {
-                if (!variable.IsGlobal) continue;
+                if (!variable.IsGlobal || !variable.IsExposed) continue;
                 variable.MapTo(globalVariables);
             }
         }
@@ -104,6 +104,7 @@ namespace Kurisu.AkiBT
         public static void MapTo(this SharedVariable variable, IVariableSource variableSource)
         {
             if (variable == null) return;
+            if (!variable.IsExposed) return;
             if (!variable.IsShared && !variable.IsGlobal) return;
             if (!variableSource.TryGetSharedVariable(variable.Name, out SharedVariable sharedVariable)) return;
             variable.Bind(sharedVariable);

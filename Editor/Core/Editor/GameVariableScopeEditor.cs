@@ -37,7 +37,7 @@ namespace Kurisu.AkiBT.Editor
             var proxy = new VariableSourceProxy(source, source);
             //Need attached to a virtual graphView to send event
             //It's an interesting hack so that you can use blackBoard outside of graphView
-            var blackBoard = new AdvancedBlackBoard(proxy, new VirtualGraphView());
+            var blackBoard = new AdvancedBlackBoard(proxy, new VirtualGraphView()) { AlwaysExposed = true };
             foreach (var variable in source.SharedVariables)
             {
                 //In play mode, use original variable to observe value change
@@ -47,7 +47,7 @@ namespace Kurisu.AkiBT.Editor
                 }
                 else
                 {
-                    blackBoard.AddSharedVariable(variable.Clone() as SharedVariable);
+                    blackBoard.AddSharedVariable(variable.Clone());
                 }
             }
             blackBoard.style.position = Position.Relative;
@@ -74,7 +74,7 @@ namespace Kurisu.AkiBT.Editor
             var proxy = new VariableSourceProxy(source, source);
             //Need attached to a virtual graphView to send event
             //It's an interesting hack so that you can use blackBoard outside of graphView
-            var blackBoard = new AdvancedBlackBoard(proxy, new VirtualGraphView());
+            var blackBoard = new AdvancedBlackBoard(proxy, new VirtualGraphView()) { AlwaysExposed = true };
             foreach (var variable in source.SharedVariables)
             {
                 //In play mode, use original variable to observe value change
@@ -84,7 +84,7 @@ namespace Kurisu.AkiBT.Editor
                 }
                 else
                 {
-                    blackBoard.AddSharedVariable(variable.Clone() as SharedVariable);
+                    blackBoard.AddSharedVariable(variable.Clone());
                 }
             }
             blackBoard.style.position = Position.Relative;

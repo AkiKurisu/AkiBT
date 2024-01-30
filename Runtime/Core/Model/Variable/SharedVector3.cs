@@ -13,9 +13,9 @@ namespace Kurisu.AkiBT
         {
 
         }
-        public override SharedVariable Clone()
+        protected override SharedVariable<Vector3> CloneT()
         {
-            return new SharedVector3() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
+            return new SharedVector3() { Value = value };
         }
     }
 }

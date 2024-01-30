@@ -17,9 +17,9 @@ namespace Kurisu.AkiBT
         {
 
         }
-        public override SharedVariable Clone()
+        protected override SharedVariable<UObject> CloneT()
         {
-            return new SharedObject() { Value = value, Name = Name, IsShared = IsShared, ConstraintTypeAQM = ConstraintTypeAQM, IsGlobal = IsGlobal };
+            return new SharedObject() { Value = value, ConstraintTypeAQM = constraintTypeAQM };
         }
     }
     [Serializable]
@@ -47,9 +47,9 @@ namespace Kurisu.AkiBT
         {
 
         }
-        public override SharedVariable Clone()
+        protected override SharedVariable<TObject> CloneT()
         {
-            return new SharedTObject<TObject>() { Value = value, Name = Name, IsShared = IsShared, IsGlobal = IsGlobal };
+            return new SharedTObject<TObject>() { Value = value };
         }
         public override void Bind(SharedVariable other)
         {

@@ -63,6 +63,7 @@ namespace Kurisu.AkiBT.Editor
         }
         private void RegisterSerializationCallBack()
         {
+            serializeGraphElements += OnSerialize;
             canPasteSerializedData += (data) => true;
             unserializeAndPaste += OnPaste;
         }
@@ -86,14 +87,24 @@ namespace Kurisu.AkiBT.Editor
             this.AddManipulator(contentDragger);
             this.AddManipulator(new DragDropManipulator(CopyFromObject));
         }
+        private string OnSerialize(IEnumerable<GraphElement> elements)
+        {
+            CopyPaste.Copy(EditorWindow.GetInstanceID(), elements);
+            return string.Empty;
+        }
         private void OnPaste(string a, string b)
         {
-            List<ISelectable> copyElements = new CopyPasteConvertor(this, selection).GetPasteElements();
+            if (CopyPaste.CanPaste)
+                Paste(new Vector2(50, 50));
+        }
+        private void Paste(Vector2 positionOffSet)
+        {
             ClearSelection();
-            copyElements.ForEach(node =>
+            //Add paste elements to selection
+            foreach (var element in new CopyPasteGraphConvertor(this, CopyPaste.Paste(), positionOffSet).GetCopyElements())
             {
-                node.Select(this, true);
-            });
+                element.Select(this, true);
+            }
         }
         public IBehaviorTreeNode DuplicateNode(IBehaviorTreeNode node)
         {
@@ -121,6 +132,10 @@ namespace Kurisu.AkiBT.Editor
             //Remove needless default actions .
             evt.menu.MenuItems().Clear();
             remainTargets.ForEach(evt.menu.MenuItems().Add);
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Paste", (evt) =>
+            {
+                Paste(contentViewContainer.WorldToLocal(evt.eventInfo.mousePosition) - CopyPaste.CenterPosition);
+            }, x => CopyPaste.CanPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled));
         }
         public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter)
         {

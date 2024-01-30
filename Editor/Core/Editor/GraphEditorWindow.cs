@@ -89,6 +89,14 @@ namespace Kurisu.AkiBT.Editor
             AssetDatabase.SaveAssets();
             Show(treeSO);
         }
+        public static bool ContainsEditorWindow(int windowInstanceID)
+        {
+            foreach (var value in cache.Values)
+            {
+                if (value.GetInstanceID() == windowInstanceID) return true;
+            }
+            return false;
+        }
         public static void Show(IBehaviorTree bt)
         {
             var window = Create<GraphEditorWindow>(bt);
