@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Editor
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeEditor : UnityEditor.Editor
     {
-        private const string LabelText = "AkiBT BehaviorTree <size=12>Version1.4.2</size>";
+        private const string LabelText = "AkiBT BehaviorTree <size=12>V1.4.3</size>";
         private const string ButtonText = "Edit BehaviorTree";
         private const string DebugText = "Debug BehaviorTree";
         private IBehaviorTree Tree => target as IBehaviorTree;
@@ -48,7 +48,7 @@ namespace Kurisu.AkiBT.Editor
     public class BehaviorTreeSOEditor : UnityEditor.Editor
     {
         private IBehaviorTree Tree => target as IBehaviorTree;
-        private const string LabelText = "AkiBT BehaviorTreeSO <size=12>Version1.4.2</size>";
+        private const string LabelText = "AkiBT BehaviorTreeSO <size=12>V1.4.3</size>";
         private const string ButtonText = "Edit BehaviorTreeSO";
         private const string DebugText = "Debug BehaviorTreeSO";
         public override VisualElement CreateInspectorGUI()
