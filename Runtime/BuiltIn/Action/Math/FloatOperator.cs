@@ -1,12 +1,12 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Operate float value")]
-    [AkiLabel("Math : FloatOperator")]
+    [AkiInfo("Action: Operate float value")]
+    [AkiLabel("Math: FloatOperator")]
     [AkiGroup("Math")]
     public class FloatOperator : Action
     {
-        private enum Operation
+        public enum Operation
         {
             Add,
             Subtract,
@@ -16,20 +16,11 @@ namespace Kurisu.AkiBT.Extend
             Max,
             Modulo
         }
-        [SerializeField]
-        private SharedFloat float1;
-        [SerializeField]
-        private SharedFloat float2;
-        [SerializeField, ForceShared]
-        private SharedFloat storeResult;
-        [SerializeField]
-        private Operation operation;
-        public override void Awake()
-        {
-            InitVariable(float1);
-            InitVariable(float2);
-            InitVariable(storeResult);
-        }
+        public SharedFloat float1;
+        public SharedFloat float2;
+        [ForceShared]
+        public SharedFloat storeResult;
+        public Operation operation;
         protected override Status OnUpdate()
         {
             switch (operation)

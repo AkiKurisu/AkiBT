@@ -1,23 +1,18 @@
-using UnityEngine;
+using UnityEngine.Serialization;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Set string value")]
-    [AkiLabel("String : Set")]
+    [AkiInfo("Action: Set string value")]
+    [AkiLabel("String: Set")]
     [AkiGroup("String")]
     public class SetString : Action
     {
-        [SerializeField]
-        private SharedString value;
-        [SerializeField, ForceShared]
-        private SharedString storeResult;
-        public override void Awake()
-        {
-            InitVariable(value);
-            InitVariable(storeResult);
-        }
+        [FormerlySerializedAs("value")]
+        public SharedString stringValue;
+        [ForceShared]
+        public SharedString storeResult;
         protected override Status OnUpdate()
         {
-            storeResult.Value = value.Value;
+            storeResult.Value = stringValue.Value;
             return Status.Success;
         }
     }

@@ -43,7 +43,6 @@ namespace Kurisu.AkiBT
                 root = instance.Root;
             }
             this.MapGlobal();
-#if AKIBT_REFLECTION
             if (externalBehaviorTree)
             {
                 //Prevent remap for external tree
@@ -54,7 +53,6 @@ namespace Kurisu.AkiBT
             {
                 SharedVariableMapper.Traverse(this);
             }
-#endif
             root.Run(gameObject, this);
             root.Awake();
         }

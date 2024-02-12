@@ -1,23 +1,17 @@
-using UnityEngine;
+using UnityEngine.Serialization;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Set int value")]
-    [AkiLabel("Math : SetInt")]
+    [AkiInfo("Action: Set int value")]
+    [AkiLabel("Math: SetInt")]
     [AkiGroup("Math")]
     public class SetInt : Action
     {
-        [SerializeField]
-        private int setValue;
-        [SerializeField, ForceShared]
-        private SharedInt intToSet;
-
-        public override void Awake()
-        {
-            InitVariable(intToSet);
-        }
+        public SharedInt intValue;
+        [ForceShared, FormerlySerializedAs("intToSet")]
+        public SharedInt storeResult;
         protected override Status OnUpdate()
         {
-            intToSet.Value = setValue;
+            storeResult.Value = intValue.Value;
             return Status.Success;
         }
     }

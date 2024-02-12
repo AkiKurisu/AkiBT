@@ -26,23 +26,17 @@ namespace Kurisu.AkiBT
                 /// Whether behaviorTreeSO is initialized
                 /// </summary>
                 /// <value></value>
-#if AKIBT_REFLECTION
                 public bool IsInitialized { get; private set; }
-#else
-public bool IsInitialized=>true;
-#endif
                 /// <summary>
                 /// Bind GameObject and Init behaviorTree through Awake and Start method
                 /// </summary>
                 /// <param name="gameObject"></param>
                 public void Init(GameObject gameObject)
                 {
-#if AKIBT_REFLECTION
                         if (!IsInitialized)
                         {
                                 Initialize();
                         }
-#endif
                         this.MapGlobal();
                         root.Run(gameObject, this);
                         root.Awake();
@@ -67,12 +61,9 @@ public bool IsInitialized=>true;
 #if UNITY_EDITOR
                         blockData = new List<GroupBlockData>(template.BlockData);
 #endif
-#if AKIBT_REFLECTION
                         IsInitialized = true;
                         SharedVariableMapper.Traverse(this);
-#endif
                 }
-#if AKIBT_REFLECTION
                 /// <summary>
                 /// This will be called when the object is loaded for the first time when entering PlayMode
                 /// Currently we only need to map variables once per scriptableObject
@@ -84,16 +75,13 @@ public bool IsInitialized=>true;
                                 Initialize();
                         }
                 }
-#endif
                 /// <summary>
                 /// Traverse behaviors and bind shared variables
                 /// </summary>
                 public void Initialize()
                 {
-#if AKIBT_REFLECTION
                         IsInitialized = true;
                         SharedVariableMapper.Traverse(this);
-#endif
                 }
         }
 }

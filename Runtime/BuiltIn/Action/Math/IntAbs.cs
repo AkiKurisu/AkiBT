@@ -1,17 +1,13 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Int type takes absolute value")]
-    [AkiLabel("Math : IntAbs")]
+    [AkiInfo("Action: Int type takes absolute value")]
+    [AkiLabel("Math: IntAbs")]
     [AkiGroup("Math")]
     public class IntAbs : Action
     {
-        [SerializeField, ForceShared]
-        private SharedInt value;
-        public override void Awake()
-        {
-            InitVariable(value);
-        }
+        [ForceShared]
+        public SharedInt value;
         protected override Status OnUpdate()
         {
             value.Value = Mathf.Abs(value.Value);

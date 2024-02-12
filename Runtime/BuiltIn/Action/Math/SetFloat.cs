@@ -1,22 +1,17 @@
-using UnityEngine;
+using UnityEngine.Serialization;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Set float value")]
-    [AkiLabel("Math : SetFloat")]
+    [AkiInfo("Action: Set float value")]
+    [AkiLabel("Math: SetFloat")]
     [AkiGroup("Math")]
     public class SetFloat : Action
     {
-        [SerializeField]
-        private float setValue;
-        [SerializeField, ForceShared]
-        private SharedFloat floatToSet;
-        public override void Awake()
-        {
-            InitVariable(floatToSet);
-        }
+        public SharedFloat floatValue;
+        [ForceShared, FormerlySerializedAs("floatToSet")]
+        public SharedFloat storeResult;
         protected override Status OnUpdate()
         {
-            floatToSet.Value = setValue;
+            storeResult.Value = floatValue.Value;
             return Status.Success;
         }
     }

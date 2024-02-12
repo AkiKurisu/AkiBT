@@ -1,8 +1,8 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Operate Vector3 value")]
-    [AkiLabel("Vector3 : Operator")]
+    [AkiInfo("Action: Operate Vector3 value")]
+    [AkiLabel("Vector3: Operator")]
     [AkiGroup("Vector3")]
     public class Vector3Operator : Action
     {
@@ -13,20 +13,11 @@ namespace Kurisu.AkiBT.Extend
             Subtract,
             Scale
         }
-        [SerializeField]
-        private Operation operation;
-        [SerializeField]
-        private SharedVector3 firstVector3;
-        [SerializeField]
-        private SharedVector3 secondVector3;
-        [SerializeField, ForceShared]
-        private SharedVector3 storeResult;
-        public override void Awake()
-        {
-            InitVariable(firstVector3);
-            InitVariable(secondVector3);
-            InitVariable(storeResult);
-        }
+        public Operation operation;
+        public SharedVector3 firstVector3;
+        public SharedVector3 secondVector3;
+        [ForceShared]
+        public SharedVector3 storeResult;
         protected override Status OnUpdate()
         {
             switch (operation)

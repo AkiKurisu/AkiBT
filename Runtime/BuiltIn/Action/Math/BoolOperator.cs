@@ -1,30 +1,20 @@
-using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Operate bool value")]
-    [AkiLabel("Math : BoolOperator")]
+    [AkiInfo("Action: Operate bool value")]
+    [AkiLabel("Math: BoolOperator")]
     [AkiGroup("Math")]
     public class BoolOperator : Action
     {
-        private enum Operation
+        public enum Operation
         {
             And,
             Or
         }
-        [SerializeField]
-        private SharedBool bool1;
-        [SerializeField]
-        private SharedBool bool2;
-        [SerializeField, ForceShared]
-        private SharedBool storeResult;
-        [SerializeField]
-        private Operation operation;
-        public override void Awake()
-        {
-            InitVariable(bool1);
-            InitVariable(bool2);
-            InitVariable(storeResult);
-        }
+        public SharedBool bool1;
+        public SharedBool bool2;
+        [ForceShared]
+        public SharedBool storeResult;
+        public Operation operation;
         protected override Status OnUpdate()
         {
             switch (operation)

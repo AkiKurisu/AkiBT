@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite : Random, random update a child and reselect the next node")]
+    [AkiInfo("Composite: Random, random update a child and reselect the next node")]
     public class Random : Composite
     {
         private NodeBehavior runningNode;

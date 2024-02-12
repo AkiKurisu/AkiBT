@@ -1,26 +1,20 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Int type set random value")]
-    [AkiLabel("Math : IntRandom")]
+    [AkiInfo("Action: Int type set random value")]
+    [AkiLabel("Math: IntRandom")]
     [AkiGroup("Math")]
     public class IntRandom : Action
     {
-        private enum Operation
+        public enum Operation
         {
             Absolutely,
             Relatively
         }
-        [SerializeField]
-        private Vector2Int range = new Vector2Int(-5, 5);
-        [SerializeField]
-        private Operation operation;
-        [SerializeField, ForceShared]
-        private SharedInt randomInt;
-        public override void Awake()
-        {
-            InitVariable(randomInt);
-        }
+        public Vector2Int range = new(-5, 5);
+        public Operation operation;
+        [ForceShared]
+        public SharedInt randomInt;
         protected override Status OnUpdate()
         {
             int random = UnityEngine.Random.Range(range.x, range.y);

@@ -1,17 +1,16 @@
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
     [AkiInfo("Composite : Sequence, traversing the child nodes in turn, if it returns Success" +
      ", continue to update the next one, otherwise it returns Failure")]
     public class Sequence : Composite
     {
-        [SerializeField, Tooltip("When the judgment of the child node prior to the current running node is changed," +
+        [Tooltip("When the judgment of the child node prior to the current running node is changed," +
         " the current running node is interrupted, and the interruption will affect all nodes under its branches;" +
         " Note: in AkiBT, the judgment of the Action node is always" +
          "For true, only the Conditional node will change the judgment (CanUpdate)"
         )]
-        private bool abortOnConditionChanged = true;
+        public bool abortOnConditionChanged = true;
 
         private NodeBehavior runningNode;
 

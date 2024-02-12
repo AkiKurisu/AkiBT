@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Decorator : Return Running until the child node returns Success")]
+    [AkiInfo("Decorator: Return Running until the child node returns Success")]
     public class WaitSuccess : Decorator
     {
         protected override Status OnDecorate(Status childStatus)

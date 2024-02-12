@@ -138,23 +138,15 @@ namespace Kurisu.AkiBT.Editor
     internal class BehaviorTreeSettingsProvider : SettingsProvider
     {
         private SerializedObject m_Settings;
-        private bool useReflection;
         private class Styles
         {
             public static GUIContent GraphEditorSettingStyle = new("Graph Editor Setting");
             public static GUIContent LayoutDistanceStyle = new("Layout Distance", "Auto node layout sibling distance");
-            public static GUIContent EnableReflectionStyle = new("Enable Runtime Reflection",
-                     "Set this on to map shared variables on awake automatically." +
-                     " However, reflection may decrease your loading speed" +
-                     " since shared variables will be mapped when behavior tree is first loaded"
-                     );
         }
-        private const string ReflectionSymbol = "AKIBT_REFLECTION";
         public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User) : base(path, scope) { }
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
             m_Settings = BehaviorTreeSetting.GetSerializedSettings();
-            useReflection = ScriptingSymbolHelper.ContainsScriptingSymbol(ReflectionSymbol);
         }
         public override void OnGUI(string searchContext)
         {
@@ -163,22 +155,6 @@ namespace Kurisu.AkiBT.Editor
             EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.GraphEditorSettingStyle);
             EditorGUILayout.PropertyField(m_Settings.FindProperty("autoLayoutSiblingDistance"), Styles.LayoutDistanceStyle);
             m_Settings.ApplyModifiedPropertiesWithoutUndo();
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical("Runtime Settings", GUI.skin.box);
-            GUILayout.Space(EditorGUIUtility.singleLineHeight);
-            var newValue = EditorGUILayout.ToggleLeft(Styles.EnableReflectionStyle, useReflection);
-            if (newValue != useReflection)
-            {
-                useReflection = newValue;
-                if (useReflection)
-                {
-                    ScriptingSymbolHelper.AddScriptingSymbol(ReflectionSymbol);
-                }
-                else
-                {
-                    ScriptingSymbolHelper.RemoveScriptingSymbol(ReflectionSymbol);
-                }
-            }
             GUILayout.EndVertical();
         }
         [SettingsProvider]

@@ -1,12 +1,12 @@
 using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Operate int value")]
-    [AkiLabel("Math : IntOperator")]
+    [AkiInfo("Action: Operate int value")]
+    [AkiLabel("Math: IntOperator")]
     [AkiGroup("Math")]
     public class IntOperator : Action
     {
-        private enum Operation
+        public enum Operation
         {
             Add,
             Subtract,
@@ -16,20 +16,11 @@ namespace Kurisu.AkiBT.Extend
             Max,
             Modulo
         }
-        [SerializeField]
-        private SharedInt int1;
-        [SerializeField]
-        private SharedInt int2;
-        [SerializeField, ForceShared]
-        private SharedInt storeResult;
-        [SerializeField]
-        private Operation operation;
-        public override void Awake()
-        {
-            InitVariable(int1);
-            InitVariable(int2);
-            InitVariable(storeResult);
-        }
+        public SharedInt int1;
+        public SharedInt int2;
+        [ForceShared]
+        public SharedInt storeResult;
+        public Operation operation;
         protected override Status OnUpdate()
         {
             switch (operation)

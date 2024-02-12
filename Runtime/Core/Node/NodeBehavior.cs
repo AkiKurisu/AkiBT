@@ -74,10 +74,7 @@ namespace Kurisu.AkiBT
         public virtual bool CanUpdate() => true;
         protected void InitVariable(SharedVariable sharedVariable)
         {
-            //Skip init variable if use reflection runtime
-#if !AKIBT_REFLECTION
             sharedVariable.MapTo(Tree);
-#endif
         }
     }
 }

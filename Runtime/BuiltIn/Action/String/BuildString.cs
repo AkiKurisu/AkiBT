@@ -1,20 +1,17 @@
 using System.Collections.Generic;
-using UnityEngine;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action : Build value of string")]
-    [AkiLabel("String : Build")]
+    [AkiInfo("Action: Build value of string")]
+    [AkiLabel("String: Build")]
     [AkiGroup("String")]
     public class BuildString : Action
     {
-        [SerializeField]
-        private List<SharedString> values;
-        [SerializeField, ForceShared]
-        private SharedString storeResult;
+        public List<SharedString> values;
+        [ForceShared]
+        public SharedString storeResult;
         public override void Awake()
         {
             foreach (var value in values) InitVariable(value);
-            InitVariable(storeResult);
         }
         protected override Status OnUpdate()
         {

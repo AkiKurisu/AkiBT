@@ -7,9 +7,9 @@ namespace Kurisu.AkiBT
     public class WeightedRandom : Composite
     {
         private NodeBehavior runningNode;
-        [SerializeField, Tooltip("Node weight list, when the length of the list is greater than the number of child nodes" +
+        [Tooltip("Node weight list, when the length of the list is greater than the number of child nodes" +
         ", the excess part will not be included in the weight")]
-        private List<float> weights = new();
+        public List<float> weights = new();
         protected override Status OnUpdate()
         {
             // update running node if previous status is Running.
