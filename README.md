@@ -1,6 +1,6 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg?style=social)](https://github.com/AkiKurisu/AkiBT/releases)
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
-# 行为树 AkiBT Version 1.4.2 简介
+# 行为树 AkiBT Version 1.4.3 简介
 
 ***Read this document in English: [English Document](./README_EN.md)***
 
@@ -147,26 +147,6 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 ### 泛型对象共享变量 SharedTObject
 
    在自定义结点中，你可以使用`SharedTObject<T>`来创建一个泛型对象（UnityEngine.Object）共享变量，其绑定逻辑与`SharedObject`相同，可见``IBindableVariable<T>``，好处是你可以拥有更安全的类型检查
-
-### 初始化共享变量
-
-   在AkiBT中支持两种方式初始化共享变量，这一步骤是为了将结点中的共享变量与行为树中的相绑定，在使用变量之前请确保它已经被初始化。
-   第一种是手动初始化，示例如下
-
-   ```C#
-    public abstract class AnimatorAction : Action
-    {
-        [SerializeField]
-        private SharedTObject<Animator> animator;
-        public override void Awake()
-        {
-            InitVariable(animator);
-        }
-    }
-   ```
-   第二种是使用C#的反射来完成，你需要在ProjectSetting/AkiBTSetting中勾选`Enable Runtime Reflection`，行为树将在初次加载时使用反射获取所有共享变量进行初始化
-
-   <img src="Images/EnableReflection.png"/>
 
 ### 调试行为树
 

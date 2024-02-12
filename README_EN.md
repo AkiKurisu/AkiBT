@@ -1,6 +1,6 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg?style=social)](https://github.com/AkiKurisu/AkiBT/releases)
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
-# AkiBT Version 1.4.2 Intro
+# AkiBT Version 1.4.3 Intro
 
 
 ***Read this document in Chinese: [中文文档](./README.md)***
@@ -145,27 +145,6 @@ Different scopes can depend on each other. For example, ``SceneVariableScope`` c
 ### Generic object shared variable SharedTObject
 
    In a custom node, you can use `SharedTObject<T>` to create a generic object (UnityEngine.Object) shared variable. Its binding logic is the same as `SharedObject`, as shown in `IBindableVariable<T>`, The benefit is that you can have safer type checking
-
-### Initialize shared variables
-
-   AkiBT supports two ways to initialize shared variables. This step is to bind the shared variables in the node to those in the behavior tree. Please make sure that the variable has been initialized before using it.
-   The first is manual initialization, the example is as follows
-
-   ```C#
-   public abstract class AnimatorAction : Action
-   {
-      [SerializeField]
-      private SharedTObject<Animator> animator;
-      public override void Awake()
-      {
-         InitVariable(animator);
-      }
-   }
-   ```
-
-   The second is to use C# reflection. You need to check `Enable Runtime Reflection` in ProjectSetting/AkiBTSetting. The behavior tree will use reflection to obtain all shared variables for initialization during initial loading.
-
-   <img src="Images/EnableReflection.png"/>
 
 ### Debugging behavior tree
 
