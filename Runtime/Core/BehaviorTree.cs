@@ -17,7 +17,22 @@ namespace Kurisu.AkiBT
 
         [HideInInspector, SerializeReference]
         protected Root root = new();
-        public Root Root => root;
+        public Root Root
+        {
+            get => root;
+            set
+            {
+                root = value;
+                //Runtime setup root
+                if (Application.isPlaying)
+                {
+                    SharedVariableMapper.Traverse(this);
+                    root.Run(gameObject, this);
+                    root.Awake();
+                    root.Start();
+                }
+            }
+        }
         Object IBehaviorTree._Object => gameObject;
         [HideInInspector, SerializeReference]
         protected List<SharedVariable> sharedVariables = new();
@@ -43,20 +58,10 @@ namespace Kurisu.AkiBT
                 root = instance.Root;
             }
             this.MapGlobal();
-            if (externalBehaviorTree)
-            {
-                //Prevent remap for external tree
-                if (!externalBehaviorTree.IsInitialized)
-                    externalBehaviorTree.Initialize();
-            }
-            else
-            {
-                SharedVariableMapper.Traverse(this);
-            }
+            SharedVariableMapper.Traverse(this);
             root.Run(gameObject, this);
             root.Awake();
         }
-
         private void Start()
         {
             root.Start();
