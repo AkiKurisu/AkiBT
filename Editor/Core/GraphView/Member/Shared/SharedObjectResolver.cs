@@ -32,7 +32,7 @@ namespace Kurisu.AkiBT.Editor
             Type objectType;
             try
             {
-                objectType = Type.GetType(value.ConstraintTypeAQM, true);
+                objectType = Type.GetType(value.ConstraintTypeAQN, true);
             }
             catch
             {
@@ -49,7 +49,7 @@ namespace Kurisu.AkiBT.Editor
             Type objectType;
             try
             {
-                objectType = Type.GetType(value.ConstraintTypeAQM, true);
+                objectType = Type.GetType(value.ConstraintTypeAQN, true);
             }
             catch
             {

@@ -65,7 +65,7 @@ namespace Kurisu.AkiBT.Editor
         private static List<string> GetList(ITreeView treeView)
         {
             return treeView.SharedVariables
-            .Where(x => x is SharedObject sharedObject && sharedObject.ConstraintTypeAQM == typeof(T).AssemblyQualifiedName)
+            .Where(x => x is SharedObject sharedObject && sharedObject.ConstraintTypeAQN == typeof(T).AssemblyQualifiedName)
             .Select(v => v.Name)
             .ToList();
         }
@@ -73,7 +73,7 @@ namespace Kurisu.AkiBT.Editor
         {
             if (treeView == null) return;
             bindExposedProperty = treeView.SharedVariables
-            .Where(x => x is SharedObject sharedObject && sharedObject.ConstraintTypeAQM == typeof(T).AssemblyQualifiedName && x.Name.Equals(value.Name))
+            .Where(x => x is SharedObject sharedObject && sharedObject.ConstraintTypeAQN == typeof(T).AssemblyQualifiedName && x.Name.Equals(value.Name))
             .FirstOrDefault();
         }
         private void OnToggle(bool IsShared)

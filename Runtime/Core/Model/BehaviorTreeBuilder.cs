@@ -224,7 +224,7 @@ namespace Kurisu.AkiBT
                 {
                     Name = key,
                     Value = defaultValue,
-                    ConstraintTypeAQM = typeof(TObject).AssemblyQualifiedName,
+                    ConstraintTypeAQN = typeof(TObject).AssemblyQualifiedName,
                     IsShared = true
                 });
             }

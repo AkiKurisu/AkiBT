@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UObject = UnityEngine.Object;
 namespace Kurisu.AkiBT
 {
     [Serializable]
     public class SharedObject : SharedVariable<UObject>
     {
-        [SerializeField]
-        private string constraintTypeAQM;
-        public string ConstraintTypeAQM { get => constraintTypeAQM; set => constraintTypeAQM = value; }
+        [SerializeField, FormerlySerializedAs("constraintTypeAQM")]
+        private string constraintTypeAQN;
+        public string ConstraintTypeAQN { get => constraintTypeAQN; set => constraintTypeAQN = value; }
         public SharedObject(UObject value)
         {
             this.value = value;
@@ -19,7 +20,7 @@ namespace Kurisu.AkiBT
         }
         protected override SharedVariable<UObject> CloneT()
         {
-            return new SharedObject() { Value = value, ConstraintTypeAQM = constraintTypeAQM };
+            return new SharedObject() { Value = value, ConstraintTypeAQN = constraintTypeAQN };
         }
         public SharedTObject<TObject> ConvertT<TObject>() where TObject : UObject
         {

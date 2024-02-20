@@ -60,7 +60,7 @@ namespace Kurisu.AkiBT.Editor
                     var objectField = valueField as ObjectField;
                     try
                     {
-                        objectField.objectType = Type.GetType(sharedObject.ConstraintTypeAQM, true);
+                        objectField.objectType = Type.GetType(sharedObject.ConstraintTypeAQN, true);
                         grid.text = $"{variable.GetType().Name} ({objectField.objectType.Name})  :  {variable.Name}";
                     }
                     catch

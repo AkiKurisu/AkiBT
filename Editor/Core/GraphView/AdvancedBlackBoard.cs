@@ -187,7 +187,7 @@ namespace Kurisu.AkiBT.Editor
             string constraintTypeName;
             try
             {
-                objectField.objectType = Type.GetType(sharedObject.ConstraintTypeAQM, true);
+                objectField.objectType = Type.GetType(sharedObject.ConstraintTypeAQN, true);
                 constraintTypeName = "Constraint Type : " + objectField.objectType.Name;
             }
             catch
@@ -208,13 +208,13 @@ namespace Kurisu.AkiBT.Editor
                  {
                      if (type == null)
                      {
-                         typeField.text = sharedObject.ConstraintTypeAQM = NonConstraint;
+                         typeField.text = sharedObject.ConstraintTypeAQN = NonConstraint;
                          objectField.objectType = typeof(UnityEngine.Object);
                      }
                      else
                      {
                          objectField.objectType = type;
-                         sharedObject.ConstraintTypeAQM = type.AssemblyQualifiedName;
+                         sharedObject.ConstraintTypeAQN = type.AssemblyQualifiedName;
                          typeField.text = "Constraint Type : " + type.Name;
                      }
                      NotifyVariableChanged(sharedObject, VariableChangeType.ValueChange);
