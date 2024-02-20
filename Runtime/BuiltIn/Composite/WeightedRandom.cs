@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite : Weighted random, randomly selected according to the weight" +
+    [AkiInfo("Composite: Weighted random, randomly selected according to the weight" +
    ", wait for the node to finish running and reselect the next node")]
     public class WeightedRandom : Composite
     {

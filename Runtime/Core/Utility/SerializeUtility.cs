@@ -64,7 +64,7 @@ namespace Kurisu.AkiBT
                     string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
                     if (string.IsNullOrEmpty(guid))
                     {
-                        Debug.LogWarning($"<color=#fcbe03>{template.TemplateName}</color> :  Can't serialize UnityEngine.Object field : {propertyName}");
+                        Debug.LogWarning($"<color=#fcbe03>{template.TemplateName}</color>:  Can't serialize UnityEngine.Object field {propertyName}");
                         continue;
                     }
                     //Convert to GUID

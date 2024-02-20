@@ -1,5 +1,4 @@
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
     /// <summary>
@@ -10,7 +9,8 @@ namespace Kurisu.AkiBT
         /// <summary>
         /// 子结点运行时是否要继续判断
         /// </summary>
-        [SerializeField, Tooltip("勾选后子结点运行时,该结点依然会进行判断,否则在子结点运行时CanUpdate总是返回True")]
+        [SerializeField, Tooltip("After checking, when the child node is running," +
+        " the node will still be evaluated, otherwise CanUpdate will always return True when the child node is running.")]
         private bool evaluateOnRunning = false;
 
         [SerializeReference]
@@ -19,9 +19,7 @@ namespace Kurisu.AkiBT
         public NodeBehavior Child
         {
             get => child;
-#if UNITY_EDITOR
             set => child = value;
-#endif
         }
 
         private bool? frameScope = null;

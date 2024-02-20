@@ -17,6 +17,7 @@
     - [AkiGroupAttribute](#akigroupattribute)
     - [ForceSharedAttribute](#forcesharedattribute)
     - [WrapFieldAttribute](#wrapfieldattribute)
+  - [Runtime Build BehaviorTree](#runtime-build-behaviortree)
   - [SharedVariable](#sharedvariable)
     - [How to use](#how-to-use)
     - [API Reference](#api-reference)
@@ -326,6 +327,57 @@ public class SetFloat : Action
     [SerializeField, WrapField]
     private UnityEvent unityEvent;
 }
+```
+
+## Runtime Build BehaviorTree
+
+Use `BehaviorTreeBuilder` to build a behaviorTree on the builder pattern.
+
+Use `BeginChild` to start writing child or children.
+
+Use `EndChild` to end writing.
+
+Example:
+```C#
+    var builder = new BehaviorTreeBuilder(gameObject);
+    //Create and set value of local variable
+    builder.NewObject<NavMeshAgent>("NavAgent",navmeshAgent);
+    //Create and bind global variable
+    builder.NewFloat("Distance").IsGlobal = true;
+    bool success = builder.BeginChild(new Sequence() { abortOnConditionChanged = true })
+        .Append(new FloatComparison()
+        {
+            operation = FloatComparison.Operation.GreaterThan,
+            float1 = builder.NewFloat("Distance"),
+            float2 = new(4f)
+        })
+        .BeginChild()
+            .BeginChild(new Sequence())
+                .Append(new NavmeshSetDestination()
+                {
+                    agent = builder.NewObject<NavMeshAgent>("NavAgent"),
+                    destination = builder.NewVector3("EnemyPosition")
+                })
+                .Append(new SetBool()
+                {
+                    boolValue = new(true),
+                    storeResult = builder.NewBool("IsFollowing")
+                })
+            .EndChild()
+        .EndChild()
+        .BeginChild(new Sequence())
+            .Append(new SetBool()
+            {
+                boolValue = new(false),
+                storeResult = builder.NewBool("IsFollowing")
+            })
+        .EndChild(new NavmeshStopAgent()
+        {
+            agent = builder.NewObject<UnityEngine.AI.NavMeshAgent>("NavAgent"),
+            isStopped = new(true)
+        })
+    .EndChild()
+    .Build(out BehaviorTree behaviorTree);
 ```
 
 ## SharedVariable

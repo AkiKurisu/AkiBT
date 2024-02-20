@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite : Sequence, traversing the child nodes in turn, if it returns Success" +
+    [AkiInfo("Composite: Sequence, traversing the child nodes in turn, if it returns Success" +
      ", continue to update the next one, otherwise it returns Failure")]
     public class Sequence : Composite
     {

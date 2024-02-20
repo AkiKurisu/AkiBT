@@ -4,7 +4,7 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 根结点行为
     /// </summary>
-    [AkiInfo("Root:根节点,你不能删除它")]
+    [AkiInfo("Root: The root of behavior tree, you can not delate it.")]
     public class Root : NodeBehavior, IIterable
     {
         [SerializeReference]
@@ -16,9 +16,7 @@ namespace Kurisu.AkiBT
         public NodeBehavior Child
         {
             get => child;
-#if UNITY_EDITOR
             set => child = value;
-#endif
         }
 
         protected sealed override void OnRun()

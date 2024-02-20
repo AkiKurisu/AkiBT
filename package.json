@@ -27,6 +27,11 @@
       "displayName": "AI Example",
       "description": "Contains sample behaviorTree for AI",
       "path": "Samples~/Example"
+    },
+    {
+      "displayName": "Builder Example",
+      "description": "Contains sample builder for BehaviorTreeBuilder",
+      "path": "Samples~/Builder Example"
     }
   ]
 }

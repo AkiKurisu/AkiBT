@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT
 {
-    [AkiInfo("Composite : Rotator, update child nodes in order, each Update will only update the current node" +
+    [AkiInfo("Composite: Rotator, update child nodes in order, each Update will only update the current node" +
     ", after the node finishes running, the next Update will continue to update the next node")]
     public class Rotator : Composite
     {

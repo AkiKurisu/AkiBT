@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
     /// <summary>
@@ -52,14 +51,10 @@ namespace Kurisu.AkiBT
         /// 组合结点可以增加子结点
         /// </summary>
         /// <param name="child"></param>
-#if UNITY_EDITOR
         public void AddChild(NodeBehavior child)
         {
             children.Add(child);
         }
-
-
-#endif
         public NodeBehavior GetChildAt(int index)
         {
             return children[index];

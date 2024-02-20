@@ -21,6 +21,12 @@ namespace Kurisu.AkiBT
         {
             return new SharedObject() { Value = value, ConstraintTypeAQM = constraintTypeAQM };
         }
+        public SharedTObject<TObject> ConvertT<TObject>() where TObject : UObject
+        {
+            var clone = new SharedTObject<TObject>() { Value = (TObject)value };
+            clone.CopyProperty(this);
+            return clone;
+        }
     }
     [Serializable]
     public class SharedTObject<TObject> : SharedVariable<TObject>, IBindableVariable<UObject> where TObject : UObject
@@ -67,6 +73,12 @@ namespace Kurisu.AkiBT
         {
             Getter = () => { return (TObject)other.Value; };
             Setter = (evt) => other.Value = evt;
+        }
+        public SharedObject Convert()
+        {
+            var clone = new SharedObject() { Value = value };
+            clone.CopyProperty(this);
+            return clone;
         }
     }
 }

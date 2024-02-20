@@ -1,5 +1,4 @@
 using UnityEngine;
-
 namespace Kurisu.AkiBT
 {
     /// <summary>
@@ -14,9 +13,7 @@ namespace Kurisu.AkiBT
         public NodeBehavior Child
         {
             get => child;
-#if UNITY_EDITOR
             set => child = value;
-#endif
         }
         private bool isRunning = false;
 

@@ -31,11 +31,31 @@ namespace Kurisu.AkiBT
         {
             return variableScope.GetSharedVariable(variableName) as SharedVariable<string>;
         }
+        public static SharedVariable<T> GetSharedObject<T>(this IVariableSource variableScope, string variableName) where T : Object
+        {
+            return variableScope.GetSharedVariable(variableName) as SharedVariable<T>;
+        }
+        public static SharedVariable<Object> GetSharedObject(this IVariableSource variableScope, string variableName)
+        {
+            return variableScope.GetSharedVariable(variableName) as SharedVariable<Object>;
+        }
+        public static T GetValue<T>(this IVariableSource variableScope, string variableName) where T : unmanaged
+        {
+            var variable = variableScope.GetSharedVariable(variableName);
+            if (variable is SharedVariable<T> tVariable) return tVariable.Value;
+            return default;
+        }
         public static T GetObject<T>(this IVariableSource variableScope, string variableName) where T : Object
         {
             var variable = variableScope.GetSharedVariable(variableName);
             if (variable is SharedVariable<T> tVariable) return tVariable.Value;
-            if (variable is SharedObject sharedObject) return sharedObject.Value as T;
+            if (variable is SharedVariable<Object> sharedObject) return sharedObject.Value as T;
+            return null;
+        }
+        public static string GetString(this IVariableSource variableScope, string variableName)
+        {
+            var variable = variableScope.GetSharedVariable(variableName);
+            if (variable is SharedVariable<string> sVariable) return sVariable.Value;
             return null;
         }
         /// <summary>
@@ -81,6 +101,26 @@ namespace Kurisu.AkiBT
                 return sharedTVariable != null;
             }
             sharedTVariable = null;
+            return false;
+        }
+        public static bool TryGetSharedObject(this IVariableSource variableScope, string variableName, out SharedVariable<Object> sharedObject)
+        {
+            if (variableScope.TryGetSharedVariable(variableName, out SharedVariable sharedVariable))
+            {
+                sharedObject = sharedVariable as SharedVariable<Object>;
+                return sharedObject != null;
+            }
+            sharedObject = null;
+            return false;
+        }
+        public static bool TryGetSharedObject<T>(this IVariableSource variableScope, string variableName, out SharedVariable<T> sharedTObject) where T : Object
+        {
+            if (variableScope.TryGetSharedVariable(variableName, out SharedVariable sharedVariable))
+            {
+                sharedTObject = sharedVariable as SharedVariable<T>;
+                return sharedTObject != null;
+            }
+            sharedTObject = null;
             return false;
         }
         /// <summary>

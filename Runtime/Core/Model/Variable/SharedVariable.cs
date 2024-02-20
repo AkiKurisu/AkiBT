@@ -87,6 +87,13 @@ namespace Kurisu.AkiBT
 		{
 			return Clone();
 		}
+		public void CopyProperty(SharedVariable other)
+		{
+			IsGlobal = other.IsGlobal;
+			IsExposed = other.IsExposed;
+			IsShared = other.IsShared;
+			Name = other.Name;
+		}
 	}
 	[Serializable]
 	public abstract class SharedVariable<T> : SharedVariable, IBindableVariable<T>
@@ -174,13 +181,6 @@ namespace Kurisu.AkiBT
 		protected virtual SharedVariable<T> CloneT()
 		{
 			return ReflectionHelper.DeepCopy(this);
-		}
-		protected void CopyProperty(SharedVariable other)
-		{
-			IsGlobal = other.IsGlobal;
-			IsExposed = other.IsExposed;
-			IsShared = other.IsShared;
-			Name = other.Name;
 		}
 	}
 	public class SetterWrapper<T> : IDisposable
