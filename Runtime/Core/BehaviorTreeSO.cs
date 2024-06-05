@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT
         public class BehaviorTreeSO : ScriptableObject, IBehaviorTree
         {
                 [SerializeReference, HideInInspector]
-                protected Root root = new();
+                protected internal Root root = new();
                 public Root Root => root;
                 Object IBehaviorTree._Object => this;
                 public List<SharedVariable> SharedVariables => sharedVariables;

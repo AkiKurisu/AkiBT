@@ -44,7 +44,10 @@ namespace Kurisu.AkiBT.Editor
                 menu.AddItem(new GUIContent("Int"), false, () => AddSharedVariableWithNotify(new SharedInt()));
                 menu.AddItem(new GUIContent("Float"), false, () => AddSharedVariableWithNotify(new SharedFloat()));
                 menu.AddItem(new GUIContent("Bool"), false, () => AddSharedVariableWithNotify(new SharedBool()));
+                menu.AddItem(new GUIContent("Vector2"), false, () => AddSharedVariableWithNotify(new SharedVector2()));
+                menu.AddItem(new GUIContent("Vector2Int"), false, () => AddSharedVariableWithNotify(new SharedVector2Int()));
                 menu.AddItem(new GUIContent("Vector3"), false, () => AddSharedVariableWithNotify(new SharedVector3()));
+                menu.AddItem(new GUIContent("Vector3Int"), false, () => AddSharedVariableWithNotify(new SharedVector3Int()));
                 menu.AddItem(new GUIContent("String"), false, () => AddSharedVariableWithNotify(new SharedString()));
                 menu.AddItem(new GUIContent("Object"), false, () => AddSharedVariableWithNotify(new SharedObject()));
                 menu.ShowAsContext();
