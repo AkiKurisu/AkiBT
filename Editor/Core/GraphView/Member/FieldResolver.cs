@@ -21,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
         /// Only create ValueField without any binding
         /// </summary>
         /// <returns></returns>
-        public VisualElement CreateField();
+        VisualElement CreateField();
         /// <summary>
         /// Restore editor field value from behavior
         /// </summary>
@@ -58,7 +58,6 @@ namespace Kurisu.AkiBT.Editor
         private void SetEditorField()
         {
             editorField = CreateEditorField(fieldInfo);
-            //修改标签
             AkiLabelAttribute label = fieldInfo.GetCustomAttribute<AkiLabelAttribute>();
             if (label != null) editorField.label = label.Title;
             TooltipAttribute tooltip = fieldInfo.GetCustomAttribute<TooltipAttribute>();

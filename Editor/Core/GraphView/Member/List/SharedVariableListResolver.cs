@@ -31,7 +31,7 @@ namespace Kurisu.AkiBT.Editor
     public class SharedVariableListField<T> : ListField<T>, IInitField where T : SharedVariable
     {
         private ITreeView treeView;
-        public event System.Action<ITreeView> OnTreeViewInitEvent;
+        public event Action<ITreeView> OnTreeViewInitEvent;
         public SharedVariableListField(string label, VisualElement visualInput, Func<VisualElement> elementCreator, Func<object> valueCreator) : base(label, visualInput, elementCreator, valueCreator)
         {
 
@@ -43,19 +43,19 @@ namespace Kurisu.AkiBT.Editor
         }
         protected override ListView CreateListView()
         {
-            Action<VisualElement, int> bindItem = (e, i) =>
+            void bindItem(VisualElement e, int i)
             {
                 (e as BaseField<T>).value = value[i];
-                (e as BaseField<T>).RegisterValueChangedCallback((x) => value[i] = (T)x.newValue);
-            };
-            Func<VisualElement> makeItem = () =>
+                (e as BaseField<T>).RegisterValueChangedCallback((x) => value[i] = x.newValue);
+            }
+            VisualElement makeItem()
             {
                 var field = elementCreator.Invoke();
                 (field as BaseField<T>).label = string.Empty;
                 if (treeView != null) (field as IInitField).InitField(treeView);
                 OnTreeViewInitEvent += (view) => { (field as IInitField).InitField(view); };
                 return field;
-            };
+            }
             var view = new ListView(value, 60, makeItem, bindItem);
             return view;
         }

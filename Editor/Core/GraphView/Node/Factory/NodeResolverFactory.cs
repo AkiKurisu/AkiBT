@@ -54,7 +54,7 @@ namespace Kurisu.AkiBT.Editor
             }
             if (!find) node = new ActionNode();
             node.SetBehavior(behaviorType, treeView);
-            if (styleSheetCache == null) styleSheetCache = BehaviorTreeSetting.GetNodeStyle(treeView.TreeEditorName);
+            if (styleSheetCache == null) styleSheetCache = BehaviorTreeSetting.GetNodeStyle(treeView.EditorName);
             node.View.styleSheets.Add(styleSheetCache);
             return node;
         }

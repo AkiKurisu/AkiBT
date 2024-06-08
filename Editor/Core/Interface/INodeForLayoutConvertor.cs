@@ -12,13 +12,9 @@ namespace Kurisu.AkiBT.Editor
     /// </summary>
     public interface INodeForLayoutConvertor
     {
-        /// <summary>
-        /// 节点间的距离
-        /// </summary>
         float SiblingDistance { get; }
         ILayoutTreeNode PrimRootNode { get; }
         NodeAutoLayoutHelper.TreeNode LayoutRootNode { get; }
-
         INodeForLayoutConvertor Init(ILayoutTreeNode primRootNode);
         NodeAutoLayoutHelper.TreeNode PrimNode2LayoutNode();
         void LayoutNode2PrimNode();

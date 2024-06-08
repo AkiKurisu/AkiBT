@@ -13,7 +13,6 @@ namespace Kurisu.AkiBT.Editor
     {
         private static FieldResolverFactory instance;
         public static FieldResolverFactory Instance => instance ?? new FieldResolverFactory();
-
         private readonly List<Type> _ResolverTypes = new();
         public FieldResolverFactory()
         {

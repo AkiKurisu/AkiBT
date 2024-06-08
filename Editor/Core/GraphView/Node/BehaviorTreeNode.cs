@@ -7,29 +7,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public interface IBehaviorTreeNode
-    {
-        Node View { get; }
-        string GUID { get; }
-        Port Parent { get; }
-        public ITreeView MapTreeView { get; }
-        Action<IBehaviorTreeNode> OnSelectAction { get; set; }
-        void Restore(NodeBehavior behavior);
-        void Commit(Stack<IBehaviorTreeNode> stack);
-        bool Validate(Stack<IBehaviorTreeNode> stack);
-        Type GetBehavior();
-        void SetBehavior(Type nodeBehavior, ITreeView ownerTreeView = null);
-        void CopyFrom(IBehaviorTreeNode copyNode);
-        NodeBehavior ReplaceBehavior();
-        void ClearStyle();
-        IFieldResolver GetFieldResolver(string fieldName);
-        Rect GetWorldPosition();
-    }
     public abstract class BehaviorTreeNode : Node, ILayoutTreeNode, IBehaviorTreeNode
     {
         public Node View => this;
-        public string GUID => guid;
-        private string guid;
+        public string GUID { get; private set; }
         protected NodeBehavior NodeBehavior { set; get; }
         private Type dirtyNodeBehaviorType;
         public Port Parent { private set; get; }
@@ -53,7 +34,7 @@ namespace Kurisu.AkiBT.Editor
             fieldResolverFactory = FieldResolverFactory.Instance;
             container = new VisualElement();
             description = new TextField();
-            guid = Guid.NewGuid().ToString();
+            GUID = Guid.NewGuid().ToString();
             Initialize();
         }
         public IFieldResolver GetFieldResolver(string fieldName)
@@ -82,7 +63,7 @@ namespace Kurisu.AkiBT.Editor
             resolvers.ForEach(e => e.Restore(NodeBehavior));
             NodeBehavior.NotifyEditor = MarkAsExecuted;
             description.value = NodeBehavior.description;
-            guid = string.IsNullOrEmpty(behavior.GUID) ? Guid.NewGuid().ToString() : behavior.GUID;
+            GUID = string.IsNullOrEmpty(behavior.GUID) ? Guid.NewGuid().ToString() : behavior.GUID;
             OnRestore();
         }
         public void CopyFrom(IBehaviorTreeNode copyNode)
@@ -95,7 +76,7 @@ namespace Kurisu.AkiBT.Editor
             description.value = node.Description;
             NodeBehavior = Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            guid = Guid.NewGuid().ToString();
+            GUID = Guid.NewGuid().ToString();
         }
 
         protected virtual void OnRestore()

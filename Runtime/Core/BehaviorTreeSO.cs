@@ -17,8 +17,8 @@ namespace Kurisu.AkiBT
                 [SerializeField, HideInInspector]
                 private List<GroupBlockData> blockData = new();
                 public List<GroupBlockData> BlockData => blockData;
-                [Multiline]
-                public string Description;
+                [Multiline, SerializeField]
+                private string description;
 #endif
                 [HideInInspector, SerializeReference]
                 protected List<SharedVariable> sharedVariables = new();

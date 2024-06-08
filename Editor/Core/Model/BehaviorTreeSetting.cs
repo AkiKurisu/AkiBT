@@ -23,6 +23,7 @@ namespace Kurisu.AkiBT.Editor
     }
     public class BehaviorTreeSetting : ScriptableObject
     {
+        public const string Version = "v1.4.4";
         private const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
         private const string k_UserServiceSettingPath = "Assets/AkiBTUserServiceData.asset";
         private const string GraphFallBackPath = "AkiBT/Graph";
@@ -88,21 +89,21 @@ namespace Kurisu.AkiBT.Editor
             var setting = GetOrCreateSettings();
             if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
             var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
-            return editorSetting.graphStyleSheet ?? Resources.Load<StyleSheet>(GraphFallBackPath);
+            return editorSetting.graphStyleSheet != null ? editorSetting.graphStyleSheet : Resources.Load<StyleSheet>(GraphFallBackPath);
         }
         public static StyleSheet GetInspectorStyle(string editorName)
         {
             var setting = GetOrCreateSettings();
             if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
             var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
-            return editorSetting.inspectorStyleSheet ?? Resources.Load<StyleSheet>(InspectorFallBackPath);
+            return editorSetting.inspectorStyleSheet != null ? editorSetting.inspectorStyleSheet : Resources.Load<StyleSheet>(InspectorFallBackPath);
         }
         public static StyleSheet GetNodeStyle(string editorName)
         {
             var setting = GetOrCreateSettings();
             if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
             var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
-            return editorSetting.nodeStyleSheet ?? Resources.Load<StyleSheet>(NodeFallBackPath);
+            return editorSetting.nodeStyleSheet != null ? editorSetting.nodeStyleSheet : Resources.Load<StyleSheet>(NodeFallBackPath);
         }
         public static (string[], string[]) GetMask(string editorName)
         {
