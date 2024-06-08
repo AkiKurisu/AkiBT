@@ -2,11 +2,11 @@
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
 <div align="center">
 
-# 行为树 AkiBT Version 1.4.3
+# 行为树 AkiBT Version 1.4.4
 
 ***Read this document in English: [English Document](./README.md)***
 
-AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结点编辑器, UniBT原作者为[Yoshida](https://github.com/yoshidan/)，在前者基础上丰富了大量现代行为树编辑器功能.
+AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结点编辑器, 并在前者基础上丰富了众多现代行为树编辑器功能.
 
    <img src="./Docs/Images/demo.jpg" />
 
@@ -76,7 +76,7 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
 ### 编辑器内编辑共享变量
 
-   SharedVariable可以在黑板中添加,变量目前支持Float、Int、Vector3、Bool、String、UnityEngine.Object以及其继承子类型
+   SharedVariable可以在黑板中添加。
    
    <img src="./Docs/Images/SharedVariable.png" />
 

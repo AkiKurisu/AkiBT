@@ -4,6 +4,9 @@ using System.Linq;
 using System.Reflection;
 namespace Kurisu.AkiBT.Editor
 {
+    /// <summary>
+    /// Use this attribute to let factory input child resolver as second constructor argument
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class ResolveChildAttribute : Attribute
     {
@@ -33,7 +36,7 @@ namespace Kurisu.AkiBT.Editor
                 return 1;
             });
         }
-        static bool IsValidType(Type type)
+        private static bool IsValidType(Type type)
         {
             if (type.IsAbstract) return false;
             if (type.GetMethod("IsAcceptable") == null) return false;
@@ -44,11 +47,11 @@ namespace Kurisu.AkiBT.Editor
         public IFieldResolver Create(FieldInfo fieldInfo)
         {
             Type fieldType = fieldInfo.FieldType;
-            Type parameterType = fieldType.IsGenericType ? fieldType.GenericTypeArguments[0] : fieldType;
+            Type parameterType = GetParameterType(fieldType) ?? fieldType;
             foreach (var _type in _ResolverTypes)
             {
                 var resolverType = _type;
-                //Try create generic resolver for this field type, can be more easier for user to create custom field
+                //Try create a generic resolver for this field type, can be more easier for user to create custom field
                 if (resolverType.IsGenericTypeDefinition)
                 {
                     try
@@ -61,15 +64,15 @@ namespace Kurisu.AkiBT.Editor
                     }
                 }
                 if (!IsAcceptable(resolverType, fieldType, fieldInfo)) continue;
-                //Identify the list field whether should resolve it's child
-                if (resolverType.GetCustomAttribute(typeof(ResolveChildAttribute)) != null)
+                // Identify the list field whether should resolve it's child
+                if (resolverType.GetCustomAttribute(typeof(ResolveChildAttribute), false) != null)
                     return (IFieldResolver)Activator.CreateInstance(resolverType, new object[] { fieldInfo, GetChildResolver(parameterType, fieldInfo) });
                 else
                     return (IFieldResolver)Activator.CreateInstance(resolverType, new object[] { fieldInfo });
             }
-            if (!IsList(fieldType))
+            if (!IsIList(fieldType))
                 return new ObjectResolver(fieldInfo);
-            //Special case : List<Object>
+            // Special case: IList<Object>
             IFieldResolver childResolver = GetChildResolver(parameterType, fieldInfo);
             if (childResolver == null)
                 return (IFieldResolver)Activator.CreateInstance(typeof(ObjectListResolver<>).MakeGenericType(parameterType), new object[] { fieldInfo });
@@ -80,13 +83,20 @@ namespace Kurisu.AkiBT.Editor
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SharedTObject<>);
         }
-        public static bool IsList(Type type)
+        public static Type GetParameterType(Type type)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) return type.GenericTypeArguments[0];
+            if (type.IsArray) return type.GetElementType();
+            return null;
+        }
+        public static bool IsIList(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) return true;
+            return type.IsArray;
         }
         private static bool IsAcceptable(Type type, Type fieldType, FieldInfo fieldInfo)
         {
-            //Skip unconstructed generic T type
+            // Skip unConstructed generic type
             if (type.IsGenericTypeDefinition) return false;
             return (bool)type.InvokeMember("IsAcceptable", BindingFlags.InvokeMethod, null, null, new object[] { fieldType, fieldInfo });
         }

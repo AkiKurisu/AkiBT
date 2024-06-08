@@ -3,12 +3,11 @@
 
 <div align="center">
 
-# AkiBT Version 1.4.3
-
+# AkiBT Version 1.4.4
 
 ***Read this document in Chinese: [中文文档](./README_ZH.md)***
 
-AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshidan/UniBT). The original author of UniBT is [Yoshida](https://github.com/yoshidan/). Based on the former, a large number of modern behavior tree editor functions are enriched.
+AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshidan/UniBT) and a large number of modern behavior tree editor functions are enriched.
 
    <img src="./Docs/Images/demo.jpg" />
 
@@ -76,7 +75,7 @@ This part will explain the advanced skills and knowledge related to using AkiBT 
 
 ### Edit shared variables in the editor
 
-   SharedVariable can be added in the blackboard. Variables currently support Float, Int, Vector3, Bool, String, UnityEngine.Object and their inherited subtypes.
+   SharedVariable can be added in the blackboard.
 
    <img src="./Docs/Images/SharedVariable.png" />
 

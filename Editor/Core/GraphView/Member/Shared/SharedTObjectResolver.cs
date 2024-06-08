@@ -12,22 +12,16 @@ namespace Kurisu.AkiBT.Editor
         {
 
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedTObjectField<T> editorField;
         protected override SharedTObjectField<T> CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedTObjectField<T>(fieldInfo.Name, null, fieldInfo);
-            return editorField;
+            return new SharedTObjectField<T>(fieldInfo.Name, null, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _)
         {
             return FieldResolverFactory.IsSharedTObject(infoType) && infoType.GenericTypeArguments.Length == 1 && infoType.GenericTypeArguments[0] == typeof(T);
         }
     }
-    public class SharedTObjectField<T> : BaseField<SharedTObject<T>>, IInitField where T : UnityEngine.Object
+    public class SharedTObjectField<T> : BaseField<SharedTObject<T>>, IBindableField where T : UnityEngine.Object
     {
         private readonly bool forceShared;
         private readonly VisualElement foldout;
@@ -51,7 +45,7 @@ namespace Kurisu.AkiBT.Editor
             }
             foldout.Add(toggle);
         }
-        public void InitField(ITreeView treeView)
+        public void BindTreeView(ITreeView treeView)
         {
             this.treeView = treeView;
             treeView.BlackBoard.View.RegisterCallback<VariableChangeEvent>(evt =>

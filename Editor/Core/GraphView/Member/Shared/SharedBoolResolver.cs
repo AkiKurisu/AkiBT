@@ -1,6 +1,9 @@
 using System.Reflection;
 using System;
 using UnityEngine.UIElements;
+#if !UNITY_2022_1_OR_NEWER
+using UnityEditor.UIElements;
+#endif
 namespace Kurisu.AkiBT.Editor
 {
 
@@ -9,22 +12,16 @@ namespace Kurisu.AkiBT.Editor
         public SharedBoolResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedBoolField editorField;
         protected override SharedBoolField CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedBoolField(fieldInfo.Name, null, fieldInfo.FieldType, fieldInfo);
-            return editorField;
+            return new SharedBoolField(fieldInfo.Name, fieldInfo.FieldType, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _) => infoType == typeof(SharedBool);
 
     }
     public class SharedBoolField : SharedVariableField<SharedBool, bool>
     {
-        public SharedBoolField(string label, VisualElement visualInput, Type objectType, FieldInfo fieldInfo) : base(label, visualInput, objectType, fieldInfo)
+        public SharedBoolField(string label, Type objectType, FieldInfo fieldInfo) : base(label, objectType, fieldInfo)
         {
 
 

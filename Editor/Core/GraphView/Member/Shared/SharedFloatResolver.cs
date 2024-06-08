@@ -1,6 +1,8 @@
 using System.Reflection;
-using UnityEditor.UIElements;
 using System;
+#if !UNITY_2022_1_OR_NEWER
+using UnityEditor.UIElements;
+#endif
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
@@ -9,15 +11,9 @@ namespace Kurisu.AkiBT.Editor
         public SharedFloatResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedFloatField editorField;
         protected override SharedFloatField CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedFloatField(fieldInfo.Name, null, fieldInfo.FieldType, fieldInfo);
-            return editorField;
+            return new SharedFloatField(fieldInfo.Name, fieldInfo.FieldType, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _) => infoType == typeof(SharedFloat);
 
@@ -25,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
     public class SharedFloatField : SharedVariableField<SharedFloat, float>
     {
 
-        public SharedFloatField(string label, VisualElement visualInput, Type objectType, FieldInfo fieldInfo) : base(label, visualInput, objectType, fieldInfo)
+        public SharedFloatField(string label, Type objectType, FieldInfo fieldInfo) : base(label, objectType, fieldInfo)
         {
 
         }

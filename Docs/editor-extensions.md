@@ -39,7 +39,7 @@ public class SampleResolver : INodeResolver
 
 Since AkiBT use GraphView as frontend which is powered by UIElement, it can not support all fields.
 
-If you want to customize field or want to support some fields AkiBT currently not support (eg. Array), you can write an editor class to provide your field which is similar to customize `PropertyDrawer` in `UnityEditor`.
+If you want to customize field or want to support some fields AkiBT currently not support (eg. `UnityEngine.Localization.LocalizedString`), you can write an editor class to provide your field which is similar to customize `PropertyDrawer` in `UnityEditor`.
 
 ```C#
 [Ordered]
@@ -64,6 +64,14 @@ public class LocalizedStringField : BaseField<LocalizedString>
 ## How to use IMGUI in graph editor
 
 If you don't want to use ui element, you can notify the field with `WarpFieldAttribute` to let editor use IMGUI as field's frontend.
+
+```C#
+public class EventAction : Action
+{
+    [WarpField]
+    public UnityEvent myEvent;
+}
+```
 
 ## How to customize graph editor
 

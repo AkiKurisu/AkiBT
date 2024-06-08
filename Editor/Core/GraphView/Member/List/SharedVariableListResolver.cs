@@ -1,42 +1,35 @@
 using System.Reflection;
-using System.Collections.Generic;
 using System;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
 namespace Kurisu.AkiBT.Editor
 {
     [ResolveChild]
-    public class SharedVariableListResolver<T> : FieldResolver<SharedVariableListField<T>, List<T>> where T : SharedVariable, new()
+    public class SharedVariableListResolver<T> : ListResolver<T> where T : SharedVariable, new()
     {
-        private readonly IFieldResolver childResolver;
-        public SharedVariableListResolver(FieldInfo fieldInfo, IFieldResolver resolver) : base(fieldInfo)
+        public SharedVariableListResolver(FieldInfo fieldInfo, IFieldResolver resolver) : base(fieldInfo, resolver)
         {
-            childResolver = resolver;
         }
-        SharedVariableListField<T> editorField;
-        protected override void SetTree(ITreeView ownerTreeView)
+        protected override ListField<T> CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField.InitField(ownerTreeView);
+            return new SharedVariableListField<T>(fieldInfo.Name, () => childResolver.CreateField(), () => new T());
         }
-        protected override SharedVariableListField<T> CreateEditorField(FieldInfo fieldInfo)
+        public static bool IsAcceptable(Type infoType, FieldInfo _)
         {
-            editorField = new SharedVariableListField<T>(fieldInfo.Name, null, () => childResolver.CreateField(), () => new T());
-            return editorField;
+            if (infoType.IsGenericType && infoType.GetGenericTypeDefinition() == typeof(List<>) && infoType.GenericTypeArguments[0].IsSubclassOf(typeof(SharedVariable))) return true;
+            if (infoType.IsArray && infoType.GetElementType().IsSubclassOf(typeof(SharedVariable))) return true;
+            return false;
         }
-        public static bool IsAcceptable(Type infoType, FieldInfo info) =>
-        FieldResolverFactory.IsList(infoType) &&
-        infoType.GenericTypeArguments.Length > 0 &&
-        infoType.GenericTypeArguments[0].IsSubclassOf(typeof(SharedVariable));
-
     }
-    public class SharedVariableListField<T> : ListField<T>, IInitField where T : SharedVariable
+    public class SharedVariableListField<T> : ListField<T>, IBindableField where T : SharedVariable
     {
         private ITreeView treeView;
         public event Action<ITreeView> OnTreeViewInitEvent;
-        public SharedVariableListField(string label, VisualElement visualInput, Func<VisualElement> elementCreator, Func<object> valueCreator) : base(label, visualInput, elementCreator, valueCreator)
+        public SharedVariableListField(string label, Func<VisualElement> elementCreator, Func<object> valueCreator) : base(label, elementCreator, valueCreator)
         {
 
         }
-        public void InitField(ITreeView treeView)
+        public void BindTreeView(ITreeView treeView)
         {
             this.treeView = treeView;
             OnTreeViewInitEvent?.Invoke(treeView);
@@ -52,11 +45,11 @@ namespace Kurisu.AkiBT.Editor
             {
                 var field = elementCreator.Invoke();
                 (field as BaseField<T>).label = string.Empty;
-                if (treeView != null) (field as IInitField).InitField(treeView);
-                OnTreeViewInitEvent += (view) => { (field as IInitField).InitField(view); };
+                if (treeView != null) (field as IBindableField).BindTreeView(treeView);
+                OnTreeViewInitEvent += (view) => { (field as IBindableField).BindTreeView(view); };
                 return field;
             }
-            var view = new ListView(value, 60, makeItem, bindItem);
+            var view = new ListView(value, 20, makeItem, bindItem);
             return view;
         }
 

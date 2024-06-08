@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Editor
         protected readonly ListView listView;
         protected readonly Func<VisualElement> elementCreator;
         protected readonly Func<object> valueCreator;
-        public ListField(string label, VisualElement visualInput, Func<VisualElement> elementCreator, Func<object> valueCreator) : base(label, visualInput)
+        public ListField(string label, Func<VisualElement> elementCreator, Func<object> valueCreator) : base(label, null)
         {
             value ??= new List<T>();
             this.elementCreator = elementCreator;
