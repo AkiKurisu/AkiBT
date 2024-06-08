@@ -12,21 +12,20 @@ namespace Kurisu.AkiBT.Extend
         public List<SharedString> parameters;
         [ForceShared]
         public SharedString storeResult;
-        private string[] paramterValues;
+        private string[] parameterValues;
         public override void Awake()
         {
-            foreach (var value in parameters) InitVariable(value);
-            paramterValues = new string[parameters.Count];
+            parameterValues = new string[parameters.Count];
         }
         protected override Status OnUpdate()
         {
-            for (int i = 0; i < paramterValues.Length; ++i)
+            for (int i = 0; i < parameterValues.Length; ++i)
             {
-                paramterValues[i] = parameters[i].Value;
+                parameterValues[i] = parameters[i].Value;
             }
             try
             {
-                storeResult.Value = string.Format(format.Value, paramterValues);
+                storeResult.Value = string.Format(format.Value, parameterValues);
             }
             catch (Exception e)
             {

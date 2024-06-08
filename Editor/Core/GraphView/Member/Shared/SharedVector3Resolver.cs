@@ -1,5 +1,7 @@
 using System.Reflection;
+#if !UNITY_2022_1_OR_NEWER
 using UnityEditor.UIElements;
+#endif
 using System;
 using UnityEngine.UIElements;
 using UnityEngine;
@@ -10,21 +12,15 @@ namespace Kurisu.AkiBT.Editor
         public SharedVector3Resolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedVector3Field editorField;
         protected override SharedVector3Field CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedVector3Field(fieldInfo.Name, null, fieldInfo.FieldType, fieldInfo);
-            return editorField;
+            return new SharedVector3Field(fieldInfo.Name, fieldInfo.FieldType, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _) => infoType == typeof(SharedVector3);
     }
     public class SharedVector3Field : SharedVariableField<SharedVector3, Vector3>
     {
-        public SharedVector3Field(string label, VisualElement visualInput, Type objectType, FieldInfo fieldInfo) : base(label, visualInput, objectType, fieldInfo)
+        public SharedVector3Field(string label, Type objectType, FieldInfo fieldInfo) : base(label, objectType, fieldInfo)
         {
         }
         protected override BaseField<Vector3> CreateValueField() => new Vector3Field();

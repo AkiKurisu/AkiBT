@@ -9,11 +9,9 @@ namespace Kurisu.AkiBT.Editor
         public WrapFieldResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        private WrapField<T> editorField;
         protected override WrapField<T> CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new WrapField<T>(fieldInfo.Name);
-            return editorField;
+            return new WrapField<T>(fieldInfo.Name);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo fieldInfo)
         {

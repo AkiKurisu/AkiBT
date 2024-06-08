@@ -9,20 +9,20 @@ namespace Kurisu.AkiBT.Editor
         GraphView View { get; }
         IControlGroupBlock GroupBlockController { get; }
         /// <summary>
-        /// 结点选择委托
+        /// Callback on node select
         /// </summary>
         /// <value></value>
         Action<IBehaviorTreeNode> OnNodeSelect { get; }
         /// <summary>
-        /// 复制结点
+        /// Duplicate a behavior tree node
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
         IBehaviorTreeNode DuplicateNode(IBehaviorTreeNode node);
         /// <summary>
-        /// 编辑器名称
+        /// The editor name
         /// </summary>
-        string TreeEditorName { get; }
+        string EditorName { get; }
         IBlackBoard BlackBoard { get; }
     }
 }

@@ -26,5 +26,9 @@ namespace Kurisu.AkiBT.Editor
             button.style.color = Color.white;
             return button;
         }
+        public static string GetRelativePath(string path)
+        {
+            return path.Replace(Application.dataPath, "Assets/");
+        }
     }
 }

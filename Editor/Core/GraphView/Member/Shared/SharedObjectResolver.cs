@@ -9,22 +9,16 @@ namespace Kurisu.AkiBT.Editor
         public SharedObjectResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedObjectField editorField;
         protected override SharedObjectField CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedObjectField(fieldInfo.Name, null, fieldInfo.FieldType, fieldInfo);
-            return editorField;
+            return new SharedObjectField(fieldInfo.Name, fieldInfo.FieldType, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _) => infoType == typeof(SharedObject);
 
     }
     public class SharedObjectField : SharedVariableField<SharedObject, UnityEngine.Object>
     {
-        public SharedObjectField(string label, VisualElement visualInput, Type objectType, FieldInfo fieldInfo) : base(label, visualInput, objectType, fieldInfo)
+        public SharedObjectField(string label, Type objectType, FieldInfo fieldInfo) : base(label, objectType, fieldInfo)
         {
         }
         protected override BaseField<UnityEngine.Object> CreateValueField()

@@ -14,7 +14,7 @@ namespace Kurisu.AkiBT.Editor
         public IBehaviorTree BehaviorTree => behaviorTree;
         protected RootNode root;
         public List<SharedVariable> SharedVariables { get; } = new();
-        public virtual string TreeEditorName => "AkiBT";
+        public virtual string EditorName => "AkiBT";
         private readonly NodeResolverFactory nodeResolver = NodeResolverFactory.Instance;
         public Action<IBehaviorTreeNode> OnNodeSelect { get; set; }
         public EditorWindow EditorWindow { get; internal set; }
@@ -44,14 +44,14 @@ namespace Kurisu.AkiBT.Editor
         {
             style.flexGrow = 1;
             style.flexShrink = 1;
-            styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(TreeEditorName));
+            styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(EditorName));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new GridBackground());
         }
         private void AddNodeProvider()
         {
             var provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
-            provider.Initialize(this, BehaviorTreeSetting.GetMask(TreeEditorName));
+            provider.Initialize(this, BehaviorTreeSetting.GetMask(EditorName));
             nodeCreationRequest += context =>
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
@@ -85,7 +85,9 @@ namespace Kurisu.AkiBT.Editor
                 button = MouseButton.MiddleMouse,
             });
             this.AddManipulator(contentDragger);
-            this.AddManipulator(new DragDropManipulator(CopyFromObject));
+            this.AddManipulator(new GameObjectManipulator());
+            this.AddManipulator(new JsonManipulator());
+            this.AddManipulator(new ScriptableObjectManipulator());
         }
         private string OnSerialize(IEnumerable<GraphElement> elements)
         {
@@ -140,40 +142,6 @@ namespace Kurisu.AkiBT.Editor
         public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter)
         {
             return PortHelper.GetCompatiblePorts(View, startAnchor);
-        }
-        /// <summary>
-        /// Copy graph view nodes from UObject
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="mousePosition"></param>
-        public void CopyFromObject(UnityEngine.Object data, Vector2 mousePosition)
-        {
-            if (data is GameObject gameObject)
-            {
-                if (gameObject.TryGetComponent(out IBehaviorTree tree))
-                {
-                    EditorWindow.ShowNotification(new GUIContent("GameObject Dropped Succeed !"));
-                    CopyFromTree(tree, mousePosition);
-                    return;
-                }
-                EditorWindow.ShowNotification(new GUIContent("Invalid Drag GameObject !"));
-                return;
-            }
-            if (data is TextAsset asset)
-            {
-                if (CopyFromJson(asset.text, mousePosition))
-                    EditorWindow.ShowNotification(new GUIContent("Text Asset Dropped Succeed !"));
-                else
-                    EditorWindow.ShowNotification(new GUIContent("Invalid Drag Text Asset !"));
-                return;
-            }
-            if (data is not IBehaviorTree)
-            {
-                EditorWindow.ShowNotification(new GUIContent("Invalid Drag Data !"));
-                return;
-            }
-            EditorWindow.ShowNotification(new GUIContent("Data Dropped Succeed !"));
-            CopyFromTree(data as IBehaviorTree, mousePosition);
         }
         /// <summary>
         /// Copy graph view nodes from other tree

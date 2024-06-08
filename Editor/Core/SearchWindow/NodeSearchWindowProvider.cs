@@ -68,7 +68,7 @@ namespace Kurisu.AkiBT.Editor
             return true;
         }
     }
-    public class CertainNodeSearchWindowProvider<T> : ScriptableObject, ISearchWindowProvider where T : NodeBehavior
+    public class NodeSearchWindowProvider<T> : ScriptableObject, ISearchWindowProvider where T : NodeBehavior
     {
         private IBehaviorTreeNode node;
         private Texture2D _indentationIcon;

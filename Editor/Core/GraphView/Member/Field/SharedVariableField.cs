@@ -5,11 +5,14 @@ using System.Reflection;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    internal interface IInitField
+    /// <summary>
+    /// Interface for fields need to bind tree view
+    /// </summary>
+    internal interface IBindableField
     {
-        void InitField(ITreeView treeView);
+        void BindTreeView(ITreeView treeView);
     }
-    public abstract class SharedVariableField<T, K> : BaseField<T>, IInitField where T : SharedVariable<K>, new()
+    public abstract class SharedVariableField<T, K> : BaseField<T>, IBindableField where T : SharedVariable<K>, new()
     {
         private readonly bool forceShared;
         private readonly VisualElement foldout;
@@ -18,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
         private DropdownField nameDropdown;
         private SharedVariable bindExposedProperty;
         private readonly Type bindType;
-        public SharedVariableField(string label, VisualElement visualInput, Type objectType, FieldInfo fieldInfo) : base(label, visualInput)
+        public SharedVariableField(string label, Type objectType, FieldInfo fieldInfo) : base(label, null)
         {
             forceShared = fieldInfo.GetCustomAttribute<ForceSharedAttribute>() != null;
             AddToClassList("SharedVariableField");
@@ -35,16 +38,17 @@ namespace Kurisu.AkiBT.Editor
             }
             foldout.Add(toggle);
         }
-        public void InitField(ITreeView treeView)
+        public void BindTreeView(ITreeView treeView)
         {
             this.treeView = treeView;
-            treeView.BlackBoard.View.RegisterCallback<VariableChangeEvent>(evt =>
-            {
-                if (evt.ChangeType != VariableChangeType.NameChange) return;
-                if (evt.Variable != bindExposedProperty) return;
-                nameDropdown.value = value.Name = evt.Variable.Name;
-            });
+            treeView.BlackBoard.View.RegisterCallback<VariableChangeEvent>(OnVariableChange);
             OnToggle(toggle.value);
+        }
+        private void OnVariableChange(VariableChangeEvent evt)
+        {
+            if (evt.ChangeType != VariableChangeType.NameChange) return;
+            if (evt.Variable != bindExposedProperty) return;
+            nameDropdown.value = value.Name = evt.Variable.Name;
         }
         private static List<string> GetList(ITreeView treeView)
         {

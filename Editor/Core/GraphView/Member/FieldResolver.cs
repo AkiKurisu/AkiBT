@@ -21,7 +21,7 @@ namespace Kurisu.AkiBT.Editor
         /// Only create ValueField without any binding
         /// </summary>
         /// <returns></returns>
-        public VisualElement CreateField();
+        VisualElement CreateField();
         /// <summary>
         /// Restore editor field value from behavior
         /// </summary>
@@ -44,52 +44,79 @@ namespace Kurisu.AkiBT.Editor
         /// <param name="fieldChangeCallBack"></param>
         void RegisterValueChangeCallback(ValueChangeDelegate fieldChangeCallBack);
     }
-
     public abstract class FieldResolver<T, K> : IFieldResolver where T : BaseField<K>
     {
-        private readonly FieldInfo fieldInfo;
-        private T editorField;
-        public object Value { get => editorField.value; set => editorField.SetValueWithoutNotify((K)value); }
+        protected readonly FieldInfo fieldInfo;
+        protected readonly T editorField;
+        public virtual object Value
+        {
+            get => editorField.value;
+            set => editorField.value = (K)value;
+        }
         public FieldResolver(FieldInfo fieldInfo)
         {
             this.fieldInfo = fieldInfo;
-            SetEditorField();
-        }
-        private void SetEditorField()
-        {
             editorField = CreateEditorField(fieldInfo);
-            //修改标签
             AkiLabelAttribute label = fieldInfo.GetCustomAttribute<AkiLabelAttribute>();
             if (label != null) editorField.label = label.Title;
             TooltipAttribute tooltip = fieldInfo.GetCustomAttribute<TooltipAttribute>();
             if (tooltip != null) editorField.tooltip = tooltip.tooltip;
         }
-
-        protected abstract T CreateEditorField(FieldInfo fieldInfo);
-        public VisualElement CreateField() => CreateEditorField(this.fieldInfo);
-        protected virtual void SetTree(ITreeView ownerTreeView) { }
+        public VisualElement CreateField()
+        {
+            return CreateEditorField(fieldInfo);
+        }
         public VisualElement GetEditorField(ITreeView ownerTreeView)
         {
-            SetTree(ownerTreeView);
+            if (editorField is IBindableField bindableField) bindableField.BindTreeView(ownerTreeView);
             return editorField;
         }
         public void Copy(IFieldResolver resolver)
         {
             if (resolver is not FieldResolver<T, K>) return;
             if (fieldInfo.GetCustomAttribute<CopyDisableAttribute>() != null) return;
-            editorField.value = (K)resolver.Value;
+            Value = resolver.Value;
         }
         public void Restore(object behavior)
         {
-            editorField.value = (K)fieldInfo.GetValue(behavior);
+            Value = fieldInfo.GetValue(behavior);
         }
         public void Commit(object behavior)
         {
-            fieldInfo.SetValue(behavior, editorField.value);
+            fieldInfo.SetValue(behavior, Value);
         }
         public void RegisterValueChangeCallback(ValueChangeDelegate fieldChangeCallBack)
         {
             editorField.RegisterValueChangedCallback(evt => fieldChangeCallBack?.Invoke(evt.newValue));
         }
+        /// <summary>
+        /// Create <see cref="BaseField{T}"/>
+        /// </summary>
+        /// <param name="fieldInfo"></param>
+        /// <returns></returns>
+        protected abstract T CreateEditorField(FieldInfo fieldInfo);
+    }
+    public abstract class FieldResolver<T, K, F> : FieldResolver<T, K> where T : BaseField<K> where K : F
+    {
+        protected FieldResolver(FieldInfo fieldInfo) : base(fieldInfo)
+        {
+        }
+
+        public sealed override object Value
+        {
+            get => ValueGetter != null ? ValueGetter(editorField.value) : editorField.value;
+            set => editorField.value = ValueSetter != null ? ValueSetter((F)value) : (K)value;
+        }
+
+        /// <summary>
+        /// Bridge for setting value from <see cref="K"/> to <see cref="F"/>
+        /// </summary>
+        /// <value></value>
+        protected Func<F, K> ValueSetter { get; set; }
+        /// <summary>
+        /// Bridge for setting value from <see cref="K"/> to <see cref="F"/>
+        /// </summary>
+        /// <value></value>
+        protected Func<K, object> ValueGetter { get; set; }
     }
 }

@@ -9,23 +9,17 @@ namespace Kurisu.AkiBT.Editor
         public SharedStringResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedStringField editorField;
         protected override SharedStringField CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedStringField(fieldInfo.Name, null, fieldInfo.FieldType, fieldInfo);
-            return editorField;
+            return new SharedStringField(fieldInfo.Name, fieldInfo.FieldType, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _) => infoType == typeof(SharedString);
 
     }
     public class SharedStringField : SharedVariableField<SharedString, string>
     {
-        private bool multiline;
-        public SharedStringField(string label, VisualElement visualInput, Type objectType, FieldInfo fieldInfo) : base(label, visualInput, objectType, fieldInfo)
+        private readonly bool multiline;
+        public SharedStringField(string label, Type objectType, FieldInfo fieldInfo) : base(label, objectType, fieldInfo)
         {
             multiline = fieldInfo.GetCustomAttribute<MultilineAttribute>() != null;
         }

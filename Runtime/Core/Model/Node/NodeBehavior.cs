@@ -72,9 +72,5 @@ namespace Kurisu.AkiBT
         public virtual void Abort() { }
 
         public virtual bool CanUpdate() => true;
-        protected void InitVariable(SharedVariable sharedVariable)
-        {
-            sharedVariable.MapTo(Tree);
-        }
     }
 }

@@ -1,6 +1,6 @@
 namespace Kurisu.AkiBT.Editor
 {
-    public sealed class ActionSearchWindowProvider : CertainNodeSearchWindowProvider<Action>
+    public sealed class ActionSearchWindowProvider : NodeSearchWindowProvider<Action>
     {
 
     }

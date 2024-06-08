@@ -1,5 +1,5 @@
 using UnityEngine.UIElements;
-namespace Kurisu.AkiBT
+namespace Kurisu.AkiBT.Editor
 {
     public enum VariableChangeType
     {

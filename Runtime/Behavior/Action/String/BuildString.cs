@@ -9,10 +9,6 @@ namespace Kurisu.AkiBT.Extend
         public List<SharedString> values;
         [ForceShared]
         public SharedString storeResult;
-        public override void Awake()
-        {
-            foreach (var value in values) InitVariable(value);
-        }
         protected override Status OnUpdate()
         {
             for (int i = 0; i < values.Count; i++)

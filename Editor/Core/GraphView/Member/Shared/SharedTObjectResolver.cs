@@ -4,30 +4,25 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using UObject = UnityEngine.Object;
 namespace Kurisu.AkiBT.Editor
 {
-    public class SharedTObjectResolver<T> : FieldResolver<SharedTObjectField<T>, SharedTObject<T>> where T : UnityEngine.Object
+    public class SharedTObjectResolver<T> : FieldResolver<SharedTObjectField<T>, SharedTObject<T>> where T : UObject
     {
         public SharedTObjectResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
 
         }
-        protected override void SetTree(ITreeView ownerTreeView)
-        {
-            editorField.InitField(ownerTreeView);
-        }
-        private SharedTObjectField<T> editorField;
         protected override SharedTObjectField<T> CreateEditorField(FieldInfo fieldInfo)
         {
-            editorField = new SharedTObjectField<T>(fieldInfo.Name, null, fieldInfo);
-            return editorField;
+            return new SharedTObjectField<T>(fieldInfo.Name, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _)
         {
-            return FieldResolverFactory.IsSharedTObject(infoType) && infoType.GenericTypeArguments.Length == 1 && infoType.GenericTypeArguments[0] == typeof(T);
+            return FieldResolverFactory.IsSharedTObject(infoType) && infoType.GenericTypeArguments[0] == typeof(T);
         }
     }
-    public class SharedTObjectField<T> : BaseField<SharedTObject<T>>, IInitField where T : UnityEngine.Object
+    public class SharedTObjectField<T> : BaseField<SharedTObject<T>>, IBindableField where T : UObject
     {
         private readonly bool forceShared;
         private readonly VisualElement foldout;
@@ -35,7 +30,7 @@ namespace Kurisu.AkiBT.Editor
         private ITreeView treeView;
         private DropdownField nameDropdown;
         private SharedVariable bindExposedProperty;
-        public SharedTObjectField(string label, VisualElement visualInput, FieldInfo fieldInfo) : base(label, visualInput)
+        public SharedTObjectField(string label, FieldInfo fieldInfo) : base(label, null)
         {
             forceShared = fieldInfo.GetCustomAttribute<ForceSharedAttribute>() != null;
             AddToClassList("SharedVariableField");
@@ -51,7 +46,7 @@ namespace Kurisu.AkiBT.Editor
             }
             foldout.Add(toggle);
         }
-        public void InitField(ITreeView treeView)
+        public void BindTreeView(ITreeView treeView)
         {
             this.treeView = treeView;
             treeView.BlackBoard.View.RegisterCallback<VariableChangeEvent>(evt =>

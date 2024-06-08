@@ -1,33 +1,17 @@
-# API
+<div align="center">
+
+# Runtime Extensions
+
+This document contains notice for using and extending nodes, SharedVariables and attributes.
+
+</div>
+
   - [Behavior Node Type](#behavior-node-type)
   - [Built In Composite Node](#built-in-composite-node)
-    - [Sequence](#sequence)
-    - [Selector](#selector)
-    - [Parallel](#parallel)
-    - [Random](#random)
-    - [Rotator](#rotator)
   - [Create New Behaviors](#create-new-behaviors)
-    - [Create Action](#create-action)
-    - [Create Conditional](#create-conditional)
-    - [Create Composite](#create-composite)
-    - [Create Decorator](#create-decorator)
   - [Attributes](#attributes)
-    - [AkiInfoAttribute](#akiinfoattribute)
-    - [AkiLabelAttribute](#akilabelattribute)
-    - [AkiGroupAttribute](#akigroupattribute)
-    - [ForceSharedAttribute](#forcesharedattribute)
-    - [WrapFieldAttribute](#wrapfieldattribute)
-  - [Runtime Build BehaviorTree](#runtime-build-behaviortree)
+  - [BehaviorTree Builder](#behaviortree-builder)
   - [SharedVariable](#sharedvariable)
-    - [How to use](#how-to-use)
-    - [API Reference](#api-reference)
-  - [Editor Extend](#editor-extend)
-    - [How to change font](#how-to-change-font)
-    - [How to customize node](#how-to-customize-node)
-    - [How to customize field](#how-to-customize-field)
-    - [How to use IMGUI in Graph Editor](#how-to-use-imgui-in-graph-editor)
-
-
 
 ## Behavior Node Type
 
@@ -38,9 +22,6 @@
 | Conditional Node | It has one child node and check the condition whether child is updatable. when having no child, Conditional Node is the leaf node like Action Node. |
 | Decorator Node   | It has one child node and will modify the return value according to the return value of the child node                                              |
 
-| Name              | Description                                                               |
-| ----------------- | ------------------------------------------------------------------------- |
-| evaluateOnRunning | true : evaluate the condition if the previous status is `Status.Running`. |
 
 ## Built In Composite Node
 
@@ -138,7 +119,11 @@ public class Wait : Action
 * Override `OnAwake` called by `AkiBT.BehaviorTree.Awake` if needed.
 * Override `OnStart` called by `AkiBT.BehaviorTree.Start` if needed.
 * Conditional Node has `gameObject` field with `AkiBT.BehaviorTree` attached.
-* Private [SerializeField] field and public field can be set on Behavior Tree editor window.
+* Private `[SerializeField]` field and public field can be set on Behavior Tree editor window.
+
+| Name              | Description                                                               |
+| ----------------- | ------------------------------------------------------------------------- |
+| evaluateOnRunning | true : evaluate the condition if the previous status is `Status.Running`. |
 
 ```c#
 public class IsHateGt: Conditional
@@ -329,7 +314,7 @@ public class SetFloat : Action
 }
 ```
 
-## Runtime Build BehaviorTree
+## BehaviorTree Builder
 
 Use `BehaviorTreeBuilder` to build a behaviorTree on the builder pattern.
 
@@ -337,8 +322,9 @@ Use `BeginChild` to start writing child or children.
 
 Use `EndChild` to end writing.
 
-Example:
+Use `New{VariableType}` to get a reference of SharedVariable, if not exist before, it will create new one.
 ```C#
+    // Example code 
     var builder = new BehaviorTreeBuilder(gameObject);
     //Create and set value of local variable
     builder.NewObject<NavMeshAgent>("NavAgent",navmeshAgent);
@@ -411,64 +397,4 @@ Example:
     | GetValue | Get variable value              |
     | Bind     | Bind to other sharedVariable    |
     | Unbind   | Unbind self                     |
-    | Observe  | Create a observe proxy variable |
-   
-## Editor Extend
-
-### How to change font
-
-For visual effects such as fonts, colors, layout, etc, you can change the uss style file in `BehaviorTreeSetting`.
-
-### How to customize node
-
-For many reason, you may want to customize node like adding a button to preview effect.
-
-You can write an editor class to provide your node which is similar to customize `Editor` in `UnityEditor`.
-```C#
-[Ordered]
-public class SampleResolver : INodeResolver
-{
-    //Create custom node
-    public IBehaviorTreeNode CreateNodeInstance(Type type)
-    {
-        return new SampleNode();
-    }
-    //Identify node type
-    public static bool IsAcceptable(Type behaviorType) => behaviorType == typeof(SampleClass);
-
-    //Your custom node
-    private class SampleNode : ActionNode
-    {
-    }
-}
-```
-
-### How to customize field
-
-Since AkiBT use GraphView as frontend which is powered by UIElement, it can not support all fields.
-
-If you want to customize field or want to support some fields AkiBT currently not support (eg. Array), you can write an editor class to provide your field which is similar to customize `PropertyDrawer` in `UnityEditor`.
-
-```C#
-[Ordered]
-public class LocalizedStringResolver : FieldResolver<LocalizedStringField,LocalizedString>
-{
-    public LocalizedStringResolver(FieldInfo fieldInfo) : base(fieldInfo)
-    {
-    }
-    protected override LocalizedStringField CreateEditorField(FieldInfo fieldInfo)
-    {
-        return new LocalizedStringField(fieldInfo.Name);
-    }
-    public static bool IsAcceptable(Type infoType, FieldInfo _) => infoType == typeof(LocalizedString);
-
-}
-public class LocalizedStringField : BaseField<LocalizedString>
-{
-
-}
-```
-
-### How to use IMGUI in Graph Editor
-
-If you don't want to use ui element, you can notify the field with `WarpFieldAttribute` to let editor use IMGUI as field's frontend.
+    | Observe  | Create an observe proxy variable |
