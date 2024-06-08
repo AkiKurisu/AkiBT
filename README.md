@@ -1,11 +1,18 @@
 [![GitHub release](https://img.shields.io/github/release/AkiKurisu/AkiBT.svg?style=social)](https://github.com/AkiKurisu/AkiBT/releases)
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
-# AkiBT Version 1.4.3 Intro
+
+<div align="center">
+
+# AkiBT Version 1.4.3
 
 
 ***Read this document in Chinese: [中文文档](./README_ZH.md)***
 
 AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshidan/UniBT). The original author of UniBT is [Yoshida](https://github.com/yoshidan/). Based on the former, a large number of modern behavior tree editor functions are enriched.
+
+   <img src="./Docs/Images/demo.jpg" />
+
+</div>
 
 ## Setup
 1. Download [Release Package](https://github.com/AkiKurisu/AkiBT/releases)
@@ -20,8 +27,6 @@ AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshida
 
 * Newtonsoft.Json
 
-   Available for download in Unity PackageManager
-
 ## Features
 * Supports constructing behavior tree by visual node editor.
 * Support visualizing node status and debugging behavior tree during runtime
@@ -30,18 +35,16 @@ AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshida
 
 ## Quick Start
 
-   <img src="Images/demo.jpg" />
-
 1. Add `AkiBT.BehaviorTree` component for any GameObject.  
-   <img src="Images/started1.png" width="480"/>
+   <img src="./Docs/Images/started1.png" width="480"/>
 2. `Open Graph Editor` button opens GraphView for Behavior Tree.  
-   <img src="Images/started2.gif" width="480"/>
+   <img src="./Docs/Images/started2.gif" width="480"/>
 3. Add behaviors and set parameters.  
-   <img src="Images/started2.gif" width="480"/>
+   <img src="./Docs/Images/started2.gif" width="480"/>
 4. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
-   <img src="Images/started3.png" width="480"/>  
+   <img src="./Docs/Images/started3.png" width="480"/>  
 5. Run the unity application. you can see node status in the editor window.  
-   <img src="Images/started4.png" width="480"/>
+   <img src="./Docs/Images/started4.png" width="480"/>
    
    * The red node means that last `Update` returned `Status.Failure`.
    * The green node means that last `Update` returned `Status.Success`.
@@ -69,17 +72,17 @@ This part will explain the advanced skills and knowledge related to using AkiBT 
 
    You can select Copy From SO from the upper toolbar, or drag and drop BehaviorTreeSO, BehaviorTree components, or GameObject and Json files that mount BehaviorTree into the editor to copy and paste.
 
-   <img src="Images/DragDrop.gif" width="1920"/>
+   <img src="./Docs/Images/DragDrop.gif" width="1920"/>
 
 ### Edit shared variables in the editor
 
    SharedVariable can be added in the blackboard. Variables currently support Float, Int, Vector3, Bool, String, UnityEngine.Object and their inherited subtypes.
 
-   <img src="Images/SharedVariable.png" />
+   <img src="./Docs/Images/SharedVariable.png" />
 
    * For SharedVariable in the field, check ``Is Shared`` and a drop-down menu will appear for binding shared variables in the behavior tree blackboard.
 
-   <img src="Images/ReferenceVariable.png" />
+   <img src="./Docs/Images/ReferenceVariable.png" />
 
    * SharedObject supports type restrictions, see [SharedVariable](./API.md#SharedVariable) for details
 
@@ -88,13 +91,13 @@ This part will explain the advanced skills and knowledge related to using AkiBT 
 
    * Inspector can modify and delete shared variables
 
-   <img src="Images/ChangeVariableInInspector.png" width="480"/>
+   <img src="./Docs/Images/ChangeVariableInInspector.png" width="480"/>
 
 ### Filter nodes
 
    You can set the search mask for the AkiBT editor or other editors inherited from AkiBT in ProjectSetting. You can set the Group type required in the workflow (see above for Group attributes). Nodes without Group attributes will not be filtered.
 
-   <img src="Images/Setting.png" width="480"/>
+   <img src="./Docs/Images/Setting.png" width="480"/>
 
 ### Combination stack node style (experimental)
 
@@ -116,7 +119,7 @@ namespace Kurisu.AkiBT.Editor
 }
 
 ```
-   <img src="Images/CompositeStack.gif"/>
+   <img src="./Docs/Images/CompositeStack.gif"/>
    Of course, this feature currently has some limitations, such as the inability to nest Composite Stack, which will be resolved later.
 
 ## Runtime Advanced
@@ -127,11 +130,11 @@ This part will explain the advanced skills and knowledge related to using AkiBT'
 
 For shared variables across Prefabs in the same scene, you can use ``SceneVariableScope`` (MonoBehaviour) to create ``Global Variables`` that are effective within the scene.
 
-<img src="Images/SceneScope.png"/>
+<img src="./Docs/Images/SceneScope.png"/>
 
 For shared variables across scenes, you can use ``GameVariableScope`` (ScriptableObject) to create ``Global Variables`` that are effective within the application. For packaged games, you need to manually load the ScriptableObject from the resource loading scheme, such as using ``Resources. Load()`` to load
 
-<img src="Images/GameScope.png"/>
+<img src="./Docs/Images/GameScope.png"/>
 
 Different scopes can depend on each other. For example, ``SceneVariableScope`` can set ``GameVariableScope`` to ParentScope to obtain global shared variables within the application.
 
@@ -139,7 +142,7 @@ Different scopes can depend on each other. For example, ``SceneVariableScope`` c
 
    View the field in the Inspector and click ``Is Global`` to mark it. The behavior tree will bind the global shared variable before the shared variable is initialized.
 
-   <img src="Images/SetGlobal.png"/>
+   <img src="./Docs/Images/SetGlobal.png"/>
 
    * The button text is green after marking
 ### Generic object shared variable SharedTObject
@@ -150,7 +153,7 @@ Different scopes can depend on each other. For example, ``SceneVariableScope`` c
 
    Shared variables can be modified in the Inspector or editor during runtime to debug the behavior tree. Global variables need to be modified in their corresponding scopes.
 
-   <img src="Images/DebugVariable.png"/>
+   <img src="./Docs/Images/DebugVariable.png"/>
 
 ### Json serialization
 
@@ -164,24 +167,22 @@ Different scopes can depend on each other. For example, ``SceneVariableScope`` c
 
 ***See [API Document](./API.md)***
 
-## Extra Module
 
-### Runtime Update Support
+## DSL
    
+You can use [AkiBTDSL](https://github.com/AkiKurisu/AkiBTDSL) to make it easier to edit the behavior tree at runtime or outside the project. It can be exported to a DSL (domain specific language) format that is easy to read and modify, such as it is convenient to establish unified editing of Excel tables.
 
-   You can use [AkiBTDSL](https://github.com/AkiKurisu/AkiBTDSL) to make it easier to edit the behavior tree at runtime or outside the project. It can be exported to a DSL (text domain-specific language) format that is easy to read and modify, such as It is convenient to establish unified editing of Excel tables and separate the behavior tree editing environment and project environment.
-
-### User Service
+## User Service
 
 
-   The plugin currently has a new User Service (Tools/AkiBT/AkiBT User Service) built in, which provides two functions Serialize Service and Search Service
+The plugin currently has a new User Service (Tools/AkiBT/AkiBT User Service) built in, which provides two functions Serialize Service and Search Service
 
-   ### 1. Serialize Service
-   Since AkiBT uses ScriptableObject for data storage, data loss will occur when modifying the field name of the node (this problem can be avoided by adding `FormerlySerializedAsAttribute` to the modified field). However, after modifying the name and namespace of the node, the entire node cannot be deserialized, thus losing all data of the node and subsequent nodes. After serializing to Json, you can use a text editor to modify the nodes in batches, and then re-deserialize to ScriptableObject.
+### Serialize Service
+Since AkiBT uses ScriptableObject for data storage, data loss will occur when modifying the field name of the node (this problem can be avoided by adding `FormerlySerializedAsAttribute` to the modified field). However, after modifying the name and namespace of the node, the entire node cannot be deserialized, thus losing all data of the node and subsequent nodes. After serializing to Json, you can use a text editor to modify the nodes in batches, and then re-deserialize to ScriptableObject.
 
-   <img src="Images/SerializeService.png"/>
+<img src="./Docs/Images/SerializeService.png"/>
 
-   It should be noted that not all fields of ScriptableObject are serialized. Serialize Service only serializes the nodes and shared variables of the behavior tree, and the deserialization is the same.
-   
-  ### 2. Search Service
-  Select a node type to quickly find all behavior trees using the node, and combine with Serialize Service to find the corresponding Json file at the same time.
+It should be noted that not all fields of ScriptableObject are serialized. Serialize Service only serializes the nodes and shared variables of the behavior tree, and the deserialization is the same.
+
+### Search Service
+Select a node type to quickly find all behavior trees using the node, and combine with Serialize Service to find the corresponding Json file at the same time.
