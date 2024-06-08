@@ -4,9 +4,10 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using UObject = UnityEngine.Object;
 namespace Kurisu.AkiBT.Editor
 {
-    public class SharedTObjectResolver<T> : FieldResolver<SharedTObjectField<T>, SharedTObject<T>> where T : UnityEngine.Object
+    public class SharedTObjectResolver<T> : FieldResolver<SharedTObjectField<T>, SharedTObject<T>> where T : UObject
     {
         public SharedTObjectResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
@@ -14,14 +15,14 @@ namespace Kurisu.AkiBT.Editor
         }
         protected override SharedTObjectField<T> CreateEditorField(FieldInfo fieldInfo)
         {
-            return new SharedTObjectField<T>(fieldInfo.Name, null, fieldInfo);
+            return new SharedTObjectField<T>(fieldInfo.Name, fieldInfo);
         }
         public static bool IsAcceptable(Type infoType, FieldInfo _)
         {
-            return FieldResolverFactory.IsSharedTObject(infoType) && infoType.GenericTypeArguments.Length == 1 && infoType.GenericTypeArguments[0] == typeof(T);
+            return FieldResolverFactory.IsSharedTObject(infoType) && infoType.GenericTypeArguments[0] == typeof(T);
         }
     }
-    public class SharedTObjectField<T> : BaseField<SharedTObject<T>>, IBindableField where T : UnityEngine.Object
+    public class SharedTObjectField<T> : BaseField<SharedTObject<T>>, IBindableField where T : UObject
     {
         private readonly bool forceShared;
         private readonly VisualElement foldout;
@@ -29,7 +30,7 @@ namespace Kurisu.AkiBT.Editor
         private ITreeView treeView;
         private DropdownField nameDropdown;
         private SharedVariable bindExposedProperty;
-        public SharedTObjectField(string label, VisualElement visualInput, FieldInfo fieldInfo) : base(label, visualInput)
+        public SharedTObjectField(string label, FieldInfo fieldInfo) : base(label, null)
         {
             forceShared = fieldInfo.GetCustomAttribute<ForceSharedAttribute>() != null;
             AddToClassList("SharedVariableField");

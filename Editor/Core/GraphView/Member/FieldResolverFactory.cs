@@ -85,7 +85,7 @@ namespace Kurisu.AkiBT.Editor
         }
         public static Type GetParameterType(Type type)
         {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) return type.GenericTypeArguments[0];
+            if (type.IsGenericType) return type.GenericTypeArguments[0];
             if (type.IsArray) return type.GetElementType();
             return null;
         }
