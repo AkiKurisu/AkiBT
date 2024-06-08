@@ -4,7 +4,7 @@
 
 # 行为树 AkiBT Version 1.4.3
 
-***Read this document in English: [English Document](./README_EN.md)***
+***Read this document in English: [English Document](./README.md)***
 
 AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结点编辑器, UniBT原作者为[Yoshida](https://github.com/yoshidan/)，在前者基础上丰富了大量现代行为树编辑器功能.
 
@@ -84,7 +84,7 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
    <img src="./Docs/Images/ReferenceVariable.png" />
 
-   * SharedObject支持进行类型限制,详见[SharedVariable](./API.md#SharedVariable)
+   * SharedObject支持进行类型限制,详见[SharedVariable](./runtime-extensions.md#SharedVariable)
 
    * 双击共享变量以修改名称,为空时删除，修改后同时更新引用该变量的结点字段
         
@@ -162,11 +162,11 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
 ## 如何拓展结点
 
-***查看 [API文档](./API.md)***
+***查看 [运行时拓展](./Docs/runtime-extensions.md)***
 
 ## 如何拓展编辑器
 
-***查看 [API文档](./API.md)***
+***查看 [编辑器拓展](./Docs/editor-extensions.md)***
 
 ## 拓展功能 Extra Module
 

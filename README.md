@@ -84,7 +84,7 @@ This part will explain the advanced skills and knowledge related to using AkiBT 
 
    <img src="./Docs/Images/ReferenceVariable.png" />
 
-   * SharedObject supports type restrictions, see [SharedVariable](./API.md#SharedVariable) for details
+   * SharedObject supports type restrictions, see [SharedVariable](./Docs/runtime-extensions.md#SharedVariable) for details
 
    * Double-click the shared variable to modify the name, delete it if it is empty, and update the node field that references the variable after modification.
       
@@ -161,11 +161,11 @@ Different scopes can depend on each other. For example, ``SceneVariableScope`` c
 
 ## Extend Node
 
-***See [API Document](./API.md)***
+***See [Runtime Extensions](./Docs/runtime-extensions.md)***
 
 ## Extend Editor
 
-***See [API Document](./API.md)***
+***See [Editor Extensions](./Docs/editor-extensions.md)***
 
 
 ## DSL
