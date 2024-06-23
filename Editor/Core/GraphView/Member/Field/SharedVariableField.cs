@@ -123,7 +123,7 @@ namespace Kurisu.AkiBT.Editor
             BindProperty();
             OnToggle(value.IsShared);
             NotifyValueChange();
-            OnValueUpdate();
+            OnRepaint();
         }
         protected void NotifyValueChange()
         {
@@ -131,7 +131,7 @@ namespace Kurisu.AkiBT.Editor
             changeEvent.target = this;
             SendEvent(changeEvent);
         }
-        protected virtual void OnValueUpdate() { }
+        protected virtual void OnRepaint() { }
     }
 
 }

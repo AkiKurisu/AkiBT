@@ -10,9 +10,7 @@ namespace Kurisu.AkiBT.Editor
         }
         protected override EnumField CreateEditorField(FieldInfo fieldInfo)
         {
-            Type type = fieldInfo.FieldType;
-            if (type.IsGenericType) type = type.GenericTypeArguments[0];
-            else if (type.IsArray) type = type.GetElementType();
+            Type type = FieldResolverFactory.GetParameterType(fieldInfo.FieldType) ?? fieldInfo.FieldType;
             var enumValue = Enum.GetValues(type).Cast<Enum>().Select(v => v).ToList();
             return new EnumField(fieldInfo.Name, enumValue, enumValue[0]);
         }

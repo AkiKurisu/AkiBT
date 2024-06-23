@@ -10,11 +10,6 @@ namespace Kurisu.AkiBT.Example
         private SharedTObject<GameObject> target;
         [SerializeField, Tooltip("获取的位置会存储在该共享变量中")]
         private SharedVector3 result;
-        public override void Awake()
-        {
-            InitVariable(target);
-            InitVariable(result);
-        }
         protected override Status OnUpdate()
         {
             if (target.Value != null) result.Value = target.Value.transform.position;
