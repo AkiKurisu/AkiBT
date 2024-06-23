@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT.Example.Builder
         private Transform target;
         public void Build()
         {
-            var builder = new BehaviorTreeBuilder(gameObject);
+            var builder = new BehaviorTreeBuilder();
             builder.NewObject("NavAgent", GetComponent<NavMeshAgent>());
             builder
             .BeginChild(new Sequence())
@@ -50,7 +50,7 @@ namespace Kurisu.AkiBT.Example.Builder
                     })
                 .EndChild()
             .EndChild()
-            .Build(out BehaviorTree _);
+            .Build(gameObject, out BehaviorTree _);
         }
     }
 }

@@ -112,6 +112,7 @@ namespace Kurisu.AkiBT
             behaviorTree.SharedVariables.AddRange(SharedVariables);
             behaviorTree.Root = new Root() { Child = nodeStack.Pop() };
             SharedVariables.Clear();
+            SharedVariableMapper.Traverse(behaviorTree);
             return true;
         }
         /// <summary>
@@ -154,6 +155,7 @@ namespace Kurisu.AkiBT
             behaviorTreeSO.SharedVariables.AddRange(SharedVariables);
             behaviorTreeSO.root = new Root() { Child = nodeStack.Pop() };
             SharedVariables.Clear();
+            behaviorTreeSO.Initialize();
             return true;
         }
         /// <summary>
@@ -212,6 +214,63 @@ namespace Kurisu.AkiBT
                 });
             }
             return variable.Clone() as SharedVector3;
+        }
+        /// <summary>
+        /// Get new <see cref="SharedVector3Int"/>, also write it to the public variables of the behavior tree
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public SharedVector3Int NewVector2Int(string key, Vector3Int defaultValue = default)
+        {
+            if (!this.TryGetSharedVariable(key, out SharedVariable<Vector3Int> variable))
+            {
+                SharedVariables.Add(variable = new SharedVector3Int()
+                {
+                    Name = key,
+                    Value = defaultValue,
+                    IsShared = true
+                });
+            }
+            return variable.Clone() as SharedVector3Int;
+        }
+        /// <summary>
+        /// Get new <see cref="SharedVector2"/>, also write it to the public variables of the behavior tree
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public SharedVector2 NewVector2(string key, Vector2 defaultValue = default)
+        {
+            if (!this.TryGetSharedVariable(key, out SharedVariable<Vector2> variable))
+            {
+                SharedVariables.Add(variable = new SharedVector2()
+                {
+                    Name = key,
+                    Value = defaultValue,
+                    IsShared = true
+                });
+            }
+            return variable.Clone() as SharedVector2;
+        }
+        /// <summary>
+        /// Get new <see cref="SharedVector2Int"/>, also write it to the public variables of the behavior tree
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public SharedVector2Int NewVector2Int(string key, Vector2Int defaultValue = default)
+        {
+            if (!this.TryGetSharedVariable(key, out SharedVariable<Vector2Int> variable))
+            {
+                SharedVariables.Add(variable = new SharedVector2Int()
+                {
+                    Name = key,
+                    Value = defaultValue,
+                    IsShared = true
+                });
+            }
+            return variable.Clone() as SharedVector2Int;
         }
         /// <summary>
         /// Get new <see cref="SharedBool"/>, also write it to the public variables of the behavior tree

@@ -38,7 +38,7 @@ namespace Kurisu.AkiBT.Editor
             };
         }
 
-        protected sealed override void OnValueUpdate()
+        protected sealed override void OnRepaint()
         {
             Type objectType;
             try
