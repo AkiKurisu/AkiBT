@@ -42,7 +42,7 @@ namespace Kurisu.AkiBT.Editor
         private void OnEnable()
         {
             searchCache = CreateInstance<BehaviorTreeSearchCache>();
-            searchCache.allBehaviorTreeSOCache = BehaviorTreeSearchUtility.GetAllBehaviorTreeSO();
+            searchCache.assetsCache = BehaviorTreeSearchUtility.GetAllBehaviorTreeAssets();
             searchCacheSerializedObject = new SerializedObject(searchCache);
             searchWindow = CreateInstance<NodeTypeSearchWindow>();
             searchWindow.Initialize((T) => searchType = T);
@@ -85,10 +85,10 @@ namespace Kurisu.AkiBT.Editor
                 {
                     foreach (var pair in serviceData.serializationCollection.serializationPairs)
                     {
-                        if (pair.serializedData != null && pair.behaviorTreeSO != null)
+                        if (pair.serializedData != null && pair.behaviorTreeAsset != null)
                         {
-                            pair.behaviorTreeSO.Deserialize(pair.serializedData.text);
-                            EditorUtility.SetDirty(pair.behaviorTreeSO);
+                            // pair.behaviorTreeContainerAsset.Deserialize(pair.serializedData.text);
+                            EditorUtility.SetDirty(pair.behaviorTreeAsset);
                         }
                     }
                     AssetDatabase.SaveAssets();
@@ -132,9 +132,9 @@ namespace Kurisu.AkiBT.Editor
                 else
                 {
                     //Use cache for quick search
-                    searchCache.searchResult = BehaviorTreeSearchUtility.SearchBehaviorTreeSO(searchType, serviceData, searchCache.allBehaviorTreeSOCache);
+                    searchCache.searchResult = BehaviorTreeSearchUtility.SearchBehaviorTreeSO(searchType, serviceData, searchCache.assetsCache);
                     if (!string.IsNullOrEmpty(newName))
-                        searchCache.searchResult = searchCache.searchResult.Where(x => x.behaviorTreeSO.name.Contains(newName)).ToList();
+                        searchCache.searchResult = searchCache.searchResult.Where(x => x.behaviorTreeAsset.name.Contains(newName)).ToList();
                 }
                 searchCacheSerializedObject.ApplyModifiedProperties();
             }
@@ -146,19 +146,20 @@ namespace Kurisu.AkiBT.Editor
             string path = EditorUtility.OpenFolderPanel("Choose json files saving path", Application.dataPath, "");
             if (string.IsNullOrEmpty(path)) return;
             List<string> savePaths = new();
-            for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Count; i++)
+            for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Length; i++)
             {
                 var pair = serviceData.serializationCollection.serializationPairs[i];
-                var serializedData = SerializeUtility.SerializeTree(pair.behaviorTreeSO, true, true);
-                string folderPath = path + $"/{pair.behaviorTreeSO.GetType().Name}";
+                var tree = pair.behaviorTreeAsset.GetBehaviorTree();
+                var serializedData = tree.Serialize(true, true);
+                string folderPath = path + $"/{pair.behaviorTreeAsset.GetType().Name}";
                 if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
-                string savePath = $"{folderPath}/{pair.behaviorTreeSO.name}_{serviceData.serializationCollection.guids[i]}.json";
+                string savePath = $"{folderPath}/{pair.behaviorTreeAsset.name}_{serviceData.serializationCollection.guids[i]}.json";
                 savePaths.Add(savePath);
                 File.WriteAllText(savePath, serializedData);
             }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Count; i++)
+            for (int i = 0; i < serviceData.serializationCollection.serializationPairs.Length; i++)
             {
                 serviceData.serializationCollection.serializationPairs[i].serializedData = AssetDatabase.LoadAssetAtPath<TextAsset>(GetRelativePath(savePaths[i]));
             }

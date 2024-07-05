@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT.Editor
             AssetType = type;
         }
     }
-    [DefaultAssetType(typeof(BehaviorTreeSO))]
+    [DefaultAssetType(typeof(BehaviorTreeAsset))]
     public class GraphEditorWindow : EditorWindow, IHasCustomMenu
     {
         // GraphView window per UObject
@@ -39,7 +39,7 @@ namespace Kurisu.AkiBT.Editor
         public Type GetAssetType()
         {
             var attribute = GetType().GetCustomAttribute<DefaultAssetTypeAttribute>();
-            return attribute?.AssetType ?? typeof(BehaviorTreeSO);
+            return attribute?.AssetType ?? typeof(BehaviorTreeAsset);
         }
 #pragma warning disable IDE0051
         [OnOpenAsset]
@@ -52,12 +52,12 @@ namespace Kurisu.AkiBT.Editor
                 return true;
             }
             var asset = EditorUtility.InstanceIDToObject(instanceId);
-            if (asset.GetType() == typeof(BehaviorTreeSO))
+            if (asset.GetType() == typeof(BehaviorTreeAsset))
             {
-                Show((IBehaviorTree)asset);
+                Show((IBehaviorTreeContainer)asset);
                 return true;
             }
-            if (asset.GetType().IsSubclassOf(typeof(BehaviorTreeSO)))
+            if (asset.GetType().IsSubclassOf(typeof(BehaviorTreeAsset)))
             {
                 var windowTypes = SubclassSearchUtility.FindSubClassTypes(typeof(GraphEditorWindow));
                 foreach (var windowType in windowTypes)
@@ -65,11 +65,11 @@ namespace Kurisu.AkiBT.Editor
                     var attribute = windowType.GetCustomAttribute<DefaultAssetTypeAttribute>();
                     if (attribute != null && attribute.AssetType == asset.GetType())
                     {
-                        var bt = (IBehaviorTree)asset;
+                        var bt = (IBehaviorTreeContainer)asset;
                         var window = CreateInstance(windowType) as GraphEditorWindow;
                         window.RepaintGraphView(bt);
-                        window.titleContent = new GUIContent($"{window.graphView.EditorName} ({bt._Object.name})");
-                        window.Key = bt._Object;
+                        window.titleContent = new GUIContent($"{window.graphView.EditorName} ({bt.Object.name})");
+                        window.Key = bt.Object;
                         cache[instanceId] = window;
                         window.Show();
                         window.Focus();
@@ -86,7 +86,7 @@ namespace Kurisu.AkiBT.Editor
             string path = EditorUtility.SaveFilePanel("Select ScriptableObject save path", Application.dataPath, "BehaviorTreeSO", "asset");
             if (string.IsNullOrEmpty(path)) return;
             path = path.Replace(Application.dataPath, string.Empty);
-            var treeSO = CreateInstance<BehaviorTreeSO>();
+            var treeSO = CreateInstance<BehaviorTreeAsset>();
             AssetDatabase.CreateAsset(treeSO, $"Assets/{path}");
             AssetDatabase.SaveAssets();
             Show(treeSO);
@@ -99,7 +99,7 @@ namespace Kurisu.AkiBT.Editor
             }
             return false;
         }
-        public static void Show(IBehaviorTree bt)
+        public static void Show(IBehaviorTreeContainer bt)
         {
             var window = Create<GraphEditorWindow>(bt);
             window.Show();
@@ -112,28 +112,28 @@ namespace Kurisu.AkiBT.Editor
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="K"></typeparam>
         /// <returns></returns>
-        public static T Create<T>(IBehaviorTree bt) where T : GraphEditorWindow
+        public static T Create<T>(IBehaviorTreeContainer bt) where T : GraphEditorWindow
         {
-            var key = bt._Object.GetHashCode();
+            var key = bt.Object.GetHashCode();
             if (cache.ContainsKey(key))
             {
                 return (T)cache[key];
             }
             var window = CreateInstance<T>();
             window.RepaintGraphView(bt);
-            window.titleContent = new GUIContent($"{window.graphView.EditorName} ({bt._Object.name})");
-            window.Key = bt._Object;
+            window.titleContent = new GUIContent($"{window.graphView.EditorName} ({bt.Object.name})");
+            window.Key = bt.Object;
             cache[key] = window;
             return window;
         }
-        private void RepaintGraphView(IBehaviorTree bt)
+        private void RepaintGraphView(IBehaviorTreeContainer bt)
         {
             rootVisualElement.Clear();
             rootVisualElement.Add(CreateToolBar());
             graphView = StructGraphView(bt);
             rootVisualElement.Add(graphView);
         }
-        protected virtual BehaviorTreeView StructGraphView(IBehaviorTree bt)
+        protected virtual BehaviorTreeView StructGraphView(IBehaviorTreeContainer bt)
         {
             var graphView = new BehaviorTreeView(bt, this);
             var infoView = new InfoView(InfoText);
@@ -151,7 +151,7 @@ namespace Kurisu.AkiBT.Editor
                 Debug.LogWarning($"<color=#ff2f2f>{graphView.EditorName}</color>: Save failed, ScriptableObject wasn't created!\n{DateTime.Now}");
                 return;
             }
-            graphView.Commit((IBehaviorTree)treeSO);
+            graphView.Commit((IBehaviorTreeContainer)treeSO);
             string savePath = $"{path}/{Key.name}.asset";
             AssetDatabase.CreateAsset(treeSO, savePath);
             AssetDatabase.SaveAssets();
@@ -160,12 +160,13 @@ namespace Kurisu.AkiBT.Editor
 
         private void OnDestroy()
         {
-            int code;
-            if (Key != null && cache.ContainsKey(code = Key.GetHashCode()))
+            if (Key == null) return;
+            int code = Key.GetHashCode();
+            if (Key != null && cache.TryGetValue(code, out var editor))
             {
                 if (Setting.AutoSave && !Application.isPlaying)
                 {
-                    if (!cache[code].graphView.Save())
+                    if (!editor.graphView.Save())
                     {
                         var msg = "Auto save failed, do you want to discard change?";
                         if (EditorUtility.DisplayDialog("Warning", msg, "Cancel", "Discard"))
@@ -179,13 +180,13 @@ namespace Kurisu.AkiBT.Editor
                         }
                         return;
                     }
-                    Debug.Log($"<color=#3aff48>{graphView.EditorName}</color>[{graphView.BehaviorTree._Object.name}] saved succeed! {DateTime.Now}");
+                    Debug.Log($"<color=#3aff48>{graphView.EditorName}</color>[{graphView.Container.Object.name}] saved succeed! {DateTime.Now}");
                 }
                 cache.Remove(code);
             }
         }
         /// <summary>
-        /// Clone the editor window for preventing data lossing when reloading or quitting
+        /// Clone the editor window for preventing data loss when reloading or quitting
         /// </summary>
         /// <returns></returns>
         protected virtual GraphEditorWindow Clone()
@@ -237,8 +238,8 @@ namespace Kurisu.AkiBT.Editor
         {
             if (Key != null)
             {
-                if (Key is GameObject) RepaintGraphView((Key as GameObject).GetComponent<IBehaviorTree>());
-                else RepaintGraphView(Key as IBehaviorTree);
+                if (Key is GameObject) RepaintGraphView((Key as GameObject).GetComponent<IBehaviorTreeContainer>());
+                else RepaintGraphView(Key as IBehaviorTreeContainer);
                 Repaint();
             }
         }
@@ -304,7 +305,7 @@ namespace Kurisu.AkiBT.Editor
                     EditorUtility.SetDirty(setting);
                     AssetDatabase.SaveAssets();
                     ShowNotification(new GUIContent("Data Dropped Succeed!"));
-                    graphView.CopyFromTree(data, new Vector3(400, 300));
+                    graphView.CopyFromTree(data.GetBehaviorTree(), new Vector3(400, 300));
                 }
             }
             GUI.enabled = true;
@@ -321,7 +322,7 @@ namespace Kurisu.AkiBT.Editor
             if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
             {
                 var serializedData = graphView.SerializeTreeToJson();
-                string path = EditorUtility.SaveFilePanel("Select json file save path", Setting.LastPath, graphView.BehaviorTree._Object.name, "json");
+                string path = EditorUtility.SaveFilePanel("Select json file save path", Setting.LastPath, graphView.Container.Object.name, "json");
                 if (!string.IsNullOrEmpty(path))
                 {
                     FileInfo info = new(path);
@@ -352,11 +353,11 @@ namespace Kurisu.AkiBT.Editor
             }
             GUI.enabled = true;
         }
-        protected IBehaviorTree LoadDataFromFile(string path)
+        protected IBehaviorTreeContainer LoadDataFromFile(string path)
         {
             try
             {
-                return AssetDatabase.LoadAssetAtPath<BehaviorTreeSO>(path);
+                return AssetDatabase.LoadAssetAtPath<BehaviorTreeAsset>(path);
 
             }
             catch

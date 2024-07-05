@@ -9,10 +9,10 @@ namespace Kurisu.AkiBT.Editor
             {
                 if (data is ScriptableObject)
                 {
-                    if (data is IBehaviorTree behaviorTree)
+                    if (data is IBehaviorTreeContainer container)
                     {
                         TreeView.EditorWindow.ShowNotification(new GUIContent("Asset dropped succeed!"));
-                        TreeView.CopyFromTree(behaviorTree, mousePosition);
+                        TreeView.CopyFromTree(container.GetBehaviorTree(), mousePosition);
                     }
                     else
                     {

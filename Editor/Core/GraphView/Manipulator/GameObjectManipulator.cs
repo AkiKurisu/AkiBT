@@ -9,9 +9,9 @@ namespace Kurisu.AkiBT.Editor
             {
                 if (data is GameObject gameObject)
                 {
-                    if (gameObject.TryGetComponent(out IBehaviorTree tree))
+                    if (gameObject.TryGetComponent(out IBehaviorTreeContainer container))
                     {
-                        TreeView.CopyFromTree(tree, mousePosition);
+                        TreeView.CopyFromTree(container.GetBehaviorTree(), mousePosition);
                         TreeView.EditorWindow.ShowNotification(new GUIContent("GameObject dropped succeed!"));
                     }
                     else

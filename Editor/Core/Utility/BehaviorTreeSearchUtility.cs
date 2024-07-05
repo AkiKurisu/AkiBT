@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 namespace Kurisu.AkiBT.Editor
 {
@@ -7,47 +8,50 @@ namespace Kurisu.AkiBT.Editor
     {
         public static List<BehaviorTreeSerializationPair> SearchBehaviorTreeSO(Type searchType)
         {
-            return SearchBehaviorTreeSO(searchType, BehaviorTreeSetting.GetOrCreateSettings().ServiceData, GetAllBehaviorTreeSO());
+            return SearchBehaviorTreeSO(searchType, BehaviorTreeSetting.GetOrCreateSettings().ServiceData, GetAllBehaviorTreeAssets());
         }
-        public static List<BehaviorTreeSerializationPair> SearchBehaviorTreeSO(Type searchType, BehaviorTreeServiceData serviceData, List<BehaviorTreeSO> searchList)
+        public static List<BehaviorTreeSerializationPair> SearchBehaviorTreeSO(Type searchType, BehaviorTreeServiceData serviceData, List<BehaviorTreeAsset> searchList)
         {
             if (serviceData == null) serviceData = BehaviorTreeSetting.GetOrCreateSettings().ServiceData;
-            searchList ??= GetAllBehaviorTreeSO();
-            List<BehaviorTreeSO> behaviorTreeSOs = new();
+            searchList ??= GetAllBehaviorTreeAssets();
+            List<BehaviorTreeAsset> behaviorTreeAssets = new();
             List<BehaviorTreeSerializationPair> pairs = new();
             foreach (var treeSO in searchList)
             {
-                SearchBehavior(treeSO, searchType, behaviorTreeSOs);
+                SearchBehavior(treeSO, searchType, behaviorTreeAssets);
             }
-            foreach (var so in behaviorTreeSOs)
+            foreach (var so in behaviorTreeAssets)
             {
                 var pair = serviceData.serializationCollection.FindSerializationPair(so);
                 pairs.Add(new BehaviorTreeSerializationPair(so, pair.serializedData));
             }
             return pairs;
         }
-        public static List<BehaviorTreeSO> GetAllBehaviorTreeSO()
+        public static string[] GetAllBehaviorTreeAssetGuids()
         {
-            var guids = AssetDatabase.FindAssets($"t:{typeof(BehaviorTreeSO)}");
-            List<BehaviorTreeSO> behaviorTreeSOs = new();
-            foreach (var guid in guids)
-            {
-                behaviorTreeSOs.Add(AssetDatabase.LoadAssetAtPath<BehaviorTreeSO>(AssetDatabase.GUIDToAssetPath(guid)));
-            }
-            return behaviorTreeSOs;
+            return AssetDatabase.FindAssets($"t:{typeof(BehaviorTreeAsset)}");
         }
-        private static void SearchBehavior(BehaviorTreeSO treeSO, Type checkType, List<BehaviorTreeSO> behaviorTreeSOs)
+        public static List<BehaviorTreeAsset> GetAllBehaviorTreeAssets()
+        {
+            var guids = GetAllBehaviorTreeAssetGuids();
+            return GetBehaviorTreeAssets(guids);
+        }
+        public static List<BehaviorTreeAsset> GetBehaviorTreeAssets(string[] guids)
+        {
+            return guids.Select(x => AssetDatabase.LoadAssetAtPath<BehaviorTreeAsset>(AssetDatabase.GUIDToAssetPath(x))).ToList();
+        }
+        private static void SearchBehavior(BehaviorTreeAsset btAsset, Type checkType, List<BehaviorTreeAsset> behaviorTreeSOs)
         {
             if (checkType == null)
             {
-                behaviorTreeSOs.Add(treeSO);
+                behaviorTreeSOs.Add(btAsset);
                 return;
             }
-            foreach (var node in treeSO.Traverse())
+            foreach (var node in btAsset.GetBehaviorTree())
             {
                 if (node.GetType() == checkType)
                 {
-                    behaviorTreeSOs.Add(treeSO);
+                    behaviorTreeSOs.Add(btAsset);
                     return;
                 }
             }

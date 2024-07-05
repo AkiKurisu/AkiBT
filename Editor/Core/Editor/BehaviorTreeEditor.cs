@@ -5,14 +5,16 @@ using UnityEditor.UIElements;
 using System.Linq;
 namespace Kurisu.AkiBT.Editor
 {
-    [CustomEditor(typeof(BehaviorTree))]
-    public class BehaviorTreeEditor : UnityEditor.Editor
+    [CustomEditor(typeof(BehaviorTreeComponent))]
+    public class BehaviorTreeComponentEditor : UnityEditor.Editor
     {
         private static readonly string LabelText = $"AkiBT BehaviorTree <size=12>{BehaviorTreeSetting.Version}</size>";
         public override VisualElement CreateInspectorGUI()
         {
             var myInspector = new VisualElement();
-            var tree = target as IBehaviorTree;
+            var tree = target as IBehaviorTreeContainer;
+            // create instance for edit
+            var instance = tree.GetBehaviorTree();
             var label = new Label(LabelText);
             label.style.fontSize = 20;
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
@@ -23,22 +25,24 @@ namespace Kurisu.AkiBT.Editor
             var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
             field.SetEnabled(!Application.isPlaying);
             myInspector.Add(field);
-            if (tree.SharedVariables.Count(x => x.IsExposed) != 0)
+            if (instance.SharedVariables.Count(x => x.IsExposed) != 0)
             {
-                myInspector.Add(new SharedVariablesFoldout(tree, target, this));
+                myInspector.Add(new SharedVariablesFoldout(instance, target, this));
             }
             myInspector.Add(new BehaviorTreeDebugButton(tree));
             return myInspector;
         }
     }
-    [CustomEditor(typeof(BehaviorTreeSO))]
-    public class BehaviorTreeSOEditor : UnityEditor.Editor
+    [CustomEditor(typeof(BehaviorTreeAsset))]
+    public class BehaviorTreeAssetEditor : UnityEditor.Editor
     {
-        private static readonly string LabelText = $"AkiBT BehaviorTreeSO <size=12>{BehaviorTreeSetting.Version}</size>";
+        private static readonly string LabelText = $"AkiBT BehaviorTree <size=12>{BehaviorTreeSetting.Version}</size>";
         public override VisualElement CreateInspectorGUI()
         {
             var myInspector = new VisualElement();
-            var tree = target as IBehaviorTree;
+            var tree = target as IBehaviorTreeContainer;
+            // create instance for edit
+            var instance = tree.GetBehaviorTree();
             var label = new Label(LabelText);
             label.style.fontSize = 20;
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
@@ -52,9 +56,9 @@ namespace Kurisu.AkiBT.Editor
             description.style.minHeight = 60;
             description.BindProperty(serializedObject.FindProperty("description"));
             myInspector.Add(description);
-            if (tree.SharedVariables.Count(x => x.IsExposed) != 0)
+            if (instance.SharedVariables.Count(x => x.IsExposed) != 0)
             {
-                myInspector.Add(new SharedVariablesFoldout(tree, target, this));
+                myInspector.Add(new SharedVariablesFoldout(instance, target, this));
             }
             myInspector.Add(new BehaviorTreeDebugButton(tree));
             return myInspector;

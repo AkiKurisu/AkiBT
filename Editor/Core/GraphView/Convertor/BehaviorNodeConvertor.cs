@@ -51,11 +51,11 @@ namespace Kurisu.AkiBT.Editor
         }
         private readonly NodeResolverFactory nodeResolver = NodeResolverFactory.Instance;
         private readonly List<IBehaviorTreeNode> tempNodes = new();
-        public (RootNode, IEnumerable<IBehaviorTreeNode>) ConvertToNode<T>(IBehaviorTree tree, T treeView, Vector2 initPos) where T : GraphView, ITreeView
+        public (RootNode, IEnumerable<IBehaviorTreeNode>) ConvertToNode<T>(BehaviorTree tree, T treeView, Vector2 initPos) where T : GraphView, ITreeView
         {
             var stack = new Stack<EdgePair>();
             RootNode root = null;
-            stack.Push(new EdgePair(tree.Root, null));
+            stack.Push(new EdgePair(tree.root, null));
             tempNodes.Clear();
             while (stack.Count > 0)
             {

@@ -53,7 +53,7 @@ namespace Kurisu.AkiBT.Editor
             capabilities |= Capabilities.Groupable;
             fieldResolverFactory = FieldResolverFactory.Instance;
             fieldContainer = new VisualElement();
-            GUID = Guid.NewGuid().ToString();
+            Guid = System.Guid.NewGuid().ToString();
             Initialize();
             headerContainer.style.flexDirection = FlexDirection.Column;
             headerContainer.style.justifyContent = Justify.Center;
@@ -78,7 +78,7 @@ namespace Kurisu.AkiBT.Editor
         public Node View => this;
         public virtual Color PortColor => new(97 / 255f, 95 / 255f, 212 / 255f, 0.91f);
         private readonly TextField description;
-        public string GUID { get; private set; }
+        public string Guid { get; private set; }
         protected NodeBehavior NodeBehavior { set; get; }
         private readonly Label titleLabel;
         private Type dirtyNodeBehaviorType;
@@ -119,7 +119,7 @@ namespace Kurisu.AkiBT.Editor
             resolvers.ForEach(e => e.Restore(NodeBehavior));
             NodeBehavior.NotifyEditor = MarkAsExecuted;
             description.value = NodeBehavior.description;
-            GUID = string.IsNullOrEmpty(behavior.GUID) ? Guid.NewGuid().ToString() : behavior.GUID;
+            Guid = string.IsNullOrEmpty(behavior.guid) ? System.Guid.NewGuid().ToString() : behavior.guid;
         }
         public void CopyFrom(IBehaviorTreeNode copyNode)
         {
@@ -143,7 +143,7 @@ namespace Kurisu.AkiBT.Editor
             description.value = node.description.value;
             NodeBehavior = (NodeBehavior)Activator.CreateInstance(copyNode.GetBehavior());
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            GUID = Guid.NewGuid().ToString();
+            Guid = System.Guid.NewGuid().ToString();
         }
         private readonly Dictionary<int, IChildPortable> copyMapCache = new();
         internal IReadOnlyDictionary<int, IChildPortable> GetCopyMap()
@@ -175,7 +175,7 @@ namespace Kurisu.AkiBT.Editor
             NodeBehavior.description = description.value;
             NodeBehavior.graphPosition = GetPosition();
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            NodeBehavior.GUID = GUID;
+            NodeBehavior.guid = Guid;
         }
         protected virtual void OnCommit(Stack<IBehaviorTreeNode> stack) { }
         public bool Validate(Stack<IBehaviorTreeNode> stack)
@@ -268,11 +268,11 @@ namespace Kurisu.AkiBT.Editor
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Select Group", (a) =>
             {
-                MapTreeView.GroupBlockController.SelectGroup(this);
+                MapTreeView.SelectGroup(this);
             }));
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("UnSelect Group", (a) =>
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Unselect Group", (a) =>
             {
-                MapTreeView.GroupBlockController.UnSelectGroup();
+                MapTreeView.UnselectGroup();
             }));
         }
 

@@ -61,9 +61,9 @@ namespace Kurisu.AkiBT.Editor
             cache = child;
         }
 
-        public void PostCommit(IBehaviorTree tree)
+        public void PostCommit(BehaviorTree treeContainer)
         {
-            BehaviorTreeEditorUtility.SetRoot(tree, NodeBehavior as Root);
+            treeContainer.root = NodeBehavior as Root;
         }
         protected override void OnClearStyle()
         {

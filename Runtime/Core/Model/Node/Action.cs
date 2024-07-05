@@ -5,15 +5,18 @@ namespace Kurisu.AkiBT
     /// </summary>
     public abstract class Action : NodeBehavior
     {
-        
-        protected sealed override void OnRun() {
+
+        protected sealed override void OnRun()
+        {
         }
-        
-        public sealed override void PreUpdate() {
+
+        public sealed override void PreUpdate()
+        {
         }
-        
-        public sealed override void PostUpdate() {
+
+        public sealed override void PostUpdate()
+        {
         }
-            
+
     }
 }

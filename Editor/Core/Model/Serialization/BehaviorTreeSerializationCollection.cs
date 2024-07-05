@@ -8,19 +8,19 @@ namespace Kurisu.AkiBT.Editor
     [Serializable]
     public class BehaviorTreeSerializationPair
     {
-        public BehaviorTreeSO behaviorTreeSO;
+        public BehaviorTreeAsset behaviorTreeAsset;
         public TextAsset serializedData;
-        public BehaviorTreeSerializationPair(BehaviorTreeSO behaviorTreeSO, TextAsset serializedData)
+        public BehaviorTreeSerializationPair(BehaviorTreeAsset behaviorTreeAsset, TextAsset serializedData)
         {
-            this.behaviorTreeSO = behaviorTreeSO;
+            this.behaviorTreeAsset = behaviorTreeAsset;
             this.serializedData = serializedData;
         }
     }
     [Serializable]
     public class BehaviorTreeSerializationCollection
     {
-        public List<BehaviorTreeSerializationPair> serializationPairs;
-        public List<string> guids;
+        public BehaviorTreeSerializationPair[] serializationPairs;
+        public string[] guids;
         public void SetUp()
         {
             HashSet<TextAsset> serializedDataSet;
@@ -28,29 +28,26 @@ namespace Kurisu.AkiBT.Editor
                 serializedDataSet = serializationPairs.Select(x => x.serializedData).Where(x => x != null).ToHashSet();
             else
                 serializedDataSet = new();
-            serializationPairs = new();
-            guids = AssetDatabase.FindAssets($"t:{typeof(BehaviorTreeSO)}").ToList();
-            var list = guids.Select(x => AssetDatabase.LoadAssetAtPath<BehaviorTreeSO>(AssetDatabase.GUIDToAssetPath(x))).ToList();
-            for (int i = 0; i < list.Count; i++)
+            guids = BehaviorTreeSearchUtility.GetAllBehaviorTreeAssetGuids();
+            serializationPairs = BehaviorTreeSearchUtility.GetBehaviorTreeAssets(guids).Select((x, id) =>
             {
-                var so = list[i];
-                serializationPairs.Add(new BehaviorTreeSerializationPair(
-                    so,
-                    serializedDataSet.FirstOrDefault(x => x.name == $"{so.name}_{guids[i]}")
-                ));
-            }
+                return new BehaviorTreeSerializationPair(
+                    x,
+                    serializedDataSet.FirstOrDefault(x => x.name == $"{x.name}_{guids[id]}")
+                );
+            }).ToArray();
         }
         public void InjectJsonFiles(HashSet<TextAsset> dataSet)
         {
-            for (int i = 0; i < serializationPairs.Count; i++)
+            for (int i = 0; i < serializationPairs.Length; i++)
             {
-                serializationPairs[i].serializedData = dataSet.FirstOrDefault(x => x.name == $"{serializationPairs[i].behaviorTreeSO.name}_{guids[i]}");
+                serializationPairs[i].serializedData = dataSet.FirstOrDefault(x => x.name == $"{serializationPairs[i].behaviorTreeAsset.name}_{guids[i]}");
             }
         }
-        public BehaviorTreeSerializationPair FindSerializationPair(BehaviorTreeSO behaviorTreeSO)
+        public BehaviorTreeSerializationPair FindSerializationPair(BehaviorTreeAsset behaviorTreeContainerSo)
         {
             return serializationPairs
-            .FirstOrDefault(x => x.behaviorTreeSO == behaviorTreeSO);
+            .FirstOrDefault(x => x.behaviorTreeAsset == behaviorTreeContainerSo);
         }
     }
 }

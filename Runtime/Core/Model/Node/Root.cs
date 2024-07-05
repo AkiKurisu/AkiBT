@@ -5,7 +5,7 @@ namespace Kurisu.AkiBT
     /// 根结点行为
     /// </summary>
     [AkiInfo("Root: The root of behavior tree, you can not delate it.")]
-    public class Root : NodeBehavior, IIterable
+    public class Root : NodeBehavior
     {
         [SerializeReference]
         internal NodeBehavior child;
@@ -58,15 +58,21 @@ namespace Kurisu.AkiBT
         {
             child?.Abort();
         }
-        public NodeBehavior GetChildAt(int index)
+        public sealed override NodeBehavior GetChildAt(int index)
         {
             return child;
         }
-
-        public int GetChildCount()
+        public sealed override int GetChildrenCount()
         {
             return child == null ? 0 : 1;
         }
-
+        public sealed override void ClearChildren()
+        {
+            child = null;
+        }
+        public sealed override void AddChild(NodeBehavior nodeBehavior)
+        {
+            child = nodeBehavior;
+        }
     }
 }

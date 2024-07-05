@@ -71,68 +71,55 @@ namespace Kurisu.AkiBT
             for (int i = 0; i < childCount; ++i)
             {
                 var childNode = pointers.Pop();
-                if (pointer is Composite composite)
-                    composite.AddChild(childNode);
-                else if (pointer is Conditional conditional)
-                    conditional.Child = childNode;
-                else if (pointer is Decorator decorator)
-                    decorator.Child = childNode;
+                childNode.AddChild(childNode);
             }
             return this;
         }
         /// <summary>
-        /// Build behavior tree
+        /// Build behavior tree component
         /// </summary>
         /// <param name="bindObject"></param>
-        /// <param name="behaviorTree"></param>
+        /// <param name="behaviorTreeComponent>
         /// <returns></returns>
-        public bool Build(GameObject bindObject, out BehaviorTree behaviorTree)
+        public bool Build(GameObject bindObject, out BehaviorTreeComponent behaviorTreeComponent)
         {
-            if (pointers.Count > 0)
-            {
-                Debug.LogWarning("The number of calls to EndChild is not consistent with StartChild");
-            }
-            pointers.Clear();
-            int excess = nodeStack.Count - 1;
-            if (excess == -1)
-            {
-                Debug.LogError("Build failed, no node is added to the builder");
-                behaviorTree = null;
-                return false;
-            }
-            if (excess > 0)
-            {
-                for (int i = 0; i < excess; ++i)
-                {
-                    nodeStack.Pop();
-                }
-            }
-            if (!bindObject.TryGetComponent(out behaviorTree))
-                behaviorTree = bindObject.AddComponent<BehaviorTree>();
-            behaviorTree.SharedVariables.AddRange(SharedVariables);
-            behaviorTree.Root = new Root() { Child = nodeStack.Pop() };
-            SharedVariables.Clear();
-            SharedVariableMapper.Traverse(behaviorTree);
+            behaviorTreeComponent = null;
+            if (!Build(out BehaviorTree bt)) return false;
+            if (!bindObject.TryGetComponent(out behaviorTreeComponent))
+                behaviorTreeComponent = bindObject.AddComponent<BehaviorTreeComponent>();
+            behaviorTreeComponent.SetBehaviorTreeData(bt.GetData());
             return true;
         }
         /// <summary>
-        /// Build behavior tree so
+        /// Build behavior tree asset
         /// </summary>
         /// <returns></returns>
-        public BehaviorTreeSO Build()
+        public BehaviorTreeAsset Build()
         {
-            var instance = ScriptableObject.CreateInstance<BehaviorTreeSO>();
+            var instance = ScriptableObject.CreateInstance<BehaviorTreeAsset>();
             if (Build(instance)) return instance;
             UObject.Destroy(instance);
             return null;
         }
         /// <summary>
-        /// Build behavior tree so
+        /// Build behavior tree asset by overwritten data
         /// </summary>
-        /// <param name="behaviorTreeSO"></param>
+        /// <param name="behaviorTreeAsset>
         /// <returns></returns>
-        public bool Build(BehaviorTreeSO behaviorTreeSO)
+        public bool Build(BehaviorTreeAsset behaviorTreeAsset)
         {
+            if (!Build(out BehaviorTree bt)) return false;
+            behaviorTreeAsset.SetBehaviorTreeData(bt.GetData());
+            return true;
+        }
+        /// <summary>
+        /// Build behavior tree
+        /// </summary>
+        /// <param name="tree"></param>
+        /// <returns></returns>
+        public bool Build(out BehaviorTree tree)
+        {
+            tree = null;
             if (pointers.Count > 0)
             {
                 Debug.LogWarning("The number of calls to EndChild is not consistent with StartChild");
@@ -151,11 +138,12 @@ namespace Kurisu.AkiBT
                     nodeStack.Pop();
                 }
             }
-            behaviorTreeSO.SharedVariables.Clear();
-            behaviorTreeSO.SharedVariables.AddRange(SharedVariables);
-            behaviorTreeSO.root = new Root() { Child = nodeStack.Pop() };
+            tree = new BehaviorTree
+            {
+                variables = new List<SharedVariable>(SharedVariables),
+                root = new Root() { Child = nodeStack.Pop() }
+            };
             SharedVariables.Clear();
-            behaviorTreeSO.Initialize();
             return true;
         }
         /// <summary>
