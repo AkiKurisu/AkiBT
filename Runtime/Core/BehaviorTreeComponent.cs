@@ -78,6 +78,7 @@ namespace Kurisu.AkiBT
             instance.InitVariables(bindToGlobal: true);
             instance.Run(gameObject);
             instance.Awake();
+            instance.Start();
         }
     }
 }

@@ -28,6 +28,12 @@ namespace Kurisu.AkiBT
                 foreach (var fieldInfo in fields)
                 {
                     var value = fieldInfo.GetValue(behavior);
+                    // shared variables should not be null (dsl/builder will cause null variables)
+                    if (value == null)
+                    {
+                        value = Activator.CreateInstance(fieldInfo.FieldType);
+                        fieldInfo.SetValue(behavior, value);
+                    }
                     if (value is SharedVariable sharedVariable)
                     {
                         sharedVariable.MapTo(behaviorTree);

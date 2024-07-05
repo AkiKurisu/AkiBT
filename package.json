@@ -1,7 +1,7 @@
 {
   "name": "com.kurisu.akibt",
   "displayName": "AkiBT",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "unity": "2021.3",
   "description": "Node based Behavior Tree Editor.\nSupports visualizing active node in runtime.\nEasily add original behaviors.",
   "keywords": [
@@ -24,13 +24,13 @@
   },
   "samples": [
     {
-      "displayName": "AI Example",
-      "description": "Contains sample behaviorTree for AI",
-      "path": "Samples~/Example"
+      "displayName": "Basic Example",
+      "description": "Contains basic sample for AkiBT",
+      "path": "Samples~/Basic Example"
     },
     {
       "displayName": "Builder Example",
-      "description": "Contains sample builder for BehaviorTreeBuilder",
+      "description": "Contains builder Basic for BehaviorTreeBuilder",
       "path": "Samples~/Builder Example"
     }
   ]

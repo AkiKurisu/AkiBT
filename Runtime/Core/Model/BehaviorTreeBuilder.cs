@@ -71,7 +71,7 @@ namespace Kurisu.AkiBT
             for (int i = 0; i < childCount; ++i)
             {
                 var childNode = pointers.Pop();
-                childNode.AddChild(childNode);
+                pointer.AddChild(childNode);
             }
             return this;
         }
@@ -87,7 +87,10 @@ namespace Kurisu.AkiBT
             if (!Build(out BehaviorTree bt)) return false;
             if (!bindObject.TryGetComponent(out behaviorTreeComponent))
                 behaviorTreeComponent = bindObject.AddComponent<BehaviorTreeComponent>();
-            behaviorTreeComponent.SetBehaviorTreeData(bt.GetData());
+            if (Application.isPlaying)
+                behaviorTreeComponent.SetRuntimeBehaviorTree(bt);
+            else
+                behaviorTreeComponent.SetBehaviorTreeData(bt.GetData());
             return true;
         }
         /// <summary>

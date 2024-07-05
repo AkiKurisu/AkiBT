@@ -124,7 +124,7 @@ namespace Kurisu.AkiBT
             return false;
         }
         /// <summary>
-        /// Map source to source
+        /// Map source's exposed variables to source
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -132,11 +132,12 @@ namespace Kurisu.AkiBT
         {
             foreach (var variable in from.SharedVariables)
             {
+                if (!variable.IsExposed) continue;
                 variable.MapTo(to);
             }
         }
         /// <summary>
-        /// Map variable to global variables
+        /// Map source's global and exposed variable to global variables
         /// </summary>
         /// <param name="variableSource"></param>
         public static void MapGlobal(this IVariableSource variableSource)
@@ -144,8 +145,9 @@ namespace Kurisu.AkiBT
             var globalVariables = GlobalVariables.Instance;
             foreach (var variable in variableSource.SharedVariables)
             {
-                if (!variable.IsGlobal || !variable.IsExposed) continue;
-                variable.MapTo(globalVariables);
+                // should both be global and exposed (normally done by editor)
+                if (variable.IsGlobal && variable.IsExposed)
+                    variable.MapTo(globalVariables);
             }
         }
         /// <summary>

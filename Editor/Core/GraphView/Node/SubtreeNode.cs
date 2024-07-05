@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
@@ -15,9 +16,20 @@ namespace Kurisu.AkiBT.Editor
         protected override void OnRestore()
         {
             var node = NodeBehavior as Subtree;
-            if (!node.subtree) return;
+            if (!node.subtree)
+            {
+                // happen when subtree was deleted
+                title = "<color=#FFE000><b>Subtree Missing!</b></color>";
+                return;
+            }
             subtree = node.subtree;
-            title = $"Subtree {node.subtree.name}";
+            title = $"Subtree {subtree.name}";
+            foreach (var variable in subtree.GetBehaviorTree().SharedVariables)
+            {
+                // not add if exist
+                if (variable.IsExposed && !MapTreeView.SharedVariables.Any(x => x.Name == variable.Name))
+                    MapTreeView.BlackBoard.AddSharedVariable(variable);
+            }
         }
         protected override void OnCommit(Stack<IBehaviorTreeNode> stack)
         {

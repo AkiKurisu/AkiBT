@@ -1,31 +1,27 @@
 using UnityEngine;
-using UnityEngine.Assertions;
 namespace Kurisu.AkiBT
 {
     [AkiInfo("Subtree: An embedding subtree instance.")]
     [AkiGroup("Hidden")]
-    public class Subtree : Action, IBehaviorTreeContainer
+    public class Subtree : NodeBehavior, IBehaviorTreeContainer
     {
         private BehaviorTree instance;
         // should not use shared mode because it can not guarantee instance initialization
         [HideInEditorWindow]
         public BehaviorTreeAsset subtree;
-
         public Object Object => subtree;
-
-        public override void Abort()
+        protected override void OnRun()
         {
             if (subtree == null) return;
-            instance.Abort();
+            instance = subtree.GetBehaviorTree();
+            // inherit variables if possible
+            instance.MapTo(Tree);
+            instance.InitVariables();
+            instance.Run(GameObject);
         }
         public override void Awake()
         {
             if (subtree == null) return;
-            instance = subtree.GetBehaviorTree();
-            Assert.IsNotNull(instance.root);
-            // inherit variables if possible
-            instance.MapTo(Tree);
-            instance.InitVariables();
             instance.Awake();
         }
         public override void Start()
@@ -38,7 +34,11 @@ namespace Kurisu.AkiBT
             if (subtree == null) return Status.Success;
             return instance.TickWithStatus();
         }
-
+        public override void Abort()
+        {
+            if (subtree == null) return;
+            instance.Abort();
+        }
         public BehaviorTree GetBehaviorTree()
         {
             if (Application.isPlaying) return instance;
