@@ -12,7 +12,7 @@ namespace Kurisu.AkiBT.Extend
         public SharedVector3 storeResult;
         protected override Status OnUpdate()
         {
-            if (target.Value != null) storeResult.Value = target.Value.position;
+            if (target.Value) storeResult.Value = target.Value.position;
             else storeResult.Value = GameObject.transform.position;
             return Status.Success;
         }

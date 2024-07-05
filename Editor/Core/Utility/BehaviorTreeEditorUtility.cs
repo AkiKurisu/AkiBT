@@ -5,18 +5,18 @@ namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeEditorUtility
     {
-        public static void SetRoot(IBehaviorTree behaviorTree, Root root)
+        public static void SetRoot(IBehaviorTreeContainer behaviorTreeContainer, Root root)
         {
-            behaviorTree.GetType()
+            behaviorTreeContainer.GetType()
             .GetField("root", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(behaviorTree, root);
+            .SetValue(behaviorTreeContainer, root);
         }
-        public static bool TryGetExternalTree(IBehaviorTree behaviorTree, out IBehaviorTree externalTree)
+        public static bool TryGetExternalTree(IBehaviorTreeContainer behaviorTreeContainer, out IBehaviorTreeContainer externalTreeContainer)
         {
-            externalTree = behaviorTree.GetType()
+            externalTreeContainer = behaviorTreeContainer.GetType()
             .GetField("externalBehaviorTree", BindingFlags.Instance | BindingFlags.NonPublic)
-            ?.GetValue(behaviorTree) as IBehaviorTree;
-            return externalTree != null;
+            ?.GetValue(behaviorTreeContainer) as IBehaviorTreeContainer;
+            return externalTreeContainer != null;
         }
         internal static Button GetButton(System.Action clickEvent)
         {

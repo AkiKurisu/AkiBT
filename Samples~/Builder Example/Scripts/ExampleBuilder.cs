@@ -50,7 +50,7 @@ namespace Kurisu.AkiBT.Example.Builder
                     })
                 .EndChild()
             .EndChild()
-            .Build(gameObject, out BehaviorTree _);
+            .Build(gameObject, out BehaviorTreeComponent _);
         }
     }
 }

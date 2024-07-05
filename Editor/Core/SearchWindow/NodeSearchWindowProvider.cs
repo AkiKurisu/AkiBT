@@ -48,6 +48,14 @@ namespace Kurisu.AkiBT.Editor
                 }
             }
             entries.Add(new SearchTreeEntry(new GUIContent("Create Group Block", _indentationIcon)) { level = 1, userData = typeof(GroupBlock) });
+            entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select Subtree"), 1));
+            var assets = BehaviorTreeSearchUtility.GetAllBehaviorTreeAssets();
+            foreach (var asset in assets)
+            {
+                // exclude view's current container, should not reference self
+                if (graphView.Container.Equals(asset)) continue;
+                entries.Add(new SearchTreeEntry(new GUIContent($"Select {asset.name}", _indentationIcon)) { level = 2, userData = asset });
+            }
             return entries;
         }
         bool ISearchWindowProvider.OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
@@ -55,17 +63,35 @@ namespace Kurisu.AkiBT.Editor
             var worldMousePosition = graphView.EditorWindow.rootVisualElement.ChangeCoordinatesTo(graphView.EditorWindow.rootVisualElement.parent, context.screenMousePosition - graphView.EditorWindow.position.position);
             var localMousePosition = graphView.View.contentViewContainer.WorldToLocal(worldMousePosition);
             Rect newRect = new(localMousePosition, new Vector2(100, 100));
-            var type = searchTreeEntry.userData as Type;
-            if (type == typeof(GroupBlock))
+            // Select a subtree
+            if (searchTreeEntry.userData is BehaviorTreeAsset behaviorTreeAsset)
             {
-                graphView.GroupBlockController.CreateBlock(newRect);
+                var node = AddNode(typeof(Subtree), newRect);
+                var subtree = new Subtree
+                {
+                    subtree = behaviorTreeAsset
+                };
+                node.Restore(subtree);
                 return true;
             }
-            var node = nodeResolver.Create(type, graphView);
-            node.View.SetPosition(newRect);
+            var type = searchTreeEntry.userData as Type;
+            // Select node block
+            if (type == typeof(GroupBlock))
+            {
+                graphView.CreateBlock(newRect);
+                return true;
+            }
+            // Select node
+            AddNode(type, newRect);
+            return true;
+        }
+        private IBehaviorTreeNode AddNode(Type nodeType, Rect rect)
+        {
+            var node = nodeResolver.Create(nodeType, graphView);
+            node.View.SetPosition(rect);
             graphView.View.AddElement(node.View);
             node.OnSelectAction = graphView.OnNodeSelect;
-            return true;
+            return node;
         }
     }
     public class NodeSearchWindowProvider<T> : ScriptableObject, ISearchWindowProvider where T : NodeBehavior

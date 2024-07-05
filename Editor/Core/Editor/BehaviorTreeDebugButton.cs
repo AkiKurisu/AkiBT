@@ -6,7 +6,7 @@ namespace Kurisu.AkiBT.Editor
     {
         private const string ButtonText = "Edit BehaviorTree";
         private const string DebugText = "Debug BehaviorTree";
-        public BehaviorTreeDebugButton(IBehaviorTree tree) : base(() => GraphEditorWindow.Show(tree))
+        public BehaviorTreeDebugButton(IBehaviorTreeContainer treeContainer) : base(() => GraphEditorWindow.Show(treeContainer))
         {
             style.fontSize = 15;
             style.unityFontStyleAndWeight = FontStyle.Bold;

@@ -124,7 +124,20 @@ namespace Kurisu.AkiBT
             return false;
         }
         /// <summary>
-        /// Map variable to global variables
+        /// Map source's exposed variables to source
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public static void MapTo(this IVariableSource from, IVariableSource to)
+        {
+            foreach (var variable in from.SharedVariables)
+            {
+                if (!variable.IsExposed) continue;
+                variable.MapTo(to);
+            }
+        }
+        /// <summary>
+        /// Map source's global and exposed variable to global variables
         /// </summary>
         /// <param name="variableSource"></param>
         public static void MapGlobal(this IVariableSource variableSource)
@@ -132,8 +145,9 @@ namespace Kurisu.AkiBT
             var globalVariables = GlobalVariables.Instance;
             foreach (var variable in variableSource.SharedVariables)
             {
-                if (!variable.IsGlobal || !variable.IsExposed) continue;
-                variable.MapTo(globalVariables);
+                // should both be global and exposed (normally done by editor)
+                if (variable.IsGlobal && variable.IsExposed)
+                    variable.MapTo(globalVariables);
             }
         }
         /// <summary>
@@ -147,14 +161,6 @@ namespace Kurisu.AkiBT
             if (!variable.IsShared && !variable.IsGlobal && !variable.IsExposed) return;
             if (!variableSource.TryGetSharedVariable(variable.Name, out SharedVariable sharedVariable)) return;
             variable.Bind(sharedVariable);
-        }
-        public static TraverseIterator Traverse(this IBehaviorTree behaviorTree, bool includeChildren = true)
-        {
-            return new TraverseIterator(behaviorTree.Root, includeChildren);
-        }
-        public static TraverseIterator Traverse(this NodeBehavior nodeBehavior, bool includeChildren = true)
-        {
-            return new TraverseIterator(nodeBehavior, includeChildren);
         }
     }
 }

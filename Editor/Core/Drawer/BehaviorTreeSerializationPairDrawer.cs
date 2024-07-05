@@ -8,7 +8,7 @@ namespace Kurisu.AkiBT.Editor
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var soProperty = property.FindPropertyRelative("behaviorTreeSO");
+            var soProperty = property.FindPropertyRelative("behaviorTreeAsset");
             var textProperty = property.FindPropertyRelative("serializedData");
             position.width /= 3;
             GUI.enabled = false;
@@ -21,7 +21,8 @@ namespace Kurisu.AkiBT.Editor
             GUI.enabled = textProperty.objectReferenceValue != null;
             if (GUI.Button(position, "Serialize"))
             {
-                var serializedData = SerializeUtility.SerializeTree(soProperty.objectReferenceValue as BehaviorTreeSO, true, true);
+                var asset = soProperty.objectReferenceValue as BehaviorTreeAsset;
+                var serializedData = BehaviorTree.Serialize(asset.GetBehaviorTree(), true, true);
                 var textPath = Application.dataPath + AssetDatabase.GetAssetPath(textProperty.objectReferenceValue).Replace("Assets", string.Empty);
                 File.WriteAllText(textPath, serializedData);
                 AssetDatabase.SaveAssets();
@@ -30,10 +31,11 @@ namespace Kurisu.AkiBT.Editor
             position.x += position.width;
             if (GUI.Button(position, "Deserialize"))
             {
-                var treeSO = soProperty.objectReferenceValue as BehaviorTreeSO;
-                Undo.RecordObject(treeSO, "Deserialize from json file");
-                treeSO.Deserialize((textProperty.objectReferenceValue as TextAsset).text);
-                EditorUtility.SetDirty(treeSO);
+                var asset = soProperty.objectReferenceValue as BehaviorTreeAsset;
+                Undo.RecordObject(asset, "Deserialize from json file");
+                var data = BehaviorTreeData.Deserialize((textProperty.objectReferenceValue as TextAsset).text);
+                asset.SetBehaviorTreeData(data);
+                EditorUtility.SetDirty(asset);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }

@@ -21,26 +21,24 @@ namespace Kurisu.AkiBT
     {
 
 #if UNITY_EDITOR
-        [HideInEditorWindow]
-        public Rect graphPosition = new(400, 300, 100, 100);
+        [HideInEditorWindow, SerializeField]
+        internal Rect graphPosition = new(400, 300, 100, 100);
 
-        [HideInEditorWindow]
-        public string description;
+        [HideInEditorWindow, SerializeField]
+        internal string description;
 
-        [HideInEditorWindow]
-        [NonSerialized]
-        public Action<Status> NotifyEditor;
+        [HideInEditorWindow, NonSerialized]
+        internal Action<Status> NotifyEditor;
         [SerializeField, HideInEditorWindow]
-        private string guid;
-        public string GUID { get => guid; set => guid = value; }
+        internal string guid;
 #endif
 
-        protected GameObject GameObject { private set; get; }
-        protected IBehaviorTree Tree { private set; get; }
-        public void Run(GameObject attachedObject, IBehaviorTree attachedTree)
+        protected GameObject GameObject { get; private set; }
+        protected BehaviorTree Tree { get; private set; }
+        public void Run(GameObject attachedObject, BehaviorTree tree)
         {
             GameObject = attachedObject;
-            Tree = attachedTree;
+            Tree = tree;
             OnRun();
         }
 
@@ -70,7 +68,16 @@ namespace Kurisu.AkiBT
         /// Abort running node when the condition changed.
         /// </summary>
         public virtual void Abort() { }
-
         public virtual bool CanUpdate() => true;
+        public virtual NodeBehavior GetChildAt(int _)
+        {
+            return null;
+        }
+        public virtual void AddChild(NodeBehavior _)
+        {
+
+        }
+        public virtual int GetChildrenCount() => 0;
+        public virtual void ClearChildren() { }
     }
 }

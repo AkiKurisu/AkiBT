@@ -14,7 +14,7 @@ namespace Kurisu.AkiBT.Editor
         private void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             evt.menu.MenuItems().Clear();
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("UnSelect All", (a) =>
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Unselect All", (a) =>
             {
                 //Clone to prevent self modify
                 RemoveElements(containedElements.ToArray());
@@ -24,7 +24,7 @@ namespace Kurisu.AkiBT.Editor
         {
             var nodes = containedElements
                                 .OfType<IBehaviorTreeNode>()
-                                .Select(x => x.GUID).ToList();
+                                .Select(x => x.Guid).ToList();
             blockData.Add(new GroupBlockData
             {
                 ChildNodes = nodes,

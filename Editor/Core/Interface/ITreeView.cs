@@ -5,9 +5,14 @@ namespace Kurisu.AkiBT.Editor
 {
     public interface ITreeView : IVariableSource
     {
+        /// <summary>
+        /// The editor name
+        /// </summary>
+        string EditorName { get; }
+        IBehaviorTreeContainer Container { get; }
+        IBlackBoard BlackBoard { get; }
         EditorWindow EditorWindow { get; }
         GraphView View { get; }
-        IControlGroupBlock GroupBlockController { get; }
         /// <summary>
         /// Callback on node select
         /// </summary>
@@ -19,10 +24,5 @@ namespace Kurisu.AkiBT.Editor
         /// <param name="node"></param>
         /// <returns></returns>
         IBehaviorTreeNode DuplicateNode(IBehaviorTreeNode node);
-        /// <summary>
-        /// The editor name
-        /// </summary>
-        string EditorName { get; }
-        IBlackBoard BlackBoard { get; }
     }
 }

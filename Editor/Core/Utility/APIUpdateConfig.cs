@@ -69,7 +69,7 @@ namespace Kurisu.AkiBT.Editor
             base.OnInspectorGUI();
             if (GUILayout.Button("Update API"))
             {
-                APIUpdater.UpdateAPI(typeof(BehaviorTreeSO), target as APIUpdateConfig);
+                APIUpdater.UpdateAPI(typeof(BehaviorTreeAsset), target as APIUpdateConfig);
             }
         }
     }

@@ -5,7 +5,7 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 组合类型结点行为
     /// </summary>
-    public abstract class Composite : NodeBehavior, IIterable
+    public abstract class Composite : NodeBehavior
     {
         [SerializeReference]
         private List<NodeBehavior> children = new();
@@ -51,19 +51,33 @@ namespace Kurisu.AkiBT
         /// 组合结点可以增加子结点
         /// </summary>
         /// <param name="child"></param>
-        public void AddChild(NodeBehavior child)
+        public sealed override void AddChild(NodeBehavior child)
         {
             children.Add(child);
         }
-        public NodeBehavior GetChildAt(int index)
+        public sealed override NodeBehavior GetChildAt(int index)
         {
             return children[index];
         }
 
-        public int GetChildCount()
+        public sealed override int GetChildrenCount()
         {
             return children.Count;
         }
-
+        public sealed override void ClearChildren()
+        {
+            children.Clear();
+        }
+    }
+    /// <summary>
+    /// Placeholder node for missing class node
+    /// </summary>
+    [AkiGroup("Hidden")]
+    public sealed class InvalidNode : Composite
+    {
+        protected override Status OnUpdate()
+        {
+            return Status.Success;
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Kurisu.AkiBT.Editor
     public interface IBehaviorTreeNode
     {
         Node View { get; }
-        string GUID { get; }
+        string Guid { get; }
         Port Parent { get; }
         ITreeView MapTreeView { get; }
         Action<IBehaviorTreeNode> OnSelectAction { get; set; }

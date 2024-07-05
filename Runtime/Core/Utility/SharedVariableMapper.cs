@@ -11,10 +11,10 @@ namespace Kurisu.AkiBT
         /// <summary>
         /// Traverse the behavior tree and automatically init all shared variables
         /// </summary>
-        /// <param name="behaviorTree"></param>
-        public static void Traverse(IBehaviorTree behaviorTree)
+        /// <param name="behaviorTree>
+        public static void Traverse(BehaviorTree behaviorTree)
         {
-            foreach (var behavior in behaviorTree.Traverse())
+            foreach (var behavior in behaviorTree)
             {
                 var behaviorType = behavior.GetType();
                 if (!variableLookup.TryGetValue(behaviorType, out var fields))
@@ -28,6 +28,12 @@ namespace Kurisu.AkiBT
                 foreach (var fieldInfo in fields)
                 {
                     var value = fieldInfo.GetValue(behavior);
+                    // shared variables should not be null (dsl/builder will cause null variables)
+                    if (value == null)
+                    {
+                        value = Activator.CreateInstance(fieldInfo.FieldType);
+                        fieldInfo.SetValue(behavior, value);
+                    }
                     if (value is SharedVariable sharedVariable)
                     {
                         sharedVariable.MapTo(behaviorTree);

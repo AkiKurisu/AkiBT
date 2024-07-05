@@ -4,7 +4,7 @@ namespace Kurisu.AkiBT
     /// <summary>
     /// 判断类型结点行为
     /// </summary>
-    public abstract class Conditional : NodeBehavior, IIterable
+    public abstract class Conditional : NodeBehavior
     {
         /// <summary>
         /// 子结点运行时是否要继续判断
@@ -104,15 +104,21 @@ namespace Kurisu.AkiBT
 
         protected abstract bool IsUpdatable();
 
-        public NodeBehavior GetChildAt(int index)
+        public sealed override NodeBehavior GetChildAt(int index)
         {
             return child;
         }
-
-        public int GetChildCount()
+        public sealed override int GetChildrenCount()
         {
             return child == null ? 0 : 1;
         }
+        public sealed override void ClearChildren()
+        {
+            child = null;
+        }
+        public sealed override void AddChild(NodeBehavior nodeBehavior)
+        {
+            child = nodeBehavior;
+        }
     }
-
 }

@@ -116,7 +116,7 @@ namespace Kurisu.AkiBT.Editor
                 var nodes = selectBlock.containedElements.OfType<IBehaviorTreeNode>();
                 Rect newRect = selectBlock.GetPosition();
                 newRect.position += new Vector2(50, 50);
-                var block = sourceView.GroupBlockController.CreateBlock(newRect);
+                var block = sourceView.CreateBlock(newRect);
                 block.title = selectBlock.title;
                 block.AddElements(nodes.Where(x => nodeCopyDict.ContainsKey(x)).Select(x => nodeCopyDict[x].View));
             }

@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT.Editor
     }
     public class BehaviorTreeSetting : ScriptableObject
     {
-        public const string Version = "v1.4.4";
+        public const string Version = "v1.4.5";
         private const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
         private const string k_UserServiceSettingPath = "Assets/AkiBTUserServiceData.asset";
         private const string GraphFallBackPath = "AkiBT/Graph";
@@ -111,7 +111,7 @@ namespace Kurisu.AkiBT.Editor
             if (setting.settings.Any(x => x.EditorName.Equals(editorName)))
             {
                 var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
-                return (editorSetting.ShowGroups, editorSetting.NotShowGroups);
+                return (editorSetting.ShowGroups, editorSetting.NotShowGroups.Concat(new string[1] { "Hidden" }).ToArray());
             }
             return (null, null);
         }

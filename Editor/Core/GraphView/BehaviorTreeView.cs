@@ -5,13 +5,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
 using System;
+using UnityEngine.Assertions;
 namespace Kurisu.AkiBT.Editor
 {
     public class BehaviorTreeView : GraphView, ITreeView, ILayoutTreeNode
     {
         public IBlackBoard BlackBoard { get; protected set; }
-        protected readonly IBehaviorTree behaviorTree;
-        public IBehaviorTree BehaviorTree => behaviorTree;
+        public BehaviorTree Instance { get; protected set; }
+        public IBehaviorTreeContainer Container { get; protected set; }
         protected RootNode root;
         public List<SharedVariable> SharedVariables { get; } = new();
         public virtual string EditorName => "AkiBT";
@@ -21,22 +22,22 @@ namespace Kurisu.AkiBT.Editor
         private readonly BehaviorNodeConvertor converter = new();
         VisualElement ILayoutTreeNode.View => this;
         public GraphView View => this;
-        public IControlGroupBlock GroupBlockController { get; protected set; }
-        public BehaviorTreeView(IBehaviorTree bt, EditorWindow editor)
+        public BehaviorTreeView(IBehaviorTreeContainer container, EditorWindow editor)
         {
             EditorWindow = editor;
-            behaviorTree = bt;
-            ConstructTreeView();
+            Container = container;
+            Instance = container.GetBehaviorTree();
+            Assert.IsNotNull(Instance.root);
+            LocalConstruct();
         }
         /// <summary>
         /// Build tree view elements
         /// </summary>
-        protected virtual void ConstructTreeView()
+        private void LocalConstruct()
         {
             SetStyle();
             AddManipulators();
             AddNodeProvider();
-            AddGroupBlockController();
             RegisterSerializationCallBack();
             AddBlackBoard();
         }
@@ -56,10 +57,6 @@ namespace Kurisu.AkiBT.Editor
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
             };
-        }
-        private void AddGroupBlockController()
-        {
-            GroupBlockController = new GroupBlockController(this);
         }
         private void RegisterSerializationCallBack()
         {
@@ -146,20 +143,20 @@ namespace Kurisu.AkiBT.Editor
         /// <summary>
         /// Copy graph view nodes from other tree
         /// </summary>
-        /// <param name="otherTree"></param>
+        /// <param name="tree>
         /// <param name="mousePosition"></param>
-        public void CopyFromTree(IBehaviorTree otherTree, Vector2 mousePosition)
+        public void CopyFromTree(BehaviorTree tree, Vector2 mousePosition)
         {
             var localMousePosition = contentViewContainer.WorldToLocal(mousePosition) - new Vector2(400, 300);
             IEnumerable<IBehaviorTreeNode> nodes;
             RootNode rootNode;
-            RestoreSharedVariables(otherTree);
-            (rootNode, nodes) = converter.ConvertToNode(otherTree, this, localMousePosition);
+            AddSharedVariablesToBlackBoard(tree, false);
+            (rootNode, nodes) = converter.ConvertToNode(tree, this, localMousePosition);
             foreach (var node in nodes) node.OnSelectAction = OnNodeSelect;
             var edge = rootNode.Child.connections.First();
             RemoveElement(edge);
             RemoveElement(rootNode);
-            RestoreBlocks(otherTree, nodes);
+            RestoreBlocks(tree, nodes);
         }
         /// <summary>
         /// Serialize current editing behavior tree to json format
@@ -167,7 +164,7 @@ namespace Kurisu.AkiBT.Editor
         /// <returns></returns>
         public string SerializeTreeToJson()
         {
-            return SerializeUtility.SerializeTree(behaviorTree, false, true);
+            return BehaviorTree.Serialize(Instance, false, true);
         }
         /// <summary>
         /// Copy BehaviorTree from json file
@@ -177,10 +174,9 @@ namespace Kurisu.AkiBT.Editor
         /// <returns></returns>
         public bool CopyFromJson(string serializedData, Vector3 mousePosition)
         {
-            var temp = ScriptableObject.CreateInstance<BehaviorTreeSO>();
             try
             {
-                temp.Deserialize(serializedData);
+                var temp = BehaviorTree.Deserialize(serializedData);
                 CopyFromTree(temp, mousePosition);
                 return true;
             }
@@ -194,31 +190,25 @@ namespace Kurisu.AkiBT.Editor
         /// </summary>
         public void Restore()
         {
-            if (!Application.isPlaying && BehaviorTreeEditorUtility.TryGetExternalTree(behaviorTree, out IBehaviorTree tree))
-            {
-                OnRestore(tree);
-            }
-            else
-            {
-                OnRestore(behaviorTree);
-            }
+            OnRestore(Instance);
         }
         /// <summary>
         /// Restore behavior tree to the graph view nodes
         /// </summary>
-        /// <param name="tree"></param>
-        protected virtual void OnRestore(IBehaviorTree tree)
+        /// <param name="treeContainer>
+        protected virtual void OnRestore(BehaviorTree tree)
         {
-            RestoreSharedVariables(tree);
+            AddSharedVariablesToBlackBoard(tree, true);
             IEnumerable<IBehaviorTreeNode> nodes;
             (root, nodes) = converter.ConvertToNode(tree, this, Vector2.zero);
             foreach (var node in nodes) node.OnSelectAction = OnNodeSelect;
             RestoreBlocks(tree, nodes);
         }
-        private void RestoreSharedVariables(IBehaviorTree tree)
+        private void AddSharedVariablesToBlackBoard(BehaviorTree tree, bool duplicateWhenConflict)
         {
             foreach (var variable in tree.SharedVariables)
             {
+                if (!duplicateWhenConflict && SharedVariables.Any(x => x.Name == variable.Name)) continue;
                 //In play mode, use original variable to observe value change
                 if (Application.isPlaying)
                 {
@@ -230,12 +220,12 @@ namespace Kurisu.AkiBT.Editor
                 }
             }
         }
-        private void RestoreBlocks(IBehaviorTree tree, IEnumerable<IBehaviorTreeNode> nodes)
+        private void RestoreBlocks(BehaviorTree tree, IEnumerable<IBehaviorTreeNode> nodes)
         {
-            foreach (var nodeBlockData in tree.BlockData)
+            foreach (var nodeBlockData in tree.blockData)
             {
-                GroupBlockController.CreateBlock(new Rect(nodeBlockData.Position, new Vector2(100, 100)), nodeBlockData)
-                .AddElements(nodes.Where(x => nodeBlockData.ChildNodes.Contains(x.GUID)).Select(x => x.View));
+                this.CreateBlock(new Rect(nodeBlockData.Position, new Vector2(100, 100)), nodeBlockData)
+                .AddElements(nodes.Where(x => nodeBlockData.ChildNodes.Contains(x.Guid)).Select(x => x.View));
             }
         }
 
@@ -244,7 +234,7 @@ namespace Kurisu.AkiBT.Editor
             if (Application.isPlaying) return false;
             if (Validate())
             {
-                Commit(behaviorTree);
+                Commit(Container);
                 AssetDatabase.SaveAssets();
                 return true;
             }
@@ -266,12 +256,14 @@ namespace Kurisu.AkiBT.Editor
             }
             return true;
         }
-        internal void Commit(IBehaviorTree behaviorTree)
+        internal void Commit(IBehaviorTreeContainer container)
         {
-            OnCommit(behaviorTree);
+            OnCommit(container);
         }
-        protected virtual void OnCommit(IBehaviorTree behaviorTree)
+        protected virtual void OnCommit(IBehaviorTreeContainer container)
         {
+            Undo.RecordObject(container.Object, "Commit behavior tree change");
+            var tree = new BehaviorTree();
             var stack = new Stack<IBehaviorTreeNode>();
             stack.Push(root);
             // save new components
@@ -280,20 +272,17 @@ namespace Kurisu.AkiBT.Editor
                 var node = stack.Pop();
                 node.Commit(stack);
             }
-            root.PostCommit(behaviorTree);
-            behaviorTree.SharedVariables.Clear();
-            foreach (var sharedVariable in SharedVariables)
-            {
-                behaviorTree.SharedVariables.Add(sharedVariable);
-            }
+            root.PostCommit(tree);
+            tree.variables = new List<SharedVariable>(SharedVariables);
             List<GroupBlock> NodeBlocks = graphElements.OfType<GroupBlock>().ToList();
-            behaviorTree.BlockData.Clear();
+            tree.blockData = new();
             foreach (var block in NodeBlocks)
             {
-                block.Commit(behaviorTree.BlockData);
+                block.Commit(tree.blockData);
             }
+            container.SetBehaviorTreeData(tree.GetData());
             // notify to unity editor that the tree is changed.
-            EditorUtility.SetDirty(behaviorTree._Object);
+            EditorUtility.SetDirty(container.Object);
         }
         public IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {

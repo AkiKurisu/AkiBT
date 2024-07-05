@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT.Editor
     public abstract class BehaviorTreeNode : Node, ILayoutTreeNode, IBehaviorTreeNode
     {
         public Node View => this;
-        public string GUID { get; private set; }
+        public string Guid { get; private set; }
         protected NodeBehavior NodeBehavior { set; get; }
         private Type dirtyNodeBehaviorType;
         public Port Parent { private set; get; }
@@ -34,7 +34,7 @@ namespace Kurisu.AkiBT.Editor
             fieldResolverFactory = FieldResolverFactory.Instance;
             container = new VisualElement();
             description = new TextField();
-            GUID = Guid.NewGuid().ToString();
+            Guid = System.Guid.NewGuid().ToString();
             Initialize();
         }
         public IFieldResolver GetFieldResolver(string fieldName)
@@ -63,7 +63,7 @@ namespace Kurisu.AkiBT.Editor
             resolvers.ForEach(e => e.Restore(NodeBehavior));
             NodeBehavior.NotifyEditor = MarkAsExecuted;
             description.value = NodeBehavior.description;
-            GUID = string.IsNullOrEmpty(behavior.GUID) ? Guid.NewGuid().ToString() : behavior.GUID;
+            Guid = string.IsNullOrEmpty(behavior.guid) ? System.Guid.NewGuid().ToString() : behavior.guid;
             OnRestore();
         }
         public void CopyFrom(IBehaviorTreeNode copyNode)
@@ -76,7 +76,7 @@ namespace Kurisu.AkiBT.Editor
             description.value = node.Description;
             NodeBehavior = Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            GUID = Guid.NewGuid().ToString();
+            Guid = System.Guid.NewGuid().ToString();
         }
 
         protected virtual void OnRestore()
@@ -132,7 +132,7 @@ namespace Kurisu.AkiBT.Editor
             NodeBehavior.description = description.value;
             NodeBehavior.graphPosition = GetPosition();
             NodeBehavior.NotifyEditor = MarkAsExecuted;
-            NodeBehavior.GUID = GUID;
+            NodeBehavior.guid = Guid;
         }
         protected abstract void OnCommit(Stack<IBehaviorTreeNode> stack);
 
@@ -236,12 +236,12 @@ namespace Kurisu.AkiBT.Editor
             }));
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Select Group", (a) =>
             {
-                MapTreeView.GroupBlockController.SelectGroup(this);
+                MapTreeView.SelectGroup(this);
                 return;
             }));
-            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("UnSelect Group", (a) =>
+            evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Unselect Group", (a) =>
             {
-                MapTreeView.GroupBlockController.UnSelectGroup();
+                MapTreeView.UnselectGroup();
                 return;
             }));
         }
