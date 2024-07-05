@@ -2,7 +2,7 @@
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
 <div align="center">
 
-# 行为树 AkiBT Version 1.4.4
+# 行为树 AkiBT Version 1.4.5
 
 ***Read this document in English: [English Document](./README.md)***
 
