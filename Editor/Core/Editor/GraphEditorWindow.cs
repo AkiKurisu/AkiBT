@@ -143,19 +143,19 @@ namespace Kurisu.AkiBT.Editor
             graphView.Restore();
             return graphView;
         }
-        private void SaveToSO(string path)
+        private void SaveToAsset(string path)
         {
             var treeSO = CreateInstance(GetAssetType());
             if (!graphView.Validate())
             {
-                Debug.LogWarning($"<color=#ff2f2f>{graphView.EditorName}</color>: Save failed, ScriptableObject wasn't created!\n{DateTime.Now}");
+                Debug.LogWarning($"<color=#ff2f2f>{graphView.EditorName}</color>: Save failed, asset wasn't created!\n{DateTime.Now}");
                 return;
             }
             graphView.Commit((IBehaviorTreeContainer)treeSO);
             string savePath = $"{path}/{Key.name}.asset";
             AssetDatabase.CreateAsset(treeSO, savePath);
             AssetDatabase.SaveAssets();
-            Debug.Log($"<color=#3aff48>{graphView.EditorName}</color>: Save succeed, ScriptableObject created path: {savePath}\n{DateTime.Now}");
+            Debug.Log($"<color=#3aff48>{graphView.EditorName}</color>: Save succeed, asset created path: {savePath}\n{DateTime.Now}");
         }
 
         private void OnDestroy()
@@ -284,27 +284,27 @@ namespace Kurisu.AkiBT.Editor
                 EditorUtility.SetDirty(setting);
                 AssetDatabase.SaveAssets();
             }
-            if (GUILayout.Button("Save To SO", EditorStyles.toolbarButton))
+            if (GUILayout.Button("Save to Asset", EditorStyles.toolbarButton))
             {
-                string path = EditorUtility.OpenFolderPanel("Select ScriptableObject save path", Setting.LastPath, "");
+                string path = EditorUtility.OpenFolderPanel("Select asset save path", Setting.LastPath, "");
                 if (!string.IsNullOrEmpty(path))
                 {
                     Setting.LastPath = path;
-                    SaveToSO(BehaviorTreeEditorUtility.GetRelativePath(path));
+                    SaveToAsset(BehaviorTreeEditorUtility.GetRelativePath(path));
                 }
 
             }
             GUI.enabled = !Application.isPlaying;
-            if (GUILayout.Button("Copy From SO", EditorStyles.toolbarButton))
+            if (GUILayout.Button("Copy from Asset", EditorStyles.toolbarButton))
             {
-                string path = EditorUtility.OpenFilePanel("Select ScriptableObject to copy", Setting.LastPath, "asset");
+                string path = EditorUtility.OpenFilePanel("Select asset to copy", Setting.LastPath, "asset");
                 var data = LoadDataFromFile(BehaviorTreeEditorUtility.GetRelativePath(path));
                 if (data != null)
                 {
                     Setting.LastPath = path;
                     EditorUtility.SetDirty(setting);
                     AssetDatabase.SaveAssets();
-                    ShowNotification(new GUIContent("Data Dropped Succeed!"));
+                    ShowNotification(new GUIContent("Asset Dropped Succeed!"));
                     graphView.CopyFromTree(data.GetBehaviorTree(), new Vector3(400, 300));
                 }
             }
@@ -319,7 +319,7 @@ namespace Kurisu.AkiBT.Editor
             {
                 NodeAutoLayoutHelper.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
             }
-            if (GUILayout.Button("Save To Json", EditorStyles.toolbarButton))
+            if (GUILayout.Button("Save to Json", EditorStyles.toolbarButton))
             {
                 var serializedData = graphView.SerializeTreeToJson();
                 string path = EditorUtility.SaveFilePanel("Select json file save path", Setting.LastPath, graphView.Container.Object.name, "json");
@@ -335,7 +335,7 @@ namespace Kurisu.AkiBT.Editor
                 }
             }
             GUI.enabled = !Application.isPlaying;
-            if (GUILayout.Button("Copy From Json", EditorStyles.toolbarButton))
+            if (GUILayout.Button("Copy from Json", EditorStyles.toolbarButton))
             {
                 string path = EditorUtility.OpenFilePanel("Select json file to copy", Setting.LastPath, "json");
                 if (!string.IsNullOrEmpty(path))
