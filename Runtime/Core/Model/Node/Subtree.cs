@@ -14,9 +14,9 @@ namespace Kurisu.AkiBT
         {
             if (subtree == null) return;
             instance = subtree.GetBehaviorTree();
-            // inherit variables if possible
-            instance.MapTo(Tree);
             instance.InitVariables();
+            // inherit variables if possible
+            instance.BlackBoard.MapTo(Tree.BlackBoard);
             instance.Run(GameObject);
         }
         public override void Awake()

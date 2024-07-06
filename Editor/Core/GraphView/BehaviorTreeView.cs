@@ -66,7 +66,11 @@ namespace Kurisu.AkiBT.Editor
         }
         private void AddBlackBoard()
         {
-            var blackboard = new AdvancedBlackBoard(this, View);
+            var blackboard = new AdvancedBlackBoard(this, View, new AdvancedBlackBoard.BlackBoardSettings()
+            {
+                showIsExposed = true,
+                showIsGlobalToggle = true,
+            });
             blackboard.SetPosition(new Rect(10, 100, 300, 400));
             Add(blackboard);
             BlackBoard = blackboard;
