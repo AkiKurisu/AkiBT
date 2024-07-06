@@ -117,9 +117,9 @@ namespace Kurisu.AkiBT.Editor
         {
             NodeBehavior = behavior;
             resolvers.ForEach(e => e.Restore(NodeBehavior));
-            NodeBehavior.NotifyEditor = MarkAsExecuted;
-            description.value = NodeBehavior.description;
-            Guid = string.IsNullOrEmpty(behavior.guid) ? System.Guid.NewGuid().ToString() : behavior.guid;
+            NodeBehavior.OnNotifyStatus = MarkAsExecuted;
+            description.value = NodeBehavior.nodeData.description;
+            Guid = string.IsNullOrEmpty(behavior.nodeData.guid) ? System.Guid.NewGuid().ToString() : behavior.nodeData.guid;
         }
         public void CopyFrom(IBehaviorTreeNode copyNode)
         {
@@ -142,7 +142,7 @@ namespace Kurisu.AkiBT.Editor
             );
             description.value = node.description.value;
             NodeBehavior = (NodeBehavior)Activator.CreateInstance(copyNode.GetBehavior());
-            NodeBehavior.NotifyEditor = MarkAsExecuted;
+            NodeBehavior.OnNotifyStatus = MarkAsExecuted;
             Guid = System.Guid.NewGuid().ToString();
         }
         private readonly Dictionary<int, IChildPortable> copyMapCache = new();
@@ -172,10 +172,10 @@ namespace Kurisu.AkiBT.Editor
             //Manually commit bridge node
             //Do not duplicate commit dialogue piece
             resolvers.ForEach(r => r.Commit(NodeBehavior));
-            NodeBehavior.description = description.value;
-            NodeBehavior.graphPosition = GetPosition();
-            NodeBehavior.NotifyEditor = MarkAsExecuted;
-            NodeBehavior.guid = Guid;
+            NodeBehavior.nodeData.description = description.value;
+            NodeBehavior.nodeData.graphPosition = GetPosition();
+            NodeBehavior.OnNotifyStatus = MarkAsExecuted;
+            NodeBehavior.nodeData.guid = Guid;
         }
         protected virtual void OnCommit(Stack<IBehaviorTreeNode> stack) { }
         public bool Validate(Stack<IBehaviorTreeNode> stack)
@@ -279,13 +279,10 @@ namespace Kurisu.AkiBT.Editor
         public IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
             var list = new List<ILayoutTreeNode>();
-            contentContainer
-            .Query<BehaviorTreeNode>()
-            .ToList()
-            .OfType<ILayoutTreeNode>()
-            .Reverse()
-            .ToList()
-            .ForEach(x => list.AddRange(x.GetLayoutTreeChildren()));
+            var children = contentContainer.Query<BehaviorTreeNode>()
+                            .ToList();
+            children.Reverse();
+            children.ForEach(x => list.AddRange(x.GetLayoutTreeChildren()));
             return list;
         }
         public Rect GetWorldPosition() => GetPosition();

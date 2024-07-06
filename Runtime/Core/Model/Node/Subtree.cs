@@ -9,7 +9,7 @@ namespace Kurisu.AkiBT
         // should not use shared mode because it can not guarantee instance initialization
         [HideInEditorWindow]
         public BehaviorTreeAsset subtree;
-        public Object Object => subtree;
+        Object IBehaviorTreeContainer.Object => subtree;
         protected override void OnRun()
         {
             if (subtree == null) return;

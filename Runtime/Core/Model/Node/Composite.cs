@@ -69,15 +69,4 @@ namespace Kurisu.AkiBT
             children.Clear();
         }
     }
-    /// <summary>
-    /// Placeholder node for missing class node
-    /// </summary>
-    [AkiGroup("Hidden")]
-    public sealed class InvalidNode : Composite
-    {
-        protected override Status OnUpdate()
-        {
-            return Status.Success;
-        }
-    }
 }

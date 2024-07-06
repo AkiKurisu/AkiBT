@@ -48,9 +48,5 @@ namespace Kurisu.AkiBT.Editor
             if (!subtree.subtree) return;
             GraphEditorWindow.Show(subtree);
         }
-        public override IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
-        {
-            return new List<ILayoutTreeNode>();
-        }
     }
 }

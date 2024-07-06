@@ -18,7 +18,6 @@ namespace Kurisu.AkiBT
         [Serializable]
         public class Edge
         {
-            public int id;
             public int[] children;
         }
         [SerializeReference]
@@ -28,6 +27,8 @@ namespace Kurisu.AkiBT
         public Edge[] edges;
 #if UNITY_EDITOR
         [SerializeField]
+        private NodeData[] nodeData;
+        [SerializeField]
         internal GroupBlockData[] blockData;
 #endif
         public BehaviorTreeData() { }
@@ -36,9 +37,15 @@ namespace Kurisu.AkiBT
             variables = tree.variables.ToArray();
             behaviors = tree.ToArray();
             edges = new Edge[behaviors.Length];
+#if UNITY_EDITOR
+            nodeData = new NodeData[behaviors.Length];
+#endif
             for (int i = 0; i < behaviors.Length; ++i)
             {
-                var edge = edges[i] = new Edge() { id = i };
+#if UNITY_EDITOR
+                nodeData[i] = behaviors[i].nodeData;
+#endif
+                var edge = edges[i] = new Edge();
                 edge.children = new int[behaviors[i].GetChildrenCount()];
                 for (int n = 0; n < edge.children.Length; ++n)
                 {
@@ -57,18 +64,33 @@ namespace Kurisu.AkiBT
             {
                 throw new ArgumentException("The length of behaviors and edges must be the same.");
             }
-            foreach (var edge in edges)
+            for (int n = 0; n < behaviors.Length; ++n)
             {
-                NodeBehavior parent = behaviors[edge.id];
+                var edge = edges[n];
+                var behavior = behaviors[n];
+#if UNITY_EDITOR
+                if (nodeData != null && nodeData.Length > n)
+                    behavior.nodeData = nodeData[n];
+#endif
                 for (int i = 0; i < edge.children.Length; i++)
                 {
                     int childIndex = edge.children[i];
                     if (childIndex >= 0 && childIndex < behaviors.Length)
                     {
-                        NodeBehavior child = behaviors[childIndex];
+                        var child = behaviors[childIndex];
                         // use invalid node to replace missing nodes
-                        child ??= new InvalidNode();
-                        parent.AddChild(child);
+                        if (child == null)
+                        {
+                            if (edges[childIndex].children.Length > 0)
+                            {
+                                child = new InvalidComposite();
+                            }
+                            else
+                            {
+                                child = new InvalidAction();
+                            }
+                        }
+                        behavior.AddChild(child);
                     }
                 }
             }

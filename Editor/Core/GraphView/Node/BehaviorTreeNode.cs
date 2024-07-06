@@ -61,9 +61,9 @@ namespace Kurisu.AkiBT.Editor
         {
             NodeBehavior = behavior;
             resolvers.ForEach(e => e.Restore(NodeBehavior));
-            NodeBehavior.NotifyEditor = MarkAsExecuted;
-            description.value = NodeBehavior.description;
-            Guid = string.IsNullOrEmpty(behavior.guid) ? System.Guid.NewGuid().ToString() : behavior.guid;
+            NodeBehavior.OnNotifyStatus = MarkAsExecuted;
+            description.value = NodeBehavior.nodeData.description;
+            Guid = string.IsNullOrEmpty(behavior.nodeData.guid) ? System.Guid.NewGuid().ToString() : behavior.nodeData.guid;
             OnRestore();
         }
         public void CopyFrom(IBehaviorTreeNode copyNode)
@@ -75,7 +75,7 @@ namespace Kurisu.AkiBT.Editor
             }
             description.value = node.Description;
             NodeBehavior = Activator.CreateInstance(copyNode.GetBehavior()) as NodeBehavior;
-            NodeBehavior.NotifyEditor = MarkAsExecuted;
+            NodeBehavior.OnNotifyStatus = MarkAsExecuted;
             Guid = System.Guid.NewGuid().ToString();
         }
 
@@ -129,10 +129,10 @@ namespace Kurisu.AkiBT.Editor
         {
             OnCommit(stack);
             resolvers.ForEach(r => r.Commit(NodeBehavior));
-            NodeBehavior.description = description.value;
-            NodeBehavior.graphPosition = GetPosition();
-            NodeBehavior.NotifyEditor = MarkAsExecuted;
-            NodeBehavior.guid = Guid;
+            NodeBehavior.nodeData.description = description.value;
+            NodeBehavior.nodeData.graphPosition = GetPosition();
+            NodeBehavior.OnNotifyStatus = MarkAsExecuted;
+            NodeBehavior.nodeData.guid = Guid;
         }
         protected abstract void OnCommit(Stack<IBehaviorTreeNode> stack);
 
@@ -246,7 +246,11 @@ namespace Kurisu.AkiBT.Editor
             }));
         }
 
-        public abstract IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren();
+        public virtual IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
+        {
+            return new List<ILayoutTreeNode>();
+        }
+
         public virtual Rect GetWorldPosition()
         {
             CompositeStack parent;

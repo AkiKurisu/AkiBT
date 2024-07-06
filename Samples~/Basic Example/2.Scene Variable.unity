@@ -388,39 +388,89 @@ MonoBehaviour:
   externalBehaviorTree: {fileID: 0}
   behaviorTreeData:
     variables:
-    - rid: 1337990329029099727
-    - rid: 1337990329029099728
-    - rid: 1337990329029099729
+    - rid: 1337990348908527772
+    - rid: 1337990348908527773
+    - rid: 1337990348908527774
     behaviors:
-    - rid: 1337990329029099730
-    - rid: 1337990329029099731
-    - rid: 1337990329029099732
-    - rid: 1337990329029099733
-    - rid: 1337990329029099734
-    - rid: 1337990329029099735
-    - rid: 1337990329029099736
+    - rid: 1337990348908527775
+    - rid: 1337990348908527776
+    - rid: 1337990348908527777
+    - rid: 1337990348908527778
+    - rid: 1337990348908527779
+    - rid: 1337990348908527780
+    - rid: 1337990348908527781
     edges:
-    - id: 0
-      children: 01000000
-    - id: 1
-      children: 0200000006000000
-    - id: 2
-      children: 03000000
-    - id: 3
-      children: 0400000005000000
-    - id: 4
-      children: 
-    - id: 5
-      children: 
-    - id: 6
-      children: 
+    - children: 01000000
+    - children: 0200000006000000
+    - children: 03000000
+    - children: 0400000005000000
+    - children: 
+    - children: 
+    - children: 
+    nodeData:
+    - graphPosition:
+        serializedVersion: 2
+        x: 400
+        y: 300
+        width: 79
+        height: 77
+      description: 
+      guid: f24039d6-cefb-4166-88d8-9c657d15bc18
+    - graphPosition:
+        serializedVersion: 2
+        x: 531
+        y: 272
+        width: 173
+        height: 138
+      description: 
+      guid: 96152a0b-3c6d-4652-a0ee-070e5480f595
+    - graphPosition:
+        serializedVersion: 2
+        x: 754
+        y: 127
+        width: 239
+        height: 208
+      description: 
+      guid: b24a7d7a-4a6c-4e7b-ad84-dfc143ec44e3
+    - graphPosition:
+        serializedVersion: 2
+        x: 1043
+        y: 162
+        width: 173
+        height: 138
+      description: 
+      guid: 8e46fc35-5048-4161-a5a7-74ff799a3959
+    - graphPosition:
+        serializedVersion: 2
+        x: 1266
+        y: 72
+        width: 271
+        height: 172
+      description: 
+      guid: 25e7a61b-7029-4fa5-9a63-1b95e997e1c3
+    - graphPosition:
+        serializedVersion: 2
+        x: 1266
+        y: 294
+        width: 165
+        height: 96
+      description: 
+      guid: e8904302-8965-4680-ac53-f85a1e8f667f
+    - graphPosition:
+        serializedVersion: 2
+        x: 754
+        y: 385
+        width: 269
+        height: 170
+      description: 
+      guid: 04a1f7de-2393-496f-adfd-04108933a148
     blockData: []
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 1337990329029099727
+    - rid: 1337990348908527772
       type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
@@ -428,7 +478,7 @@ MonoBehaviour:
         isExposed: 1
         mName: destination
         value: {x: 0, y: 0, z: 0}
-    - rid: 1337990329029099728
+    - rid: 1337990348908527773
       type: {class: SharedBool, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
@@ -436,7 +486,7 @@ MonoBehaviour:
         isExposed: 1
         mName: canMove
         value: 0
-    - rid: 1337990329029099729
+    - rid: 1337990348908527774
       type: {class: SharedObject, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
@@ -446,43 +496,46 @@ MonoBehaviour:
         value: {fileID: 0}
         constraintTypeAQN: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-    - rid: 1337990329029099730
+    - rid: 1337990348908527775
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 400
-          y: 300
-          width: 79
-          height: 77
-        description: 
-        guid: 00d69356-8c28-4c49-bb5c-ca9d0e592470
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 400
+            y: 300
+            width: 79
+            height: 77
+          description: 
+          guid: f24039d6-cefb-4166-88d8-9c657d15bc18
         child:
           rid: -2
-    - rid: 1337990329029099731
+    - rid: 1337990348908527776
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 531
-          y: 272
-          width: 173
-          height: 138
-        description: 
-        guid: 903ac360-b1c0-40ae-8eb5-11f781e7b24d
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 531
+            y: 272
+            width: 173
+            height: 138
+          description: 
+          guid: 96152a0b-3c6d-4652-a0ee-070e5480f595
         children: []
         abortOnConditionChanged: 1
-    - rid: 1337990329029099732
+    - rid: 1337990348908527777
       type: {class: BoolComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 754
-          y: 102
-          width: 239
-          height: 208
-        description: Global Variable
-        guid: df78859c-1d0d-49a7-818f-08a9d35e2ae0
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 754
+            y: 127
+            width: 239
+            height: 208
+          description: 
+          guid: b24a7d7a-4a6c-4e7b-ad84-dfc143ec44e3
         evaluateOnRunning: 1
         child:
           rid: -2
@@ -499,30 +552,32 @@ MonoBehaviour:
           mName: 
           value: 1
         operation: 0
-    - rid: 1337990329029099733
+    - rid: 1337990348908527778
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 1035
-          y: 156
-          width: 173
-          height: 138
-        description: 
-        guid: da4df494-f943-488b-9019-64bb4771c441
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 1043
+            y: 162
+            width: 173
+            height: 138
+          description: 
+          guid: 8e46fc35-5048-4161-a5a7-74ff799a3959
         children: []
         abortOnConditionChanged: 0
-    - rid: 1337990329029099734
+    - rid: 1337990348908527779
       type: {class: GetGameObjectPosition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 1258
-          y: 66
-          width: 271
-          height: 172
-        description: Global Variable
-        guid: 9710fc8b-fb2b-40b4-9a0a-4a3d1439fe06
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 1266
+            y: 72
+            width: 271
+            height: 172
+          description: 
+          guid: 25e7a61b-7029-4fa5-9a63-1b95e997e1c3
         target:
           isShared: 1
           isGlobal: 0
@@ -535,29 +590,31 @@ MonoBehaviour:
           isExposed: 0
           mName: destination
           value: {x: 0, y: 0, z: 0}
-    - rid: 1337990329029099735
+    - rid: 1337990348908527780
       type: {class: Subtree, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 1258
-          y: 287
-          width: 165
-          height: 96
-        description: 
-        guid: d37bdcf5-4489-4e90-9d91-062afdb034c2
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 1266
+            y: 294
+            width: 165
+            height: 96
+          description: 
+          guid: e8904302-8965-4680-ac53-f85a1e8f667f
         subtree: {fileID: 11400000, guid: 27b5ceb622afd8b44b9c6f868a017ef2, type: 2}
-    - rid: 1337990329029099736
+    - rid: 1337990348908527781
       type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
-        graphPosition:
-          serializedVersion: 2
-          x: 754
-          y: 344
-          width: 269
-          height: 170
-        description: 
-        guid: 9ea559bf-ddf2-42b4-9d1f-81ecb6046951
+        nodeData:
+          graphPosition:
+            serializedVersion: 2
+            x: 754
+            y: 385
+            width: 269
+            height: 170
+          description: 
+          guid: 04a1f7de-2393-496f-adfd-04108933a148
         agent:
           isShared: 0
           isGlobal: 0
@@ -750,6 +807,7 @@ MonoBehaviour:
     variables: []
     behaviors: []
     edges: []
+    nodeData: []
     blockData: []
   references:
     version: 2

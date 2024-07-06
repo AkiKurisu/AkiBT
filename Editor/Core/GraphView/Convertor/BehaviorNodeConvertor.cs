@@ -69,7 +69,7 @@ namespace Kurisu.AkiBT.Editor
                 node.Restore(edgePair.NodeBehavior);
                 treeView.AddElement(node.View);
                 tempNodes.Add(node);
-                var rect = edgePair.NodeBehavior.graphPosition;
+                var rect = edgePair.NodeBehavior.nodeData.graphPosition;
                 rect.position += initPos;
                 node.View.SetPosition(rect);
 

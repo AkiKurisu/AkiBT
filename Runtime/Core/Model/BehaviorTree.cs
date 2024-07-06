@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections;
 using System;
+using UnityEngine.Pool;
 namespace Kurisu.AkiBT
 {
     [Serializable]
@@ -34,7 +35,7 @@ namespace Kurisu.AkiBT
         /// <param name="bindToGlobal">Whether bind properties assigned with isGlobal to global variables</param>
         public void InitVariables(bool bindToGlobal = true)
         {
-            SharedVariableMapper.Traverse(this);
+            SharedVariableHelper.InitVariables(this);
             if (bindToGlobal) this.MapGlobal();
         }
         public void Run(GameObject gameObject)
@@ -69,12 +70,12 @@ namespace Kurisu.AkiBT
 
         public IEnumerator<NodeBehavior> GetEnumerator()
         {
-            return new TraverseIterator(root);
+            return new Enumerator(root);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new TraverseIterator(root);
+            return new Enumerator(root);
         }
         public BehaviorTree Clone()
         {
@@ -98,6 +99,65 @@ namespace Kurisu.AkiBT
         {
             if (tree == null) return null;
             return BehaviorTreeData.Serialize(tree.GetData(), indented, serializeEditorData);
+        }
+        private struct Enumerator : IEnumerator<NodeBehavior>
+        {
+            private readonly Stack<NodeBehavior> stack;
+            private static readonly ObjectPool<Stack<NodeBehavior>> pool = new(() => new(), null, s => s.Clear());
+            private NodeBehavior currentNode;
+            public Enumerator(NodeBehavior root)
+            {
+                stack = pool.Get();
+                currentNode = null;
+                if (root != null)
+                {
+                    stack.Push(root);
+                }
+            }
+
+            public readonly NodeBehavior Current
+            {
+                get
+                {
+                    if (currentNode == null)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                    return currentNode;
+                }
+            }
+
+            readonly object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+                pool.Release(stack);
+                currentNode = null;
+            }
+            public bool MoveNext()
+            {
+                if (stack.Count == 0)
+                {
+                    return false;
+                }
+
+                currentNode = stack.Pop();
+                int childrenCount = currentNode.GetChildrenCount();
+                for (int i = childrenCount - 1; i >= 0; i--)
+                {
+                    stack.Push(currentNode.GetChildAt(i));
+                }
+                return true;
+            }
+            public void Reset()
+            {
+                stack.Clear();
+                if (currentNode != null)
+                {
+                    stack.Push(currentNode);
+                }
+                currentNode = null;
+            }
         }
     }
 }

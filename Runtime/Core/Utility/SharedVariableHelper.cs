@@ -5,25 +5,25 @@ using System.Linq;
 using System.Reflection;
 namespace Kurisu.AkiBT
 {
-    public class SharedVariableMapper
+    public static class SharedVariableHelper
     {
-        private static readonly Dictionary<Type, List<FieldInfo>> variableLookup = new();
+        private static readonly Dictionary<Type, List<FieldInfo>> fieldInfoLookup = new();
         /// <summary>
         /// Traverse the behavior tree and automatically init all shared variables
         /// </summary>
         /// <param name="behaviorTree>
-        public static void Traverse(BehaviorTree behaviorTree)
+        public static void InitVariables(BehaviorTree behaviorTree)
         {
             foreach (var behavior in behaviorTree)
             {
                 var behaviorType = behavior.GetType();
-                if (!variableLookup.TryGetValue(behaviorType, out var fields))
+                if (!fieldInfoLookup.TryGetValue(behaviorType, out var fields))
                 {
                     fields = behaviorType
                             .GetAllFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                             .Where(x => x.FieldType.IsSubclassOf(typeof(SharedVariable)) || IsIListVariable(x.FieldType))
                             .ToList();
-                    variableLookup.Add(behaviorType, fields);
+                    fieldInfoLookup.Add(behaviorType, fields);
                 }
                 foreach (var fieldInfo in fields)
                 {

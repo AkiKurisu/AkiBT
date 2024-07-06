@@ -19,20 +19,12 @@ namespace Kurisu.AkiBT
     [Serializable]
     public abstract class NodeBehavior
     {
-
 #if UNITY_EDITOR
-        [HideInEditorWindow, SerializeField]
-        internal Rect graphPosition = new(400, 300, 100, 100);
-
-        [HideInEditorWindow, SerializeField]
-        internal string description;
-
         [HideInEditorWindow, NonSerialized]
-        internal Action<Status> NotifyEditor;
-        [SerializeField, HideInEditorWindow]
-        internal string guid;
+        internal Action<Status> OnNotifyStatus;
+        [HideInEditorWindow, SerializeField]
+        internal NodeData nodeData = new();
 #endif
-
         protected GameObject GameObject { get; private set; }
         protected BehaviorTree Tree { get; private set; }
         public void Run(GameObject attachedObject, BehaviorTree tree)
@@ -55,7 +47,7 @@ namespace Kurisu.AkiBT
             var status = OnUpdate();
 
 #if UNITY_EDITOR
-            NotifyEditor?.Invoke(status);
+            OnNotifyStatus?.Invoke(status);
 #endif
             return status;
         }
