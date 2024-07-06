@@ -30,7 +30,7 @@
     },
     {
       "displayName": "Builder Example",
-      "description": "Contains builder Basic for BehaviorTreeBuilder",
+      "description": "Contains builder sample for BehaviorTreeBuilder",
       "path": "Samples~/Builder Example"
     }
   ]
