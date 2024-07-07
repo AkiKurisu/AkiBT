@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT.Editor
     }
     public class BehaviorTreeSetting : ScriptableObject
     {
-        public const string Version = "v1.4.6";
+        public const string Version = "v1.4.7";
         private const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
         private const string k_UserServiceSettingPath = "Assets/AkiBTUserServiceData.asset";
         private const string GraphFallBackPath = "AkiBT/Graph";
