@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,13 +9,13 @@ namespace Kurisu.AkiBT.Editor
 {
     public class SharedVariablesFoldout : Foldout
     {
-        private readonly HashSet<ObserveProxyVariable> observeProxies;
-        public SharedVariablesFoldout(IVariableSource source, UnityEngine.Object target, UnityEditor.Editor editor)
+        private readonly HashSet<ObservableVariable> observableVariables;
+        public SharedVariablesFoldout(IVariableSource source, System.Action onUpdate)
         {
             value = false;
             text = "SharedVariables";
             RegisterCallback<DetachFromPanelEvent>(Release);
-            observeProxies = new HashSet<ObserveProxyVariable>();
+            observableVariables = new HashSet<ObservableVariable>();
             var factory = FieldResolverFactory.Instance;
             foreach (var variable in source.SharedVariables.Where(x => x.IsExposed))
             {
@@ -35,7 +34,7 @@ namespace Kurisu.AkiBT.Editor
                 {
                     var index = source.SharedVariables.FindIndex(x => x.Name == variable.Name);
                     source.SharedVariables[index].SetValue(obj);
-                    NotifyEditor();
+                    onUpdate();
                 });
                 if (Application.isPlaying)
                 {
@@ -45,7 +44,7 @@ namespace Kurisu.AkiBT.Editor
                     //Disable since you should only edit global variable in source
                     if (variable.IsGlobal) valueField.SetEnabled(false);
                     valueField.tooltip = "Global variable can only be edited in source at runtime";
-                    observeProxies.Add(observeProxy);
+                    observableVariables.Add(observeProxy);
                 }
                 if (valueField is TextField field)
                 {
@@ -79,7 +78,7 @@ namespace Kurisu.AkiBT.Editor
                     {
                         variable.IsGlobal = !variable.IsGlobal;
                         SetToggleButtonColor(globalToggle, variable.IsGlobal);
-                        NotifyEditor();
+                        onUpdate();
                     };
                 }
                 SetToggleButtonColor(globalToggle, variable.IsGlobal);
@@ -97,7 +96,7 @@ namespace Kurisu.AkiBT.Editor
                         {
                             RemoveFromHierarchy();
                         }
-                        NotifyEditor();
+                        onUpdate();
                     })
                     {
                         text = "Delate"
@@ -111,13 +110,8 @@ namespace Kurisu.AkiBT.Editor
                 //Append to folder
                 Add(grid);
             }
-            void NotifyEditor()
-            {
-                EditorUtility.SetDirty(target);
-                EditorUtility.SetDirty(editor);
-                AssetDatabase.SaveAssets();
-            }
-            void SetToggleButtonColor(Button button, bool isOn)
+
+            static void SetToggleButtonColor(Button button, bool isOn)
             {
                 button.style.color = isOn ? Color.green : Color.gray;
             }
@@ -125,7 +119,7 @@ namespace Kurisu.AkiBT.Editor
 
         private void Release(DetachFromPanelEvent _)
         {
-            foreach (var proxy in observeProxies)
+            foreach (var proxy in observableVariables)
             {
                 proxy.Dispose();
             }

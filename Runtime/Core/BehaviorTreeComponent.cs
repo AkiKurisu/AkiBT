@@ -23,13 +23,14 @@ namespace Kurisu.AkiBT
         private BehaviorTree instance = null;
         [SerializeField, HideInInspector]
         private BehaviorTreeData behaviorTreeData = new();
+        private BlackBoardComponent blackBoardCmp;
+        private BlackBoard blackBoard;
         private void Awake()
         {
+            blackBoardCmp = GetComponent<BlackBoardComponent>();
+            if (blackBoardCmp) blackBoard = blackBoardCmp.GetBlackBoard();
             // Assign instance only at runtime
-            instance = GetBehaviorTree();
-            // Initialize before run
-            instance.InitVariables(bindToGlobal: true);
-            instance.Run(gameObject);
+            InitBehaviorTree(instance = GetBehaviorTree());
             instance.Awake();
         }
         private void Start()
@@ -46,7 +47,23 @@ namespace Kurisu.AkiBT
         {
             instance.Tick();
         }
-
+        private void InitBehaviorTree(BehaviorTree instance)
+        {
+            // Initialize before run
+            instance.InitVariables();
+            if (blackBoard != null)
+            {
+                // Need to ensure the order of the mapping chain
+                instance.BlackBoard.MapTo(blackBoard);
+                // chain: node => tree => blackBoard => global variables
+                blackBoard.MapGlobal();
+            }
+            else
+            {
+                instance.BlackBoard.MapGlobal();
+            }
+            instance.Run(gameObject);
+        }
         public BehaviorTree GetBehaviorTree()
         {
             if (Application.isPlaying && instance != null)
@@ -74,9 +91,7 @@ namespace Kurisu.AkiBT
                 return;
             }
             instance?.Abort();
-            instance = behaviorTree;
-            instance.InitVariables(bindToGlobal: true);
-            instance.Run(gameObject);
+            InitBehaviorTree(instance = behaviorTree);
             instance.Awake();
             instance.Start();
         }

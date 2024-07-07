@@ -27,7 +27,11 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(field);
             if (instance.SharedVariables.Count(x => x.IsExposed) != 0)
             {
-                myInspector.Add(new SharedVariablesFoldout(instance, target, this));
+                myInspector.Add(new SharedVariablesFoldout(instance.BlackBoard, () =>
+                {
+                    tree.SetBehaviorTreeData(instance.GetData());
+                    EditorUtility.SetDirty(target);
+                }));
             }
             myInspector.Add(new BehaviorTreeDebugButton(tree));
             return myInspector;
@@ -58,7 +62,11 @@ namespace Kurisu.AkiBT.Editor
             myInspector.Add(description);
             if (instance.SharedVariables.Count(x => x.IsExposed) != 0)
             {
-                myInspector.Add(new SharedVariablesFoldout(instance, target, this));
+                myInspector.Add(new SharedVariablesFoldout(instance.BlackBoard, () =>
+                {
+                    tree.SetBehaviorTreeData(instance.GetData());
+                    EditorUtility.SetDirty(target);
+                }));
             }
             myInspector.Add(new BehaviorTreeDebugButton(tree));
             return myInspector;

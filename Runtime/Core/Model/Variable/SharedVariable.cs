@@ -81,7 +81,7 @@ namespace Kurisu.AkiBT
 		/// Create a observe proxy variable
 		/// </summary>
 		/// <returns></returns>
-		public abstract ObserveProxyVariable Observe();
+		public abstract ObservableVariable Observe();
 
 		object ICloneable.Clone()
 		{
@@ -160,15 +160,15 @@ namespace Kurisu.AkiBT
 		}
 		[SerializeField]
 		protected T value;
-		public override ObserveProxyVariable Observe()
+		public override ObservableVariable Observe()
 		{
 			return ObserveT();
 		}
-		public ObserveProxyVariable<T> ObserveT()
+		public ObservableVariable<T> ObserveT()
 		{
 			Setter ??= (evt) => { value = evt; };
-			var wrapper = new SetterWrapper<T>((w) => { Setter -= w.Invoke; });
-			var proxy = new ObserveProxyVariable<T>(this, in wrapper);
+			var wrapper = new ObservableVariable<T>.Subscription(w => Setter -= w.Invoke);
+			var proxy = new ObservableVariable<T>(this, ref wrapper);
 			Setter += wrapper.Invoke;
 			return proxy;
 		}
@@ -183,27 +183,10 @@ namespace Kurisu.AkiBT
 			return ReflectionHelper.DeepCopy(this);
 		}
 	}
-	public class SetterWrapper<T> : IDisposable
-	{
-		private readonly Action<SetterWrapper<T>> Unregister;
-		public Action<T> Setter;
-		public void Invoke(T value)
-		{
-			Setter(value);
-		}
-		public void Dispose()
-		{
-			Unregister(this);
-		}
-		public SetterWrapper(Action<SetterWrapper<T>> unRegister)
-		{
-			Unregister = unRegister;
-		}
-	}
 	/// <summary>
-	/// Proxy variable to observe value change
+	/// Variable to observe value change
 	/// </summary>
-	public abstract class ObserveProxyVariable : IDisposable
+	public abstract class ObservableVariable : IDisposable
 	{
 		public abstract void Dispose();
 		/// <summary>
@@ -211,10 +194,28 @@ namespace Kurisu.AkiBT
 		/// </summary>
 		public abstract void Unbind();
 		public abstract void Register(Action<object> observeCallBack);
-
+		public abstract void Unregister(Action<object> observeCallBack);
 	}
-	public class ObserveProxyVariable<T> : ObserveProxyVariable, IBindableVariable<T>
+	public class ObservableVariable<T> : ObservableVariable, IBindableVariable<T>
 	{
+		public struct Subscription : IDisposable
+		{
+			private readonly Action<Subscription> Unregister;
+			public Action<T> Setter;
+			public readonly void Invoke(T value)
+			{
+				Setter(value);
+			}
+			public readonly void Dispose()
+			{
+				Unregister(this);
+			}
+			public Subscription(Action<Subscription> unRegister)
+			{
+				Unregister = unRegister;
+				Setter = null;
+			}
+		}
 		public T Value
 		{
 			get
@@ -228,25 +229,29 @@ namespace Kurisu.AkiBT
 		}
 		private Func<T> Getter;
 		private Action<T> Setter;
-		private readonly SetterWrapper<T> setterWrapper;
+		private readonly Subscription setterWrapper;
 		public void Bind(IBindableVariable<T> other)
 		{
 			Getter = () => other.Value;
 			Setter = (evt) => other.Value = evt;
 		}
-		public ObserveProxyVariable(SharedVariable<T> variable, in SetterWrapper<T> setterWrapper)
+		public ObservableVariable(SharedVariable<T> variable, ref Subscription setterWrapper)
 		{
 			this.setterWrapper = setterWrapper;
 			setterWrapper.Setter = Notify;
 			Bind(variable);
+			OnValueChange += (x) => OnBoxValueChange?.Invoke(x);
 		}
 		public event Action<T> OnValueChange;
+		private Action<object> OnBoxValueChange;
 		private void Notify(T value)
 		{
 			OnValueChange?.Invoke(value);
 		}
 		public sealed override void Dispose()
 		{
+			OnValueChange = null;
+			OnBoxValueChange = null;
 			setterWrapper.Dispose();
 		}
 		public override void Unbind()
@@ -254,10 +259,13 @@ namespace Kurisu.AkiBT
 			Getter = null;
 			Setter = null;
 		}
-
 		public override void Register(Action<object> observeCallBack)
 		{
-			OnValueChange += (x) => observeCallBack?.Invoke(x);
+			OnBoxValueChange += observeCallBack;
+		}
+		public override void Unregister(Action<object> observeCallBack)
+		{
+			OnBoxValueChange -= observeCallBack;
 		}
 	}
 }

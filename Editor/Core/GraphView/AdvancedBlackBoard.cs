@@ -11,15 +11,31 @@ namespace Kurisu.AkiBT.Editor
 {
     public class AdvancedBlackBoard : Blackboard, IBlackBoard
     {
+        public struct BlackBoardSettings
+        {
+            /// <summary>
+            /// Show IsExposed toggle for shared variable
+            /// </summary>
+            public bool showIsExposed;
+            /// <summary>
+            /// Automatically set IsExposed for variables
+            /// </summary>
+            public bool autoExposed;
+            /// <summary>
+            /// Show IsGlobal toggle for shared variable
+            /// </summary>
+            public bool showIsGlobalToggle;
+        }
         public Blackboard View => this;
-        public bool AlwaysExposed { get; set; }
+        public BlackBoardSettings settings;
         private readonly FieldResolverFactory fieldResolverFactory = FieldResolverFactory.Instance;
         private readonly ScrollView scrollView;
         public VisualElement RawContainer => scrollView;
         private readonly List<SharedVariable> sharedVariables;
-        private readonly HashSet<ObserveProxyVariable> observeProxies = new();
-        public AdvancedBlackBoard(IVariableSource variableSource, GraphView graphView) : base(graphView)
+        private readonly HashSet<ObservableVariable> observeProxies = new();
+        public AdvancedBlackBoard(IVariableSource variableSource, GraphView graphView, BlackBoardSettings settings = default) : base(graphView)
         {
+            this.settings = settings;
             var header = this.Q("header");
             header.style.height = new StyleLength(50);
             Add(scrollView = new());
@@ -94,7 +110,7 @@ namespace Kurisu.AkiBT.Editor
                 localPropertyName = $"{variable.Name}{index++}";
             }
             variable.Name = localPropertyName;
-            if (AlwaysExposed) variable.IsExposed = true;
+            if (settings.autoExposed) variable.IsExposed = true;
             sharedVariables.Add(variable);
             var container = new VisualElement();
             var field = new BlackboardField { text = localPropertyName, typeText = variable.GetType().Name };
@@ -128,7 +144,7 @@ namespace Kurisu.AkiBT.Editor
                 }
             }
             var placeHolder = new VisualElement();
-            if (!AlwaysExposed)
+            if (settings.showIsExposed)
             {
                 var toggle = new Toggle("Exposed")
                 {
@@ -144,6 +160,27 @@ namespace Kurisu.AkiBT.Editor
                     {
                         var index = sharedVariables.FindIndex(x => x.Name == variable.Name);
                         sharedVariables[index].IsExposed = x.newValue;
+                        NotifyVariableChanged(variable, VariableChangeType.ValueChange);
+                    });
+                }
+                placeHolder.Add(toggle);
+            }
+            if (settings.showIsGlobalToggle)
+            {
+                var toggle = new Toggle("Global")
+                {
+                    value = variable.IsGlobal
+                };
+                if (Application.isPlaying)
+                {
+                    toggle.SetEnabled(false);
+                }
+                else
+                {
+                    toggle.RegisterValueChangedCallback(x =>
+                    {
+                        var index = sharedVariables.FindIndex(x => x.Name == variable.Name);
+                        sharedVariables[index].IsGlobal = x.newValue;
                         NotifyVariableChanged(variable, VariableChangeType.ValueChange);
                     });
                 }

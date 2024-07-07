@@ -36,13 +36,13 @@ namespace Kurisu.AkiBT
                     }
                     if (value is SharedVariable sharedVariable)
                     {
-                        sharedVariable.MapTo(behaviorTree);
+                        sharedVariable.MapTo(behaviorTree.BlackBoard);
                     }
                     else if (value is IList sharedVariableList)
                     {
                         foreach (var variable in sharedVariableList)
                         {
-                            (variable as SharedVariable).MapTo(behaviorTree);
+                            (variable as SharedVariable).MapTo(behaviorTree.BlackBoard);
                         }
                     }
                 }

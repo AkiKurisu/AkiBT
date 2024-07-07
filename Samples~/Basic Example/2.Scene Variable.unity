@@ -388,17 +388,17 @@ MonoBehaviour:
   externalBehaviorTree: {fileID: 0}
   behaviorTreeData:
     variables:
-    - rid: 1337990348908527772
-    - rid: 1337990348908527773
-    - rid: 1337990348908527774
+    - rid: 1337990364364013578
+    - rid: 1337990364364013579
+    - rid: 1337990364364013580
     behaviors:
-    - rid: 1337990348908527775
-    - rid: 1337990348908527776
-    - rid: 1337990348908527777
-    - rid: 1337990348908527778
-    - rid: 1337990348908527779
-    - rid: 1337990348908527780
-    - rid: 1337990348908527781
+    - rid: 1337990364364013581
+    - rid: 1337990364364013582
+    - rid: 1337990364364013583
+    - rid: 1337990364364013584
+    - rid: 1337990364364013585
+    - rid: 1337990364364013586
+    - rid: 1337990364364013587
     edges:
     - children: 01000000
     - children: 0200000006000000
@@ -470,33 +470,33 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 1337990348908527772
+    - rid: 1337990364364013578
       type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
         isGlobal: 0
-        isExposed: 1
+        isExposed: 0
         mName: destination
         value: {x: 0, y: 0, z: 0}
-    - rid: 1337990348908527773
+    - rid: 1337990364364013579
       type: {class: SharedBool, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
-        isGlobal: 0
+        isGlobal: 1
         isExposed: 1
         mName: canMove
         value: 0
-    - rid: 1337990348908527774
+    - rid: 1337990364364013580
       type: {class: SharedObject, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         isShared: 0
-        isGlobal: 0
+        isGlobal: 1
         isExposed: 1
         mName: enemy
         value: {fileID: 0}
         constraintTypeAQN: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-    - rid: 1337990348908527775
+    - rid: 1337990364364013581
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         nodeData:
@@ -510,7 +510,7 @@ MonoBehaviour:
           guid: f24039d6-cefb-4166-88d8-9c657d15bc18
         child:
           rid: -2
-    - rid: 1337990348908527776
+    - rid: 1337990364364013582
       type: {class: Selector, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         nodeData:
@@ -524,7 +524,7 @@ MonoBehaviour:
           guid: 96152a0b-3c6d-4652-a0ee-070e5480f595
         children: []
         abortOnConditionChanged: 1
-    - rid: 1337990348908527777
+    - rid: 1337990364364013583
       type: {class: BoolComparison, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         nodeData:
@@ -552,7 +552,7 @@ MonoBehaviour:
           mName: 
           value: 1
         operation: 0
-    - rid: 1337990348908527778
+    - rid: 1337990364364013584
       type: {class: Sequence, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         nodeData:
@@ -566,7 +566,7 @@ MonoBehaviour:
           guid: 8e46fc35-5048-4161-a5a7-74ff799a3959
         children: []
         abortOnConditionChanged: 0
-    - rid: 1337990348908527779
+    - rid: 1337990364364013585
       type: {class: GetGameObjectPosition, ns: Kurisu.AkiBT.Example, asm: Kurisu.AkiBT.Example}
       data:
         nodeData:
@@ -590,7 +590,7 @@ MonoBehaviour:
           isExposed: 0
           mName: destination
           value: {x: 0, y: 0, z: 0}
-    - rid: 1337990348908527780
+    - rid: 1337990364364013586
       type: {class: Subtree, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         nodeData:
@@ -603,7 +603,7 @@ MonoBehaviour:
           description: 
           guid: e8904302-8965-4680-ac53-f85a1e8f667f
         subtree: {fileID: 11400000, guid: 27b5ceb622afd8b44b9c6f868a017ef2, type: 2}
-    - rid: 1337990348908527781
+    - rid: 1337990364364013587
       type: {class: NavmeshStopAgent, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
       data:
         nodeData:

@@ -7,22 +7,24 @@ using UnityEngine.Pool;
 namespace Kurisu.AkiBT
 {
     [Serializable]
-    public class BehaviorTree : IVariableSource, IEnumerable<NodeBehavior>
+    public class BehaviorTree : IEnumerable<NodeBehavior>
     {
         [SerializeReference]
         internal List<SharedVariable> variables;
         [SerializeReference]
         internal Root root;
-        public Root Root => root;
         public List<SharedVariable> SharedVariables => variables;
 #if UNITY_EDITOR
         [SerializeField]
         internal List<GroupBlockData> blockData = new();
 #endif
+        // Exposed blackboard for data exchange
+        public BlackBoard BlackBoard { get; private set; }
         public BehaviorTree() { }
         public BehaviorTree(BehaviorTreeData behaviorTreeData)
         {
             variables = behaviorTreeData.variables.ToList();
+            BlackBoard = BlackBoard.Create(variables, false);
             root = behaviorTreeData.Build() as Root;
             root ??= new Root();
 #if UNITY_EDITOR
@@ -32,11 +34,10 @@ namespace Kurisu.AkiBT
         /// <summary>
         /// Initialize behavior tree's shared variables
         /// </summary>
-        /// <param name="bindToGlobal">Whether bind properties assigned with isGlobal to global variables</param>
-        public void InitVariables(bool bindToGlobal = true)
+        public void InitVariables()
         {
+            BlackBoard ??= BlackBoard.Create(variables, false);
             SharedVariableHelper.InitVariables(this);
-            if (bindToGlobal) this.MapGlobal();
         }
         public void Run(GameObject gameObject)
         {
