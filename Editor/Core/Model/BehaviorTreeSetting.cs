@@ -108,12 +108,9 @@ namespace Kurisu.AkiBT.Editor
         public static (string[], string[]) GetMask(string editorName)
         {
             var setting = GetOrCreateSettings();
-            if (setting.settings.Any(x => x.EditorName.Equals(editorName)))
-            {
-                var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
-                return (editorSetting.ShowGroups, editorSetting.NotShowGroups.Concat(new string[1] { "Hidden" }).ToArray());
-            }
-            return (null, null);
+            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return (null, null);
+            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            return (editorSetting.ShowGroups, editorSetting.NotShowGroups.Concat(new string[1] { "Hidden" }).ToArray());
         }
         public static BehaviorTreeSetting GetOrCreateSettings()
         {

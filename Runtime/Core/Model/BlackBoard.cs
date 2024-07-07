@@ -108,5 +108,25 @@ namespace Kurisu.AkiBT
             variable.Value = value;
             return variable;
         }
+        public SharedVariable<Object> SetObject(string key, Object value)
+        {
+            if (!this.TryGetSharedObject(key, out SharedVariable<Object> variable))
+            {
+                variable = new SharedObject() { Name = key };
+                SharedVariables.Add(variable);
+            }
+            variable.Value = value;
+            return variable;
+        }
+        public SharedVariable<Object> SetTObject<T>(string key, T value) where T : Object
+        {
+            if (!this.TryGetSharedObject(key, out SharedVariable<Object> variable))
+            {
+                variable = new SharedObject() { Name = key, ConstraintTypeAQN = typeof(T).AssemblyQualifiedName };
+                SharedVariables.Add(variable);
+            }
+            variable.Value = value;
+            return variable;
+        }
     }
 }
