@@ -54,7 +54,9 @@ namespace Kurisu.AkiBT
                 // clear duplicated reference
                 behaviors[i].ClearChildren();
             }
+#if UNITY_EDITOR
             blockData = tree.blockData.ToArray();
+#endif
         }
         public NodeBehavior Build()
         {
