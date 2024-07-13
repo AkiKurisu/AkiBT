@@ -78,14 +78,15 @@ namespace Kurisu.AkiBT
         {
             return new Enumerator(root);
         }
-        public BehaviorTree Clone()
-        {
-            // use internal serialization to solve UObject hard reference
-            return JsonUtility.FromJson<BehaviorTree>(JsonUtility.ToJson(this));
-        }
+        /// <summary>
+        /// Get better format data for serialization of this tree
+        /// </summary>
+        /// <returns></returns>
         public BehaviorTreeData GetData()
         {
-            return new BehaviorTreeData(Clone());
+            // since this function used in editor most of time
+            // use clone to prevent modify source tree
+            return new BehaviorTreeData(this).Clone();
         }
         public static BehaviorTree Deserialize(string serializedData)
         {

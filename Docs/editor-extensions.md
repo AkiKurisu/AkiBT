@@ -76,3 +76,26 @@ public class EventAction : Action
 ## How to customize graph editor
 
 TODO
+
+## Use stack node style (experimental)
+
+   Connecting Composite nodes to child nodes may be troublesome, especially when reordering. You can use Composite Stack to replace the traditional node style. There is no node using this style in the built-in nodes. If you need to use it, you need to write a ``NodeResolver`` to declare the nodes used, the example is as follows:
+```C#
+using System;
+namespace Kurisu.AkiBT.Editor
+{
+   [Ordered]
+   public class SequenceResolver : INodeResolver
+   {
+      public IBehaviorTreeNode CreateNodeInstance(Type type)
+      {
+            return new SequenceStack();
+      }
+      public static bool IsAcceptable(Type behaviorType) => behaviorType == typeof(Sequence);
+   }
+   public class SequenceStack : CompositeStack { }
+}
+
+```
+   <img src="./Images/CompositeStack.gif"/>
+   Of course, this feature currently has some limitations, such as the inability to nest Composite Stack.

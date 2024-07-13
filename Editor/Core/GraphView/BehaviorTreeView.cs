@@ -22,12 +22,14 @@ namespace Kurisu.AkiBT.Editor
         private readonly BehaviorNodeConvertor converter = new();
         VisualElement ILayoutTreeNode.View => this;
         public GraphView View => this;
+        private readonly BehaviorTreeSetting setting;
         public BehaviorTreeView(IBehaviorTreeContainer container, EditorWindow editor)
         {
             EditorWindow = editor;
             Container = container;
             Instance = container.GetBehaviorTree();
             Assert.IsNotNull(Instance.root);
+            setting = BehaviorTreeSetting.GetOrCreateSettings();
             LocalConstruct();
         }
         /// <summary>
@@ -45,14 +47,14 @@ namespace Kurisu.AkiBT.Editor
         {
             style.flexGrow = 1;
             style.flexShrink = 1;
-            styleSheets.Add(BehaviorTreeSetting.GetGraphStyle(EditorName));
+            styleSheets.Add(setting.GetGraphStyle(EditorName));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new GridBackground());
         }
         private void AddNodeProvider()
         {
             var provider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
-            provider.Initialize(this, BehaviorTreeSetting.GetMask(EditorName));
+            provider.Initialize(this, setting.GetMask(EditorName));
             nodeCreationRequest += context =>
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
@@ -168,7 +170,7 @@ namespace Kurisu.AkiBT.Editor
         /// <returns></returns>
         public string SerializeTreeToJson()
         {
-            return BehaviorTree.Serialize(Instance, false, true);
+            return BehaviorTree.Serialize(Instance, false, setting.JsonSerializeEditorData);
         }
         /// <summary>
         /// Copy BehaviorTree from json file

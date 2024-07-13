@@ -22,7 +22,7 @@ namespace Kurisu.AkiBT
 #if UNITY_EDITOR
         [HideInEditorWindow, NonSerialized]
         internal Action<Status> OnNotifyStatus;
-        [HideInEditorWindow, SerializeField]
+        [HideInEditorWindow, NonSerialized]
         internal NodeData nodeData = new();
 #endif
         protected GameObject GameObject { get; private set; }
@@ -71,5 +71,13 @@ namespace Kurisu.AkiBT
         }
         public virtual int GetChildrenCount() => 0;
         public virtual void ClearChildren() { }
+#if UNITY_EDITOR
+        internal NodeData GetSerializedData()
+        {
+            var data = nodeData.Clone();
+            data.Serialize(this);
+            return data;
+        }
+#endif
     }
 }

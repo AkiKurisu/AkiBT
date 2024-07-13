@@ -18,7 +18,7 @@ namespace Kurisu.AkiBT.Editor
             evt.menu.MenuItems().Add(new BehaviorTreeDropdownMenuAction("Change Behavior", (a) =>
             {
                 var provider = ScriptableObject.CreateInstance<DecoratorSearchWindowProvider>();
-                provider.Init(this, BehaviorTreeSetting.GetMask(MapTreeView.EditorName));
+                provider.Init(this, BehaviorTreeSetting.GetOrCreateSettings().GetMask(MapTreeView.EditorName));
                 SearchWindow.Open(new SearchWindowContext(a.eventInfo.localMousePosition), provider);
             }));
             base.BuildContextualMenu(evt);

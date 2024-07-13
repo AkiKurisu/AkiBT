@@ -33,7 +33,7 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
 ## 快速开始
 
-1. 为需要添加行为树的GameObject挂载 `AkiBT.BehaviorTree` 组件.  
+1. 为需要添加行为树的GameObject挂载 `AkiBT.BehaviorTreeComponent` 组件.  
    <img src="./Docs/Images/started1.png" width="480"/>
 2. 点击`Open Graph Editor` 打开结点编辑器.  
    
@@ -47,7 +47,7 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
    * 红色代表上次 `Update` 返回了 `Status.Failure`
    * 绿色代表上次 `Update` 返回了 `Status.Success`
    * 黄色代表上次 `Update` 返回了 `Status.Running`
-6. 你可以将挂载 `AkiBT.BehaviorTree` 的GameObject保存为预制体或保存为ScriptableObject或序列化为Json
+6. 你可以将挂载 `AkiBT.BehaviorTreeComponent` 的GameObject保存为预制体或保存为ScriptableObject或序列化为Json
 
 7. BiliBili 的教学视频（视频中使用的版本较老，待更新）
    
@@ -55,9 +55,9 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
 ## 工作原理
 
-* 当UpdateType为`UpdateType.Auto`时，`AkiBT.BehaviorTree`会在`Update`定时更新子节点。
+* 当UpdateType为`UpdateType.Auto`时，`AkiBT.BehaviorTreeComponent`会在`Update`定时更新子节点。
 * 如果想随时更新，请将UpdateType更改为`UpdateType.Manual`并调用`BehaviorTree.Tick()`；
-* 只有`AkiBT.BehaviorTree`是`MonoBehavior`。 每个节点只是一个 C# 可序列化类。
+* 只有`AkiBT.BehaviorTreeComponent`是`MonoBehavior`。 每个节点只是一个 C# 可序列化类。
   
 
 
@@ -69,7 +69,7 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
    你可以点击结点Ctrl+C&&Ctrl+V或右键选择Duplicate复制结点，你也可以批量选择进行复制粘贴
 
-   你可以从上侧工具栏选择```Copy From SO```，也可以将BehaviorTreeSO、BehaviorTree组件或挂载BehaviorTree的GameObject、Json文件拖拽进编辑器中进行复制粘贴。
+   你可以从上侧工具栏选择```Copy from Asset```，也可以将`BehaviorTreeAsset`、`BehaviorTreeComponent`组件或挂载`BehaviorTreeComponent`的GameObject、Json文件拖拽进编辑器中进行复制粘贴。
    
 
    <img src="./Docs/Images/DragDrop.gif" width="1920"/>
@@ -99,29 +99,17 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
    <img src="./Docs/Images/Setting.png" width="480"/>
 
-### 组合栈结点样式 （实验性）
+### 子树
 
-   将Composite结点与子节点连线尤其是重新排序时可能比较麻烦，你可以使用Composite Stack来替换传统的结点样式，内置结点中没有使用该样式的结点，如需使用你需要编写一个``NodeResolver``来申明使用的结点，示例如下:
-   ```C#
-   using System;
-   namespace Kurisu.AkiBT.Editor
-   {
-      [Ordered]
-      public class SequenceResolver : INodeResolver
-      {
-         public IBehaviorTreeNode CreateNodeInstance(Type type)
-         {
-               return new SequenceStack();
-         }
-         public static bool IsAcceptable(Type behaviorType) => behaviorType == typeof(Sequence);
-      }
-      public class SequenceStack : CompositeStack { }
-   }
+   当打开节点搜索窗口，你可以看到项目中所有的`BehaviorTreeAsset`, 你可以导入编辑器视图中作为子树。
 
-   ```
-   <img src="./Docs/Images/CompositeStack.gif"/>
-   当然目前这一功能具有一些限制，例如无法嵌套使用Composite Stack，之后会进行解决
+   子树中所有勾选`IsExposed`的共享变量会绑定到父树实例上。
 
+### 类型丢失
+
+   如果修改了节点的类、命名空间和程序集，序列化会失败。目前编辑器会将它们转为`InvalidNode`并保留序列化数据为字符串。
+
+   <img src="./Docs/Images/MissingClass.png" width="480"/>
 
 ## Runtime进阶
 

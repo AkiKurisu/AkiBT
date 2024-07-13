@@ -19,7 +19,7 @@ namespace Kurisu.AkiBT.Editor
             label.style.fontSize = 20;
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
             myInspector.Add(label);
-            myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
+            myInspector.styleSheets.Add(BehaviorTreeSetting.GetOrCreateSettings().GetInspectorStyle("AkiBT"));
             var toggle = new PropertyField(serializedObject.FindProperty("updateType"), "Update Type");
             myInspector.Add(toggle);
             var field = new PropertyField(serializedObject.FindProperty("externalBehaviorTree"), "External BehaviorTree");
@@ -51,7 +51,7 @@ namespace Kurisu.AkiBT.Editor
             label.style.fontSize = 20;
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
             myInspector.Add(label);
-            myInspector.styleSheets.Add(BehaviorTreeSetting.GetInspectorStyle("AkiBT"));
+            myInspector.styleSheets.Add(BehaviorTreeSetting.GetOrCreateSettings().GetInspectorStyle("AkiBT"));
             myInspector.Add(new Label("Editor Description"));
             var description = new TextField(string.Empty)
             {

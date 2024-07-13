@@ -42,9 +42,6 @@ namespace Kurisu.AkiBT
 #endif
             for (int i = 0; i < behaviors.Length; ++i)
             {
-#if UNITY_EDITOR
-                nodeData[i] = behaviors[i].nodeData;
-#endif
                 var edge = edges[i] = new Edge();
                 edge.children = new int[behaviors[i].GetChildrenCount()];
                 for (int n = 0; n < edge.children.Length; ++n)
@@ -53,6 +50,9 @@ namespace Kurisu.AkiBT
                 }
                 // clear duplicated reference
                 behaviors[i].ClearChildren();
+#if UNITY_EDITOR
+                nodeData[i] = behaviors[i].GetSerializedData();
+#endif
             }
 #if UNITY_EDITOR
             blockData = tree.blockData.ToArray();
@@ -85,12 +85,21 @@ namespace Kurisu.AkiBT
                         {
                             if (edges[childIndex].children.Length > 0)
                             {
-                                child = new InvalidComposite();
+                                child = new InvalidComposite()
+                                {
+                                    nodeType = nodeData[childIndex].nodeType.ToString(),
+                                    serializedData = nodeData[childIndex].serializedData
+                                };
                             }
                             else
                             {
-                                child = new InvalidAction();
+                                child = new InvalidAction()
+                                {
+                                    nodeType = nodeData[childIndex].nodeType.ToString(),
+                                    serializedData = nodeData[childIndex].serializedData
+                                };
                             }
+                            behaviors[childIndex] = child;
                         }
                         behavior.AddChild(child);
                     }
@@ -137,7 +146,7 @@ namespace Kurisu.AkiBT
             return JsonUtility.FromJson<BehaviorTreeData>(serializedData);
         }
         /// <summary>
-        /// Serialize to json, but has limit at runtime
+        /// Serialize <see cref="BehaviorTreeData"/> to json
         /// </summary>
         /// <param name="tree"></param>
         /// <param name="indented"></param>
@@ -146,17 +155,30 @@ namespace Kurisu.AkiBT
         public static string Serialize(BehaviorTreeData tree, bool indented = false, bool serializeEditorData = false)
         {
             if (tree == null) return null;
-            var json = JsonUtility.ToJson(tree);
+            return SmartSerialize(tree, indented, serializeEditorData);
+        }
+        /// <summary>
+        /// Format json smarter in editor
+        /// </summary>
+        /// <param name="json"></param>
+        /// <param name="indented"></param>
+        /// <param name="serializeEditorData"></param>
+        /// <returns></returns>
+        internal static string SmartSerialize(object data, bool indented = false, bool serializeEditorData = false)
+        {
 #if UNITY_EDITOR
+            string json = JsonUtility.ToJson(data, indented);
             JObject obj = JObject.Parse(json);
             foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
             {
-                //Remove editor only fields in behaviorTree manually
+                //Remove editor only fields manually
                 if (!serializeEditorData)
-                    if (prop.Name == "graphPosition" || prop.Name == "description" || prop.Name == "guid")
+                {
+                    if (prop.Name == nameof(nodeData) || prop.Name == nameof(blockData))
                     {
                         prop.Remove();
                     }
+                }
                 if (prop.Name == "instanceID")
                 {
                     string propertyName = prop.Name;
@@ -166,6 +188,7 @@ namespace Kurisu.AkiBT
                     string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
                     if (string.IsNullOrEmpty(guid))
                     {
+                        // if reference objects inside prefab or in scene
                         Debug.LogWarning($"<color=#fcbe03>AkiBT</color>: Can't serialize UnityEngine.Object field {propertyName}");
                         continue;
                     }

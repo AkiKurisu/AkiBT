@@ -34,7 +34,7 @@ AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshida
 
 ## Quick Start
 
-1. Add `AkiBT.BehaviorTree` component for any GameObject.  
+1. Add `AkiBT.BehaviorTreeComponent` for any GameObject.  
    <img src="./Docs/Images/started1.png" width="480"/>
 2. `Open Graph Editor` button opens GraphView for Behavior Tree.  
    <img src="./Docs/Images/started2.gif" width="480"/>
@@ -48,7 +48,7 @@ AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshida
    * The red node means that last `Update` returned `Status.Failure`.
    * The green node means that last `Update` returned `Status.Success`.
    * The yellow node means that last `Update` returned `Status.Running`.
-6. You can save the GameObject with `AkiBT.BehaviorTree` as prefab or save to ScriptableObject or save to json file.
+6. You can save the GameObject with `AkiBT.BehaviorTreeComponent` as prefab or save to ScriptableObject or save to json file.
 
 7. Tutorial Video On BiliBili (The version in video is older and needs to be updated)
    
@@ -58,7 +58,7 @@ AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshida
 
 * `AkiBT.BehaviorTree` updates child nodes in `Update` timing when the UpdateType is `UpdateType.Auto`.
 * If you want to update at any time, change UpdateType to `UpdateType.Manual` and call `BehaviorTree.Tick()`;
-* Only `AkiBT.BehaviorTree` is the `MonoBehavior`. Each node is just a C# Serializable class.
+* Only `AkiBT.BehaviorTreeComponent` is the `MonoBehavior`. Each node is just a C# Serializable class.
   
   
 ## Editor Advanced
@@ -69,7 +69,7 @@ This part will explain the advanced skills and knowledge related to using AkiBT 
 
    You can click on the node Ctrl+C&&Ctrl+V or right-click and select Duplicate to copy the node. You can also batch select to copy and paste.
 
-   You can select Copy From SO from the upper toolbar, or drag and drop BehaviorTreeSO, BehaviorTree components, or GameObject and Json files that mount BehaviorTree into the editor to copy and paste.
+   You can select `Copy from Asset` from the upper toolbar, or drag and drop `BehaviorTreeAsset`, `BehaviorTreeComponent`, or GameObject and Json files that mount `BehaviorTreeComponent` into the editor to copy and paste.
 
    <img src="./Docs/Images/DragDrop.gif" width="1920"/>
 
@@ -98,28 +98,18 @@ This part will explain the advanced skills and knowledge related to using AkiBT 
 
    <img src="./Docs/Images/Setting.png" width="480"/>
 
-### Combination stack node style (experimental)
+### Subtree
 
-   Connecting Composite nodes to child nodes may be troublesome, especially when reordering. You can use Composite Stack to replace the traditional node style. There is no node using this style in the built-in nodes. If you need to use it, you need to write a ``NodeResolver`` to declare the nodes used, the example is as follows:
-```C#
-using System;
-namespace Kurisu.AkiBT.Editor
-{
-   [Ordered]
-   public class SequenceResolver : INodeResolver
-   {
-      public IBehaviorTreeNode CreateNodeInstance(Type type)
-      {
-            return new SequenceStack();
-      }
-      public static bool IsAcceptable(Type behaviorType) => behaviorType == typeof(Sequence);
-   }
-   public class SequenceStack : CompositeStack { }
-}
+   When open node search window, you can find all `BehaviorTreeAsset` in your project and import it to editor view as a subtree.
 
-```
-   <img src="./Docs/Images/CompositeStack.gif"/>
-   Of course, this feature currently has some limitations, such as the inability to nest Composite Stack, which will be resolved later.
+   All shared variables in subtree marked with `IsExposed` will be bound to parent behavior tree instance.
+
+### Class Missing
+
+   If change node class, namespace and assembly, serialization will be broken. Currently, editor will convert them to `InvalidNode` and keep their serialized data as string.
+
+   <img src="./Docs/Images/MissingClass.png" width="480"/>
+
 
 ## Runtime Advanced
 

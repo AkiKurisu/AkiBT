@@ -34,6 +34,8 @@ namespace Kurisu.AkiBT.Editor
         private EditorSetting[] settings;
         [SerializeField]
         private float autoLayoutSiblingDistance = 50f;
+        [SerializeField]
+        private bool jsonSerializeEditorData = true;
         [SerializeField, HideInInspector]
         private bool autoSave;
         [SerializeField, HideInInspector]
@@ -81,35 +83,30 @@ namespace Kurisu.AkiBT.Editor
         /// <summary>
         /// Auto node layout sibling distance
         /// </summary> <summary>
-        /// 
-        /// </summary>
         public float AutoLayoutSiblingDistance => autoLayoutSiblingDistance;
-        public static StyleSheet GetGraphStyle(string editorName)
+        public bool JsonSerializeEditorData => jsonSerializeEditorData;
+        public StyleSheet GetGraphStyle(string editorName)
         {
-            var setting = GetOrCreateSettings();
-            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
-            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            if (settings == null || settings.Length == 0 || !settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(GraphFallBackPath);
+            var editorSetting = settings.First(x => x.EditorName.Equals(editorName));
             return editorSetting.graphStyleSheet != null ? editorSetting.graphStyleSheet : Resources.Load<StyleSheet>(GraphFallBackPath);
         }
-        public static StyleSheet GetInspectorStyle(string editorName)
+        public StyleSheet GetInspectorStyle(string editorName)
         {
-            var setting = GetOrCreateSettings();
-            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
-            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            if (settings == null || settings.Length == 0 || !settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(InspectorFallBackPath);
+            var editorSetting = settings.First(x => x.EditorName.Equals(editorName));
             return editorSetting.inspectorStyleSheet != null ? editorSetting.inspectorStyleSheet : Resources.Load<StyleSheet>(InspectorFallBackPath);
         }
-        public static StyleSheet GetNodeStyle(string editorName)
+        public StyleSheet GetNodeStyle(string editorName)
         {
-            var setting = GetOrCreateSettings();
-            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
-            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            if (settings == null || settings.Length == 0 || !settings.Any(x => x.EditorName.Equals(editorName))) return Resources.Load<StyleSheet>(NodeFallBackPath);
+            var editorSetting = settings.First(x => x.EditorName.Equals(editorName));
             return editorSetting.nodeStyleSheet != null ? editorSetting.nodeStyleSheet : Resources.Load<StyleSheet>(NodeFallBackPath);
         }
-        public static (string[], string[]) GetMask(string editorName)
+        public (string[], string[]) GetMask(string editorName)
         {
-            var setting = GetOrCreateSettings();
-            if (setting.settings == null || setting.settings.Length == 0 || !setting.settings.Any(x => x.EditorName.Equals(editorName))) return (null, null);
-            var editorSetting = setting.settings.First(x => x.EditorName.Equals(editorName));
+            if (settings == null || settings.Length == 0 || !settings.Any(x => x.EditorName.Equals(editorName))) return (null, null);
+            var editorSetting = settings.First(x => x.EditorName.Equals(editorName));
             return (editorSetting.ShowGroups, editorSetting.NotShowGroups.Concat(new string[1] { "Hidden" }).ToArray());
         }
         public static BehaviorTreeSetting GetOrCreateSettings()
@@ -140,6 +137,7 @@ namespace Kurisu.AkiBT.Editor
         {
             public static GUIContent GraphEditorSettingStyle = new("Graph Editor Setting");
             public static GUIContent LayoutDistanceStyle = new("Layout Distance", "Auto node layout sibling distance");
+            public static GUIContent SerializeEditorDataStyle = new("Serialize Editor Data", "Serialize node editor data when use json serialization, turn off to decrease file size");
         }
         public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User) : base(path, scope) { }
         public override void OnActivate(string searchContext, VisualElement rootElement)
@@ -152,6 +150,7 @@ namespace Kurisu.AkiBT.Editor
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
             EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.GraphEditorSettingStyle);
             EditorGUILayout.PropertyField(m_Settings.FindProperty("autoLayoutSiblingDistance"), Styles.LayoutDistanceStyle);
+            EditorGUILayout.PropertyField(m_Settings.FindProperty("jsonSerializeEditorData"), Styles.SerializeEditorDataStyle);
             m_Settings.ApplyModifiedPropertiesWithoutUndo();
             GUILayout.EndVertical();
         }
