@@ -101,6 +101,12 @@ namespace Kurisu.AkiBT
                 child?.Abort();
             }
         }
+        public sealed override void Dispose()
+        {
+            base.Dispose();
+            child?.Dispose();
+            child = null;
+        }
 
         protected abstract bool IsUpdatable();
 

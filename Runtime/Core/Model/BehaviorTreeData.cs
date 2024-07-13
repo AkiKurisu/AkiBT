@@ -87,16 +87,20 @@ namespace Kurisu.AkiBT
                             {
                                 child = new InvalidComposite()
                                 {
+#if UNITY_EDITOR
                                     nodeType = nodeData[childIndex].nodeType.ToString(),
                                     serializedData = nodeData[childIndex].serializedData
+#endif
                                 };
                             }
                             else
                             {
                                 child = new InvalidAction()
                                 {
+#if UNITY_EDITOR
                                     nodeType = nodeData[childIndex].nodeType.ToString(),
                                     serializedData = nodeData[childIndex].serializedData
+#endif
                                 };
                             }
                             behaviors[childIndex] = child;
@@ -166,8 +170,8 @@ namespace Kurisu.AkiBT
         /// <returns></returns>
         internal static string SmartSerialize(object data, bool indented = false, bool serializeEditorData = false)
         {
-#if UNITY_EDITOR
             string json = JsonUtility.ToJson(data, indented);
+#if UNITY_EDITOR
             JObject obj = JObject.Parse(json);
             foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
             {

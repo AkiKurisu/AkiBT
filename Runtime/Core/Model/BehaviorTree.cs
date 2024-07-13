@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 namespace Kurisu.AkiBT
 {
     [Serializable]
-    public class BehaviorTree : IEnumerable<NodeBehavior>
+    public class BehaviorTree : IEnumerable<NodeBehavior>, IDisposable
     {
         [SerializeReference]
         internal List<SharedVariable> variables;
@@ -20,6 +20,7 @@ namespace Kurisu.AkiBT
 #endif
         // Exposed blackboard for data exchange
         public BlackBoard BlackBoard { get; private set; }
+        internal readonly HashSet<SharedVariable> internalVariables = new();
         public BehaviorTree() { }
         public BehaviorTree(BehaviorTreeData behaviorTreeData)
         {
@@ -68,7 +69,20 @@ namespace Kurisu.AkiBT
         {
             root.Abort();
         }
-
+        public void Dispose()
+        {
+            foreach (var variable in variables)
+            {
+                variable.Unbind();
+            }
+            foreach (var variable in internalVariables)
+            {
+                variable.Unbind();
+            }
+            variables.Clear();
+            internalVariables.Clear();
+            root.Dispose();
+        }
         public IEnumerator<NodeBehavior> GetEnumerator()
         {
             return new Enumerator(root);

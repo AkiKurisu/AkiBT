@@ -84,6 +84,12 @@ namespace Kurisu.AkiBT
                 child?.Abort();
             }
         }
+        public sealed override void Dispose()
+        {
+            base.Dispose();
+            child?.Dispose();
+            child = null;
+        }
         public sealed override NodeBehavior GetChildAt(int index)
         {
             return child;

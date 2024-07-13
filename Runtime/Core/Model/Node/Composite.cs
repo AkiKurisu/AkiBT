@@ -20,7 +20,8 @@ namespace Kurisu.AkiBT
         public sealed override void Awake()
         {
             OnAwake();
-            children.ForEach(e => e.Awake());
+            foreach (var child in children)
+                child.Awake();
         }
 
         protected virtual void OnAwake()
@@ -30,7 +31,8 @@ namespace Kurisu.AkiBT
         public sealed override void Start()
         {
             OnStart();
-            children.ForEach(c => c.Start());
+            foreach (var child in children)
+                child.Start();
         }
 
         protected virtual void OnStart()
@@ -39,12 +41,14 @@ namespace Kurisu.AkiBT
 
         public sealed override void PreUpdate()
         {
-            children.ForEach(c => c.PreUpdate());
+            foreach (var child in children)
+                child.PreUpdate();
         }
 
         public sealed override void PostUpdate()
         {
-            children.ForEach(c => c.PostUpdate());
+            foreach (var child in children)
+                child.PostUpdate();
         }
 
         /// <summary>
@@ -66,6 +70,13 @@ namespace Kurisu.AkiBT
         }
         public sealed override void ClearChildren()
         {
+            children.Clear();
+        }
+        public sealed override void Dispose()
+        {
+            base.Dispose();
+            foreach (var child in children)
+                child.Dispose();
             children.Clear();
         }
     }

@@ -39,6 +39,13 @@ namespace Kurisu.AkiBT
             if (subtree == null) return;
             instance.Abort();
         }
+        public sealed override void Dispose()
+        {
+            base.Dispose();
+            if (subtree == null) return;
+            instance.Dispose();
+            instance = null;
+        }
         public BehaviorTree GetBehaviorTree()
         {
             if (Application.isPlaying) return instance;

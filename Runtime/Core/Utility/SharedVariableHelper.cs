@@ -14,6 +14,7 @@ namespace Kurisu.AkiBT
         /// <param name="behaviorTree>
         public static void InitVariables(BehaviorTree behaviorTree)
         {
+            HashSet<SharedVariable> internalVariables = behaviorTree.internalVariables;
             foreach (var behavior in behaviorTree)
             {
                 var behaviorType = behavior.GetType();
@@ -37,12 +38,15 @@ namespace Kurisu.AkiBT
                     if (value is SharedVariable sharedVariable)
                     {
                         sharedVariable.MapTo(behaviorTree.BlackBoard);
+                        internalVariables.Add(sharedVariable);
                     }
                     else if (value is IList sharedVariableList)
                     {
                         foreach (var variable in sharedVariableList)
                         {
-                            (variable as SharedVariable).MapTo(behaviorTree.BlackBoard);
+                            var sv = variable as SharedVariable;
+                            internalVariables.Add(sv);
+                            sv.MapTo(behaviorTree.BlackBoard);
                         }
                     }
                 }

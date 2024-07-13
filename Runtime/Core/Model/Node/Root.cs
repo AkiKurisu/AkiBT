@@ -53,7 +53,12 @@ namespace Kurisu.AkiBT
         {
             child?.PostUpdate();
         }
-
+        public sealed override void Dispose()
+        {
+            base.Dispose();
+            child?.Dispose();
+            child = null;
+        }
         public override void Abort()
         {
             child?.Abort();

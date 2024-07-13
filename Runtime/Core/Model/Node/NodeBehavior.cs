@@ -17,7 +17,7 @@ namespace Kurisu.AkiBT
     /// you can implement this class
     /// </summary>
     [Serializable]
-    public abstract class NodeBehavior
+    public abstract class NodeBehavior : IDisposable
     {
 #if UNITY_EDITOR
         [HideInEditorWindow, NonSerialized]
@@ -41,6 +41,18 @@ namespace Kurisu.AkiBT
         public virtual void Start() { }
 
         public virtual void PreUpdate() { }
+
+        /// <summary>
+        /// Release when behavior tree destroy
+        /// </summary>
+        public virtual void Dispose()
+        {
+            GameObject = null;
+            Tree = null;
+#if UNITY_EDITOR
+            OnNotifyStatus = null;
+#endif
+        }
 
         public Status Update()
         {

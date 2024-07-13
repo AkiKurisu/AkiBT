@@ -1,11 +1,6 @@
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
-    public enum UpdateType
-    {
-        Auto,
-        Manual
-    }
     /// <summary>
     /// Behavior Tree Component
     /// Awake, Start and Update using UnityEngine's life cycle
@@ -13,6 +8,11 @@ namespace Kurisu.AkiBT
     [DisallowMultipleComponent]
     public class BehaviorTreeComponent : MonoBehaviour, IBehaviorTreeContainer
     {
+        public enum UpdateType
+        {
+            Auto,
+            Manual
+        }
         Object IBehaviorTreeContainer.Object => gameObject;
         [SerializeField,
         Tooltip("Switch to UpdateType.Manual to use manual updates and call BehaviorTree.Tick()")]
@@ -42,7 +42,11 @@ namespace Kurisu.AkiBT
         {
             if (updateType == UpdateType.Auto) Tick();
         }
-
+        private void OnDestroy()
+        {
+            instance.Dispose();
+            instance = null;
+        }
         public void Tick()
         {
             instance.Tick();
@@ -91,6 +95,7 @@ namespace Kurisu.AkiBT
                 return;
             }
             instance?.Abort();
+            instance?.Dispose();
             InitBehaviorTree(instance = behaviorTree);
             instance.Awake();
             instance.Start();
