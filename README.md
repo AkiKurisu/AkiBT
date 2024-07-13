@@ -37,7 +37,6 @@ AkiBT is a behavior tree node editor based on [UniBT](https://github.com/yoshida
 1. Add `AkiBT.BehaviorTreeComponent` for any GameObject.  
    <img src="./Docs/Images/started1.png" width="480"/>
 2. `Open Graph Editor` button opens GraphView for Behavior Tree.  
-   <img src="./Docs/Images/started2.gif" width="480"/>
 3. Add behaviors and set parameters.  
    <img src="./Docs/Images/started2.gif" width="480"/>
 4. Finally press save button on tool bar of the editor window. (If invalid node found the color of the node become red.)  
