@@ -80,6 +80,18 @@ namespace Kurisu.AkiBT
                     if (childIndex >= 0 && childIndex < behaviors.Length)
                     {
                         var child = behaviors[childIndex];
+#if UNITY_EDITOR
+                        var config = APIUpdateConfig.GetConfig();
+                        if (config)
+                        {
+                            var pair = config.FindPair(nodeData[childIndex].nodeType);
+                            if (pair != null)
+                            {
+                                Debug.Log($"<color=#3aff48>API Updater</color>: Update node {pair.sourceType.nodeType} to {pair.targetType.nodeType}");
+                                behaviors[childIndex] = child = (NodeBehavior)SmartDeserialize(nodeData[childIndex].serializedData, pair.targetType.Type);
+                            }
+                        }
+#endif
                         // use invalid node to replace missing nodes
                         if (child == null)
                         {
@@ -121,33 +133,17 @@ namespace Kurisu.AkiBT
             return new BehaviorTree(Clone());
         }
         /// <summary>
-        /// Deserialize from json, but has limit at runtime
+        /// Deserialize <see cref="BehaviorTreeData"/> from json
         /// </summary>
         /// <param name="serializedData"></param>
         /// <returns></returns>
         public static BehaviorTreeData Deserialize(string serializedData)
         {
 #if UNITY_EDITOR
-            if (!string.IsNullOrEmpty(serializedData))
-            {
-                JObject obj = JObject.Parse(serializedData);
-                foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
-                {
-                    if (prop.Name == "instanceID")
-                    {
-                        var UObject = AssetDatabase.LoadAssetAtPath<UObject>(AssetDatabase.GUIDToAssetPath((string)prop.Value));
-                        if (UObject == null)
-                        {
-                            prop.Value = 0;
-                            continue;
-                        }
-                        prop.Value = UObject.GetInstanceID();
-                    }
-                }
-                return JsonUtility.FromJson<BehaviorTreeData>(obj.ToString(Formatting.Indented));
-            }
-#endif
+            return SmartDeserialize(serializedData, typeof(BehaviorTreeData)) as BehaviorTreeData;
+#else
             return JsonUtility.FromJson<BehaviorTreeData>(serializedData);
+#endif
         }
         /// <summary>
         /// Serialize <see cref="BehaviorTreeData"/> to json
@@ -162,7 +158,7 @@ namespace Kurisu.AkiBT
             return SmartSerialize(tree, indented, serializeEditorData);
         }
         /// <summary>
-        /// Format json smarter in editor
+        /// Serialize json smarter in editor
         /// </summary>
         /// <param name="json"></param>
         /// <param name="indented"></param>
@@ -204,6 +200,30 @@ namespace Kurisu.AkiBT
 #else
             return json;
 #endif
+        }
+        internal static object SmartDeserialize(string serializedData, Type type)
+        {
+#if UNITY_EDITOR
+            if (!string.IsNullOrEmpty(serializedData))
+            {
+                JObject obj = JObject.Parse(serializedData);
+                foreach (JProperty prop in obj.Descendants().OfType<JProperty>().ToList())
+                {
+                    if (prop.Name == "instanceID")
+                    {
+                        var UObject = AssetDatabase.LoadAssetAtPath<UObject>(AssetDatabase.GUIDToAssetPath((string)prop.Value));
+                        if (UObject == null)
+                        {
+                            prop.Value = 0;
+                            continue;
+                        }
+                        prop.Value = UObject.GetInstanceID();
+                    }
+                }
+                return JsonUtility.FromJson(obj.ToString(Formatting.Indented), type);
+            }
+#endif
+            return JsonUtility.FromJson(serializedData, type);
         }
     }
 }
