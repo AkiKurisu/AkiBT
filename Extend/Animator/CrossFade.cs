@@ -11,6 +11,10 @@ namespace Kurisu.AkiBT.Extend.Animator
         public SharedFloat normalizedTimeOffset = new(float.NegativeInfinity);
         protected override Status OnUpdate()
         {
+            if (Animator == null)
+            {
+                return Status.Failure;
+            }
             Animator.CrossFade(stateName.Value, normalizedTransitionDuration.Value, layer.Value, normalizedTimeOffset.Value);
             return Status.Success;
         }

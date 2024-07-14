@@ -103,11 +103,12 @@ namespace Kurisu.AkiBT.Editor
             var editorSetting = settings.First(x => x.EditorName.Equals(editorName));
             return editorSetting.nodeStyleSheet != null ? editorSetting.nodeStyleSheet : Resources.Load<StyleSheet>(NodeFallBackPath);
         }
-        public (string[], string[]) GetMask(string editorName)
+        private static readonly string[] internalNotShowGroups = new string[1] { "Hidden" };
+        public (string[] showGroups, string[] notShowGroups) GetMask(string editorName)
         {
-            if (settings == null || settings.Length == 0 || !settings.Any(x => x.EditorName.Equals(editorName))) return (null, null);
+            if (settings == null || settings.Length == 0 || !settings.Any(x => x.EditorName.Equals(editorName))) return (null, internalNotShowGroups);
             var editorSetting = settings.First(x => x.EditorName.Equals(editorName));
-            return (editorSetting.ShowGroups, editorSetting.NotShowGroups.Concat(new string[1] { "Hidden" }).ToArray());
+            return (editorSetting.ShowGroups, editorSetting.NotShowGroups.Concat(internalNotShowGroups).ToArray());
         }
         public static BehaviorTreeSetting GetOrCreateSettings()
         {
