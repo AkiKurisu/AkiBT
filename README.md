@@ -3,7 +3,7 @@
 
 <div align="center">
 
-# AkiBT Version 1.4.8
+# AkiBT Version 1.4.9
 
 ***Read this document in Chinese: [中文文档](./README_ZH.md)***
 

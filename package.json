@@ -1,7 +1,7 @@
 {
   "name": "com.kurisu.akibt",
   "displayName": "AkiBT",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "unity": "2021.3",
   "description": "Node based Behavior Tree Editor.\nSupports visualizing active node in runtime.\nEasily add original behaviors.",
   "keywords": [
