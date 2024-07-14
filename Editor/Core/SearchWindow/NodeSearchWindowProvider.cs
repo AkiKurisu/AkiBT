@@ -116,8 +116,8 @@ namespace Kurisu.AkiBT.Editor
 
             entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {typeof(T).Name}"), 0));
             List<Type> nodeTypes = SubclassSearchUtility.FindSubClassTypes(typeof(T));
-            var groups = nodeTypes.GroupsByAkiGroup();//按AkiGroup进行分类
-            nodeTypes = nodeTypes.Except(groups.SelectMany(x => x)).ToList();//去除被分类的部分
+            var groups = nodeTypes.GroupsByAkiGroup();
+            nodeTypes = nodeTypes.Except(groups.SelectMany(x => x)).ToList();
             groups = groups.SelectGroup(showGroups).ExceptGroup(notShowGroups);
             foreach (var group in groups)
             {

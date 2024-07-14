@@ -44,7 +44,9 @@ namespace Kurisu.AkiBT
         protected override Status OnUpdate()
         {
             var status = child.Update();
-            return OnDecorate(status);
+            status = OnDecorate(status);
+            isRunning = status == Status.Running;
+            return status;
         }
         /// <summary>
         /// 装饰子结点返回值

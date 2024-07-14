@@ -329,7 +329,7 @@ namespace Kurisu.AkiBT.Editor
                     Setting.LastPath = info.Directory.FullName;
                     EditorUtility.SetDirty(setting);
                     File.WriteAllText(path, serializedData);
-                    Debug.Log($"<color=#3aff48>{GraphView.EditorName}</color>:Save to json file succeed!");
+                    Debug.Log($"<color=#3aff48>{GraphView.EditorName}</color>: Save to json file succeed!");
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
                 }
@@ -362,7 +362,7 @@ namespace Kurisu.AkiBT.Editor
             }
             catch
             {
-                ShowNotification(new GUIContent($"Invalid Path:{path}, please pick ScriptableObject inherited from BehaviorTreeSO"));
+                ShowNotification(new GUIContent($"Invalid Path: {path}, please pick ScriptableObject inherited from BehaviorTreeSO"));
                 return null;
             }
         }

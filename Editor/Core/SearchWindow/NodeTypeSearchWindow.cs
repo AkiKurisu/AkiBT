@@ -26,6 +26,7 @@ namespace Kurisu.AkiBT.Editor
             List<Type> nodeTypes = SubclassSearchUtility.FindSubClassTypes(_Types);
             var groups = nodeTypes.GroupsByAkiGroup(); ;
             nodeTypes = nodeTypes.Except(groups.SelectMany(x => x)).ToList();
+            groups = groups.ExceptGroup(new string[1] { "Hidden" });
             foreach (var _type in _Types)
             {
                 entries.Add(new SearchTreeGroupEntry(new GUIContent($"Select {_type.Name}"), 1));

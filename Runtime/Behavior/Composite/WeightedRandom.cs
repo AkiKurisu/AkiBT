@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 namespace Kurisu.AkiBT
 {
@@ -7,9 +6,9 @@ namespace Kurisu.AkiBT
     public class WeightedRandom : Composite
     {
         private NodeBehavior runningNode;
-        [Tooltip("Node weight list, when the length of the list is greater than the number of child nodes" +
-        ", the excess part will not be included in the weight")]
-        public List<float> weights = new();
+        [Tooltip("Children weights, when weights length is greater than children count" +
+        ", the excess part will be ignored")]
+        public float[] weights;
         protected override Status OnUpdate()
         {
             // update running node if previous status is Running.
@@ -30,7 +29,7 @@ namespace Kurisu.AkiBT
         private int GetNext()
         {
             float total = 0;
-            int count = Mathf.Min(weights.Count, Children.Count);
+            int count = Mathf.Min(weights.Length, Children.Count);
             for (int i = 0; i < count; i++)
             {
                 total += weights[i];
@@ -47,11 +46,8 @@ namespace Kurisu.AkiBT
 
         public override void Abort()
         {
-            if (runningNode != null)
-            {
-                runningNode.Abort();
-                runningNode = null;
-            }
+            runningNode?.Abort();
+            runningNode = null;
         }
     }
 }

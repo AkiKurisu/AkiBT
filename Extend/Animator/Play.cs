@@ -9,6 +9,10 @@ namespace Kurisu.AkiBT.Extend.Animator
         public SharedInt layer = new(-1);
         protected override Status OnUpdate()
         {
+            if (Animator == null)
+            {
+                return Status.Failure;
+            }
             Animator.Play(stateName.Value, layer.Value);
             return Status.Success;
         }

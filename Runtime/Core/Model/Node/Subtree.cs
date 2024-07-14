@@ -54,7 +54,7 @@ namespace Kurisu.AkiBT
 
         public void SetBehaviorTreeData(BehaviorTreeData behaviorTreeData)
         {
-            if (!Application.isPlaying || !subtree) return;
+            if (Application.isPlaying || !subtree) return;
             subtree.SetBehaviorTreeData(behaviorTreeData);
         }
     }

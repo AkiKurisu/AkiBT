@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.AI;
 namespace Kurisu.AkiBT.Extend
 {
-    [AkiInfo("Action: Set the destination of NavmeshAgent")]
-    [AkiLabel("Navmesh: SetDestination")]
-    [AkiGroup("Navmesh")]
+    [AkiInfo("Action: Set the destination of NavMeshAgent")]
+    [AkiLabel("NavMeshAgent: SetDestination")]
+    [AkiGroup("NavMeshAgent")]
     public class NavmeshSetDestination : Action
     {
         [Tooltip("If not filled in, it will be obtained from the bound gameObject")]
@@ -12,10 +12,11 @@ namespace Kurisu.AkiBT.Extend
         public SharedVector3 destination;
         protected override Status OnUpdate()
         {
-            if (agent != null)
+            if (agent.Value == null)
             {
-                agent.Value.destination = destination.Value;
+                return Status.Failure;
             }
+            agent.Value.destination = destination.Value;
             return Status.Success;
         }
         public override void Awake()

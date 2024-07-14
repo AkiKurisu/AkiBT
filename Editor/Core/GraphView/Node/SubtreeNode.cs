@@ -23,7 +23,7 @@ namespace Kurisu.AkiBT.Editor
                 return;
             }
             subtree = node.subtree;
-            title = $"Subtree {subtree.name}";
+            title = $"Subtree: {subtree.name}";
             foreach (var variable in subtree.GetBehaviorTree().SharedVariables)
             {
                 // not add if exist
