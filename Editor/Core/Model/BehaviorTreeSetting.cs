@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 namespace Kurisu.AkiBT.Editor
@@ -23,8 +24,8 @@ namespace Kurisu.AkiBT.Editor
     }
     public class BehaviorTreeSetting : ScriptableObject
     {
-        public const string Version = "v1.4.9";
-        private const string k_BehaviorTreeSettingsPath = "Assets/AkiBTSetting.asset";
+        public const string Version = "v1.5.0";
+        private const string k_BehaviorTreeSettingsPath = "ProjectSettings/AkiBTSetting.asset";
         private const string k_UserServiceSettingPath = "Assets/AkiBTUserServiceData.asset";
         private const string GraphFallBackPath = "AkiBT/Graph";
         private const string InspectorFallBackPath = "AkiBT/Inspector";
@@ -112,17 +113,15 @@ namespace Kurisu.AkiBT.Editor
         }
         public static BehaviorTreeSetting GetOrCreateSettings()
         {
-            var guids = AssetDatabase.FindAssets($"t:{nameof(BehaviorTreeSetting)}");
             BehaviorTreeSetting setting = null;
-            if (guids.Length == 0)
-            {
-                setting = CreateInstance<BehaviorTreeSetting>();
-                Debug.Log($"AkiBT Setting saving path : {k_BehaviorTreeSettingsPath}");
-                AssetDatabase.CreateAsset(setting, k_BehaviorTreeSettingsPath);
-                AssetDatabase.SaveAssets();
-            }
-            else setting = AssetDatabase.LoadAssetAtPath<BehaviorTreeSetting>(AssetDatabase.GUIDToAssetPath(guids[0]));
+            var arr = InternalEditorUtility.LoadSerializedFileAndForget(k_BehaviorTreeSettingsPath);
+            setting = arr.Length > 0 ? arr[0] as BehaviorTreeSetting : setting != null ? setting : CreateInstance<BehaviorTreeSetting>();
             return setting;
+        }
+
+        public void Save(bool saveAsText = true)
+        {
+            InternalEditorUtility.SaveToSerializedFileAndForget(new[] { this }, k_BehaviorTreeSettingsPath, saveAsText);
         }
 
         internal static SerializedObject GetSerializedSettings()
@@ -133,7 +132,6 @@ namespace Kurisu.AkiBT.Editor
 
     internal class BehaviorTreeSettingsProvider : SettingsProvider
     {
-        private SerializedObject m_Settings;
         private class Styles
         {
             public static GUIContent GraphEditorSettingStyle = new("Graph Editor Setting");
@@ -141,18 +139,24 @@ namespace Kurisu.AkiBT.Editor
             public static GUIContent SerializeEditorDataStyle = new("Serialize Editor Data", "Serialize node editor data when use json serialization, turn off to decrease file size");
         }
         public BehaviorTreeSettingsProvider(string path, SettingsScope scope = SettingsScope.User) : base(path, scope) { }
+        private BehaviorTreeSetting setting;
+        private SerializedObject serializedObject;
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
-            m_Settings = BehaviorTreeSetting.GetSerializedSettings();
+            setting = BehaviorTreeSetting.GetOrCreateSettings();
+            serializedObject = new(setting);
         }
         public override void OnGUI(string searchContext)
         {
             GUILayout.BeginVertical("Editor Settings", GUI.skin.box);
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
-            EditorGUILayout.PropertyField(m_Settings.FindProperty("settings"), Styles.GraphEditorSettingStyle);
-            EditorGUILayout.PropertyField(m_Settings.FindProperty("autoLayoutSiblingDistance"), Styles.LayoutDistanceStyle);
-            EditorGUILayout.PropertyField(m_Settings.FindProperty("jsonSerializeEditorData"), Styles.SerializeEditorDataStyle);
-            m_Settings.ApplyModifiedPropertiesWithoutUndo();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("settings"), Styles.GraphEditorSettingStyle);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("autoLayoutSiblingDistance"), Styles.LayoutDistanceStyle);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("jsonSerializeEditorData"), Styles.SerializeEditorDataStyle);
+            if (serializedObject.ApplyModifiedPropertiesWithoutUndo())
+            {
+                setting.Save();
+            }
             GUILayout.EndVertical();
         }
         [SettingsProvider]
