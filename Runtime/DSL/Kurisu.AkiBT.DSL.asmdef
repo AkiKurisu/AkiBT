@@ -1,0 +1,16 @@
+{
+    "name": "Kurisu.AkiBT.DSL",
+    "rootNamespace": "Kurisu.AkiBT.DSL",
+    "references": [
+        "GUID:bf89a8bf6625fad4eb6879c01e73541d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

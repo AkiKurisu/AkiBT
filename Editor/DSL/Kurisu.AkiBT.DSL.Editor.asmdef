@@ -1,0 +1,20 @@
+{
+    "name": "Kurisu.AkiBT.DSL.Editor",
+    "rootNamespace": "Kurisu.AkiBT.DSL.Editor",
+    "references": [
+        "GUID:bf89a8bf6625fad4eb6879c01e73541d",
+        "GUID:ea13d7331a0df234f85e126949843072",
+        "GUID:f107c6017d59d64439a1cf5a67861cd3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

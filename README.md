@@ -3,7 +3,7 @@
 
 <div align="center">
 
-# AkiBT Version 1.4.9
+# AkiBT Version 1.5.0
 
 ***Read this document in Chinese: [中文文档](./README_ZH.md)***
 
@@ -158,7 +158,7 @@ Different scopes can depend on each other. For example, ``SceneVariableScope`` c
 
 ## DSL
    
-You can use [AkiBTDSL](https://github.com/AkiKurisu/AkiBTDSL) to make it easier to edit the behavior tree at runtime or outside the project. It can be exported to a DSL (domain specific language) format that is easy to read and modify, such as it is convenient to establish unified editing of Excel tables.
+You can use [AkiBTDSL](./Docs/dsl.md) to make it easier to edit the behavior tree at runtime or outside the project. It can be exported to a DSL (domain specific language) format that is easy to read and modify, such as it is convenient to establish unified editing of Excel tables.
 
 ## User Service
 

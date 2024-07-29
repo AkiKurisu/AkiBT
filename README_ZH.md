@@ -2,7 +2,7 @@
 [![Star on GitHub](https://img.shields.io/github/stars/AkiKurisu/AkiBT.svg)](https://github.com/AkiKurisu/AkiBT/stargazers)
 <div align="center">
 
-# 行为树 AkiBT Version 1.4.9
+# 行为树 AkiBT Version 1.5.0
 
 ***Read this document in English: [English Document](./README.md)***
 
@@ -160,7 +160,7 @@ AkiBT是以[UniBT](https://github.com/yoshidan/UniBT)作为基础的行为树结
 
 ## DSL
    
-你可以使用[AkiBTDSL](https://github.com/AkiKurisu/AkiBTDSL)实现运行时或在项目外更方便编辑行为树, 可导出成便于阅读和修改的DSL（特定领域语言）格式，例如方便建立Excel表格统一编辑。
+你可以使用[AkiBTDSL](./Docs/dsl.md)实现运行时或在项目外更方便编辑行为树, 可导出成便于阅读和修改的DSL（特定领域语言）格式，例如方便建立Excel表格统一编辑。
 
 
 ## 开发便捷服务

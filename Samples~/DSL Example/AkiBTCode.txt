@@ -1,0 +1,33 @@
+///
+Behavior tree written by DSL
+///
+Vector3 destination (0,0,0)
+Vector3 myPos (0,0,0)
+Float distance 1
+Vector3 subtract (0,0,0)
+Parallel(children:[
+	Sequence(children:[
+		Vector3Random(xRange:(-10,10),yRange:(0,0),zRange:(-10,10),operation:Relatively,
+		storeResult=>destination ),
+		DebugLog(logText:"Agent get a new destination!"),
+		TimeWait(waitTime:10)
+	]),
+	Sequence(children:[
+		Sequence(children:[
+			TransformGetPosition(target:null,storeResult=>myPos),
+			 Vector3Operator(operation:Subtract,firstVector3=>myPos,
+				secondVector3=>destination,storeResult=>subtract),
+			Vector3GetSqrMagnitude(vector3=>subtract,result=>distance)
+		]),
+		Selector(abortOnConditionChanged: false, children:[
+			FloatComparison(evaluateOnRunning:false,float1=>distance,
+				float2:4,operation:GreaterThan,child:
+				Sequence(abortOnConditionChanged:false,children:[
+					NavmeshStopAgent(agent:null,isStopped:false),
+					NavmeshSetDestination(agent:null,destination=>destination)
+				])
+			),
+			NavmeshStopAgent(agent:null,isStopped:true)
+		])
+	])
+])
