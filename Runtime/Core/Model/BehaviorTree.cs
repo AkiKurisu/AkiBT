@@ -122,7 +122,7 @@ namespace Kurisu.AkiBT
         /// Traverse the behavior tree and automatically init all shared variables
         /// </summary>
         /// <param name="behaviorTree>
-        public static void InitVariables_Imp(BehaviorTree behaviorTree)
+        private static void InitVariables_Imp(BehaviorTree behaviorTree)
         {
             HashSet<SharedVariable> internalVariables = behaviorTree.internalVariables;
             foreach (var behavior in behaviorTree)

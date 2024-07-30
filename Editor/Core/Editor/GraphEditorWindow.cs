@@ -80,7 +80,7 @@ namespace Kurisu.AkiBT.Editor
             return false;
         }
 #pragma warning restore IDE0051
-        [MenuItem("Tools/AkiBT/AkiBT Editor")]
+        [MenuItem("Tools/AkiBT/AkiBT Editor", priority = 0)]
         private static void ShowEditorWindow()
         {
             string path = EditorUtility.SaveFilePanel("Select ScriptableObject save path", Application.dataPath, "BehaviorTreeSO", "asset");

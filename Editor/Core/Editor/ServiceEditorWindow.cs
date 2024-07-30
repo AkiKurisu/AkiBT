@@ -10,7 +10,7 @@ namespace Kurisu.AkiBT.Editor
 {
     public class ServiceEditorWindow : EditorWindow
     {
-        [MenuItem("Tools/AkiBT/AkiBT Service")]
+        [MenuItem("Tools/AkiBT/AkiBT Service", priority = 1)]
         private static void ShowEditorWindow()
         {
             GetWindow<ServiceEditorWindow>("AkiBT Service");
