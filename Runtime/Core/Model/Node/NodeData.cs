@@ -45,7 +45,7 @@ namespace Kurisu.AkiBT
         public void Serialize(NodeBehavior nodeBehavior)
         {
             nodeType = new NodeType(nodeBehavior.GetType());
-            serializedData = BehaviorTreeData.SmartSerialize(nodeBehavior);
+            serializedData = BehaviorTreeData.SmartSerialize(nodeBehavior, verbose: false);
         }
         public NodeData Clone()
         {

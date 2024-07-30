@@ -163,8 +163,9 @@ namespace Kurisu.AkiBT
         /// <param name="json"></param>
         /// <param name="indented"></param>
         /// <param name="serializeEditorData"></param>
+        /// <param name="verbose"></param>
         /// <returns></returns>
-        internal static string SmartSerialize(object data, bool indented = false, bool serializeEditorData = false)
+        internal static string SmartSerialize(object data, bool indented = false, bool serializeEditorData = false, bool verbose = true)
         {
             string json = JsonUtility.ToJson(data, indented);
 #if UNITY_EDITOR
@@ -188,12 +189,13 @@ namespace Kurisu.AkiBT
                     string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
                     if (string.IsNullOrEmpty(guid))
                     {
-                        // if reference objects inside prefab or in scene
-                        Debug.LogWarning($"<color=#fcbe03>AkiBT</color>: Can't serialize UnityEngine.Object field {propertyName}");
+                        // TODO: if reference objects inside prefab, may use its relative path
+                        if (verbose)
+                            Debug.LogWarning($"<color=#fcbe03>AkiBT</color>: Can't serialize {propertyName} {UObject} in a Scene.");
                         continue;
                     }
                     //Convert to GUID
-                    prop.Value = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
+                    prop.Value = guid;
                 }
             }
             return obj.ToString(indented ? Formatting.Indented : Formatting.None);
