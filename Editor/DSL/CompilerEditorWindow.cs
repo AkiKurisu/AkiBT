@@ -45,10 +45,10 @@ namespace Kurisu.AkiBT.DSL.Editor
         private GUIStyle labelStyle;
         private int state = 2;
         private int mTab;
-        [MenuItem("Tools/AkiBT/DSL/Compiler")]
+        [MenuItem("Tools/AkiBT/DSL/DSL Compiler", priority = 10)]
         public static void OpenEditor()
         {
-            var window = GetWindow<CompilerEditorWindow>("AkiBT Compiler");
+            var window = GetWindow<CompilerEditorWindow>("AkiBT DSL Compiler");
             window.maxSize = new Vector2(600, 800);
         }
         private void OnEnable()

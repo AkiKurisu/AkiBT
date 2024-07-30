@@ -20,7 +20,7 @@ namespace Kurisu.AkiBT.DSL.Editor
         }
         private GeneratorSetting setting;
         private static string KeyName => Application.productName + "_AkiBT_DSL_SplitterSetting";
-        [MenuItem("Tools/AkiBT/DSL/Code Splitter")]
+        [MenuItem("Tools/AkiBT/DSL/Code Splitter", priority = 20)]
         private static void GetWindow()
         {
             GetWindowWithRect<CodeSplitter>(new Rect(0, 0, 400, 200));
