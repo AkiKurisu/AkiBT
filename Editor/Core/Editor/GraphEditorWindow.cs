@@ -276,7 +276,6 @@ namespace Kurisu.AkiBT.Editor
                     ShowNotification(guiContent);
                 }
             }
-            GUI.enabled = true;
             bool newValue = GUILayout.Toggle(Setting.AutoSave, "Auto Save", EditorStyles.toolbarButton);
             if (newValue != Setting.AutoSave)
             {
@@ -294,7 +293,6 @@ namespace Kurisu.AkiBT.Editor
                 }
 
             }
-            GUI.enabled = !Application.isPlaying;
             if (GUILayout.Button("Copy from Asset", EditorStyles.toolbarButton))
             {
                 string path = EditorUtility.OpenFilePanel("Select asset to copy", Setting.LastPath, "asset");
@@ -319,6 +317,8 @@ namespace Kurisu.AkiBT.Editor
             {
                 NodeAutoLayoutHelper.Layout(new BehaviorTreeLayoutConvertor().Init(graphView));
             }
+
+            GUI.enabled = !Application.isPlaying;
             if (GUILayout.Button("Save to Json", EditorStyles.toolbarButton))
             {
                 var serializedData = graphView.SerializeTreeToJson();
@@ -334,7 +334,7 @@ namespace Kurisu.AkiBT.Editor
                     AssetDatabase.Refresh();
                 }
             }
-            GUI.enabled = !Application.isPlaying;
+
             if (GUILayout.Button("Copy from Json", EditorStyles.toolbarButton))
             {
                 string path = EditorUtility.OpenFilePanel("Select json file to copy", Setting.LastPath, "json");

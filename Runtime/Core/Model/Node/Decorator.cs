@@ -109,5 +109,14 @@ namespace Kurisu.AkiBT
         {
             child = nodeBehavior;
         }
+        public sealed override void SetChildren(NodeBehavior[] inChildren)
+        {
+            child = inChildren[0];
+        }
+        public sealed override NodeBehavior[] GetChildren()
+        {
+            if (child == null) return base.GetChildren();
+            return new NodeBehavior[1] { child };
+        }
     }
 }
