@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using UnityEngine.Pool;
 using System.Reflection;
+using UnityEngine.Assertions;
 namespace Kurisu.AkiBT
 {
     [Serializable]
@@ -100,6 +101,10 @@ namespace Kurisu.AkiBT
         /// <returns></returns>
         public BehaviorTreeData GetData()
         {
+#if UNITY_EDITOR
+            // Should not serialize data in playing mode which will modify behavior tree structure
+            Assert.IsFalse(Application.isPlaying);
+#endif
             // since this function used in editor most of time
             // use clone to prevent modify source tree
             return new BehaviorTreeData(this).Clone();
