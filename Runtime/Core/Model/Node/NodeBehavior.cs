@@ -83,6 +83,11 @@ namespace Kurisu.AkiBT
         }
         public virtual int GetChildrenCount() => 0;
         public virtual void ClearChildren() { }
+        public virtual NodeBehavior[] GetChildren()
+        {
+            return new NodeBehavior[0];
+        }
+        public virtual void SetChildren(NodeBehavior[] childrem) { }
 #if UNITY_EDITOR
         internal NodeData GetSerializedData()
         {

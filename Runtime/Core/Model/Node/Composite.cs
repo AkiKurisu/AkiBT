@@ -50,11 +50,6 @@ namespace Kurisu.AkiBT
             foreach (var child in children)
                 child.PostUpdate();
         }
-
-        /// <summary>
-        /// 组合结点可以增加子结点
-        /// </summary>
-        /// <param name="child"></param>
         public sealed override void AddChild(NodeBehavior child)
         {
             children.Add(child);
@@ -71,6 +66,15 @@ namespace Kurisu.AkiBT
         public sealed override void ClearChildren()
         {
             children.Clear();
+        }
+        public sealed override void SetChildren(NodeBehavior[] inChildren)
+        {
+            children.Clear();
+            children.AddRange(inChildren);
+        }
+        public sealed override NodeBehavior[] GetChildren()
+        {
+            return children.ToArray();
         }
         public sealed override void Dispose()
         {
