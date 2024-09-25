@@ -48,23 +48,10 @@ namespace Kurisu.AkiBT
                 {
                     edge.children[n] = Array.IndexOf(behaviors, behaviors[i].GetChildAt(n));
                 }
+                // clear duplicated reference
+                behaviors[i].ClearChildren();
 #if UNITY_EDITOR
-                // When we debug behavior tree in the editor, should not modify nodes
-                if (!Application.isPlaying)
-#endif
-                {
-                    // clear duplicated reference
-                    behaviors[i].ClearChildren();
-                }
-#if UNITY_EDITOR
-                if (Application.isPlaying)
-                {
-                    nodeData[i] = behaviors[i].nodeData;
-                }
-                else
-                {
-                    nodeData[i] = behaviors[i].GetSerializedData();
-                }
+                nodeData[i] = behaviors[i].GetSerializedData();
 #endif
             }
 #if UNITY_EDITOR
