@@ -29,6 +29,8 @@ namespace Kurisu.AkiBT.Editor
             {
                 myInspector.Add(new SharedVariablesFoldout(instance.BlackBoard, () =>
                 {
+                    // Not serialize data in playing mode
+                    if (Application.isPlaying) return;
                     tree.SetBehaviorTreeData(instance.GetData());
                     EditorUtility.SetDirty(target);
                 }));
@@ -64,6 +66,8 @@ namespace Kurisu.AkiBT.Editor
             {
                 myInspector.Add(new SharedVariablesFoldout(instance.BlackBoard, () =>
                 {
+                    // Not serialize data in playing mode
+                    if (Application.isPlaying) return;
                     tree.SetBehaviorTreeData(instance.GetData());
                     EditorUtility.SetDirty(target);
                 }));
