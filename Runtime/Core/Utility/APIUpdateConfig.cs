@@ -7,50 +7,87 @@ namespace Kurisu.AkiBT
     public class APIUpdateConfig : ScriptableObject
     {
         [Serializable]
+        internal class Redirector<T>
+        {
+            public T source;
+            
+            public T target;
+        }
+        
+        [Serializable]
         public class SerializeType
         {
-            private Type type;
-            public Type Type => type ??= ToType();
+            private Type _type;
+            
+            public Type Type => _type ??= ToType();
+            
             public string nodeType;
-            private Type ToType()
+            
+            public Type ToType()
             {
                 var tokens = nodeType.Split(' ');
                 return new NodeData.NodeType(tokens[0], tokens[1], tokens[2]).ToType();
             }
+            
             public string GetFullTypeName()
             {
                 return $"{Type.Assembly.GetName().Name} {Type.FullName}";
             }
+            
             public SerializeType() { }
+            
             public SerializeType(Type type)
             {
                 NodeData.NodeType node = new(type);
                 nodeType = $"{node._class} {node._ns} {node._asm}";
             }
+            
             public SerializeType(NodeData.NodeType nodeType)
             {
                 this.nodeType = $"{nodeType._class} {nodeType._ns} {nodeType._asm}";
             }
         }
-        [Serializable]
-        public class Pair
-        {
-            public SerializeType sourceType;
-            public SerializeType targetType;
-            public Pair() { }
-            public Pair(Type sourceType, Type targetType)
-            {
-                this.sourceType = new SerializeType(sourceType);
-                this.targetType = new SerializeType(targetType);
-            }
-        }
-        [field: SerializeField]
-        public Pair[] Pairs { get; set; }
-        public Pair FindPair(NodeData.NodeType nodeType)
+        
+
+        [SerializeField]
+        internal Redirector<SerializeType>[] nodeRedirectors;
+        
+        [SerializeField]
+        private Redirector<string>[] assemblyRedirectors;
+        
+        [SerializeField]
+        private Redirector<string>[] namespaceRedirectors;
+        
+        public Type RedirectNode(in NodeData.NodeType nodeType)
         {
             var serializeType = new SerializeType(nodeType);
-            return Pairs.FirstOrDefault(x => x.sourceType.nodeType == serializeType.nodeType);
+            var redirector = nodeRedirectors.FirstOrDefault(x => x.source == serializeType);
+            return redirector?.target.ToType() ?? RedirectAssemblyAndNamespace(nodeType);
         }
+        
+        private Type RedirectAssemblyAndNamespace(NodeData.NodeType nodeType)
+        {
+            NodeData.NodeType redirectedNodeType = nodeType;
+            var assemblyRedirector = assemblyRedirectors.FirstOrDefault(r => nodeType._asm.StartsWith(r.source));
+            if (assemblyRedirector != null)
+            {
+                redirectedNodeType._asm = redirectedNodeType._asm.Replace(assemblyRedirector.source, assemblyRedirector.target);
+            }
+            
+            var namespaceRedirector = namespaceRedirectors.FirstOrDefault(r => nodeType._ns.StartsWith(r.source));
+            if (namespaceRedirector != null)
+            {
+                redirectedNodeType._ns = redirectedNodeType._ns.Replace(namespaceRedirector.source, namespaceRedirector.target);
+            }
+
+            if (redirectedNodeType.Equals(nodeType))
+            {
+                return null;
+            }
+
+            return redirectedNodeType.ToType();
+        }
+        
 #if UNITY_EDITOR
         internal static APIUpdateConfig GetConfig()
         {

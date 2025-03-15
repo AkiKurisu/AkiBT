@@ -20,11 +20,15 @@ namespace Kurisu.AkiBT
         {
             public int[] children;
         }
+        
         [SerializeReference]
         public SharedVariable[] variables;
+        
         [SerializeReference]
         public NodeBehavior[] behaviors;
+        
         public Edge[] edges;
+        
 #if UNITY_EDITOR
         [SerializeField]
         private NodeData[] nodeData;
@@ -32,6 +36,7 @@ namespace Kurisu.AkiBT
         internal GroupBlockData[] blockData;
 #endif
         public BehaviorTreeData() { }
+        
         public BehaviorTreeData(BehaviorTree tree)
         {
             variables = tree.variables.ToArray();
@@ -58,6 +63,7 @@ namespace Kurisu.AkiBT
             blockData = tree.blockData.ToArray();
 #endif
         }
+        
         public NodeBehavior Build()
         {
             if (edges == null || edges.Length == 0) return null;
@@ -84,11 +90,11 @@ namespace Kurisu.AkiBT
                         var config = APIUpdateConfig.GetConfig();
                         if (config)
                         {
-                            var pair = config.FindPair(nodeData[childIndex].nodeType);
-                            if (pair != null)
+                            var redirectedType = config.RedirectNode(nodeData![childIndex].nodeType);
+                            if (redirectedType != null)
                             {
-                                Debug.Log($"<color=#3aff48>API Updater</color>: Update node {pair.sourceType.nodeType} to {pair.targetType.nodeType}");
-                                behaviors[childIndex] = child = (NodeBehavior)SmartDeserialize(nodeData[childIndex].serializedData, pair.targetType.Type);
+                                Debug.Log($"<color=#3aff48>API Updater</color>: Update node {nodeData![childIndex].nodeType} to {redirectedType}");
+                                behaviors[childIndex] = child = (NodeBehavior)SmartDeserialize(nodeData[childIndex].serializedData, redirectedType);
                             }
                         }
 #endif
@@ -97,7 +103,7 @@ namespace Kurisu.AkiBT
                         {
                             if (edges[childIndex].children.Length > 0)
                             {
-                                child = new InvalidComposite()
+                                child = new InvalidComposite
                                 {
 #if UNITY_EDITOR
                                     nodeType = nodeData[childIndex].nodeType.ToString(),
@@ -107,7 +113,7 @@ namespace Kurisu.AkiBT
                             }
                             else
                             {
-                                child = new InvalidAction()
+                                child = new InvalidAction
                                 {
 #if UNITY_EDITOR
                                     nodeType = nodeData[childIndex].nodeType.ToString(),
@@ -123,15 +129,18 @@ namespace Kurisu.AkiBT
             }
             return behaviors[0];
         }
+        
         public BehaviorTreeData Clone()
         {
             // use internal serialization to solve UObject hard reference
             return JsonUtility.FromJson<BehaviorTreeData>(JsonUtility.ToJson(this));
         }
+        
         public BehaviorTree CreateInstance()
         {
             return new BehaviorTree(Clone());
         }
+        
         /// <summary>
         /// Deserialize <see cref="BehaviorTreeData"/> from json
         /// </summary>
@@ -145,6 +154,7 @@ namespace Kurisu.AkiBT
             return JsonUtility.FromJson<BehaviorTreeData>(serializedData);
 #endif
         }
+        
         /// <summary>
         /// Serialize <see cref="BehaviorTreeData"/> to json
         /// </summary>
@@ -157,6 +167,7 @@ namespace Kurisu.AkiBT
             if (tree == null) return null;
             return SmartSerialize(tree, indented, serializeEditorData);
         }
+        
         /// <summary>
         /// Serialize json smarter in editor
         /// </summary>
@@ -203,6 +214,7 @@ namespace Kurisu.AkiBT
             return json;
 #endif
         }
+        
         internal static object SmartDeserialize(string serializedData, Type type)
         {
 #if UNITY_EDITOR

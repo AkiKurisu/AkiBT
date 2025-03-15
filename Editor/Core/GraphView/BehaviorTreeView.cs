@@ -146,10 +146,11 @@ namespace Kurisu.AkiBT.Editor
         {
             return PortHelper.GetCompatiblePorts(View, startAnchor);
         }
+
         /// <summary>
         /// Copy graph view nodes from other tree
         /// </summary>
-        /// <param name="tree>
+        /// <param name="tree"></param>
         /// <param name="mousePosition"></param>
         public void CopyFromTree(BehaviorTree tree, Vector2 mousePosition)
         {
@@ -164,6 +165,7 @@ namespace Kurisu.AkiBT.Editor
             RemoveElement(rootNode);
             RestoreBlocks(tree, nodes);
         }
+        
         /// <summary>
         /// Serialize current editing behavior tree to json format
         /// </summary>
@@ -172,6 +174,7 @@ namespace Kurisu.AkiBT.Editor
         {
             return BehaviorTree.Serialize(Instance, false, setting.JsonSerializeEditorData);
         }
+        
         /// <summary>
         /// Copy BehaviorTree from json file
         /// </summary>
@@ -191,6 +194,7 @@ namespace Kurisu.AkiBT.Editor
                 return false;
             }
         }
+        
         /// <summary>
         /// Restore graph view nodes from editing behavior tree
         /// </summary>
@@ -198,10 +202,11 @@ namespace Kurisu.AkiBT.Editor
         {
             OnRestore(Instance);
         }
+
         /// <summary>
         /// Restore behavior tree to the graph view nodes
         /// </summary>
-        /// <param name="treeContainer>
+        /// <param name="tree"></param>
         protected virtual void OnRestore(BehaviorTree tree)
         {
             AddSharedVariablesToBlackBoard(tree, true);
@@ -210,6 +215,7 @@ namespace Kurisu.AkiBT.Editor
             foreach (var node in nodes) node.OnSelectAction = OnNodeSelect;
             RestoreBlocks(tree, nodes);
         }
+        
         private void AddSharedVariablesToBlackBoard(BehaviorTree tree, bool duplicateWhenConflict)
         {
             foreach (var variable in tree.SharedVariables)
@@ -226,6 +232,7 @@ namespace Kurisu.AkiBT.Editor
                 }
             }
         }
+        
         private void RestoreBlocks(BehaviorTree tree, IEnumerable<IBehaviorTreeNode> nodes)
         {
             foreach (var nodeBlockData in tree.blockData)
@@ -262,10 +269,12 @@ namespace Kurisu.AkiBT.Editor
             }
             return true;
         }
+        
         internal void Commit(IBehaviorTreeContainer container)
         {
             OnCommit(container);
         }
+        
         protected virtual void OnCommit(IBehaviorTreeContainer container)
         {
             Undo.RecordObject(container.Object, "Commit behavior tree change");
@@ -290,6 +299,7 @@ namespace Kurisu.AkiBT.Editor
             // notify to unity editor that the tree is changed.
             EditorUtility.SetDirty(container.Object);
         }
+        
         public IReadOnlyList<ILayoutTreeNode> GetLayoutTreeChildren()
         {
             return new List<ILayoutTreeNode>() { root };
