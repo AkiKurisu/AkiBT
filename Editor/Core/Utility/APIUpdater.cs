@@ -4,12 +4,8 @@ using UnityEditor;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
-    public class APIUpdater
+    public static class APIUpdater
     {
-        public static void UpdateAPI(APIUpdateConfig updateConfig)
-        {
-            UpdateAPI(typeof(ScriptableObject), updateConfig);
-        }
         public static void UpdateAPI(Type filterAssetType, APIUpdateConfig updateConfig)
         {
             var assets = AssetDatabase.FindAssets($"t:{filterAssetType}")
@@ -21,7 +17,7 @@ namespace Kurisu.AkiBT.Editor
             }
         }
 
-        public static void UpdateAPI(ScriptableObject asset, APIUpdateConfig updateConfig)
+        private static void UpdateAPI(ScriptableObject asset, APIUpdateConfig updateConfig)
         {
             var serializeObject = new SerializedObject(asset)
             {
@@ -33,11 +29,11 @@ namespace Kurisu.AkiBT.Editor
             {
                 if (iterator.propertyType == SerializedPropertyType.ManagedReference)
                 {
-                    foreach (var pair in updateConfig.Pairs)
+                    foreach (var pair in updateConfig.nodeRedirectors)
                     {
-                        if (iterator.managedReferenceFullTypename == pair.sourceType.GetFullTypeName())
+                        if (iterator.managedReferenceFullTypename == pair.source.GetFullTypeName())
                         {
-                            iterator.managedReferenceValue = JsonUtility.FromJson(JsonUtility.ToJson(iterator.managedReferenceValue), pair.targetType.Type);
+                            iterator.managedReferenceValue = JsonUtility.FromJson(JsonUtility.ToJson(iterator.managedReferenceValue), pair.target.Type);
                             isDirty = true;
                         }
                     }
@@ -45,7 +41,7 @@ namespace Kurisu.AkiBT.Editor
             }
             if (isDirty)
             {
-                Debug.Log($"{asset.name} update");
+                Debug.Log($"[AkiBT] {asset.name} api update succeed");
                 serializeObject.ApplyModifiedProperties();
                 EditorUtility.SetDirty(asset);
             }

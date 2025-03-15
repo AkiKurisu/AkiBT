@@ -1,30 +1,36 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Pool;
 namespace Kurisu.AkiBT.DSL
 {
     public sealed class BuildParserListener : IParserListener, IDisposable
     {
-        private static readonly ObjectPool<BuildParserListener> pool = new(() => new());
-        private BuildVisitor visitor;
-        private readonly List<SharedVariable> variables = new();
-        private readonly List<NodeBehavior> nodes = new();
+        private static readonly ObjectPool<BuildParserListener> Pool = new(() => new BuildParserListener());
+        
+        private BuildVisitor _visitor;
+        
+        private readonly List<SharedVariable> _variables = new();
+        
+        private readonly List<NodeBehavior> _nodes = new();
+        
         public BuildParserListener Verbose(bool verbose)
         {
-            visitor.Verbose = verbose;
+            _visitor.Verbose = verbose;
             return this;
         }
+        
         public void PushTopLevelExpression(NodeExprAST data)
         {
-            visitor.VisitNodeExprAST(data);
-            nodes.Add(visitor.nodeStack.Pop());
+            _visitor.VisitNodeExprAST(data);
+            _nodes.Add(_visitor.NodeStack.Pop());
         }
+        
         public void PushVariableDefinition(VariableDefineExprAST data)
         {
-            visitor.VisitVariableDefineAST(data);
-            variables.Add(visitor.variableStack.Pop());
+            _visitor.VisitVariableDefineAST(data);
+            _variables.Add(_visitor.VariableStack.Pop());
         }
+        
         /// <summary>
         /// Build behavior tree
         /// </summary>
@@ -32,17 +38,18 @@ namespace Kurisu.AkiBT.DSL
         public BehaviorTree Build()
         {
             var sequence = new Sequence();
-            foreach (var node in nodes)
+            foreach (var node in _nodes)
                 sequence.AddChild(node);
             var instance = new BehaviorTree
             {
-                variables = new List<SharedVariable>(variables),
-                root = new Root() { Child = sequence }
+                variables = new List<SharedVariable>(_variables),
+                root = new Root { Child = sequence }
             };
-            variables.Clear();
-            nodes.Clear();
+            _variables.Clear();
+            _nodes.Clear();
             return instance;
         }
+        
         /// <summary>
         /// Get pooled build listener
         /// </summary>
@@ -50,17 +57,18 @@ namespace Kurisu.AkiBT.DSL
         /// <returns></returns>
         public static BuildParserListener GetPooled(BuildVisitor buildVisitor)
         {
-            var listener = pool.Get();
-            listener.visitor = buildVisitor;
+            var listener = Pool.Get();
+            listener._visitor = buildVisitor;
             return listener;
         }
+        
         public void Dispose()
         {
-            visitor?.Dispose();
-            visitor = null;
-            variables.Clear();
-            nodes.Clear();
-            pool.Release(this);
+            _visitor?.Dispose();
+            _visitor = null;
+            _variables.Clear();
+            _nodes.Clear();
+            Pool.Release(this);
         }
     }
 }

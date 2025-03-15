@@ -5,20 +5,24 @@ namespace Kurisu.AkiBT.DSL
     /// </summary>
     public class Compiler
     {
-        private readonly NodeTypeRegistry registry;
-        private bool verbose;
+        private readonly NodeTypeRegistry _registry;
+        
+        private bool _verbose;
+        
         public Compiler(NodeTypeRegistry registry)
         {
-            this.registry = registry;
+            _registry = registry;
         }
-        public Compiler(string registryPath)
+        
+        public Compiler(string registryPath): this(NodeTypeRegistry.FromPath(registryPath))
         {
-            registry = NodeTypeRegistry.FromPath(registryPath);
+      
         }
+        
         public BehaviorTree Compile(string code)
         {
-            var lexer = new Lexer(new Reader(code), registry).Verbose(verbose);
-            var bpl = BuildParserListener.GetPooled(BuildVisitor.GetPooled()).Verbose(verbose);
+            var lexer = new Lexer(new Reader(code), _registry).Verbose(_verbose);
+            var bpl = BuildParserListener.GetPooled(BuildVisitor.GetPooled()).Verbose(_verbose);
             try
             {
                 lexer.ParseToEnd(new Parser(lexer, bpl));
@@ -29,12 +33,14 @@ namespace Kurisu.AkiBT.DSL
                 bpl.Dispose();
             }
         }
+        
         public Compiler Verbose(bool verbose)
         {
-            this.verbose = verbose;
+            _verbose = verbose;
             return this;
         }
     }
+    
     public static class LexerExtensions
     {
         /// <summary>

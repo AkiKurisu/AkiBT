@@ -32,7 +32,7 @@ namespace Kurisu.AkiBT.Editor
 
         protected override void OnRestore()
         {
-            (NodeBehavior as Root).UpdateEditor = ClearStyle;
+            ((Root)NodeBehavior).UpdateEditor = ClearStyle;
         }
 
         protected override bool OnValidate(Stack<IBehaviorTreeNode> stack)

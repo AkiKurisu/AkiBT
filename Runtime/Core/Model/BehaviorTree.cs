@@ -105,7 +105,7 @@ namespace Kurisu.AkiBT
             // Should not serialize data in playing mode which will modify behavior tree structure
             Assert.IsFalse(Application.isPlaying);
 #endif
-            // since this function used in editor most of time
+            // since this function used in editor most time
             // use clone to prevent modify source tree
             return new BehaviorTreeData(this).Clone();
         }
@@ -123,10 +123,11 @@ namespace Kurisu.AkiBT
             if (tree == null) return null;
             return BehaviorTreeData.Serialize(tree.GetData(), indented, serializeEditorData);
         }
+
         /// <summary>
         /// Traverse the behavior tree and automatically init all shared variables
         /// </summary>
-        /// <param name="behaviorTree>
+        /// <param name="behaviorTree"></param>
         private static void InitVariables_Imp(BehaviorTree behaviorTree)
         {
             HashSet<SharedVariable> internalVariables = behaviorTree.internalVariables;

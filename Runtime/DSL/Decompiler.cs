@@ -14,15 +14,17 @@ namespace Kurisu.AkiBT.DSL
     /// </summary>
     public class Decompiler
     {
-        private readonly StringBuilder stringBuilder = new();
+        private readonly StringBuilder _stringBuilder = new();
+        
         public string Decompile(IBehaviorTreeContainer behaviorTreeContainer)
         {
             var instance = behaviorTreeContainer.GetBehaviorTree();
-            stringBuilder.Clear();
+            _stringBuilder.Clear();
             WriteReferencedVariable(instance);
             WriteNode(instance.root.Child, 0);
-            return stringBuilder.ToString();
+            return _stringBuilder.ToString();
         }
+        
         private void WriteReferencedVariable(BehaviorTree behaviorTreeContainer)
         {
             foreach (var variable in behaviorTreeContainer.SharedVariables)
@@ -38,15 +40,15 @@ namespace Kurisu.AkiBT.DSL
                 if (variable is SharedObject sharedObject && !string.IsNullOrEmpty(sharedObject.ConstraintTypeAQN))
                 {
                     Type constraintType = Type.GetType(sharedObject.ConstraintTypeAQN);
-                    SafeWrite($"{constraintType.Assembly.GetName().Name}, {constraintType.Namespace}.{constraintType.Name}");
+                    SafeWrite($"{constraintType!.Assembly.GetName().Name}, {constraintType.Namespace}.{constraintType.Name}");
                     Space();
                 }
 #if UNITY_EDITOR
-                if (value is UnityEngine.Object UObject)
+                if (value is UnityEngine.Object uObject)
                 {
-                    string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject));
+                    string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(uObject));
                     if (string.IsNullOrEmpty(guid)) Write("Null");
-                    else Write(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(UObject)));
+                    else Write(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(uObject)));
                 }
                 else
 #endif
@@ -56,6 +58,7 @@ namespace Kurisu.AkiBT.DSL
                 NewLine();
             }
         }
+        
         private void WriteNode(NodeBehavior node, int indentLevel)
         {
             WriteIndent(indentLevel);
@@ -65,6 +68,7 @@ namespace Kurisu.AkiBT.DSL
             WriteProperties(type, node, indentLevel);
             Write(')');
         }
+        
         private void WriteProperties(Type type, NodeBehavior node, int indentLevel)
         {
             bool haveProperty = false;
@@ -105,6 +109,7 @@ namespace Kurisu.AkiBT.DSL
                 }
             }
         }
+        
         private static bool IsIList(Type type, out Type elementType)
         {
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
@@ -120,6 +125,7 @@ namespace Kurisu.AkiBT.DSL
             elementType = null;
             return false;
         }
+        
         private void WriteArray(IList list, Type childType, int indentLevel)
         {
             Write('[');
@@ -143,6 +149,7 @@ namespace Kurisu.AkiBT.DSL
             }
             Write(']');
         }
+        
         private void WritePropertyName(FieldInfo fieldInfo)
         {
             AkiLabelAttribute label;
@@ -155,6 +162,7 @@ namespace Kurisu.AkiBT.DSL
                 Write(fieldInfo.Name);
             }
         }
+        
         private void WriteVariableValue(SharedVariable variable)
         {
             if (variable.IsShared)
@@ -168,37 +176,44 @@ namespace Kurisu.AkiBT.DSL
                 SafeWrite(variable.GetValue());
             }
         }
+        
         private void WritePropertyValue(object value)
         {
             Write(':');
             SafeWrite(value);
         }
+        
         private void Space()
         {
-            stringBuilder.Append(' ');
+            _stringBuilder.Append(' ');
         }
+        
         private void WriteIndent(int indentLevel)
         {
-            stringBuilder.Append(' ', indentLevel * 4);
+            _stringBuilder.Append(' ', indentLevel * 4);
         }
+        
         private void NewLine()
         {
-            stringBuilder.Append('\n');
+            _stringBuilder.Append('\n');
         }
+        
         private void SafeWrite(object context)
         {
             if (context is string)
-                stringBuilder.Append($"\"{context}\"");
+                _stringBuilder.Append($"\"{context}\"");
             else
-                stringBuilder.Append(context.ToString());
+                _stringBuilder.Append(context);
         }
+        
         private void Write(string text)
         {
-            stringBuilder.Append(text);
+            _stringBuilder.Append(text);
         }
+        
         private void Write(char token)
         {
-            stringBuilder.Append(token);
+            _stringBuilder.Append(token);
         }
     }
 }
