@@ -13,18 +13,22 @@ namespace Kurisu.AkiBT.DSL
     {
         [JsonProperty]
         private Dictionary<string, NodeInfo> NodeInfos { get; set; } = new();
-        public static readonly HashSet<ITypeContract> contracts = new();
+        
+        public static readonly HashSet<ITypeContract> Contracts = new();
+        
         static NodeTypeRegistry()
         {
-            contracts.Add(new Vector2IntToVector2Contract());
-            contracts.Add(new Vector3IntToVector3Contract());
-            contracts.Add(new Vector2ToVector3Contract());
-            contracts.Add(new Vector3ToVector2Contract());
+            Contracts.Add(new Vector2IntToVector2Contract());
+            Contracts.Add(new Vector3IntToVector3Contract());
+            Contracts.Add(new Vector2ToVector3Contract());
+            Contracts.Add(new Vector3ToVector2Contract());
         }
+        
         public static NodeTypeRegistry FromPath(string path)
         {
             return JsonConvert.DeserializeObject<NodeTypeRegistry>(File.ReadAllText(path));
         }
+        
         /// <summary>
         /// Get node meta data from node path
         /// </summary>
@@ -41,6 +45,7 @@ namespace Kurisu.AkiBT.DSL
             }
             return false;
         }
+        
         /// <summary>
         /// Register a new node
         /// </summary>
@@ -50,9 +55,10 @@ namespace Kurisu.AkiBT.DSL
         {
             NodeInfos[nodePath] = metaData;
         }
+        
         public static object Cast(in object value, Type inputType, Type expectType)
         {
-            foreach (var contract in contracts)
+            foreach (var contract in Contracts)
             {
                 if (contract.CanConvert(inputType, expectType))
                 {
@@ -61,6 +67,7 @@ namespace Kurisu.AkiBT.DSL
             }
             return value;
         }
+        
         /// <summary>
         /// Get <see cref="FieldType"/> from type
         /// </summary>
@@ -81,6 +88,7 @@ namespace Kurisu.AkiBT.DSL
             if (type.IsSubclassOf(typeof(UObject))) return FieldType.Object;
             return FieldType.Unknown;
         }
+        
         /// <summary>
         /// Get value type from <see cref="FieldType"/>
         /// </summary>
@@ -102,6 +110,7 @@ namespace Kurisu.AkiBT.DSL
                 _ => throw new ArgumentOutOfRangeException(nameof(fieldType)),
             };
         }
+        
         public static bool IsFieldType(object value, FieldType fieldType)
         {
             return fieldType switch
@@ -121,6 +130,7 @@ namespace Kurisu.AkiBT.DSL
                 _ => throw new ArgumentOutOfRangeException(nameof(fieldType)),
             };
         }
+        
         public static IEnumerable<FieldInfo> GetAllFields(Type type)
         {
             return type.GetFields(BindingFlags.Public | BindingFlags.Instance)
@@ -128,6 +138,7 @@ namespace Kurisu.AkiBT.DSL
                     .Where(field => field.IsInitOnly == false && field.GetCustomAttribute<HideInEditorWindow>() == null)
                     .ToList();
         }
+        
         private static IEnumerable<FieldInfo> GetAllFields_Internal(Type t)
         {
             if (t == null)
@@ -138,44 +149,61 @@ namespace Kurisu.AkiBT.DSL
                     .Concat(GetAllFields_Internal(t.BaseType));
         }
     }
+    
+    [Serializable]
     public class NodeInfo
     {
         public string className;
+        
         public string ns;
+        
         public string asm;
+        
         public bool isVariable;
+        
         public List<PropertyInfo> properties;
-        private List<FieldInfo> fieldInfos;
-        private Type type;
+        
+        private List<FieldInfo> _fieldInfos;
+        
+        private Type _type;
+        
         public PropertyInfo GetProperty(string label)
         {
             return properties?.FirstOrDefault(x => x.label == label || x.name == label);
         }
+        
         public Type GetNodeType()
         {
-            type ??= Type.GetType(Assembly.CreateQualifiedName(asm, $"{ns}.{className}"));
-            if (fieldInfos == null)
+            _type ??= Type.GetType(Assembly.CreateQualifiedName(asm, $"{ns}.{className}"));
+            if (_fieldInfos == null)
             {
-                fieldInfos = NodeTypeRegistry.GetAllFields(type).ToList();
+                _fieldInfos = NodeTypeRegistry.GetAllFields(_type).ToList();
                 foreach (var property in properties)
                 {
-                    var field = fieldInfos.FirstOrDefault(x => x.Name == property.name);
+                    var field = _fieldInfos.FirstOrDefault(x => x.Name == property.name);
                     if (field != null)
                         property.FieldInfo = field;
                 }
             }
-            return type;
+            return _type;
         }
     }
+    
+    [Serializable]
     public class PropertyInfo
     {
         public string label;
+        
         public string name;
+        
         public FieldType fieldType;
+        
         [JsonIgnore]
         public bool IsVariable => fieldType == FieldType.Variable;
+        
         [JsonIgnore]
         public bool IsEnum => fieldType == FieldType.Enum;
+        
         [JsonIgnore]
         public FieldInfo FieldInfo { get; internal set; }
     }

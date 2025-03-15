@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
+
 namespace Kurisu.AkiBT
 {
     /// <summary>
@@ -13,80 +16,92 @@ namespace Kurisu.AkiBT
             Auto,
             Manual
         }
+        
         Object IBehaviorTreeContainer.Object => gameObject;
-        [SerializeField,
-        Tooltip("Switch to UpdateType.Manual to use manual updates and call BehaviorTree.Tick()")]
-        private UpdateType updateType;
+        
+        [Tooltip("Switch to UpdateType.Manual to use manual updates and call BehaviorTree.Tick()")]
+        public UpdateType updateType;
+        
         [SerializeField, Tooltip("Use the external behavior tree to replace the behavior tree in the component," +
                                  " and the behavior tree in the component will be overwritten when saving")]
         private BehaviorTreeAsset externalBehaviorTree;
-        private BehaviorTree instance = null;
+        
+        [NonSerialized]
+        private BehaviorTree _instance;
+        
         [SerializeField, HideInInspector]
+        
         private BehaviorTreeData behaviorTreeData = new();
-        private BlackBoardComponent blackBoardCmp;
-        private BlackBoard blackBoard;
+        
+        private BlackBoardComponent _blackBoardCmp;
+        
+        private BlackBoard _blackBoard;
+        
         private void Awake()
         {
-            blackBoardCmp = GetComponent<BlackBoardComponent>();
-            if (blackBoardCmp) blackBoard = blackBoardCmp.GetBlackBoard();
+            _blackBoardCmp = GetComponent<BlackBoardComponent>();
+            if (_blackBoardCmp) _blackBoard = _blackBoardCmp.GetBlackBoard();
             // Assign instance only at runtime
-            InitBehaviorTree(instance = GetBehaviorTree());
-            instance.Awake();
+            InitBehaviorTree(_instance = GetBehaviorTree());
+            _instance.Awake();
         }
+        
         private void Start()
         {
-            instance.Start();
+            _instance.Start();
         }
 
         private void Update()
         {
-            if (updateType == UpdateType.Auto) Tick();
+            if (updateType == UpdateType.Auto)
+            {
+                Tick();
+            }
         }
+        
         private void OnDestroy()
         {
-            instance.Dispose();
-            instance = null;
+            _instance.Dispose();
+            _instance = null;
         }
+        
         public void Tick()
         {
-            instance.Tick();
+            _instance.Tick();
         }
-        private void InitBehaviorTree(BehaviorTree instance)
+        
+        private void InitBehaviorTree(BehaviorTree behaviorTreeInstance)
         {
             // Initialize before run
-            instance.InitVariables();
-            if (blackBoard != null)
+            behaviorTreeInstance.InitVariables();
+            if (_blackBoard != null)
             {
                 // Need to ensure the order of the mapping chain
-                instance.BlackBoard.MapTo(blackBoard);
+                behaviorTreeInstance.BlackBoard.MapTo(_blackBoard);
                 // chain: node => tree => blackBoard => global variables
-                blackBoard.MapGlobal();
+                _blackBoard.MapGlobal();
             }
             else
             {
-                instance.BlackBoard.MapGlobal();
+                behaviorTreeInstance.BlackBoard.MapGlobal();
             }
-            instance.Run(gameObject);
+            behaviorTreeInstance.Run(gameObject);
         }
+        
         public BehaviorTree GetBehaviorTree()
         {
-            if (Application.isPlaying && instance != null)
+            if (Application.isPlaying && _instance != null)
             {
-                return instance;
+                return _instance;
             }
-            if (externalBehaviorTree)
-            {
-                return externalBehaviorTree.GetBehaviorTree();
-            }
-            else
-            {
-                return behaviorTreeData.CreateInstance();
-            }
+            return externalBehaviorTree ? externalBehaviorTree.GetBehaviorTree() : behaviorTreeData.CreateInstance();
         }
-        public void SetBehaviorTreeData(BehaviorTreeData behaviorTreeData)
+        
+        public void SetBehaviorTreeData(BehaviorTreeData serializedData)
         {
-            this.behaviorTreeData = behaviorTreeData;
+            behaviorTreeData = serializedData;
         }
+        
         public void SetRuntimeBehaviorTree(BehaviorTree behaviorTree)
         {
             if (!Application.isPlaying)
@@ -94,11 +109,11 @@ namespace Kurisu.AkiBT
                 Debug.LogWarning("Can not assign behavior tree instance in Editor mode");
                 return;
             }
-            instance?.Abort();
-            instance?.Dispose();
-            InitBehaviorTree(instance = behaviorTree);
-            instance.Awake();
-            instance.Start();
+            _instance?.Abort();
+            _instance?.Dispose();
+            InitBehaviorTree(_instance = behaviorTree);
+            _instance.Awake();
+            _instance.Start();
         }
     }
 }

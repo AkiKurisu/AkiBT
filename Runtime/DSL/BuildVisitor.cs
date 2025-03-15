@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
-using UnityEngine;
+using System.Runtime.CompilerServices;
 using UnityEngine.Pool;
+using Debug = UnityEngine.Debug;
 using UObject = UnityEngine.Object;
 namespace Kurisu.AkiBT.DSL
 {
@@ -12,35 +14,42 @@ namespace Kurisu.AkiBT.DSL
     /// </summary>
     public class BuildVisitor : ExprVisitor, IDisposable
     {
-        private bool isPooled;
-        private static readonly ObjectPool<BuildVisitor> pool = new(() => new());
+        private bool _isPooled;
+        
+        private static readonly ObjectPool<BuildVisitor> Pool = new(() => new BuildVisitor());
+        
         public bool Verbose { get; set; }
-        public readonly Stack<SharedVariable> variableStack = new();
-        public readonly Stack<NodeBehavior> nodeStack = new();
-        public readonly Stack<object> valueStack = new();
+        
+        public readonly Stack<SharedVariable> VariableStack = new();
+        
+        public readonly Stack<NodeBehavior> NodeStack = new();
+        
+        public readonly Stack<object> ValueStack = new();
+        
         protected internal override ExprAST VisitNodeExprAST(NodeExprAST node)
         {
             var nodeInfo = node.MetaData;
             var instance = Activator.CreateInstance(nodeInfo.GetNodeType()) as NodeBehavior;
             // Push if root
-            if (nodeStack.Count == 0)
-                nodeStack.Push(instance);
+            if (NodeStack.Count == 0)
+                NodeStack.Push(instance);
             // Push to node stack for writing properties
-            nodeStack.Push(instance);
+            NodeStack.Push(instance);
             base.VisitNodeExprAST(node);
             // Push to value stack for using as value expr
-            valueStack.Push(instance);
-            nodeStack.Pop();
+            ValueStack.Push(instance);
+            NodeStack.Pop();
             if (Verbose) Log($"Succeed build node {nodeInfo.GetNodeType().Name}");
             return node;
         }
+        
         protected internal override ExprAST VisitPropertyAST(PropertyExprAST node)
         {
-            NodeBehavior parent = nodeStack.Peek();
+            NodeBehavior parent = NodeStack.Peek();
             base.VisitPropertyAST(node);
             FieldInfo fieldInfo = node.MetaData.FieldInfo;
             // Pop value from stack
-            var boxValue = valueStack.Pop();
+            var boxValue = ValueStack.Pop();
             Type boxType = boxValue.GetType();
             if (boxType != fieldInfo.FieldType)
             {
@@ -50,23 +59,25 @@ namespace Kurisu.AkiBT.DSL
             if (Verbose) Log($"Write property {fieldInfo.Name} to {parent}");
             return node;
         }
+        
         protected internal override ExprAST VisitValueExprAST(ValueExprAST node)
         {
             base.VisitValueExprAST(node);
             // Push value to task
-            valueStack.Push(node.Value);
+            ValueStack.Push(node.Value);
             return node;
         }
+        
         protected internal override ExprAST VisitArrayExprAST(ArrayExprAST node)
         {
-            IList array = Activator.CreateInstance(node.FieldType, node.Children.Count) as IList;
+            IList array = (IList)Activator.CreateInstance(node.FieldType, node.Children.Count);
             if (array.IsFixedSize)
             {
                 int i = 0;
                 foreach (var child in node.Children)
                 {
                     Visit(child);
-                    array[i++] = valueStack.Pop();
+                    array[i++] = ValueStack.Pop();
                 }
             }
             else
@@ -74,12 +85,13 @@ namespace Kurisu.AkiBT.DSL
                 foreach (var child in node.Children)
                 {
                     Visit(child);
-                    array.Add(valueStack.Pop());
+                    array.Add(ValueStack.Pop());
                 }
             }
-            valueStack.Push(array);
+            ValueStack.Push(array);
             return node;
         }
+        
         protected internal override ExprAST VisitVariableDefineAST(VariableDefineExprAST node)
         {
             base.VisitVariableDefineAST(node);
@@ -87,16 +99,17 @@ namespace Kurisu.AkiBT.DSL
             variable.Name = node.Name;
             variable.IsGlobal = node.IsGlobal;
             variable.IsExposed = node.IsGlobal;
-            var value = valueStack.Pop();
+            var value = ValueStack.Pop();
             if (!NodeTypeRegistry.IsFieldType(value, node.Type))
             {
                 value = NodeTypeRegistry.Cast(in value, value.GetType(), NodeTypeRegistry.GetValueType(node.Type));
             }
             variable.SetValue(value);
             if (Verbose) Log($"Build variable {variable.Name}, type: {node.Type}, value: {variable.GetValue()}");
-            variableStack.Push(variable);
+            VariableStack.Push(variable);
             return node;
         }
+        
         protected internal override ExprAST VisitObjectDefineAST(ObjectDefineExprAST node)
         {
             base.VisitObjectDefineAST(node);
@@ -105,11 +118,12 @@ namespace Kurisu.AkiBT.DSL
             variable.IsGlobal = node.IsGlobal;
             variable.IsExposed = node.IsGlobal;
             variable.ConstraintTypeAQN = node.ConstraintTypeAQN;
-            WriteSharedObjectValue(variable, valueStack.Pop() as string);
+            WriteSharedObjectValue(variable, ValueStack.Pop() as string);
             if (Verbose) Log($"Build variable {variable.Name}, type: {node.Type}, value: {variable.GetValue()}");
-            variableStack.Push(variable);
+            VariableStack.Push(variable);
             return node;
         }
+        
         /// <summary>
         /// Override to implement UnityEngine.Object parse logic at runtime, such as loading by address
         /// </summary>
@@ -130,16 +144,17 @@ namespace Kurisu.AkiBT.DSL
                 sharedObject.Value = null;
             }
         }
+        
         protected internal override ExprAST VisitVariableExprAST(VariableExprAST node)
         {
-            NodeBehavior parent = nodeStack.Peek();
+            NodeBehavior parent = NodeStack.Peek();
             base.VisitPropertyAST(node);
             FieldInfo fieldInfo = node.MetaData.FieldInfo;
             // This will also create instance for SharedTObject<UObject>
-            SharedVariable variable = Activator.CreateInstance(fieldInfo.FieldType) as SharedVariable;
+            SharedVariable variable = (SharedVariable)Activator.CreateInstance(fieldInfo.FieldType);
             if (node.IsShared)
             {
-                variable.Name = valueStack.Pop() as string;
+                variable.Name = ValueStack.Pop() as string;
                 variable.IsShared = true;
             }
             else
@@ -147,16 +162,17 @@ namespace Kurisu.AkiBT.DSL
                 // SharedTObject<UObject> or SharedObject
                 if (variable is IBindableVariable<UObject> sharedObject)
                 {
-                    WriteSharedObjectValue(sharedObject, valueStack.Pop() as string);
+                    WriteSharedObjectValue(sharedObject, ValueStack.Pop() as string);
                 }
                 else
                 {
-                    variable.SetValue(valueStack.Pop());
+                    variable.SetValue(ValueStack.Pop());
                 }
             }
             fieldInfo.SetValue(parent, variable);
             return node;
         }
+        
         /// <summary>
         /// Create a <see cref="SharedVariable"/> instance by field type
         /// </summary>
@@ -178,26 +194,31 @@ namespace Kurisu.AkiBT.DSL
                 _ => throw new ArgumentException(nameof(type)),
             };
         }
-        protected static void Log(string message)
+        
+        [DebuggerHidden]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void Log(string message)
         {
             Debug.Log($"<color=#9999FF>[Build Visitor] {message}</color>");
         }
+        
         public static BuildVisitor GetPooled()
         {
-            var visitor = pool.Get();
-            visitor.isPooled = true;
+            var visitor = Pool.Get();
+            visitor._isPooled = true;
             return visitor;
         }
+        
         public void Dispose()
         {
-            variableStack.Clear();
-            valueStack.Clear();
-            nodeStack.Clear();
+            VariableStack.Clear();
+            ValueStack.Clear();
+            NodeStack.Clear();
             // Only release visitor from pool
-            if (isPooled)
+            if (_isPooled)
             {
-                isPooled = false;
-                pool.Release(this);
+                _isPooled = false;
+                Pool.Release(this);
             }
         }
     }

@@ -8,25 +8,32 @@ namespace Kurisu.AkiBT.DSL
     public sealed class Reader
     {
         private const string Pattern = @"(\(|\)|\[|\,|\:|\]| |\n|\r|=>|\t)";
-        private static readonly string[] ignoreTokens = new[] { "\n", "\r", "\t", " ", "" };
-        private readonly string[] tokens;
+        
+        private static readonly string[] IgnoreTokens = { "\n", "\r", "\t", " ", "" };
+        
+        private readonly string[] _tokens;
+        
         public string CurrentToken
         {
             get
             {
-                if (CurrentIndex < tokens.Length) return tokens[CurrentIndex];
+                if (CurrentIndex < _tokens.Length) return _tokens[CurrentIndex];
                 return null;
             }
         }
-        public int CurrentIndex { get; private set; } = 0;
+        
+        public int CurrentIndex { get; private set; }
+        
         public Reader(string[] tokens)
         {
-            this.tokens = tokens;
+            _tokens = tokens;
         }
+        
         public Reader(string stream)
         {
-            tokens = Tokenize(stream);
+            _tokens = Tokenize(stream);
         }
+        
         /// <summary>
         /// Read token, if not exist return null 
         /// </summary>
@@ -34,22 +41,26 @@ namespace Kurisu.AkiBT.DSL
         public string Read()
         {
             int index = CurrentIndex++;
-            if (index < tokens.Length)
-                return tokens[index];
+            if (index < _tokens.Length)
+                return _tokens[index];
             return null;
         }
+        
         public void MoveBack()
         {
             CurrentIndex--;
         }
+        
         public void MoveNext()
         {
             CurrentIndex++;
         }
+        
         public void MoveTo(int index)
         {
             CurrentIndex = index;
         }
+        
         private static string[] Tokenize(string code)
         {
             int start = 0;
@@ -75,8 +86,9 @@ namespace Kurisu.AkiBT.DSL
             }
             if (start < code.Length)
                 tokens.AddRange(Regex.Split(code[(start - flag)..], Pattern));
-            return tokens.Where(x => !ignoreTokens.Contains(x)).ToArray();
+            return tokens.Where(x => !IgnoreTokens.Contains(x)).ToArray();
         }
+        
         public Vector3 ReadVector3()
         {
             float x, y, z;
@@ -89,6 +101,7 @@ namespace Kurisu.AkiBT.DSL
             AssertToken(Read(), Symbol.RightParenthesis);
             return new Vector3(x, y, z);
         }
+        
         public Vector3Int ReadVector3Int()
         {
             int x, y, z;
@@ -101,6 +114,7 @@ namespace Kurisu.AkiBT.DSL
             AssertToken(Read(), Symbol.RightParenthesis);
             return new Vector3Int(x, y, z);
         }
+        
         public Vector2 ReadVector2()
         {
             float x, y;
@@ -111,6 +125,7 @@ namespace Kurisu.AkiBT.DSL
             AssertToken(Read(), Symbol.RightParenthesis);
             return new Vector2(x, y);
         }
+        
         public Vector2Int ReadVector2Int()
         {
             int x, y;
@@ -121,6 +136,7 @@ namespace Kurisu.AkiBT.DSL
             AssertToken(Read(), Symbol.RightParenthesis);
             return new Vector2Int(x, y);
         }
+        
         private static void AssertToken(string token, string assertToken)
         {
             Assert.IsTrue(token == assertToken);

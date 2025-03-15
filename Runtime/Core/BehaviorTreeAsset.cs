@@ -12,16 +12,19 @@ namespace Kurisu.AkiBT
                 private string description;
 #endif
                 Object IBehaviorTreeContainer.Object => this;
+                
                 [SerializeField, HideInInspector]
                 private BehaviorTreeData behaviorTreeData = new();
+                
                 public BehaviorTree GetBehaviorTree()
                 {
                         // Always return a new instance
                         return behaviorTreeData.CreateInstance();
                 }
-                public void SetBehaviorTreeData(BehaviorTreeData behaviorTreeData)
+                
+                public void SetBehaviorTreeData(BehaviorTreeData serializedData)
                 {
-                        this.behaviorTreeData = behaviorTreeData;
+                        behaviorTreeData = serializedData;
                 }
         }
 }

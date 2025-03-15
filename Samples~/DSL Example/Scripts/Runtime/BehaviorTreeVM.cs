@@ -1,54 +1,63 @@
 using UnityEngine;
 using Kurisu.AkiBT.DSL;
 using System.IO;
+
 namespace Kurisu.AkiBT.Example
 {
     public class BehaviorTreeVM : MonoBehaviour
     {
-        private Compiler compiler;
-        [SerializeField]
-        private bool isPlaying;
-        public bool IsPlaying => isPlaying;
-        [SerializeField]
-        private BehaviorTreeSO behaviorTreeSO;
-        public BehaviorTreeSO BehaviorTreeSO => behaviorTreeSO;
+        private Compiler _compiler;
+        
+        private BehaviorTree _behaviorTree;
+
+        private BehaviorTreeComponent _behaviorTreeComponent;
+
+        private bool _isUpdating;
+
         private void Start()
         {
-            compiler = new Compiler(Path.Combine(Application.streamingAssetsPath, "NodeTypeRegistry.json"));
-        }
-        /// <summary>
-        /// Compile vmCode. if success, you will have a temporary BehaviorTreeSO inside this component.
-        /// You can save this BehaviorTreeSO in the editor by clicking 'Save' button
-        /// </summary>
-        /// <param name="vmCode"></param>
-        public void Compile(string vmCode)
-        {
-            if (behaviorTreeSO != null) Clear();
-            behaviorTreeSO = compiler.Verbose(true).Compile(vmCode);
-        }
-        public void Clear()
-        {
-            behaviorTreeSO = null;
-            isPlaying = false;
-        }
-        /// <summary>
-        /// VMBehaviorTreeSO doesn't automatically awake and start, you need to run it manually
-        /// </summary>
-        public void Run()
-        {
-            if (behaviorTreeSO == null || isPlaying) return;
-            behaviorTreeSO.Initialize();
-            behaviorTreeSO.Init(gameObject);
-            isPlaying = true;
-        }
-        public void Stop()
-        {
-            isPlaying = false;
-        }
-        private void Update()
-        {
-            if (isPlaying) behaviorTreeSO.Update();
+            _behaviorTreeComponent = gameObject.AddComponent<BehaviorTreeComponent>();
+            _behaviorTreeComponent.updateType = BehaviorTreeComponent.UpdateType.Manual;
+            _compiler = new Compiler(Path.Combine(Application.streamingAssetsPath, "NodeTypeRegistry.json"));
         }
 
+        private void Update()
+        {
+            if (_isUpdating)
+            {
+                _behaviorTreeComponent.Tick();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            _behaviorTree?.Dispose();
+            _behaviorTree = null;
+        }
+        
+        public void Compile(string dsl)
+        {
+            Stop();
+            Dispose();
+            _behaviorTree = _compiler.Verbose(true).Compile(dsl);
+            Run();
+        }
+        
+        public void Dispose()
+        {
+            _behaviorTree?.Dispose();
+            _behaviorTree = null;
+        }
+        
+        public void Run()
+        {
+            _isUpdating = true;
+            _behaviorTreeComponent.SetRuntimeBehaviorTree(_behaviorTree);
+        }
+        
+        public void Stop()
+        {
+            _isUpdating = false;
+        }
     }
 }

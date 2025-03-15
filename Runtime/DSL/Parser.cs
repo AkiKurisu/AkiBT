@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using UnityEngine;
 using UnityEngine.Assertions;
+using Debug = UnityEngine.Debug;
+
 namespace Kurisu.AkiBT.DSL
 {
     public sealed class Parser : IParser
@@ -339,10 +342,16 @@ namespace Kurisu.AkiBT.DSL
             //Identify as string, need visitor to read value.
             return new VariableDefineExprAST(valueType, isGlobal, name, ValueExprAST.String(token.Value));
         }
+        
+        [DebuggerHidden]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void LogWarning(object message)
         {
             Debug.LogWarning($"<color=#FFFF66>[Parser] {message}</color>");
         }
+        
+        [DebuggerHidden]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void LogError(object message)
         {
             Debug.LogError($"<color=#FF6666>[Parser] {message}</color>");
